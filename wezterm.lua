@@ -7,5 +7,4 @@ return {
 	font_size = 13,
 	initial_cols = 140,
 	initial_rows = 45,
-	window_decorations = "RESIZE",
 }
