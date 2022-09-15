@@ -525,10 +525,6 @@ require 'packer'.startup {
 						{ name = 'nvim_lsp_signature_help' },
 						{ name = 'path' },
 					},
-					window = {
-						completion = cmp.config.window.bordered(),
-						documentation = cmp.config.window.bordered(),
-					},
 					formatting = {
 						format = require 'lspkind'.cmp_format {
 							mode = 'symbol_text',
