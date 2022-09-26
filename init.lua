@@ -634,6 +634,13 @@ require 'packer'.startup {
 			end,
 		}
 		use 'bronson/vim-trailing-whitespace' -- 余計な空白を赤くする
+		use {
+			'norcalli/nvim-colorizer.lua',
+			config = function()
+				vim.cmd [[ set termguicolors ]]
+				require 'colorizer'.setup()
+			end
+		}
 
 		-- 小機能追加
 		use 'rbtnn/vim-ambiwidth' -- 曖昧幅な文字の文字幅設定
