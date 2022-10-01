@@ -635,10 +635,18 @@ require 'packer'.startup {
 		}
 		use 'bronson/vim-trailing-whitespace' -- 余計な空白を赤くする
 		use {
-			'norcalli/nvim-colorizer.lua',
+			'uga-rosa/ccc.nvim',
 			config = function()
-				vim.cmd [[ set termguicolors ]]
-				require 'colorizer'.setup()
+				require 'ccc'.setup {
+					bar_char = '-',
+					point_char = '+',
+					highlighter = {
+						auto_enable = true,
+						filetypes = { 'css', 'sass', 'scss', 'js', 'html' },
+						events = { 'WinScrolled', 'TextChanged', 'TextChangedI', 'BufEnter' },
+						lsp = true,
+					},
+				}
 			end
 		}
 
