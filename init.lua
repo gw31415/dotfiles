@@ -24,7 +24,7 @@ vim.keymap.set('c', '<c-d>', '<del>', {})
 vim.keymap.set('c', '<c-a>', '<home>', {})
 vim.keymap.set('c', '<c-e>', '<end>', {})
 
-function lsp_onattach_func(client, bufnr)
+function _G.lsp_onattach_func(_, bufnr)
 	vim.api.nvim_create_user_command('Implementation', function() vim.lsp.buf.implementation() end, { force = true })
 	local bufopts = { silent = true, buffer = bufnr }
 	vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
@@ -101,7 +101,7 @@ require 'packer'.startup {
 			config = function()
 				require 'flutter-tools'.setup {
 					lsp = {
-						on_attach = lsp_onattach_func,
+						on_attach = _G.lsp_onattach_func,
 					}
 				}
 			end,
@@ -125,7 +125,7 @@ require 'packer'.startup {
 					mason_lspconfig.setup_handlers { function(server_name)
 						local opts = {
 							capabilities = capabilities,
-							on_attach = lsp_onattach_func,
+							on_attach = _G.lsp_onattach_func,
 						}
 						if server_name == 'sumneko_lua' then
 							opts = require 'lua-dev'.setup {
