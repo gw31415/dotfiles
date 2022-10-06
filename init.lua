@@ -24,6 +24,19 @@ vim.keymap.set('c', '<c-d>', '<del>', {})
 vim.keymap.set('c', '<c-a>', '<home>', {})
 vim.keymap.set('c', '<c-e>', '<end>', {})
 
+function lsp_onattach_func(client, bufnr)
+	vim.api.nvim_create_user_command('Implementation', function() vim.lsp.buf.implementation() end, { force = true })
+	local bufopts = { silent = true, buffer = bufnr }
+	vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+	vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+	vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+	vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+	vim.keymap.set('n', 'gqq', function() vim.lsp.buf.format { async = true } end, bufopts)
+	vim.keymap.set('n', '<leader>a', vim.lsp.buf.code_action, bufopts)
+	vim.keymap.set('n', '<leader>n', vim.lsp.buf.rename, bufopts)
+	vim.keymap.set('n', '<leader>r', function() vim.lsp.buf.references {} end, bufopts)
+end
+
 -- Configure
 vim.bo.tabstop = 4
 vim.bo.shiftwidth = 4
@@ -86,7 +99,11 @@ require 'packer'.startup {
 			requires = 'nvim-lua/plenary.nvim',
 			ft = { 'dart' },
 			config = function()
-				require 'flutter-tools'.setup {}
+				require 'flutter-tools'.setup {
+					lsp = {
+						on_attach = lsp_onattach_func,
+					}
+				}
 			end,
 		}
 		use 'qnighy/satysfi.vim'
@@ -108,18 +125,7 @@ require 'packer'.startup {
 					mason_lspconfig.setup_handlers { function(server_name)
 						local opts = {
 							capabilities = capabilities,
-							on_attach = function(_, bufnr)
-								vim.api.nvim_create_user_command('Implementation', function() vim.lsp.buf.implementation() end, { force = true })
-								local bufopts = { silent = true, buffer = bufnr }
-								vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-								vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-								vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-								vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-								vim.keymap.set('n', 'gqq', function() vim.lsp.buf.format { async = true } end, bufopts)
-								vim.keymap.set('n', '<leader>a', vim.lsp.buf.code_action, bufopts)
-								vim.keymap.set('n', '<leader>n', vim.lsp.buf.rename, bufopts)
-								vim.keymap.set('n', '<leader>r', function() vim.lsp.buf.references {} end, bufopts)
-							end
+							on_attach = lsp_onattach_func,
 						}
 						if server_name == 'sumneko_lua' then
 							opts = require 'lua-dev'.setup {
