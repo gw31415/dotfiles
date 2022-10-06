@@ -642,7 +642,7 @@ require 'packer'.startup {
 					point_char = '+',
 					highlighter = {
 						auto_enable = true,
-						filetypes = { 'css', 'sass', 'scss', 'js', 'html' },
+						filetypes = { 'css', 'sass', 'scss', 'js', 'html', 'json' },
 						events = { 'WinScrolled', 'TextChanged', 'TextChangedI', 'BufEnter' },
 						lsp = true,
 					},
