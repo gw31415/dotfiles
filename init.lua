@@ -113,26 +113,32 @@ require 'packer'.startup {
 			'williamboman/mason.nvim', { -- LSP Installer
 				'neovim/nvim-lspconfig',
 				requires = {
-					'folke/lua-dev.nvim',
+					'folke/neodev.nvim',
 					'williamboman/mason-lspconfig.nvim',
 					'hrsh7th/cmp-nvim-lsp',
 				},
 				config = function()
 					require 'mason'.setup {}
-					local lspconfig = require 'lspconfig'
 					local mason_lspconfig = require('mason-lspconfig')
-					local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+					local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 					mason_lspconfig.setup_handlers { function(server_name)
 						local opts = {
 							capabilities = capabilities,
 							on_attach = _G.lsp_onattach_func,
 						}
 						if server_name == 'sumneko_lua' then
-							opts = require 'lua-dev'.setup {
-								lspconfig = opts
-							} or opts
+							require 'neodev'.setup {
+								override = function(_, library)
+									library.enabled = true
+									library.plugins = true
+								end,
+							}
+							local lspconfig = require 'lspconfig'
+							lspconfig[server_name].setup(opts)
+						else
+							local lspconfig = require 'lspconfig'
+							lspconfig[server_name].setup(opts)
 						end
-						lspconfig[server_name].setup(opts)
 					end }
 				end,
 			}
