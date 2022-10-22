@@ -692,6 +692,7 @@ require 'packer'.startup {
 				vim.keymap.set('n', '<space>', function() require 'hop'.hint_words { multi_windows = true } end, {})
 			end,
 		}
+		use 'mbbill/undotree'
 		use {
 			'simeji/winresizer', -- ウィンドウサイズを<C-T>で変更
 			config = function()
