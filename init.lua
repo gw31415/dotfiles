@@ -116,6 +116,11 @@ require 'packer'.startup {
 			ft = { 'satysfi' },
 		}
 
+		use {
+			'tranvansang/octave.vim',
+			ft = { 'matlab', 'octave' },
+		}
+
 		-- LSP
 		use {
 			'williamboman/mason.nvim', { -- LSP Installer
@@ -519,6 +524,7 @@ require 'packer'.startup {
 		use { 'hrsh7th/vim-vsnip', event = { 'InsertEnter' } }
 		use { 'hrsh7th/cmp-cmdline', event = { 'CmdlineEnter' } }
 		use { 'hrsh7th/cmp-path', event = { 'InsertEnter' } }
+		use { 'hrsh7th/cmp-omni', event = { 'InsertEnter' } }
 		use { 'hrsh7th/cmp-buffer', event = { 'InsertEnter', 'CmdlineEnter' } }
 		use {
 			'hrsh7th/nvim-cmp',
@@ -599,6 +605,11 @@ require 'packer'.startup {
 						end, { 'i', 's', 'c', }),
 					}
 				}
+				cmp.setup.filetype('octave', {
+					sources = cmp.config.sources {
+						{ name = 'omni' },
+					}
+				})
 				cmp.setup.cmdline(':', {
 					mapping = cmp.mapping.preset.cmdline(),
 					sources = cmp.config.sources {
