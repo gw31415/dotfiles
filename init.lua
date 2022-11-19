@@ -526,6 +526,7 @@ require 'packer'.startup {
 		use { 'hrsh7th/cmp-path', event = { 'InsertEnter' } }
 		use { 'hrsh7th/cmp-omni', event = { 'InsertEnter' } }
 		use { 'hrsh7th/cmp-buffer', event = { 'InsertEnter', 'CmdlineEnter' } }
+		use { 'uga-rosa/cmp-skkeleton', event = { 'InsertEnter' } }
 		use {
 			'hrsh7th/nvim-cmp',
 			requires = { 'onsails/lspkind.nvim' },
@@ -551,6 +552,7 @@ require 'packer'.startup {
 						{ name = 'vsnip' },
 						{ name = 'buffer' },
 						{ name = 'nvim_lsp_signature_help' },
+						{ name = 'skkeleton' },
 						{ name = 'path' },
 					},
 					formatting = {
