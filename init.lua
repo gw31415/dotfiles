@@ -722,7 +722,15 @@ require 'packer'.startup {
 				vim.keymap.set('n', '<space>', function() require 'hop'.hint_words { multi_windows = true } end, {})
 			end,
 		}
-		use 'mbbill/undotree'
+		use {
+			'mbbill/undotree',
+			cmd = {
+				'UndotreeShow',
+				'UndotreeHide',
+				'UndotreeFocus',
+				'UndotreeToggle',
+			}
+		}
 		use {
 			'simeji/winresizer', -- ウィンドウサイズ変更
 			config = function()
