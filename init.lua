@@ -713,7 +713,15 @@ require 'packer'.startup {
 				end
 			}
 		end
-		use { 'tpope/vim-fugitive', event = { 'CmdlineEnter' } } -- Git連携
+		use {
+			'lambdalisue/gin.vim',
+			requires = { 'vim-denops/denops.vim' },
+			config = function()
+				if vim.fn.executable 'delta' then
+					vim.api.nvim_set_var('gin_diff_default_args', { '++processor=delta' })
+				end
+			end
+		} -- Git連携
 		use { 'lewis6991/gitsigns.nvim', config = function() require 'gitsigns'.setup() end } -- Gitの行毎ステータス
 		use {
 			'phaazon/hop.nvim', -- 画面内ジャンプ
