@@ -724,9 +724,9 @@ require 'packer'.startup {
 		}
 		use 'mbbill/undotree'
 		use {
-			'simeji/winresizer', -- ウィンドウサイズを<C-T>で変更
+			'simeji/winresizer', -- ウィンドウサイズ変更
 			config = function()
-				vim.api.nvim_set_var('winresizer_start_key', '<C-T>')
+				vim.api.nvim_set_var('winresizer_start_key', '<C-W>c')
 			end
 		}
 		use {
