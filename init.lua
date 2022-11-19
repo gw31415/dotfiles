@@ -106,7 +106,15 @@ require 'packer'.startup {
 				}
 			end,
 		}
-		use 'qnighy/satysfi.vim'
+
+		vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+			pattern = { '*.saty', '*.satyh', '*satyh-*', '*.satyg' },
+			command = 'setlocal filetype=satysfi'
+		})
+		use {
+			'qnighy/satysfi.vim',
+			ft = { 'satysfi' },
+		}
 
 		-- LSP
 		use {
