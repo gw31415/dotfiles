@@ -177,6 +177,7 @@ require 'packer'.startup {
 		}
 		use {
 			'j-hui/fidget.nvim', -- LSPのステータスを右下に表示
+			event = { 'LspAttach' },
 			config = function()
 				vim.api.nvim_create_autocmd('VimLeavePre', { command = 'silent! FidgetClose' })
 				require 'fidget'.setup()
@@ -191,6 +192,7 @@ require 'packer'.startup {
 		}
 		use {
 			'numToStr/Comment.nvim', -- コメントのトグル
+			event = { 'LspAttach' },
 			config = function()
 				require 'Comment'.setup {}
 			end
@@ -648,6 +650,13 @@ require 'packer'.startup {
 		use 'bronson/vim-trailing-whitespace' -- 余計な空白を赤くする
 		use {
 			'uga-rosa/ccc.nvim',
+			cmd = {
+				'CccPick',
+				'CccConvert',
+				'CccHighlighterEnable',
+				'CccHighlighterDisable',
+				'CccHighlighterToggle',
+			},
 			config = function()
 				require 'ccc'.setup {
 					bar_char = '-',
@@ -716,6 +725,7 @@ require 'packer'.startup {
 		}
 		use {
 			'gw31415/deepl-commands.nvim', -- deeplとの連携
+			event = { 'CmdlineEnter' },
 			requires = {
 				'gw31415/deepl.vim',
 				'gw31415/fzyselect.vim', -- Optional
