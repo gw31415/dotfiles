@@ -146,12 +146,9 @@ require 'packer'.startup {
 									library.plugins = true
 								end,
 							}
-							local lspconfig = require 'lspconfig'
-							lspconfig[server_name].setup(opts)
-						else
-							local lspconfig = require 'lspconfig'
-							lspconfig[server_name].setup(opts)
 						end
+						local lspconfig = require 'lspconfig'
+						lspconfig[server_name].setup(opts)
 					end }
 				end,
 			}
