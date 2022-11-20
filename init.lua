@@ -175,7 +175,10 @@ require 'packer'.startup {
 						table.insert(null_sources, null_ls.builtins.diagnostics[package.name])
 					end
 				end
-				null_ls.setup { sources = null_sources }
+				null_ls.setup {
+					sources = null_sources,
+					on_attach = _G.lsp_onattach_func,
+				}
 			end
 		}
 		use {
