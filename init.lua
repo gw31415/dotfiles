@@ -82,7 +82,7 @@ end
 -- Packer
 local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
 local packer_bootstrap = '' -- Packerのインストールがない場合は空文字列
-if vim.fn.empty(vim.fn.glob(install_path, false, vim.NIL, false)) > 0 then
+if vim.fn.empty(vim.fn.glob(install_path, false, vim.NIL, vim.NIL)) > 0 then
 	packer_bootstrap = vim.fn.system { 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim',
 		install_path }
 	vim.cmd 'packadd packer.nvim'
