@@ -155,7 +155,10 @@ require 'packer'.startup {
 		}
 		use {
 			'jose-elias-alvarez/null-ls.nvim',
-			requires = { 'williamboman/mason.nvim' },
+			requires = {
+				'williamboman/mason.nvim',
+				'nvim-lua/plenary.nvim',
+			},
 			config = function()
 				local mason = require 'mason'
 				local mason_package = require 'mason-core.package'
