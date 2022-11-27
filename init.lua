@@ -455,6 +455,30 @@ require 'packer'.startup {
 						vim.keymap.set('n', '<esc>', '<cmd>clo<cr>', { buffer = true })
 					end
 				})
+				-- Line Selector
+				vim.cmd "nn gl <cmd>cal fzyselect#start(getline(1, '$'), #{prompt:'Fuzzy search'}, {_,i->i==v:null?v:null:cursor(i, 0)})<cr>"
+				-- git ls-files
+				vim.cmd [[
+					fu! s:edit(path) abort
+						if a:path != v:null
+							exe 'e ' .. a:path
+						en
+					endfu
+					nn <c-p> <cmd>cal fzyselect#start(split(system(['git', 'ls-files']), '\n'), #{prompt:'git ls-files'}, {p-><SID>edit(p)})<cr>
+				]]
+
+				-- Buffer Selector
+				vim.cmd [[
+					fu! s:buffer(i) abort
+						if a:i != v:null
+							exe 'b ' .. a:i
+						en
+					endfu
+					nn B <cmd>cal fzyselect#start(
+								\ filter(range(1, bufnr('$')), 'buflisted(v:val)'),
+								\ #{prompt:'Select buffer',format_item:{i->split(execute('ls!'), "\n")[i-1]}},
+								\ {li-><SID>buffer(li)})<cr>
+				]]
 				vim.ui.select = require 'fzyselect'.start
 			end
 		}
