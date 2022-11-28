@@ -87,22 +87,7 @@ if fn.filereadable(jetpackfile) == 0 then
 end
 vim.cmd 'packadd vim-jetpack'
 require 'jetpack.packer'.startup(function(use)
-	use {
-		'tani/vim-jetpack',
-		opt = 1,
-		config = function()
-			vim.cmd [[
-				for name in jetpack#names()
-				  if !jetpack#tap(name)
-					call jetpack#sync()
-					break
-				  endif
-				endfor
-			]]
-		end
-	}
-	-- プラグイン管理
-	use 'wbthomason/packer.nvim'
+	use { 'tani/vim-jetpack', opt = 1 }
 
 	-- 言語別プラグイン
 	use 'nvim-lua/plenary.nvim'
@@ -644,3 +629,11 @@ require 'jetpack.packer'.startup(function(use)
 		end,
 	}
 end)
+vim.cmd [[
+	for name in jetpack#names()
+	  if !jetpack#tap(name)
+		call jetpack#sync()
+		break
+	  endif
+	endfor
+]]
