@@ -119,10 +119,10 @@ require 'jetpack.packer'.startup(function(use)
 	}
 
 	-- LSP
-	use 'folke/neodev.nvim'
+	use { 'folke/neodev.nvim', opt = 1 }
 	use 'williamboman/mason-lspconfig.nvim'
 	use 'hrsh7th/cmp-nvim-lsp'
-	use 'neovim/nvim-lspconfig'
+	use { 'neovim/nvim-lspconfig', opt = 1 }
 	use {
 		'williamboman/mason.nvim', -- LSP Installer
 		config = function()
@@ -135,6 +135,8 @@ require 'jetpack.packer'.startup(function(use)
 					on_attach = _G.lsp_onattach_func,
 				}
 				if server_name == 'sumneko_lua' then
+					vim.cmd 'packadd nvim-lspconfig'
+					vim.cmd 'packadd neodev.nvim'
 					require 'neodev'.setup {
 						override = function(_, library)
 							library.enabled = true
@@ -142,8 +144,8 @@ require 'jetpack.packer'.startup(function(use)
 						end,
 					}
 				end
-				local lspconfig = require 'lspconfig'
-				lspconfig[server_name].setup(opts)
+				vim.cmd 'packadd nvim-lspconfig'
+				require 'lspconfig'[server_name].setup(opts)
 			end }
 		end,
 	}
