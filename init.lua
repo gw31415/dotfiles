@@ -88,6 +88,7 @@ end
 vim.cmd 'packadd vim-jetpack'
 require 'jetpack.packer'.startup(function(use)
 	use { 'tani/vim-jetpack', opt = 1 }
+	use { 'vim-denops/denops.vim', opt = 1  }
 
 	-- 言語別プラグイン
 	use 'nvim-lua/plenary.nvim'
@@ -172,7 +173,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'onsails/diaglist.nvim', -- Diagnosticの自動更新Quickfixリスト
-		-- event = { 'LspAttach' },
+		event = { 'LspAttach' },
 		config = function()
 			vim.api.nvim_create_user_command('Diaglist', function() require 'diaglist.quickfix'.populate_qflist() end,
 				{ force = true })
@@ -182,7 +183,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'j-hui/fidget.nvim', -- LSPのステータスを右下に表示
-		-- event = { 'LspAttach' },
+		event = { 'LspAttach' },
 		config = function()
 			vim.api.nvim_create_autocmd('VimLeavePre', { command = 'silent! FidgetClose' })
 			require 'fidget'.setup()
@@ -190,14 +191,14 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'ray-x/lsp_signature.nvim', -- 関数の引数の入力時のシグネチャヘルプ
-		-- event = { 'LspAttach' },
+		event = { 'LspAttach' },
 		config = function()
 			require 'lsp_signature'.setup {}
 		end,
 	}
 	use {
 		'numToStr/Comment.nvim', -- コメントのトグル
-		-- event = { 'LspAttach' },
+		event = { 'LspAttach' },
 		config = function()
 			require 'Comment'.setup {}
 		end
@@ -244,7 +245,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'theHamsta/nvim-dap-virtual-text',
-		-- event = { 'LspAttach' },
+		event = { 'LspAttach' },
 		config = function()
 			require 'nvim-dap-virtual-text'.setup {
 				enabled_commands = false,
@@ -253,7 +254,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'rcarriga/cmp-dap',
-		-- event = { 'LspAttach' },
+		event = { 'LspAttach' },
 		config = function()
 			require 'cmp'.setup {
 				enabled = function()
@@ -562,7 +563,7 @@ require 'jetpack.packer'.startup(function(use)
 	use 'gw31415/deepl.vim'
 	use {
 		'gw31415/deepl-commands.nvim', -- deeplとの連携
-		-- event = { 'CmdlineEnter' },
+		event = { 'CmdlineEnter' },
 		config = function()
 			require 'deepl-commands'.setup {
 				selector_func = require 'fzyselect'.start
