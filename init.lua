@@ -129,7 +129,7 @@ require 'jetpack.packer'.startup(function(use)
 		event = { 'VimEnter' },
 		config = function()
 			require 'mason'.setup {}
-			vim.fn['jetpack#load']('mason-lspconfig')
+			vim.fn['jetpack#load']('mason-lspconfig.nvim')
 			local mason_lspconfig = require('mason-lspconfig')
 			vim.fn['jetpack#load']('cmp-nvim-lsp')
 			local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
