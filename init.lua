@@ -134,10 +134,18 @@ require 'jetpack.packer'.startup(function(use)
 				local opts = {
 					capabilities = capabilities,
 					on_attach = _G.lsp_onattach_func,
+					settings = {
+						Lua = {}
+					}
 				}
 				if server_name == 'sumneko_lua' then
 					vim.cmd 'packadd nvim-lspconfig'
 					vim.cmd 'packadd neodev.nvim'
+					opts.settings.Lua = {
+						workspace = {
+							checkThirdParty = false,
+						},
+					}
 					require 'neodev'.setup {
 						override = function(_, library)
 							library.enabled = true
