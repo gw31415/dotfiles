@@ -705,7 +705,7 @@ end)
 pcall(function()
 	for _, name in ipairs(fn['jetpack#names']()) do
 		if not fn['jetpack#tap'](name) then
-			fn['jetpack#sync']()
+			pcall(vim.fn['jetpack#sync'])
 			break
 		end
 	end
