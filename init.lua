@@ -90,6 +90,7 @@ require 'jetpack.packer'.startup(function(use)
 	use { 'tani/vim-jetpack', opt = 1 }
 	use 'vim-denops/denops.vim'
 	use 'nvim-lua/plenary.nvim'
+	use { 'eandrju/cellular-automaton.nvim', cmd = { 'CellularAutomaton' } }
 
 	-- 言語別プラグイン
 	use {
