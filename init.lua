@@ -222,8 +222,9 @@ require 'jetpack.packer'.startup(function(use)
 
 	-- Debug Adapter Protocol
 	local function load_dap_plugins()
-			vim.fn['jetpack#load']('nvim-dap-ui')
+		vim.fn['jetpack#load']('nvim-dap-ui')
 	end
+
 	use {
 		'mfussenegger/nvim-dap',
 		opt = 1,
