@@ -614,6 +614,7 @@ require 'jetpack.packer'.startup(function(use)
 		'gw31415/deepl-commands.nvim', -- deeplとの連携
 		event = { 'CmdlineEnter' },
 		config = function()
+			vim.cmd 'packadd deepl.vim'
 			require 'deepl-commands'.setup {
 				selector_func = require 'fzyselect'.start
 			}
