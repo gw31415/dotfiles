@@ -682,9 +682,11 @@ require 'jetpack.packer'.startup(function(use)
 end)
 
 -- インストールされていないプラグインがあった時の自動Sync
-for _, name in ipairs(fn['jetpack#names']()) do
-	if not fn['jetpack#tap'](name) then
-		fn['jetpack#sync']()
-		break
+pcall(function()
+	for _, name in ipairs(fn['jetpack#names']()) do
+		if not fn['jetpack#tap'](name) then
+			fn['jetpack#sync']()
+			break
+		end
 	end
-end
+end)
