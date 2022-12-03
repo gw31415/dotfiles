@@ -497,6 +497,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'lukas-reineke/indent-blankline.nvim', -- インデントの可視化
+		event = { 'VimEnter' },
 		config = function()
 			vim.opt.list = true
 			require 'indent_blankline'.setup {
@@ -668,6 +669,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 end)
 
+-- インストールされていないプラグインがあった時の自動Sync
 for _, name in ipairs(fn['jetpack#names']()) do
 	if not fn['jetpack#tap'](name) then
 		fn['jetpack#sync']()
