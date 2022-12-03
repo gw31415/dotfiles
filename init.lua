@@ -78,6 +78,24 @@ if vim.fn.executable('rg') then
 	vim.api.nvim_set_option_value('grepformat', '%f:%l:%c:%m', {})
 end
 
+local function lazy_default_plugs(name)
+	vim.api.nvim_set_var('loaded_' .. name, true)
+	vim.api.nvim_create_autocmd('VimEnter', {
+		once = true,
+		callback = function()
+			vim.api.nvim_set_var('loaded_' .. name, false)
+			vim.cmd('packadd ' .. name)
+		end
+	})
+end
+
+lazy_default_plugs 'matchit'
+lazy_default_plugs 'matchparen'
+vim.api.nvim_set_var('loaded_remote_plugins', true)
+vim.api.nvim_set_var('skip_loading_mswin', true)
+vim.api.nvim_set_var('loaded_tutor_mode_plugin', true)
+vim.api.nvim_set_var('loaded_2html_plugin', true)
+
 -- Jetpack
 local fn = vim.fn
 local jetpackfile = fn.stdpath('data') .. '/site/pack/jetpack/opt/vim-jetpack/plugin/jetpack.vim'
