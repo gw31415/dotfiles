@@ -656,11 +656,10 @@ require 'jetpack.packer'.startup(function(use)
 			'UndotreeToggle',
 		}
 	}
+	vim.api.nvim_set_var('winresizer_start_key', '<C-W>c')
 	use {
 		'simeji/winresizer', -- ウィンドウサイズ変更
-		config = function()
-			vim.api.nvim_set_var('winresizer_start_key', '<C-W>c')
-		end
+		event = { 'VimEnter' },
 	}
 	use {
 		'navarasu/onedark.nvim', -- テーマ
