@@ -452,7 +452,10 @@ require 'jetpack.packer'.startup(function(use)
 	}
 
 	-- UI
-	use 'kevinhwang91/nvim-bqf' -- quickfixのハイジャック
+	use { -- quickfixのハイジャック
+		'kevinhwang91/nvim-bqf',
+		event = { 'VimEnter' },
+	}
 	use { -- vim.notifyのハイジャック
 		'rcarriga/nvim-notify',
 		event = { 'VimEnter' },
@@ -460,6 +463,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'gw31415/fzyselect.vim', -- vim.ui.select
+		event = { 'VimEnter' },
 		config = function()
 			vim.api.nvim_create_autocmd('FileType', {
 				pattern = 'fzyselect',
@@ -523,7 +527,10 @@ require 'jetpack.packer'.startup(function(use)
 			}
 		end,
 	}
-	use 'bronson/vim-trailing-whitespace' -- 余計な空白を赤くする
+	use {
+		'bronson/vim-trailing-whitespace', -- 余計な空白を赤くする
+		event = { 'VimEnter' },
+	}
 	use {
 		'uga-rosa/ccc.nvim',
 		cmd = {
@@ -548,7 +555,10 @@ require 'jetpack.packer'.startup(function(use)
 	}
 
 	-- 小機能追加
-	use 'rbtnn/vim-ambiwidth' -- 曖昧幅な文字の文字幅設定
+	use {
+		'rbtnn/vim-ambiwidth', -- 曖昧幅な文字の文字幅設定
+		event = { 'VimEnter' },
+	}
 	use {
 		'kylechui/nvim-surround', -- 囲い文字向けの操作拡張
 		tag = 'v1.0.0',
@@ -568,17 +578,22 @@ require 'jetpack.packer'.startup(function(use)
 			end
 		}
 	end
-	use {
+	use { -- Git連携
 		'lambdalisue/gin.vim',
 		config = function()
 			if vim.fn.executable 'delta' then
 				vim.api.nvim_set_var('gin_diff_default_args', { '++processor=delta' })
 			end
 		end
-	} -- Git連携
-	use { 'lewis6991/gitsigns.nvim', config = function() require 'gitsigns'.setup() end } -- Gitの行毎ステータス
+	}
+	use {
+		'lewis6991/gitsigns.nvim', -- Gitの行毎ステータス
+		event = { 'VimEnter' },
+		config = function() require 'gitsigns'.setup() end
+	}
 	use {
 		'phaazon/hop.nvim', -- 画面内ジャンプ
+		event = { 'VimEnter' },
 		config = function()
 			require 'hop'.setup {}
 			vim.keymap.set('n', '<space>', function() require 'hop'.hint_words { multi_windows = true } end, {})
