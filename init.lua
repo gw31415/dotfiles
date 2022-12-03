@@ -221,14 +221,46 @@ require 'jetpack.packer'.startup(function(use)
 	}
 
 	-- Debug Adapter Protocol
+	local function load_dap_plugins()
+			vim.fn['jetpack#load']('nvim-dap-ui')
+	end
 	use {
 		'mfussenegger/nvim-dap',
-		event = { 'JetpackMasonNvimPost' },
+		opt = 1,
+	}
+	use {
+		'theHamsta/nvim-dap-virtual-text',
+		opt = 1,
+		config = function()
+			require 'nvim-dap-virtual-text'.setup {
+				enabled_commands = false,
+			}
+		end
+	}
+	use {
+		'rcarriga/cmp-dap',
+		opt = 1,
+		config = function()
+			require 'cmp'.setup {
+				enabled = function()
+					return vim.api.nvim_buf_get_option(0, 'buftype') ~= 'prompt'
+						or require 'cmp_dap'.is_dap_buffer()
+				end
+			}
+			require 'cmp'.setup.filetype({ 'dap-repl', 'dapui_watches' }, {
+				sources = {
+					{ name = 'dap' },
+				},
+			})
+		end
 	}
 	use {
 		'rcarriga/nvim-dap-ui',
-		event = { 'JetpackNvimDapPost' },
+		opt = 1,
 		config = function()
+			vim.fn['jetpack#load']('nvim-dap')
+			vim.fn['jetpack#load']('nvim-dap-virtual-text')
+			vim.fn['jetpack#load']('cmp-dap')
 			require 'dapui'.setup()
 
 			-- codelldbの設定
@@ -242,7 +274,6 @@ require 'jetpack.packer'.startup(function(use)
 					end
 				end
 			})
-			vim.fn['jetpack#load']('nvim-dap')
 			require 'dap'.adapters.lldb = {
 				type = 'server',
 				port = '13000',
@@ -265,35 +296,11 @@ require 'jetpack.packer'.startup(function(use)
 		end
 	}
 	use {
-		'theHamsta/nvim-dap-virtual-text',
-		event = { 'JetpackNvimDapUiPost' },
-		config = function()
-			require 'nvim-dap-virtual-text'.setup {
-				enabled_commands = false,
-			}
-		end
-	}
-	use {
-		'rcarriga/cmp-dap',
-		event = { 'JetpackNvimDapPost' },
-		config = function()
-			require 'cmp'.setup {
-				enabled = function()
-					return vim.api.nvim_buf_get_option(0, 'buftype') ~= 'prompt'
-						or require 'cmp_dap'.is_dap_buffer()
-				end
-			}
-			require 'cmp'.setup.filetype({ 'dap-repl', 'dapui_watches' }, {
-				sources = {
-					{ name = 'dap' },
-				},
-			})
-		end
-	}
-	use {
 		'leoluz/nvim-dap-go',
 		ft = { 'go' },
 		config = function()
+			load_dap_plugins()
+			vim.fn['jetpack#load']('mason.nvim')
 			local mason_dap_package = 'delve'
 			local init_func = require 'dap-go'.setup
 			if not require 'mason-registry'.is_installed(mason_dap_package) then
@@ -309,6 +316,8 @@ require 'jetpack.packer'.startup(function(use)
 		'gw31415/nvim-dap-rust',
 		ft = { 'rust' },
 		config = function()
+			load_dap_plugins()
+			vim.fn['jetpack#load']('mason.nvim')
 			local mason_dap_package = 'codelldb'
 			local init_func = require 'dap-rust'.setup
 			if not require 'mason-registry'.is_installed(mason_dap_package) then
@@ -324,6 +333,7 @@ require 'jetpack.packer'.startup(function(use)
 		'mfussenegger/nvim-dap-python',
 		ft = { 'python' },
 		config = function()
+			vim.fn['jetpack#load']('mason.nvim')
 			local mason_dap_package = 'delve'
 			local init_func = function()
 				require 'dap-python'.setup(vim.fn.stdpath 'data' .. '/mason/packages/debugpy/venv/bin/python')
