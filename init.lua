@@ -572,6 +572,7 @@ require 'jetpack.packer'.startup(function(use)
 	use {
 		'kylechui/nvim-surround', -- 囲い文字向けの操作拡張
 		tag = 'v1.0.0',
+		event = { 'VimEnter' },
 		config = function()
 			require 'nvim-surround'.setup {}
 		end
@@ -626,6 +627,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'navarasu/onedark.nvim', -- テーマ
+		event = { 'VimEnter' },
 		config = function()
 			require 'onedark'.setup {
 				style = 'darker',
