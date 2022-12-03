@@ -447,7 +447,11 @@ require 'jetpack.packer'.startup(function(use)
 
 	-- UI
 	use 'kevinhwang91/nvim-bqf' -- quickfixのハイジャック
-	use { 'rcarriga/nvim-notify', config = function() vim.notify = require 'notify' end } -- vim.notifyのハイジャック
+	use { -- vim.notifyのハイジャック
+		'rcarriga/nvim-notify',
+		event = { 'VimEnter' },
+		config = function() vim.notify = require 'notify' end
+	}
 	use {
 		'gw31415/fzyselect.vim', -- vim.ui.select
 		config = function()
@@ -488,6 +492,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'nvim-treesitter/nvim-treesitter', -- Treesitter
+		event = { 'VimEnter' },
 		config = function()
 			local parser_install_dir = vim.fn.stdpath 'data' .. '/treesitter'
 			vim.opt.runtimepath:append(vim.fn.stdpath 'data' .. '/treesitter')
@@ -603,7 +608,7 @@ require 'jetpack.packer'.startup(function(use)
 			require 'onedark'.load()
 		end,
 	}
-	use 'gw31415/deepl.vim'
+	use { 'gw31415/deepl.vim', opt = 1 }
 	use {
 		'gw31415/deepl-commands.nvim', -- deeplとの連携
 		event = { 'CmdlineEnter' },
