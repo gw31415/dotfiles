@@ -78,6 +78,7 @@ if vim.fn.executable('rg') then
 	vim.api.nvim_set_option_value('grepformat', '%f:%l:%c:%m', {})
 end
 
+-- default plugins
 local function lazy_default_plugs(name)
 	vim.api.nvim_set_var('loaded_' .. name, true)
 	vim.api.nvim_create_autocmd('VimEnter', {
@@ -245,10 +246,7 @@ require 'jetpack.packer'.startup(function(use)
 		vim.fn['jetpack#load']('nvim-dap-ui')
 	end
 
-	use {
-		'mfussenegger/nvim-dap',
-		opt = 1,
-	}
+	use { 'mfussenegger/nvim-dap', opt = 1 }
 	use {
 		'theHamsta/nvim-dap-virtual-text',
 		opt = 1,
