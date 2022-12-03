@@ -667,11 +667,10 @@ require 'jetpack.packer'.startup(function(use)
 		end,
 	}
 end)
-vim.cmd [[
-	for name in jetpack#names()
-	  if !jetpack#tap(name)
-		call jetpack#sync()
+
+for _, name in ipairs(fn['jetpack#names']()) do
+	if not fn['jetpack#tap'](name) then
+		fn['jetpack#sync']()
 		break
-	  endif
-	endfor
-]]
+	end
+end
