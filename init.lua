@@ -349,21 +349,39 @@ require 'jetpack.packer'.startup(function(use)
 	}
 
 	-- 補完
-	use { 'hrsh7th/cmp-vsnip', event = { 'InsertEnter' } }
-	use { 'hrsh7th/cmp-nvim-lsp-signature-help', event = { 'InsertEnter' } }
 	use { 'hrsh7th/vim-vsnip', event = { 'InsertEnter' } }
-	use { 'hrsh7th/cmp-cmdline', event = { 'CmdlineEnter' } }
-	use { 'hrsh7th/cmp-path', event = { 'InsertEnter' } }
-	use { 'hrsh7th/cmp-omni', event = { 'InsertEnter' } }
-	use { 'hrsh7th/cmp-buffer', event = { 'InsertEnter', 'CmdlineEnter' } }
-	use { 'uga-rosa/cmp-skkeleton', event = { 'InsertEnter' } }
-	use {
-		'onsails/lspkind.nvim',
-		-- event = { 'InsertEnter', 'CmdlineEnter' },
-	}
+	vim.api.nvim_create_autocmd('InsertEnter', {
+		once = true,
+		callback = function()
+			vim.fn['jetpack#load']('lspkind.nvim')
+			vim.fn['jetpack#load']('nvim-cmp')
+			vim.fn['jetpack#load']('cmp-nvim-lsp-signature-help')
+			vim.fn['jetpack#load']('cmp-path')
+			vim.fn['jetpack#load']('cmp-omni')
+			vim.fn['jetpack#load']('cmp-buffer')
+			vim.fn['jetpack#load']('cmp-skkeleton')
+		end,
+	})
+	vim.api.nvim_create_autocmd('CmdlineEnter', {
+		once = true,
+		callback = function()
+			vim.fn['jetpack#load']('lspkind.nvim')
+			vim.fn['jetpack#load']('nvim-cmp')
+			vim.fn['jetpack#load']('cmp-cmdline')
+			vim.fn['jetpack#load']('cmp-buffer')
+		end,
+	})
+	use { 'hrsh7th/cmp-vsnip', opt = 1 }
+	use { 'hrsh7th/cmp-nvim-lsp-signature-help', opt = 1 }
+	use { 'hrsh7th/cmp-cmdline', opt = 1 }
+	use { 'hrsh7th/cmp-path', opt = 1 }
+	use { 'hrsh7th/cmp-omni', opt = 1 }
+	use { 'hrsh7th/cmp-buffer', opt = 1 }
+	use { 'uga-rosa/cmp-skkeleton', opt = 1 }
+	use { 'onsails/lspkind.nvim', opt = 1 }
 	use {
 		'hrsh7th/nvim-cmp',
-		-- event = { 'InsertEnter', 'CmdlineEnter' },
+		opt = 1,
 		config = function()
 			local cmp = require 'cmp'
 			local function feedkeys(keys)
