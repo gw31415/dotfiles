@@ -240,6 +240,8 @@ require 'jetpack.packer'.startup(function(use)
 
 	-- Debug Adapter Protocol
 	local function load_dap_plugins()
+		vim.fn['jetpack#load']('lspkind.nvim')
+		vim.fn['jetpack#load']('nvim-cmp')
 		vim.fn['jetpack#load']('nvim-dap-ui')
 	end
 
