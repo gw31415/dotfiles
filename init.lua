@@ -159,6 +159,7 @@ require 'jetpack.packer'.startup(function(use)
 				vim.cmd 'packadd nvim-lspconfig'
 				require 'lspconfig'[server_name].setup(opts)
 			end }
+			vim.cmd 'LspStart'
 		end,
 	}
 	use {
