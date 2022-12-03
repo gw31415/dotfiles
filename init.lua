@@ -221,9 +221,13 @@ require 'jetpack.packer'.startup(function(use)
 	}
 
 	-- Debug Adapter Protocol
-	use 'mfussenegger/nvim-dap'
+	use {
+		'mfussenegger/nvim-dap',
+		event = { 'JetpackMasonNvimPost' },
+	}
 	use {
 		'rcarriga/nvim-dap-ui',
+		event = { 'JetpackNvimDapPost' },
 		config = function()
 			require 'dapui'.setup()
 
@@ -238,6 +242,7 @@ require 'jetpack.packer'.startup(function(use)
 					end
 				end
 			})
+			vim.fn['jetpack#load']('nvim-dap')
 			require 'dap'.adapters.lldb = {
 				type = 'server',
 				port = '13000',
@@ -261,7 +266,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'theHamsta/nvim-dap-virtual-text',
-		event = { 'LspAttach' },
+		event = { 'JetpackNvimDapUiPost' },
 		config = function()
 			require 'nvim-dap-virtual-text'.setup {
 				enabled_commands = false,
@@ -270,7 +275,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'rcarriga/cmp-dap',
-		event = { 'LspAttach' },
+		event = { 'JetpackNvimDapPost' },
 		config = function()
 			require 'cmp'.setup {
 				enabled = function()
