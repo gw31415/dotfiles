@@ -78,10 +78,12 @@ if vim.fn.executable('rg') then
 	vim.api.nvim_set_option_value('grepformat', '%f:%l:%c:%m', {})
 end
 
+local load_event = 'ColorScheme'
+
 -- default plugins
 local function lazy_default_plugs(name)
 	vim.api.nvim_set_var('loaded_' .. name, true)
-	vim.api.nvim_create_autocmd('VimEnter', {
+	vim.api.nvim_create_autocmd(load_event, {
 		once = true,
 		callback = function()
 			vim.api.nvim_set_var('loaded_' .. name, false)
@@ -145,11 +147,13 @@ require 'jetpack.packer'.startup(function(use)
 	use { 'neovim/nvim-lspconfig', opt = 1 }
 	use {
 		'williamboman/mason.nvim', -- LSP Installer
-		event = { 'VimEnter' },
+		event = { load_event },
 		config = function()
 			require 'mason'.setup {}
 			vim.fn['jetpack#load']('mason-lspconfig.nvim')
 			local mason_lspconfig = require('mason-lspconfig')
+			vim.fn['jetpack#load']('lspkind.nvim')
+			vim.fn['jetpack#load']('nvim-cmp')
 			vim.fn['jetpack#load']('cmp-nvim-lsp')
 			local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 			mason_lspconfig.setup_handlers { function(server_name)
@@ -183,7 +187,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'jose-elias-alvarez/null-ls.nvim',
-		event = { 'VimEnter' },
+		event = { load_event },
 		config = function()
 			vim.fn['jetpack#load']('mason.nvim')
 			local mason = require 'mason'
@@ -367,8 +371,8 @@ require 'jetpack.packer'.startup(function(use)
 	}
 
 	-- 補完
-	use { 'hrsh7th/vim-vsnip', event = { 'InsertEnter' } }
-	vim.api.nvim_create_autocmd('InsertEnter', {
+	use { 'hrsh7th/vim-vsnip', event = { 'InsertCharPre' } }
+	vim.api.nvim_create_autocmd('InsertCharPre', {
 		once = true,
 		callback = function()
 			vim.fn['jetpack#load']('lspkind.nvim')
@@ -501,16 +505,16 @@ require 'jetpack.packer'.startup(function(use)
 	-- UI
 	use { -- quickfixのハイジャック
 		'kevinhwang91/nvim-bqf',
-		event = { 'VimEnter' },
+		event = { load_event },
 	}
 	use { -- vim.notifyのハイジャック
 		'rcarriga/nvim-notify',
-		event = { 'VimEnter' },
+		event = { load_event },
 		config = function() vim.notify = require 'notify' end
 	}
 	use {
 		'gw31415/fzyselect.vim', -- vim.ui.select
-		event = { 'VimEnter' },
+		event = { load_event },
 		config = function()
 			vim.api.nvim_create_autocmd('FileType', {
 				pattern = 'fzyselect',
@@ -549,7 +553,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'nvim-treesitter/nvim-treesitter', -- Treesitter
-		event = { 'VimEnter' },
+		event = { load_event },
 		config = function()
 			local parser_install_dir = vim.fn.stdpath 'data' .. '/treesitter'
 			vim.opt.runtimepath:append(vim.fn.stdpath 'data' .. '/treesitter')
@@ -564,7 +568,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'lukas-reineke/indent-blankline.nvim', -- インデントの可視化
-		event = { 'VimEnter' },
+		event = { load_event },
 		config = function()
 			vim.opt.list = true
 			require 'indent_blankline'.setup {
@@ -576,7 +580,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'bronson/vim-trailing-whitespace', -- 余計な空白を赤くする
-		event = { 'VimEnter' },
+		event = { load_event },
 	}
 	use {
 		'uga-rosa/ccc.nvim',
@@ -604,17 +608,17 @@ require 'jetpack.packer'.startup(function(use)
 	-- 小機能追加
 	use {
 		'rbtnn/vim-ambiwidth', -- 曖昧幅な文字の文字幅設定
-		event = { 'VimEnter' },
+		event = { load_event },
 	}
 	use {
 		'kylechui/nvim-surround', -- 囲い文字向けの操作拡張
 		tag = 'v1.0.0',
-		event = { 'VimEnter' },
+		event = { load_event },
 		config = function()
 			require 'nvim-surround'.setup {}
 		end
 	}
-	use { 'cohama/lexima.vim', event = { 'InsertEnter' } } -- 自動括弧閉じ
+	use { 'cohama/lexima.vim', event = { load_event } } -- 自動括弧閉じ
 	if vim.fn.executable 'silicon' then
 		use {
 			'segeljakt/vim-silicon', -- ソースコードを画像化するsiliconコマンドのラッパー
@@ -636,12 +640,12 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'lewis6991/gitsigns.nvim', -- Gitの行毎ステータス
-		event = { 'VimEnter' },
+		event = { load_event },
 		config = function() require 'gitsigns'.setup() end
 	}
 	use {
 		'phaazon/hop.nvim', -- 画面内ジャンプ
-		event = { 'VimEnter' },
+		event = { load_event },
 		config = function()
 			require 'hop'.setup {}
 			vim.keymap.set('n', '<space>', function() require 'hop'.hint_words { multi_windows = true } end, {})
@@ -659,7 +663,7 @@ require 'jetpack.packer'.startup(function(use)
 	vim.api.nvim_set_var('winresizer_start_key', '<C-W>c')
 	use {
 		'simeji/winresizer', -- ウィンドウサイズ変更
-		event = { 'VimEnter' },
+		event = { load_event },
 	}
 	use {
 		'navarasu/onedark.nvim', -- テーマ
