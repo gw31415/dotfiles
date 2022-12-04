@@ -558,7 +558,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'nvim-treesitter/nvim-treesitter', -- Treesitter
-		event = { load_event },
+		event = { 'ColorScheme' },
 		config = function()
 			local parser_install_dir = vim.fn.stdpath 'data' .. '/treesitter'
 			vim.opt.runtimepath:append(vim.fn.stdpath 'data' .. '/treesitter')
