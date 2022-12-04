@@ -565,6 +565,10 @@ require 'jetpack.packer'.startup(function(use)
 				},
 			}
 			vim.fn['jetpack#load']('treesitter-unit')
+			vim.wo.foldmethod = 'expr'
+			vim.wo.foldexpr = 'nvim_treesitter#foldexpr()'
+			vim.wo.foldenable = false
+			vim.wo.foldlevel = 999
 		end
 	}
 	use {
