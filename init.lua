@@ -571,10 +571,10 @@ require 'jetpack.packer'.startup(function(use)
 		'David-Kunz/treesitter-unit',
 		opt = true,
 		config = function()
-			local opts = { noremap = true, silent =true }
-			vim.api.nvim_set_keymap('x', 'iu', ':lua require"treesitter-unit".select()<CR>', opts)
+			local opts = { noremap = true, silent = true }
+			vim.api.nvim_set_keymap('x', 'iu', ':lua require"treesitter-unit".select(false)<CR>', opts)
 			vim.api.nvim_set_keymap('x', 'au', ':lua require"treesitter-unit".select(true)<CR>', opts)
-			vim.api.nvim_set_keymap('o', 'iu', ':<c-u>lua require"treesitter-unit".select()<CR>', opts)
+			vim.api.nvim_set_keymap('o', 'iu', ':<c-u>lua require"treesitter-unit".select(false)<CR>', opts)
 			vim.api.nvim_set_keymap('o', 'au', ':<c-u>lua require"treesitter-unit".select(true)<CR>', opts)
 		end
 	}
@@ -632,7 +632,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use { 'cohama/lexima.vim', event = { load_event } } -- 自動括弧閉じ
 	use {
-		'gbprod/substitute.nvim',
+		'gbprod/substitute.nvim', -- vim-operator-replace
 		event = { load_event },
 		config = function()
 			require 'substitute'.setup {}
@@ -652,8 +652,8 @@ require 'jetpack.packer'.startup(function(use)
 			end
 		}
 	end
-	use { -- Git連携
-		'lambdalisue/gin.vim',
+	use {
+		'lambdalisue/gin.vim', -- Git連携
 		config = function()
 			if vim.fn.executable 'delta' then
 				vim.api.nvim_set_var('gin_diff_default_args', { '++processor=delta' })
