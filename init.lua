@@ -563,6 +563,7 @@ require 'jetpack.packer'.startup(function(use)
 					enable = true,
 					additional_vim_regex_highlighting = false,
 				},
+				auto_install = true,
 			}
 			vim.fn['jetpack#load']('treesitter-unit')
 			vim.wo.foldmethod = 'expr'
