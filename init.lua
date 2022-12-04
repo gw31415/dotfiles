@@ -1,5 +1,5 @@
 --[[
--- 依存: NVim nightly, Git, Deno
+-- 依存: NVim nightly, Git, cURL, Deno
 -- siliconコマンドがあれば対応。
 -- ]]
 
