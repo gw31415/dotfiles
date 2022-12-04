@@ -636,6 +636,14 @@ require 'jetpack.packer'.startup(function(use)
 			require 'nvim-surround'.setup {}
 		end
 	}
+	use { 'kana/vim-textobj-user', opts = 1 } -- カスタムtextobj 依存プラグイン
+	use {
+		'glts/vim-textobj-comment', -- コメントに対する textobj
+		event = { load_event },
+		config = function()
+			vim.fn['jetpack#load']('vim-textobj-user')
+		end
+	}
 	use {
 		'gbprod/substitute.nvim', -- vim-operator-replace
 		event = { load_event },
