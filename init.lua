@@ -503,12 +503,12 @@ require 'jetpack.packer'.startup(function(use)
 	}
 
 	-- UI
-	use { -- quickfixのハイジャック
-		'kevinhwang91/nvim-bqf',
+	use {
+		'kevinhwang91/nvim-bqf', -- quickfixのハイジャック
 		event = { load_event },
 	}
-	use { -- vim.notifyのハイジャック
-		'rcarriga/nvim-notify',
+	use {
+		'rcarriga/nvim-notify', -- vim.notifyのハイジャック
 		event = { load_event },
 		config = function() vim.notify = require 'notify' end
 	}
@@ -627,15 +627,15 @@ require 'jetpack.packer'.startup(function(use)
 		'rbtnn/vim-ambiwidth', -- 曖昧幅な文字の文字幅設定
 		event = { load_event },
 	}
+	use { 'cohama/lexima.vim', event = { load_event } } -- 自動括弧閉じ
 	use {
-		'kylechui/nvim-surround', -- 囲い文字向けの操作拡張
+		'kylechui/nvim-surround', -- operator 囲い文字
 		tag = 'v1.0.0',
 		event = { load_event },
 		config = function()
 			require 'nvim-surround'.setup {}
 		end
 	}
-	use { 'cohama/lexima.vim', event = { load_event } } -- 自動括弧閉じ
 	use {
 		'gbprod/substitute.nvim', -- vim-operator-replace
 		event = { load_event },
