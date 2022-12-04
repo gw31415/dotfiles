@@ -631,6 +631,16 @@ require 'jetpack.packer'.startup(function(use)
 		end
 	}
 	use { 'cohama/lexima.vim', event = { load_event } } -- 自動括弧閉じ
+	use {
+		'gbprod/substitute.nvim',
+		event = { load_event },
+		config = function()
+			require 'substitute'.setup {}
+			vim.keymap.set("n", "_", "<cmd>lua require('substitute').operator()<cr>", { noremap = true })
+			vim.keymap.set("n", "__", "<cmd>lua require('substitute').line()<cr>", { noremap = true })
+			vim.keymap.set("x", "_", "<cmd>lua require('substitute').visual()<cr>", { noremap = true })
+		end
+	}
 	if vim.fn.executable 'silicon' then
 		use {
 			'segeljakt/vim-silicon', -- ソースコードを画像化するsiliconコマンドのラッパー
