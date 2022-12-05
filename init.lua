@@ -79,12 +79,21 @@ if vim.fn.executable('rg') then
 	vim.api.nvim_set_option_value('grepformat', '%f:%l:%c:%m', {})
 end
 
-local startup_loadevent = { 'ColorScheme' }
+local default_updatetime = vim.o.updatetime
+vim.o.updatetime = 100
+vim.api.nvim_create_autocmd('CursorHold', {
+	once = true,
+	callback = function()
+		vim.o.updatetime = default_updatetime
+	end
+})
+local loadevent_firstview = { 'ColorScheme' }
+local loadevent_timer = { 'CursorHold' }
 
 -- default plugins
 local function lazy_default_plugs(name)
 	vim.api.nvim_set_var('loaded_' .. name, true)
-	vim.api.nvim_create_autocmd(startup_loadevent, {
+	vim.api.nvim_create_autocmd(loadevent_timer, {
 		once = true,
 		callback = function()
 			vim.api.nvim_set_var('loaded_' .. name, false)
@@ -148,7 +157,7 @@ require 'jetpack.packer'.startup(function(use)
 	use { 'neovim/nvim-lspconfig', opt = 1 }
 	use {
 		'williamboman/mason.nvim', -- LSP Installer
-		event = startup_loadevent,
+		event = loadevent_timer,
 		config = function()
 			require 'mason'.setup {}
 			vim.fn['jetpack#load']('mason-lspconfig.nvim')
@@ -188,7 +197,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'jose-elias-alvarez/null-ls.nvim',
-		event = startup_loadevent,
+		event = loadevent_timer,
 		config = function()
 			vim.fn['jetpack#load']('mason.nvim')
 			local mason = require 'mason'
@@ -506,20 +515,20 @@ require 'jetpack.packer'.startup(function(use)
 	-- UI
 	use {
 		'kevinhwang91/nvim-bqf', -- quickfixのハイジャック
-		event = startup_loadevent,
+		event = loadevent_timer,
 	}
 	use {
 		'rcarriga/nvim-notify', -- vim.notifyのハイジャック
-		event = startup_loadevent,
+		event = loadevent_firstview,
 		config = function() vim.notify = require 'notify' end
 	}
 	use {
 		'lambdalisue/readablefold.vim', -- より良い foldtext
-		event = startup_loadevent,
+		event = loadevent_firstview,
 	}
 	use {
 		'gw31415/fzyselect.vim', -- vim.ui.select
-		event = startup_loadevent,
+		event = loadevent_timer,
 		config = function()
 			vim.api.nvim_create_autocmd('FileType', {
 				pattern = 'fzyselect',
@@ -603,7 +612,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'bronson/vim-trailing-whitespace', -- 余計な空白を赤くする
-		event = startup_loadevent,
+		event = loadevent_firstview,
 	}
 	use {
 		'uga-rosa/ccc.nvim',
@@ -631,13 +640,13 @@ require 'jetpack.packer'.startup(function(use)
 	-- 小機能追加
 	use {
 		'rbtnn/vim-ambiwidth', -- 曖昧幅な文字の文字幅設定
-		event = startup_loadevent,
+		event = loadevent_firstview,
 	}
-	use { 'cohama/lexima.vim', event = startup_loadevent } -- 自動括弧閉じ
+	use { 'cohama/lexima.vim', event = loadevent_firstview } -- 自動括弧閉じ
 	use {
 		'kylechui/nvim-surround', -- operator 囲い文字
 		tag = 'v1.0.0',
-		event = startup_loadevent,
+		event = loadevent_timer,
 		config = function()
 			require 'nvim-surround'.setup {}
 		end
@@ -645,21 +654,21 @@ require 'jetpack.packer'.startup(function(use)
 	use { 'kana/vim-textobj-user', opts = 1 } -- カスタムtextobj 依存プラグイン
 	use {
 		'glts/vim-textobj-comment', -- コメントに対する textobj
-		event = startup_loadevent,
+		event = loadevent_timer,
 		config = function()
 			vim.fn['jetpack#load']('vim-textobj-user')
 		end
 	}
 	use {
 		'kana/vim-textobj-entire', -- バッファ全体に対する textobj
-		event = startup_loadevent,
+		event = loadevent_timer,
 		config = function()
 			vim.fn['jetpack#load']('vim-textobj-user')
 		end
 	}
 	use {
 		'gbprod/substitute.nvim', -- vim-operator-replace
-		event = startup_loadevent,
+		event = loadevent_timer,
 		config = function()
 			require 'substitute'.setup {}
 			vim.keymap.set("n", "_", "<cmd>lua require('substitute').operator()<cr>", { noremap = true })
@@ -688,12 +697,12 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'lewis6991/gitsigns.nvim', -- Gitの行毎ステータス
-		event = startup_loadevent,
+		event = loadevent_firstview,
 		config = function() require 'gitsigns'.setup() end
 	}
 	use {
 		'phaazon/hop.nvim', -- 画面内ジャンプ
-		event = startup_loadevent,
+		event = loadevent_timer,
 		config = function()
 			require 'hop'.setup {}
 			vim.keymap.set('n', '<space>', function() require 'hop'.hint_words { multi_windows = true } end, {})
@@ -711,7 +720,7 @@ require 'jetpack.packer'.startup(function(use)
 	vim.api.nvim_set_var('winresizer_start_key', '<C-W>c')
 	use {
 		'simeji/winresizer', -- ウィンドウサイズ変更
-		event = startup_loadevent,
+		event = loadevent_firstview,
 	}
 	use {
 		'navarasu/onedark.nvim', -- テーマ
