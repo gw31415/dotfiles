@@ -592,8 +592,8 @@ require 'jetpack.packer'.startup(function(use)
 		opt = true,
 		config = function()
 			local opts = { noremap = true, silent = true }
-			vim.api.nvim_set_keymap('x', 'iu', ':lua require"treesitter-unit".select(false)<CR>', opts)
-			vim.api.nvim_set_keymap('x', 'au', ':lua require"treesitter-unit".select(true)<CR>', opts)
+			vim.api.nvim_set_keymap('x', 'iu', '<cmd>lua require"treesitter-unit".select(false)<CR>', opts)
+			vim.api.nvim_set_keymap('x', 'au', '<cmd>lua require"treesitter-unit".select(true)<CR>', opts)
 			vim.api.nvim_set_keymap('o', 'iu', ':<c-u>lua require"treesitter-unit".select(false)<CR>', opts)
 			vim.api.nvim_set_keymap('o', 'au', ':<c-u>lua require"treesitter-unit".select(true)<CR>', opts)
 		end
