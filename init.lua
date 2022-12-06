@@ -696,8 +696,8 @@ require 'jetpack.packer'.startup(function(use)
 	end
 	use {
 		'lambdalisue/gin.vim', -- Git連携
-		config = function ()
-			vim.api.nvim_set_var('gin_patch_default_args', { '++opener=tabe', '++no-head', '%' })
+		config = function()
+			vim.api.nvim_set_var('gin_patch_default_args', { '++no-head', '%' })
 		end
 	}
 	use {
