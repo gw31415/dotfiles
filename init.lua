@@ -110,13 +110,13 @@ vim.api.nvim_set_var('loaded_2html_plugin', true)
 -- Jetpack
 local fn = vim.fn
 local jetpackfile = fn.stdpath('data') .. '/site/pack/jetpack/opt/vim-jetpack/plugin/jetpack.vim'
-local jetpackurl = 'https://raw.githubusercontent.com/uga-rosa/vim-jetpack/refactor/plugin/jetpack.vim'
+local jetpackurl = 'https://raw.githubusercontent.com/tani/vim-jetpack/ddbcbf2b7cd19991cd84042227e61d77fc9e6fbc/plugin/jetpack.vim'
 if fn.filereadable(jetpackfile) == 0 then
 	fn.system('curl -fsSLo ' .. jetpackfile .. ' --create-dirs ' .. jetpackurl)
 end
 vim.cmd 'packadd vim-jetpack'
 require 'jetpack.packer'.startup(function(use)
-	use { 'tani/vim-jetpack', opt = 1 }
+	use { 'tani/vim-jetpack', opt = 1, commit = 'ddbcbf2' }
 	use 'vim-denops/denops.vim'
 	use 'nvim-lua/plenary.nvim'
 	use { 'eandrju/cellular-automaton.nvim', cmd = { 'CellularAutomaton' } }
