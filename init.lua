@@ -694,7 +694,9 @@ require 'jetpack.packer'.startup(function(use)
 			end
 		}
 	end
-	use { 'tpope/vim-fugitive', event = loadevent_timer } -- Git連携
+	use {
+		'lambdalisue/gin.vim', -- Git連携
+	}
 	use {
 		'lewis6991/gitsigns.nvim', -- Gitの行毎ステータス
 		event = loadevent_firstview,
