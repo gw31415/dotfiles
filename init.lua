@@ -570,8 +570,8 @@ require 'jetpack.packer'.startup(function(use)
 			local parser_install_dir = vim.fn.stdpath 'data' .. '/treesitter'
 			vim.opt.runtimepath:append(vim.fn.stdpath 'data' .. '/treesitter')
 			require 'nvim-treesitter.configs'.setup {
+				parser_install_dir = parser_install_dir,
 				highlight = {
-					parser_install_dir = parser_install_dir,
 					enable = true,
 					additional_vim_regex_highlighting = false,
 				},
