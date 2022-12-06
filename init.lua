@@ -30,8 +30,6 @@ function _G.lsp_onattach_func(_, bufnr)
 	vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
 	vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
 	vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-	vim.keymap.set('n', 'gqae', function() vim.lsp.buf.format { async = true } end, bufopts)
-	vim.keymap.set('n', 'gqie', function() vim.lsp.buf.format { async = true } end, bufopts)
 	vim.keymap.set('n', '<leader>a', vim.lsp.buf.code_action, bufopts)
 	vim.keymap.set('n', '<leader>n', vim.lsp.buf.rename, bufopts)
 	vim.keymap.set('n', '<leader>r', function() vim.lsp.buf.references({}, nil) end, bufopts)
@@ -652,6 +650,7 @@ require 'jetpack.packer'.startup(function(use)
 		end
 	}
 	use { 'kana/vim-textobj-user', opts = 1 } -- カスタムtextobj 依存プラグイン
+	use { 'kana/vim-operator-user', opt = 1 } -- カスタムOperator 依存プラグイン
 	use {
 		'glts/vim-textobj-comment', -- コメントに対する textobj
 		event = loadevent_timer,
@@ -664,6 +663,14 @@ require 'jetpack.packer'.startup(function(use)
 		event = loadevent_timer,
 		config = function()
 			vim.fn['jetpack#load']('vim-textobj-user')
+		end
+	}
+	use {
+		'Osyo-manga/vim-operator-stay-cursor', -- カーソルを固定したOperatorをつくる
+		event = loadevent_timer,
+		config = function()
+			vim.fn['jetpack#load']('vim-operator-user')
+			vim.cmd 'map <expr> gq operator#stay_cursor#wrapper("gq")'
 		end
 	}
 	use {
