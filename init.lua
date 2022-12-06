@@ -694,14 +694,7 @@ require 'jetpack.packer'.startup(function(use)
 			end
 		}
 	end
-	use {
-		'lambdalisue/gin.vim', -- Git連携
-		config = function()
-			if vim.fn.executable 'delta' then
-				vim.api.nvim_set_var('gin_diff_default_args', { '++processor=delta' })
-			end
-		end
-	}
+	use { 'tpope/vim-fugitive', event = loadevent_timer } -- Git連携
 	use {
 		'lewis6991/gitsigns.nvim', -- Gitの行毎ステータス
 		event = loadevent_firstview,
