@@ -666,7 +666,7 @@ require 'jetpack.packer'.startup(function(use)
 		end
 	}
 	use {
-		'Osyo-manga/vim-operator-stay-cursor', -- カーソルを固定したOperatorをつくる
+		'osyo-manga/vim-operator-stay-cursor', -- カーソルを固定したOperatorをつくる
 		event = loadevent_timer,
 		config = function()
 			vim.fn['jetpack#load']('vim-operator-user')
