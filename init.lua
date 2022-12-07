@@ -77,6 +77,7 @@ if vim.fn.executable('rg') then
 	vim.api.nvim_set_option_value('grepformat', '%f:%l:%c:%m', {})
 end
 
+-- Lazy loading events
 local default_updatetime = vim.o.updatetime
 vim.o.updatetime = 100
 vim.api.nvim_create_autocmd('CursorHold', {
