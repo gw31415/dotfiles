@@ -90,19 +90,18 @@ local loadevent_firstview = { 'ColorScheme' }
 local loadevent_timer = { 'CursorHold' }
 
 -- default plugins
-local function lazy_default_plugs(name)
-	vim.api.nvim_set_var('loaded_' .. name, true)
+local function lazy_default_plugs(flag, name)
+	vim.api.nvim_set_var(flag, true)
 	vim.api.nvim_create_autocmd(loadevent_timer, {
 		once = true,
 		callback = function()
-			vim.api.nvim_set_var('loaded_' .. name, false)
+			vim.api.nvim_set_var(flag, false)
 			vim.cmd('packadd ' .. name)
 		end
 	})
 end
 
-lazy_default_plugs 'matchit'
-lazy_default_plugs 'matchparen'
+lazy_default_plugs('loaded_matchit', 'matchit')
 vim.api.nvim_set_var('loaded_remote_plugins', true)
 vim.api.nvim_set_var('skip_loading_mswin', true)
 vim.api.nvim_set_var('loaded_tutor_mode_plugin', true)
