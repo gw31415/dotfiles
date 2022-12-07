@@ -117,8 +117,8 @@ end
 vim.cmd 'packadd vim-jetpack'
 require 'jetpack.packer'.startup(function(use)
 	use { 'tani/vim-jetpack', opt = 1, commit = '4a08a5a8' }
-	use 'vim-denops/denops.vim'
-	use 'nvim-lua/plenary.nvim'
+	use { 'vim-denops/denops.vim', event = loadevent_timer }
+	use { 'nvim-lua/plenary.nvim', event = loadevent_firstview }
 	use { 'eandrju/cellular-automaton.nvim', cmd = { 'CellularAutomaton' } }
 
 	-- 言語別プラグイン
@@ -704,6 +704,7 @@ require 'jetpack.packer'.startup(function(use)
 	end
 	use {
 		'lambdalisue/gin.vim', -- Git連携
+		event = loadevent_timer,
 		config = function()
 			vim.api.nvim_set_var('gin_patch_default_args', { '++no-head', '%' })
 		end
@@ -766,6 +767,7 @@ require 'jetpack.packer'.startup(function(use)
 	use 'gw31415/skkeletal.vim'
 	use {
 		'vim-skk/skkeleton', -- 日本語入力
+		event = loadevent_timer,
 		config = function()
 			-- StatusLine
 			function _G.get_warn_count()
