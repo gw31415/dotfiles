@@ -102,6 +102,7 @@ local function lazy_default_plugs(flag, name)
 end
 
 lazy_default_plugs('loaded_matchit', 'matchit')
+vim.api.nvim_set_var('loaded_matchparen', true)
 vim.api.nvim_set_var('loaded_remote_plugins', true)
 vim.api.nvim_set_var('skip_loading_mswin', true)
 vim.api.nvim_set_var('loaded_tutor_mode_plugin', true)
@@ -648,6 +649,10 @@ require 'jetpack.packer'.startup(function(use)
 		'rbtnn/vim-ambiwidth', -- 曖昧幅な文字の文字幅設定
 		event = loadevent_firstview,
 	}
+	use {
+		'itchyny/vim-parenmatch',
+		event = loadevent_timer,
+	}
 	use { 'cohama/lexima.vim', event = loadevent_firstview } -- 自動括弧閉じ
 	use {
 		'kylechui/nvim-surround', -- operator 囲い文字
@@ -747,7 +752,7 @@ require 'jetpack.packer'.startup(function(use)
 					functions = 'bold',
 					keywords = 'none',
 				},
-				highlights = { MatchParen = { fg = '$red', bg = '$bg_yellow' } },
+				highlights = { ParenMatch = { fg = '$red', bg = '$bg_yellow' } },
 			}
 			require 'onedark'.load()
 		end,
