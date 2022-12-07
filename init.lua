@@ -541,13 +541,21 @@ require 'jetpack.packer'.startup(function(use)
 			vim.cmd "nn gl <cmd>cal fzyselect#start(getline(1, '$'), #{prompt:'Fuzzy search'}, {_,i->i==v:null?v:null:cursor(i, 0)})<cr>"
 			-- git ls-files
 			vim.cmd [[
-					fu! s:edit(path) abort
-						if a:path != v:null
-							exe 'e ' .. a:path
-						en
-					endfu
-					nn <c-p> <cmd>cal fzyselect#start(split(system(['git', 'ls-files']), '\n'), #{prompt:'git ls-files'}, {p-><SID>edit(p)})<cr>
-				]]
+				fu! s:fzyselect_lsfiles() abort
+					let out = system(['git', 'ls-files'])
+					if v:shell_error
+						echo out
+					el
+						cal fzyselect#start(split(out, '\n'), #{prompt:'git ls-files'}, {p-><SID>edit(p)})
+					en
+				endfu
+				fu! s:edit(path) abort
+					if a:path != v:null
+						exe 'e ' .. a:path
+					en
+				endfu
+				nn <c-p> <cmd>cal <SID>fzyselect_lsfiles()<cr>
+			]]
 
 			-- Buffer Selector
 			vim.cmd [[
