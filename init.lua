@@ -90,19 +90,8 @@ local loadevent_firstview = { 'ColorScheme' }
 local loadevent_timer = { 'CursorHold' }
 
 -- default plugins
-local function lazy_default_plugs(flag, name)
-	vim.api.nvim_set_var(flag, true)
-	vim.api.nvim_create_autocmd(loadevent_timer, {
-		once = true,
-		callback = function()
-			vim.api.nvim_set_var(flag, false)
-			vim.cmd('packadd ' .. name)
-		end
-	})
-end
-
-lazy_default_plugs('loaded_matchit', 'matchit')
 vim.api.nvim_set_var('loaded_matchparen', true)
+vim.api.nvim_set_var('loaded_matchit', true)
 vim.api.nvim_set_var('loaded_remote_plugins', true)
 vim.api.nvim_set_var('skip_loading_mswin', true)
 vim.api.nvim_set_var('loaded_tutor_mode_plugin', true)
@@ -117,7 +106,7 @@ if fn.filereadable(jetpackfile) == 0 then
 end
 vim.cmd 'packadd vim-jetpack'
 require 'jetpack.packer'.startup(function(use)
-	use { 'tani/vim-jetpack', opt = 1, commit = '4a08a5a8' }
+	use { 'tani/vim-jetpack', opt = 1, commit = '4a08a5a' }
 	use { 'vim-denops/denops.vim', event = loadevent_timer }
 	use { 'nvim-lua/plenary.nvim', event = loadevent_firstview }
 	use { 'eandrju/cellular-automaton.nvim', cmd = { 'CellularAutomaton' } }
@@ -610,6 +599,8 @@ require 'jetpack.packer'.startup(function(use)
 		opt = true,
 		config = function()
 			vim.opt.list = true
+			vim.api.nvim_set_var('indent_blankline_indent_level', 4)
+			vim.api.nvim_set_var('indent_blankline_use_treesitter', true)
 			require 'indent_blankline'.setup {
 				space_char_blankline = ' ',
 				show_current_context = true,
