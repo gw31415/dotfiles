@@ -106,7 +106,7 @@ if fn.filereadable(jetpackfile) == 0 then
 end
 vim.cmd 'packadd vim-jetpack'
 require 'jetpack.packer'.startup(function(use)
-	use { 'tani/vim-jetpack', opt = 1, commit = '4a08a5a' }
+	use { 'tani/vim-jetpack', opt = 1 }
 	use { 'vim-denops/denops.vim', event = loadevent_timer }
 	use { 'nvim-lua/plenary.nvim', event = loadevent_firstview }
 	use { 'eandrju/cellular-automaton.nvim', cmd = { 'CellularAutomaton' } }
