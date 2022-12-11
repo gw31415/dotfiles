@@ -141,18 +141,15 @@ require 'jetpack.packer'.startup(function(use)
 	-- LSP
 	use { 'folke/neodev.nvim', opt = 1 }
 	use { 'williamboman/mason-lspconfig.nvim', opt = 1 }
-	use { 'hrsh7th/cmp-nvim-lsp', opt = 1 }
 	use { 'neovim/nvim-lspconfig', opt = 1 }
+	use { 'hrsh7th/cmp-nvim-lsp', requires = 'nvim-cmp', opt = 1 }
 	use {
 		'williamboman/mason.nvim', -- LSP Installer
+		requires = { 'mason-lspconfig.nvim', 'cmp-nvim-lsp' },
 		event = loadevent_timer,
 		config = function()
 			require 'mason'.setup {}
-			vim.fn['jetpack#load']('mason-lspconfig.nvim')
 			local mason_lspconfig = require('mason-lspconfig')
-			vim.fn['jetpack#load']('lspkind.nvim')
-			vim.fn['jetpack#load']('nvim-cmp')
-			vim.fn['jetpack#load']('cmp-nvim-lsp')
 			local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 			mason_lspconfig.setup_handlers { function(server_name)
 				local opts = {
@@ -186,8 +183,8 @@ require 'jetpack.packer'.startup(function(use)
 	use {
 		'jose-elias-alvarez/null-ls.nvim',
 		event = loadevent_timer,
+		requires = 'mason.nvim',
 		config = function()
-			vim.fn['jetpack#load']('mason.nvim')
 			local mason = require 'mason'
 			local mason_package = require 'mason-core.package'
 			local mason_registry = require 'mason-registry'
@@ -242,46 +239,11 @@ require 'jetpack.packer'.startup(function(use)
 	}
 
 	-- Debug Adapter Protocol
-	local function load_dap_plugins()
-		vim.fn['jetpack#load']('lspkind.nvim')
-		vim.fn['jetpack#load']('nvim-cmp')
-		vim.fn['jetpack#load']('nvim-dap-ui')
-	end
-
-	use { 'mfussenegger/nvim-dap', opt = 1 }
 	use {
-		'theHamsta/nvim-dap-virtual-text',
+		'mfussenegger/nvim-dap',
 		opt = 1,
+		requires = { 'cmp-dap', 'nvim-dap-virtual-text', 'nvim-dap-ui' },
 		config = function()
-			require 'nvim-dap-virtual-text'.setup {
-				enabled_commands = false,
-			}
-		end
-	}
-	use {
-		'rcarriga/cmp-dap',
-		opt = 1,
-		config = function()
-			require 'cmp'.setup {
-				enabled = function()
-					return vim.api.nvim_buf_get_option(0, 'buftype') ~= 'prompt'
-						or require 'cmp_dap'.is_dap_buffer()
-				end
-			}
-			require 'cmp'.setup.filetype({ 'dap-repl', 'dapui_watches' }, {
-				sources = {
-					{ name = 'dap' },
-				},
-			})
-		end
-	}
-	use {
-		'rcarriga/nvim-dap-ui',
-		opt = 1,
-		config = function()
-			vim.fn['jetpack#load']('nvim-dap')
-			vim.fn['jetpack#load']('nvim-dap-virtual-text')
-			vim.fn['jetpack#load']('cmp-dap')
 			require 'dapui'.setup()
 
 			-- codelldbの設定
@@ -317,11 +279,38 @@ require 'jetpack.packer'.startup(function(use)
 		end
 	}
 	use {
+		'theHamsta/nvim-dap-virtual-text',
+		opt = 1,
+		config = function()
+			require 'nvim-dap-virtual-text'.setup {
+				enabled_commands = false,
+			}
+		end
+	}
+	use {
+		'rcarriga/cmp-dap',
+		opt = 1,
+		requires = 'nvim-cmp',
+		config = function()
+			require 'cmp'.setup {
+				enabled = function()
+					return vim.api.nvim_buf_get_option(0, 'buftype') ~= 'prompt'
+						or require 'cmp_dap'.is_dap_buffer()
+				end
+			}
+			require 'cmp'.setup.filetype({ 'dap-repl', 'dapui_watches' }, {
+				sources = {
+					{ name = 'dap' },
+				},
+			})
+		end
+	}
+	use { 'rcarriga/nvim-dap-ui', opt = 1 }
+	use {
 		'leoluz/nvim-dap-go',
 		ft = { 'go' },
+		requires = { 'nvim-dap', 'mason.nvim' },
 		config = function()
-			load_dap_plugins()
-			vim.fn['jetpack#load']('mason.nvim')
 			local mason_dap_package = 'delve'
 			local init_func = require 'dap-go'.setup
 			if not require 'mason-registry'.is_installed(mason_dap_package) then
@@ -336,9 +325,8 @@ require 'jetpack.packer'.startup(function(use)
 	use {
 		'gw31415/nvim-dap-rust',
 		ft = { 'rust' },
+		requires = { 'nvim-dap', 'mason.nvim' },
 		config = function()
-			load_dap_plugins()
-			vim.fn['jetpack#load']('mason.nvim')
 			local mason_dap_package = 'codelldb'
 			local init_func = require 'dap-rust'.setup
 			if not require 'mason-registry'.is_installed(mason_dap_package) then
@@ -353,8 +341,8 @@ require 'jetpack.packer'.startup(function(use)
 	use {
 		'mfussenegger/nvim-dap-python',
 		ft = { 'python' },
+		requires = { 'nvim-dap', 'mason.nvim' },
 		config = function()
-			vim.fn['jetpack#load']('mason.nvim')
 			local mason_dap_package = 'delve'
 			local init_func = function()
 				require 'dap-python'.setup(vim.fn.stdpath 'data' .. '/mason/packages/debugpy/venv/bin/python')
@@ -370,38 +358,18 @@ require 'jetpack.packer'.startup(function(use)
 
 	-- 補完
 	use { 'hrsh7th/vim-vsnip', event = { 'InsertCharPre' } }
-	vim.api.nvim_create_autocmd('InsertCharPre', {
-		once = true,
-		callback = function()
-			vim.fn['jetpack#load']('lspkind.nvim')
-			vim.fn['jetpack#load']('nvim-cmp')
-			vim.fn['jetpack#load']('cmp-nvim-lsp-signature-help')
-			vim.fn['jetpack#load']('cmp-path')
-			vim.fn['jetpack#load']('cmp-omni')
-			vim.fn['jetpack#load']('cmp-buffer')
-			vim.fn['jetpack#load']('cmp-skkeleton')
-		end,
-	})
-	vim.api.nvim_create_autocmd('CmdlineEnter', {
-		once = true,
-		callback = function()
-			vim.fn['jetpack#load']('lspkind.nvim')
-			vim.fn['jetpack#load']('nvim-cmp')
-			vim.fn['jetpack#load']('cmp-cmdline')
-			vim.fn['jetpack#load']('cmp-buffer')
-		end,
-	})
-	use { 'hrsh7th/cmp-vsnip', opt = 1 }
-	use { 'hrsh7th/cmp-nvim-lsp-signature-help', opt = 1 }
-	use { 'hrsh7th/cmp-cmdline', opt = 1 }
-	use { 'hrsh7th/cmp-path', opt = 1 }
-	use { 'hrsh7th/cmp-omni', opt = 1 }
-	use { 'hrsh7th/cmp-buffer', opt = 1 }
-	use { 'uga-rosa/cmp-skkeleton', opt = 1 }
+	use { 'hrsh7th/cmp-vsnip', requires = 'nvim-cmp', event = 'InsertCharPre' }
+	use { 'hrsh7th/cmp-nvim-lsp-signature-help', requires = 'nvim-cmp', event = 'InsertCharPre' }
+	use { 'hrsh7th/cmp-cmdline', requires = 'nvim-cmp', event = 'CmdlineEnter' }
+	use { 'hrsh7th/cmp-path', requires = 'nvim-cmp', event = 'InsertCharPre' }
+	use { 'hrsh7th/cmp-omni', requires = 'nvim-cmp', event = 'InsertCharPre' }
+	use { 'hrsh7th/cmp-buffer', requires = 'nvim-cmp', event = { 'InsertCharPre', 'CmdlineEnter' } }
+	use { 'uga-rosa/cmp-skkeleton', requires = 'nvim-cmp', event = 'InsertCharPre' }
 	use { 'onsails/lspkind.nvim', opt = 1 }
 	use {
 		'hrsh7th/nvim-cmp',
 		opt = 1,
+		requires = { 'lspkind.nvim' },
 		config = function()
 			local cmp = require 'cmp'
 			local function feedkeys(keys)
@@ -563,7 +531,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'nvim-treesitter/nvim-treesitter', -- Treesitter
-		event = { 'ColorScheme' },
+		event = loadevent_firstview,
 		config = function()
 			local parser_install_dir = vim.fn.stdpath 'data' .. '/treesitter'
 			vim.opt.runtimepath:append(vim.fn.stdpath 'data' .. '/treesitter')
@@ -575,8 +543,6 @@ require 'jetpack.packer'.startup(function(use)
 				},
 				auto_install = true,
 			}
-			vim.fn['jetpack#load']('treesitter-unit')
-			vim.fn['jetpack#load']('indent-blankline.nvim')
 			vim.wo.foldmethod = 'expr'
 			vim.wo.foldexpr = 'nvim_treesitter#foldexpr()'
 			vim.wo.foldenable = false
@@ -585,7 +551,8 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'David-Kunz/treesitter-unit',
-		opt = true,
+		opt = 1,
+		event = loadevent_firstview,
 		config = function()
 			local opts = { noremap = true, silent = true }
 			vim.api.nvim_set_keymap('x', 'iu', '<cmd>lua require"treesitter-unit".select(false)<CR>', opts)
@@ -596,7 +563,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'lukas-reineke/indent-blankline.nvim', -- インデントの可視化
-		opt = true,
+		event = loadevent_firstview,
 		config = function()
 			vim.opt.list = true
 			vim.api.nvim_set_var('indent_blankline_indent_level', 4)
@@ -658,22 +625,18 @@ require 'jetpack.packer'.startup(function(use)
 	use {
 		'glts/vim-textobj-comment', -- コメントに対する textobj
 		event = loadevent_timer,
-		config = function()
-			vim.fn['jetpack#load']('vim-textobj-user')
-		end
+		requires = 'vim-textobj-user',
 	}
 	use {
 		'kana/vim-textobj-entire', -- バッファ全体に対する textobj
 		event = loadevent_timer,
-		config = function()
-			vim.fn['jetpack#load']('vim-textobj-user')
-		end
+		requires = 'vim-textobj-user',
 	}
 	use {
 		'osyo-manga/vim-operator-stay-cursor', -- カーソルを固定したOperatorをつくる
 		event = loadevent_timer,
+		requires = 'vim-operator-user',
 		config = function()
-			vim.fn['jetpack#load']('vim-operator-user')
 			vim.cmd 'map <expr> gq operator#stay_cursor#wrapper("gq")'
 		end
 	}
@@ -752,17 +715,18 @@ require 'jetpack.packer'.startup(function(use)
 	use {
 		'gw31415/deepl-commands.nvim', -- deeplとの連携
 		event = { 'CmdlineEnter' },
+		requires = 'deepl.vim',
 		config = function()
-			vim.cmd 'packadd deepl.vim'
 			require 'deepl-commands'.setup {
 				selector_func = require 'fzyselect'.start
 			}
 		end
 	}
 	use 'vim-jp/vimdoc-ja' -- 日本語のヘルプ
-	use 'gw31415/skkeletal.vim'
+	use { 'gw31415/skkeletal.vim', opt = 1 }
 	use {
 		'vim-skk/skkeleton', -- 日本語入力
+		requires = 'skkeletal.vim',
 		event = loadevent_timer,
 		config = function()
 			-- StatusLine
