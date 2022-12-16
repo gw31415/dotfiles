@@ -157,16 +157,6 @@ require 'jetpack.packer'.startup(function(use)
 			}
 		end,
 	}
-
-	vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
-		pattern = { '*.saty', '*.satyh', '*satyh-*', '*.satyg' },
-		command = 'setlocal filetype=satysfi'
-	})
-	use {
-		'qnighy/satysfi.vim',
-		ft = { 'satysfi' },
-	}
-
 	use {
 		'tranvansang/octave.vim',
 		ft = { 'matlab', 'octave' },
