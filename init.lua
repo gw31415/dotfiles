@@ -97,6 +97,40 @@ vim.api.nvim_set_var('skip_loading_mswin', true)
 vim.api.nvim_set_var('loaded_tutor_mode_plugin', true)
 vim.api.nvim_set_var('loaded_2html_plugin', true)
 
+--LaTeXの自動コンパイル設定
+vim.api.nvim_create_autocmd('BufReadPost', {
+	pattern = '*.tex',
+	once = true,
+	callback = function()
+		if not vim.fn.executable('latexmk') then
+			return
+		end
+		vim.api.nvim_create_augroup('LaTeXAutomk', {})
+		vim.api.nvim_create_user_command('LaTeXAutomkToggle', function()
+			if vim.b['latex_automk_enabled'] == nil then
+				vim.api.nvim_buf_set_var(0, 'latex_automk_enabled', false)
+			end
+			local enabled = not vim.api.nvim_buf_get_var(0, 'latex_automk_enabled')
+			vim.api.nvim_buf_set_var(0, 'latex_automk_enabled', enabled)
+			if enabled then
+				vim.notify('latex automk enabled.')
+			else
+				vim.notify('latex automk disabled.')
+			end
+			if enabled then
+				vim.api.nvim_create_autocmd('BufWritePost', {
+					group = 'LaTeXAutomk',
+					callback = function()
+						vim.fn.jobstart({ 'latexmk', vim.fn.bufname() })
+					end
+				})
+			else
+				vim.api.nvim_clear_autocmds({ group = 'LaTeXAutomk' })
+			end
+		end, {})
+	end
+})
+
 -- Jetpack
 local fn = vim.fn
 local jetpackfile = fn.stdpath('data') .. '/site/pack/jetpack/opt/vim-jetpack/plugin/jetpack.vim'
