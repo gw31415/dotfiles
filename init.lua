@@ -266,7 +266,7 @@ require 'jetpack.packer'.startup(function(use)
 	use {
 		'mfussenegger/nvim-dap',
 		opt = 1,
-		requires = { 'cmp-dap', 'nvim-dap-virtual-text', 'nvim-dap-ui' },
+		requires = { 'nvim-dap-ui' },
 		config = function()
 			require 'dapui'.setup()
 
@@ -305,6 +305,7 @@ require 'jetpack.packer'.startup(function(use)
 	use {
 		'theHamsta/nvim-dap-virtual-text',
 		opt = 1,
+		requires = 'nvim-dap',
 		config = function()
 			require 'nvim-dap-virtual-text'.setup {
 				enabled_commands = false,
@@ -314,7 +315,7 @@ require 'jetpack.packer'.startup(function(use)
 	use {
 		'rcarriga/cmp-dap',
 		opt = 1,
-		requires = 'nvim-cmp',
+		requires = { 'nvim-cmp', 'nvim-dap' },
 		config = function()
 			require 'cmp'.setup {
 				enabled = function()
