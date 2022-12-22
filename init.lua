@@ -86,7 +86,7 @@ vim.api.nvim_create_autocmd('CursorHold', {
 		vim.o.updatetime = default_updatetime
 	end
 })
-local loadevent_firstview = { 'ColorScheme' }
+
 local loadevent_timer = { 'CursorHold' }
 
 -- default plugins
@@ -142,7 +142,7 @@ vim.cmd 'packadd vim-jetpack'
 require 'jetpack.packer'.startup(function(use)
 	use { 'tani/vim-jetpack', opt = 1 }
 	use { 'vim-denops/denops.vim', event = loadevent_timer }
-	use { 'nvim-lua/plenary.nvim', event = loadevent_firstview }
+	use 'nvim-lua/plenary.nvim'
 	use { 'eandrju/cellular-automaton.nvim', cmd = { 'CellularAutomaton' } }
 
 	-- 言語別プラグイン
@@ -216,7 +216,7 @@ require 'jetpack.packer'.startup(function(use)
 	use {
 		'jose-elias-alvarez/null-ls.nvim',
 		event = loadevent_timer,
-		requires = 'mason.nvim',
+		requires = { 'mason.nvim', 'plenary.nvim' },
 		config = function()
 			local mason = require 'mason'
 			local mason_package = require 'mason-core.package'
@@ -509,13 +509,10 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'rcarriga/nvim-notify', -- vim.notifyのハイジャック
-		event = loadevent_firstview,
 		config = function() vim.notify = require 'notify' end
 	}
-	use {
-		'lambdalisue/readablefold.vim', -- より良い foldtext
-		event = loadevent_firstview,
-	}
+	use 'lambdalisue/readablefold.vim' -- より良い foldtext
+
 	use {
 		'gw31415/fzyselect.vim', -- vim.ui.select
 		event = loadevent_timer,
@@ -565,7 +562,6 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'nvim-treesitter/nvim-treesitter', -- Treesitter
-		event = loadevent_firstview,
 		config = function()
 			local parser_install_dir = vim.fn.stdpath 'data' .. '/treesitter'
 			vim.opt.runtimepath:append(vim.fn.stdpath 'data' .. '/treesitter')
@@ -586,7 +582,6 @@ require 'jetpack.packer'.startup(function(use)
 	use {
 		'David-Kunz/treesitter-unit',
 		opt = 1,
-		event = loadevent_firstview,
 		config = function()
 			local opts = { noremap = true, silent = true }
 			vim.api.nvim_set_keymap('x', 'iu', '<cmd>lua require"treesitter-unit".select(false)<CR>', opts)
@@ -597,7 +592,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'lukas-reineke/indent-blankline.nvim', -- インデントの可視化
-		event = loadevent_firstview,
+		requires = 'nvim-treesitter',
 		config = function()
 			vim.opt.list = true
 			vim.api.nvim_set_var('indent_blankline_indent_level', 4)
@@ -609,10 +604,8 @@ require 'jetpack.packer'.startup(function(use)
 			}
 		end,
 	}
-	use {
-		'bronson/vim-trailing-whitespace', -- 余計な空白を赤くする
-		event = loadevent_firstview,
-	}
+	use 'bronson/vim-trailing-whitespace' -- 余計な空白を赤くする
+
 	use {
 		'uga-rosa/ccc.nvim',
 		cmd = {
@@ -637,15 +630,13 @@ require 'jetpack.packer'.startup(function(use)
 	}
 
 	-- 小機能追加
-	use {
-		'rbtnn/vim-ambiwidth', -- 曖昧幅な文字の文字幅設定
-		event = loadevent_firstview,
-	}
+	use 'rbtnn/vim-ambiwidth' -- 曖昧幅な文字の文字幅設定
+
 	use {
 		'itchyny/vim-parenmatch',
 		event = loadevent_timer,
 	}
-	use { 'cohama/lexima.vim', event = loadevent_firstview } -- 自動括弧閉じ
+	use 'cohama/lexima.vim' -- 自動括弧閉じ
 	use {
 		'kylechui/nvim-surround', -- operator 囲い文字
 		tag = 'v1.0.0',
@@ -704,7 +695,6 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'lewis6991/gitsigns.nvim', -- Gitの行毎ステータス
-		event = loadevent_firstview,
 		config = function() require 'gitsigns'.setup() end
 	}
 	use {
@@ -725,13 +715,10 @@ require 'jetpack.packer'.startup(function(use)
 		}
 	}
 	vim.api.nvim_set_var('winresizer_start_key', '<C-W>c')
-	use {
-		'simeji/winresizer', -- ウィンドウサイズ変更
-		event = loadevent_firstview,
-	}
+	use 'simeji/winresizer' -- ウィンドウサイズ変更
+
 	use {
 		'navarasu/onedark.nvim', -- テーマ
-		event = { 'VimEnter' },
 		config = function()
 			require 'onedark'.setup {
 				style = 'darker',
