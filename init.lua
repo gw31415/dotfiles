@@ -178,7 +178,11 @@ require 'jetpack.packer'.startup(function(use)
 			mason_lspconfig.setup_handlers { function(server_name)
 				local opts = {
 					capabilities = capabilities,
-					on_attach = _G.lsp_onattach_func,
+					on_attach = function(i, bufnr)
+						vim.api.nvim_buf_set_option(bufnr, 'formatexpr', 'v:lua.vim.lsp.formatexpr(#{timeout_ms:250})')
+						_G.lsp_onattach_func(i, bufnr)
+
+					end,
 					settings = {
 						Lua = {}
 					}
