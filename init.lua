@@ -184,7 +184,12 @@ require 'jetpack.packer'.startup(function(use)
 
 					end,
 					settings = {
-						Lua = {}
+						Lua = {},
+						['rust-analyzer'] = {
+							checkOnSave = {
+								command = 'clippy',
+							},
+						},
 					}
 				}
 				if server_name == 'sumneko_lua' then
