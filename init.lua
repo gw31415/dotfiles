@@ -207,6 +207,12 @@ require 'jetpack.packer'.startup(function(use)
 							library.plugins = true
 						end,
 					}
+				elseif server_name == 'rust_analyzer' then
+					local on_attach_prev = opts.on_attach
+					opts.on_attach = function(i, bufnr)
+						on_attach_prev(i, bufnr)
+						vim.keymap.set('n', 'gqae', function() vim.lsp.buf.format { async = true } end, { buffer = bufnr })
+					end
 				end
 				vim.cmd 'packadd nvim-lspconfig'
 				require 'lspconfig'[server_name].setup(opts)
