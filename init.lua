@@ -588,7 +588,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'David-Kunz/treesitter-unit',
-		opt = 1,
+		requires = 'nvim-treesitter',
 		config = function()
 			local opts = { noremap = true, silent = true }
 			vim.api.nvim_set_keymap('x', 'iu', '<cmd>lua require"treesitter-unit".select(false)<CR>', opts)
