@@ -37,8 +37,8 @@ function _G.lsp_onattach_func(_, bufnr)
 end
 
 -- Configure
-vim.o.tabstop=4
-vim.o.shiftwidth=4
+vim.o.tabstop = 4
+vim.o.shiftwidth = 4
 vim.wo.number = true
 vim.o.imdisable = true
 vim.wo.winblend = 20
