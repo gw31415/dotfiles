@@ -702,7 +702,12 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	use {
 		'lewis6991/gitsigns.nvim', -- Gitの行毎ステータス
-		config = function() require 'gitsigns'.setup() end
+		config = function()
+			require 'gitsigns'.setup {
+				numhl = true,
+				signcolumn = false,
+			}
+		end
 	}
 	use {
 		'phaazon/hop.nvim', -- 画面内ジャンプ
