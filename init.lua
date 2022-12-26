@@ -519,6 +519,28 @@ require 'jetpack.packer'.startup(function(use)
 		config = function() vim.notify = require 'notify' end
 	}
 	use 'lambdalisue/readablefold.vim' -- より良い foldtext
+	use {
+		'monaqa/dial.nvim', -- 拡張版<C-a><C-x>
+		config = function()
+			local augend = require 'dial.augend'
+			require 'dial.config'.augends:register_group {
+				default = {
+					augend.integer.alias.decimal,
+					augend.semver.alias.semver,
+					augend.integer.alias.hex,
+					augend.constant.alias.bool,
+					augend.date.alias["%Y/%m/%d"],
+					augend.date.alias["%Y-%m-%d"],
+				},
+			}
+			vim.api.nvim_set_keymap("n", "<C-a>", require'dial.map'.inc_normal(), { noremap = true })
+			vim.api.nvim_set_keymap("n", "<C-x>", require'dial.map'.dec_normal(), { noremap = true })
+			vim.api.nvim_set_keymap("v", "<C-a>", require'dial.map'.inc_visual(), { noremap = true })
+			vim.api.nvim_set_keymap("v", "<C-x>", require'dial.map'.dec_visual(), { noremap = true })
+			vim.api.nvim_set_keymap("v", "g<C-a>", require'dial.map'.inc_gvisual(), { noremap = true })
+			vim.api.nvim_set_keymap("v", "g<C-x>", require'dial.map'.dec_gvisual(), { noremap = true })
+		end
+	}
 
 	use {
 		'gw31415/fzyselect.vim', -- vim.ui.select
