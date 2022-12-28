@@ -534,12 +534,12 @@ require 'jetpack.packer'.startup(function(use)
 					augend.date.alias["%Y-%m-%d"],
 				},
 			}
-			vim.api.nvim_set_keymap("n", "<C-a>", require'dial.map'.inc_normal(), { noremap = true })
-			vim.api.nvim_set_keymap("n", "<C-x>", require'dial.map'.dec_normal(), { noremap = true })
-			vim.api.nvim_set_keymap("v", "<C-a>", require'dial.map'.inc_visual(), { noremap = true })
-			vim.api.nvim_set_keymap("v", "<C-x>", require'dial.map'.dec_visual(), { noremap = true })
-			vim.api.nvim_set_keymap("v", "g<C-a>", require'dial.map'.inc_gvisual(), { noremap = true })
-			vim.api.nvim_set_keymap("v", "g<C-x>", require'dial.map'.dec_gvisual(), { noremap = true })
+			vim.keymap.set("n", "<C-a>", require 'dial.map'.inc_normal(), { noremap = true })
+			vim.keymap.set("n", "<C-x>", require 'dial.map'.dec_normal(), { noremap = true })
+			vim.keymap.set("v", "<C-a>", require 'dial.map'.inc_visual(), { noremap = true })
+			vim.keymap.set("v", "<C-x>", require 'dial.map'.dec_visual(), { noremap = true })
+			vim.keymap.set("v", "g<C-a>", require 'dial.map'.inc_gvisual(), { noremap = true })
+			vim.keymap.set("v", "g<C-x>", require 'dial.map'.dec_gvisual(), { noremap = true })
 		end
 	}
 
@@ -645,10 +645,10 @@ require 'jetpack.packer'.startup(function(use)
 		requires = 'nvim-treesitter',
 		config = function()
 			local opts = { noremap = true, silent = true }
-			vim.api.nvim_set_keymap('x', 'iu', '<cmd>lua require"treesitter-unit".select(false)<CR>', opts)
-			vim.api.nvim_set_keymap('x', 'au', '<cmd>lua require"treesitter-unit".select(true)<CR>', opts)
-			vim.api.nvim_set_keymap('o', 'iu', ':<c-u>lua require"treesitter-unit".select(false)<CR>', opts)
-			vim.api.nvim_set_keymap('o', 'au', ':<c-u>lua require"treesitter-unit".select(true)<CR>', opts)
+			vim.keymap.set('x', 'iu', '<cmd>lua require"treesitter-unit".select(false)<CR>', opts)
+			vim.keymap.set('x', 'au', '<cmd>lua require"treesitter-unit".select(true)<CR>', opts)
+			vim.keymap.set('o', 'iu', ':<c-u>lua require"treesitter-unit".select(false)<CR>', opts)
+			vim.keymap.set('o', 'au', ':<c-u>lua require"treesitter-unit".select(true)<CR>', opts)
 		end
 	}
 	use {
@@ -782,6 +782,7 @@ require 'jetpack.packer'.startup(function(use)
 	}
 	vim.api.nvim_set_var('winresizer_start_key', '<C-W>c')
 	use 'simeji/winresizer' -- ウィンドウサイズ変更
+	use 'thinca/vim-partedit' -- 分割編集
 
 	use {
 		'navarasu/onedark.nvim', -- テーマ
