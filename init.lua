@@ -635,6 +635,9 @@ require 'jetpack.packer'.startup(function(use)
 			vim.wo.foldexpr = 'nvim_treesitter#foldexpr()'
 			vim.wo.foldenable = false
 			vim.wo.foldlevel = 999
+			vim.api.nvim_create_autocmd('BufEnter', {
+				command = 'TSEnable highlight'
+			})
 		end
 	}
 	use {
