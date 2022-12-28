@@ -93,6 +93,7 @@ local loadevent_timer = { 'CursorHold' }
 -- default plugins
 vim.api.nvim_set_var('loaded_matchparen', true)
 vim.api.nvim_set_var('loaded_matchit', true)
+vim.api.nvim_set_var('loaded_netrwPlugin', true)
 vim.api.nvim_set_var('loaded_remote_plugins', true)
 vim.api.nvim_set_var('skip_loading_mswin', true)
 vim.api.nvim_set_var('loaded_tutor_mode_plugin', true)
@@ -540,6 +541,34 @@ require 'jetpack.packer'.startup(function(use)
 			vim.api.nvim_set_keymap("v", "g<C-a>", require'dial.map'.inc_gvisual(), { noremap = true })
 			vim.api.nvim_set_keymap("v", "g<C-x>", require'dial.map'.dec_gvisual(), { noremap = true })
 		end
+	}
+
+	-- ファイラ
+	use {
+		'gw31415/onlybrowsex.vim',
+		config = function()
+			vim.keymap.set("n", "gx", function()
+				vim.fn["onlybrowsex#BrowseX"](vim.fn.expand('<cWORD>'))
+			end, { noremap = true, silent = true })
+		end
+	}
+	use 'lambdalisue/nerdfont.vim'
+	use 'lambdalisue/fern-renderer-nerdfont.vim'
+	use {
+		'lambdalisue/fern.vim',
+		requires = 'fern-renderer-nerdfont.vim',
+		config = function ()
+			vim.api.nvim_set_var("fern#renderer", "nerdfont")
+			vim.api.nvim_set_var("fern#renderer#nerdfont#indent_markers", 1)
+		end
+	}
+	use {
+		'lambdalisue/fern-hijack.vim',
+		requires = 'fern.vim',
+	}
+	use {
+		'lambdalisue/fern-git-status.vim',
+		requires = 'fern.vim',
 	}
 
 	use {
