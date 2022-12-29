@@ -170,7 +170,7 @@ require 'jetpack.packer'.startup(function(use)
 	use { 'hrsh7th/cmp-nvim-lsp', requires = 'nvim-cmp', opt = 1 }
 	use {
 		'williamboman/mason.nvim', -- LSP Installer
-		requires = { 'mason-lspconfig.nvim', 'cmp-nvim-lsp' },
+		requires = { 'mason-lspconfig.nvim', 'cmp-nvim-lsp', 'nvim-lspconfig' },
 		event = loadevent_timer,
 		config = function()
 			require 'mason'.setup {}
@@ -185,7 +185,11 @@ require 'jetpack.packer'.startup(function(use)
 
 					end,
 					settings = {
-						Lua = {},
+						Lua = {
+							workspace = {
+								checkThirdParty = false,
+							}
+						},
 						['rust-analyzer'] = {
 							checkOnSave = {
 								command = 'clippy',
@@ -194,19 +198,8 @@ require 'jetpack.packer'.startup(function(use)
 					}
 				}
 				if server_name == 'sumneko_lua' then
-					vim.fn['jetpack#load']('nvim-lspconfig')
-					vim.fn['jetpack#load']('neodev.nvim')
-					opts.settings.Lua = {
-						workspace = {
-							checkThirdParty = false,
-						},
-					}
-					require 'neodev'.setup {
-						override = function(_, library)
-							library.enabled = true
-							library.plugins = true
-						end,
-					}
+					vim.fn['jetpack#load'] 'neodev.nvim'
+					require 'neodev'.setup {}
 				elseif server_name == 'rust_analyzer' then
 					local on_attach_prev = opts.on_attach
 					opts.on_attach = function(i, bufnr)
@@ -214,7 +207,6 @@ require 'jetpack.packer'.startup(function(use)
 						vim.keymap.set('n', 'gqae', function() vim.lsp.buf.format { async = true } end, { buffer = bufnr })
 					end
 				end
-				vim.cmd 'packadd nvim-lspconfig'
 				require 'lspconfig'[server_name].setup(opts)
 			end }
 			vim.cmd 'LspStart'
