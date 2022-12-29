@@ -548,9 +548,10 @@ require 'jetpack.packer'.startup(function(use)
 	use {
 		'lambdalisue/fern.vim',
 		requires = 'fern-renderer-nerdfont.vim',
-		config = function ()
+		config = function()
 			vim.api.nvim_set_var("fern#renderer", "nerdfont")
 			vim.api.nvim_set_var("fern#renderer#nerdfont#indent_markers", 1)
+			vim.keymap.set('n', '<C-n>', '<cmd>Fern . -drawer -toggle -reveal=% <cr>')
 		end
 	}
 	use {
