@@ -657,7 +657,6 @@ require 'jetpack.packer'.startup(function(use)
 			}
 		end,
 	}
-	use 'bronson/vim-trailing-whitespace' -- 余計な空白を赤くする
 
 	use {
 		'uga-rosa/ccc.nvim',
