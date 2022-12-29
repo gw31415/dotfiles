@@ -134,11 +134,10 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 })
 
 -- Jetpack
-local fn = vim.fn
-local jetpackfile = fn.stdpath('data') .. '/site/pack/jetpack/opt/vim-jetpack/plugin/jetpack.vim'
-local jetpackurl = 'https://raw.githubusercontent.com/tani/vim-jetpack/master/plugin/jetpack.vim'
-if fn.filereadable(jetpackfile) == 0 then
-	fn.system({ 'curl', '-fsSLo', jetpackfile, ' --create-dirs ', jetpackurl })
+local jetpackfile = vim.fn.stdpath('data') .. '/site/pack/jetpack/opt/vim-jetpack/plugin/jetpack.vim'
+local jetpackurl = "https://raw.githubusercontent.com/tani/vim-jetpack/master/plugin/jetpack.vim"
+if vim.fn.filereadable(jetpackfile) == 0 then
+	vim.fn.system(string.format('curl -fsSLo %s --create-dirs %s', jetpackfile, jetpackurl))
 end
 vim.cmd 'packadd vim-jetpack'
 require 'jetpack.packer'.startup(function(use)
@@ -548,7 +547,7 @@ require 'jetpack.packer'.startup(function(use)
 		'gw31415/onlybrowsex.vim',
 		config = function()
 			vim.keymap.set("n", "gx", function()
-				vim.fn["onlybrowsex#BrowseX"](vim.fn.expand('<cWORD>'))
+				vim.fn["onlybrowsex#BrowseX"](vim.fn.expand('<cfile>'))
 			end, { noremap = true, silent = true })
 		end
 	}
@@ -874,11 +873,10 @@ require 'jetpack.packer'.startup(function(use)
 end)
 
 -- インストールされていないプラグインがあった時の自動Sync
-pcall(function()
-	for _, name in ipairs(fn['jetpack#names']()) do
-		if not fn['jetpack#tap'](name) then
-			pcall(vim.fn['jetpack#sync'])
-			break
-		end
+local jetpack = require('jetpack')
+for _, name in ipairs(jetpack.names()) do
+	if not jetpack.tap(name) then
+		jetpack.sync()
+		break
 	end
-end)
+end
