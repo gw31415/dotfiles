@@ -56,7 +56,7 @@ vim.o.laststatus = 3
 vim.api.nvim_set_var('tex_conceal', '')
 vim.api.nvim_set_var('netrw_banner', 0)
 vim.api.nvim_set_var('netrw_liststyle', 3)
-vim.diagnostic.config { virtual_text = false }
+vim.diagnostic.config { signs = false }
 
 -- Neovide
 vim.opt.guifont = { 'HackGenNerd Console', 'h13' }
