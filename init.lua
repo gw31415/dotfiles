@@ -62,6 +62,7 @@ vim.diagnostic.config { signs = false }
 vim.opt.guifont = { 'HackGenNerd Console', 'h13' }
 if vim.g.neovide then
 	vim.api.nvim_set_var('neovide_remember_window_size', false)
+	vim.api.nvim_set_var('neovide_hide_mouse_when_typing', true)
 end
 
 -- Mac Keybindings
@@ -92,7 +93,7 @@ vim.api.nvim_create_autocmd('CursorHold', {
 	end
 })
 
-local loadevent_timer = { 'CursorHold' }
+local loadevent_timer = { 'VeryLazy' }
 
 -- default plugins
 vim.api.nvim_set_var('loaded_matchparen', true)
@@ -137,21 +138,21 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 	end
 })
 
--- Jetpack
-local jetpackfile = vim.fn.stdpath('data') .. '/site/pack/jetpack/opt/vim-jetpack/plugin/jetpack.vim'
-local jetpackurl = "https://raw.githubusercontent.com/tani/vim-jetpack/master/plugin/jetpack.vim"
-if vim.fn.filereadable(jetpackfile) == 0 then
-	vim.fn.system(string.format('curl -fsSLo %s --create-dirs %s', jetpackfile, jetpackurl))
+vim.api.nvim_set_var('winresizer_start_key', '<C-W>c')
+
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+	vim.fn.system({ "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", lazypath })
+	vim.fn.system({ "git", "-C", lazypath, "checkout", "tags/stable" }) -- last stable release
 end
-vim.cmd 'packadd vim-jetpack'
-require 'jetpack.packer'.startup(function(use)
-	use { 'tani/vim-jetpack', opt = 1 }
-	use { 'vim-denops/denops.vim', event = loadevent_timer }
-	use 'nvim-lua/plenary.nvim'
-	use { 'eandrju/cellular-automaton.nvim', cmd = { 'CellularAutomaton' } }
+vim.opt.rtp:prepend(lazypath)
+require 'lazy'.setup {
+	{ 'vim-denops/denops.vim', event = loadevent_timer },
+	'nvim-lua/plenary.nvim',
+	{ 'eandrju/cellular-automaton.nvim', cmd = { 'CellularAutomaton' } },
 
 	-- 言語別プラグイン
-	use {
+	{
 		'akinsho/flutter-tools.nvim',
 		ft = { 'dart' },
 		config = function()
@@ -161,20 +162,17 @@ require 'jetpack.packer'.startup(function(use)
 				}
 			}
 		end,
-	}
-	use {
+	},
+	{
 		'tranvansang/octave.vim',
 		ft = { 'matlab', 'octave' },
-	}
+	},
 
 	-- LSP
-	use { 'folke/neodev.nvim', opt = 1 }
-	use { 'williamboman/mason-lspconfig.nvim', opt = 1 }
-	use { 'neovim/nvim-lspconfig', opt = 1 }
-	use { 'hrsh7th/cmp-nvim-lsp', requires = 'nvim-cmp', opt = 1 }
-	use {
+	{ 'folke/neodev.nvim', lazy = true },
+	{
 		'williamboman/mason.nvim', -- LSP Installer
-		requires = { 'mason-lspconfig.nvim', 'cmp-nvim-lsp', 'nvim-lspconfig' },
+		dependencies = { 'williamboman/mason-lspconfig.nvim', 'hrsh7th/cmp-nvim-lsp', 'neovim/nvim-lspconfig' },
 		event = loadevent_timer,
 		config = function()
 			require 'mason'.setup {}
@@ -202,7 +200,7 @@ require 'jetpack.packer'.startup(function(use)
 					}
 				}
 				if server_name == 'sumneko_lua' then
-					vim.fn['jetpack#load'] 'neodev.nvim'
+					vim.cmd 'Lazy load neodev.nvim'
 					require 'neodev'.setup {}
 				elseif server_name == 'rust_analyzer' then
 					local on_attach_prev = opts.on_attach
@@ -215,11 +213,11 @@ require 'jetpack.packer'.startup(function(use)
 			end }
 			vim.cmd 'LspStart'
 		end,
-	}
-	use {
+	},
+	{
 		'jose-elias-alvarez/null-ls.nvim',
 		event = loadevent_timer,
-		requires = { 'mason.nvim', 'plenary.nvim' },
+		dependencies = { 'williamboman/mason.nvim', 'nvim-lua/plenary.nvim' },
 		config = function()
 			local mason = require 'mason'
 			local mason_package = require 'mason-core.package'
@@ -240,8 +238,8 @@ require 'jetpack.packer'.startup(function(use)
 				on_attach = _G.lsp_onattach_func,
 			}
 		end
-	}
-	use {
+	},
+	{
 		'onsails/diaglist.nvim', -- Diagnosticの自動更新Quickfixリスト
 		event = { 'LspAttach' },
 		config = function()
@@ -250,35 +248,31 @@ require 'jetpack.packer'.startup(function(use)
 			require 'diaglist'.init()
 			require 'diaglist.quickfix'.populate_qflist()
 		end
-	}
-	use {
+	},
+	{
 		'j-hui/fidget.nvim', -- LSPのステータスを右下に表示
 		event = { 'LspAttach' },
 		config = function()
 			vim.api.nvim_create_autocmd('VimLeavePre', { command = 'silent! FidgetClose' })
 			require 'fidget'.setup()
 		end
-	}
-	use {
+	},
+	{
 		'ray-x/lsp_signature.nvim', -- 関数の引数の入力時のシグネチャヘルプ
 		event = { 'LspAttach' },
-		config = function()
-			require 'lsp_signature'.setup {}
-		end,
-	}
-	use {
+		config = true,
+	},
+	{
 		'numToStr/Comment.nvim', -- コメントのトグル
 		event = { 'LspAttach' },
-		config = function()
-			require 'Comment'.setup {}
-		end
-	}
+		config = true,
+	},
 
 	-- Debug Adapter Protocol
-	use {
+	{
 		'mfussenegger/nvim-dap',
-		opt = 1,
-		requires = { 'nvim-dap-ui' },
+		lazy = true,
+		dependencies = { 'rcarriga/nvim-dap-ui' },
 		config = function()
 			require 'dapui'.setup()
 
@@ -313,21 +307,21 @@ require 'jetpack.packer'.startup(function(use)
 			vim.keymap.set('n', '<F12>', function() require 'dap'.step_out() end, {})
 			vim.keymap.set('n', 'bb', function() require 'dap'.toggle_breakpoint() end, {})
 		end
-	}
-	use {
+	},
+	{
 		'theHamsta/nvim-dap-virtual-text',
-		opt = 1,
-		requires = 'nvim-dap',
+		lazy = true,
+		dependencies = 'mfussenegger/nvim-dap',
 		config = function()
 			require 'nvim-dap-virtual-text'.setup {
 				enabled_commands = false,
 			}
 		end
-	}
-	use {
+	},
+	{
 		'rcarriga/cmp-dap',
-		opt = 1,
-		requires = { 'nvim-cmp', 'nvim-dap' },
+		lazy = true,
+		dependencies = { 'hrsh7th/nvim-cmp', 'mfussenegger/nvim-dap' },
 		config = function()
 			require 'cmp'.setup {
 				enabled = function()
@@ -341,12 +335,11 @@ require 'jetpack.packer'.startup(function(use)
 				},
 			})
 		end
-	}
-	use { 'rcarriga/nvim-dap-ui', opt = 1 }
-	use {
+	},
+	{
 		'leoluz/nvim-dap-go',
 		ft = { 'go' },
-		requires = { 'nvim-dap', 'mason.nvim' },
+		dependencies = { 'mfussenegger/nvim-dap', 'williamboman/mason.nvim' },
 		config = function()
 			local mason_dap_package = 'delve'
 			local init_func = require 'dap-go'.setup
@@ -358,11 +351,11 @@ require 'jetpack.packer'.startup(function(use)
 				init_func()
 			end
 		end,
-	}
-	use {
+	},
+	{
 		'gw31415/nvim-dap-rust',
 		ft = { 'rust' },
-		requires = { 'nvim-dap', 'mason.nvim' },
+		dependencies = { 'mfussenegger/nvim-dap', 'williamboman/mason.nvim' },
 		config = function()
 			local mason_dap_package = 'codelldb'
 			local init_func = require 'dap-rust'.setup
@@ -374,11 +367,11 @@ require 'jetpack.packer'.startup(function(use)
 				init_func()
 			end
 		end,
-	}
-	use {
+	},
+	{
 		'mfussenegger/nvim-dap-python',
 		ft = { 'python' },
-		requires = { 'nvim-dap', 'mason.nvim' },
+		dependencies = { 'mfussenegger/nvim-dap', 'williamboman/mason.nvim' },
 		config = function()
 			local mason_dap_package = 'delve'
 			local init_func = function()
@@ -391,22 +384,14 @@ require 'jetpack.packer'.startup(function(use)
 				init_func()
 			end
 		end
-	}
+	},
 
 	-- 補完
-	use { 'hrsh7th/vim-vsnip', event = { 'InsertCharPre' } }
-	use { 'hrsh7th/cmp-vsnip', requires = 'nvim-cmp', event = 'InsertCharPre' }
-	use { 'hrsh7th/cmp-nvim-lsp-signature-help', requires = 'nvim-cmp', event = 'InsertCharPre' }
-	use { 'hrsh7th/cmp-cmdline', requires = 'nvim-cmp', event = 'CmdlineEnter' }
-	use { 'hrsh7th/cmp-path', requires = 'nvim-cmp', event = 'InsertCharPre' }
-	use { 'hrsh7th/cmp-omni', requires = 'nvim-cmp', event = 'InsertCharPre' }
-	use { 'hrsh7th/cmp-buffer', requires = 'nvim-cmp', event = { 'InsertCharPre', 'CmdlineEnter' } }
-	use { 'uga-rosa/cmp-skkeleton', requires = 'nvim-cmp', event = 'InsertCharPre' }
-	use { 'onsails/lspkind.nvim', opt = 1 }
-	use {
+	{ 'hrsh7th/vim-vsnip', event = { 'InsertCharPre' } },
+	{
 		'hrsh7th/nvim-cmp',
-		opt = 1,
-		requires = { 'lspkind.nvim' },
+		lazy = true,
+		dependencies = { 'onsails/lspkind.nvim' },
 		config = function()
 			local cmp = require 'cmp'
 			local function feedkeys(keys)
@@ -503,20 +488,29 @@ require 'jetpack.packer'.startup(function(use)
 				})
 			end
 		end
-	}
+	},
+	{ 'hrsh7th/cmp-vsnip', dependencies = 'hrsh7th/nvim-cmp', event = 'InsertCharPre' },
+	{ 'hrsh7th/cmp-nvim-lsp-signature-help', dependencies = 'hrsh7th/nvim-cmp', event = 'InsertCharPre' },
+	{ 'hrsh7th/cmp-cmdline', dependencies = 'hrsh7th/nvim-cmp', event = 'CmdlineEnter' },
+	{ 'hrsh7th/cmp-path', dependencies = 'hrsh7th/nvim-cmp', event = 'InsertCharPre' },
+	{ 'hrsh7th/cmp-omni', dependencies = 'hrsh7th/nvim-cmp', event = 'InsertCharPre' },
+	{ 'hrsh7th/cmp-buffer', dependencies = 'hrsh7th/nvim-cmp', event = { 'InsertCharPre', 'CmdlineEnter' } },
+	{ 'uga-rosa/cmp-skkeleton', dependencies = 'hrsh7th/nvim-cmp', event = 'InsertCharPre' },
 
 	-- UI
-	use {
+	{
 		'kevinhwang91/nvim-bqf', -- quickfixのハイジャック
 		event = loadevent_timer,
-	}
-	use {
+	},
+	{
 		'rcarriga/nvim-notify', -- vim.notifyのハイジャック
+		event = loadevent_timer,
 		config = function() vim.notify = require 'notify' end
-	}
-	use 'lambdalisue/readablefold.vim' -- より良い foldtext
-	use {
+	},
+	'lambdalisue/readablefold.vim', -- より良い foldtext
+	{
 		'monaqa/dial.nvim', -- 拡張版<C-a><C-x>
+		keys = { '<C-a>', '<C-x>', 'g' },
 		config = function()
 			local augend = require 'dial.augend'
 			require 'dial.config'.augends:register_group {
@@ -536,38 +530,38 @@ require 'jetpack.packer'.startup(function(use)
 			vim.keymap.set("v", "g<C-a>", require 'dial.map'.inc_gvisual(), { noremap = true })
 			vim.keymap.set("v", "g<C-x>", require 'dial.map'.dec_gvisual(), { noremap = true })
 		end
-	}
+	},
 
 	-- ファイラ
-	use {
+	{
 		'gw31415/onlybrowsex.vim',
+		keys = { "gx" },
 		config = function()
 			vim.keymap.set("n", "gx", function()
 				vim.fn["onlybrowsex#BrowseX"](vim.fn.expand('<cfile>'))
 			end, { noremap = true, silent = true })
 		end
-	}
-	use 'lambdalisue/nerdfont.vim'
-	use 'lambdalisue/fern-renderer-nerdfont.vim'
-	use {
+	},
+	'lambdalisue/nerdfont.vim',
+	{
 		'lambdalisue/fern.vim',
-		requires = 'fern-renderer-nerdfont.vim',
+		dependencies = 'lambdalisue/fern-renderer-nerdfont.vim',
 		config = function()
 			vim.api.nvim_set_var("fern#renderer", "nerdfont")
 			vim.api.nvim_set_var("fern#renderer#nerdfont#indent_markers", 1)
 			vim.keymap.set('n', '<C-n>', '<cmd>Fern . -drawer -toggle -reveal=% <cr>')
 		end
-	}
-	use {
+	},
+	{
 		'lambdalisue/fern-hijack.vim',
-		requires = 'fern.vim',
-	}
-	use {
+		dependencies = 'lambdalisue/fern.vim',
+	},
+	{
 		'lambdalisue/fern-git-status.vim',
-		requires = 'fern.vim',
-	}
+		dependencies = 'lambdalisue/fern.vim',
+	},
 
-	use {
+	{
 		'gw31415/fzyselect.vim', -- vim.ui.select
 		event = loadevent_timer,
 		config = function()
@@ -613,8 +607,8 @@ require 'jetpack.packer'.startup(function(use)
 			]]
 			vim.ui.select = require 'fzyselect'.start
 		end
-	}
-	use {
+	},
+	{
 		'nvim-treesitter/nvim-treesitter', -- Treesitter
 		config = function()
 			local parser_install_dir = vim.fn.stdpath 'data' .. '/treesitter'
@@ -635,10 +629,10 @@ require 'jetpack.packer'.startup(function(use)
 				command = 'TSEnable highlight'
 			})
 		end
-	}
-	use {
+	},
+	{
 		'David-Kunz/treesitter-unit',
-		requires = 'nvim-treesitter',
+		dependencies = 'nvim-treesitter/nvim-treesitter',
 		config = function()
 			local opts = { noremap = true, silent = true }
 			vim.keymap.set('x', 'iu', '<cmd>lua require"treesitter-unit".select(false)<CR>', opts)
@@ -646,10 +640,10 @@ require 'jetpack.packer'.startup(function(use)
 			vim.keymap.set('o', 'iu', ':<c-u>lua require"treesitter-unit".select(false)<CR>', opts)
 			vim.keymap.set('o', 'au', ':<c-u>lua require"treesitter-unit".select(true)<CR>', opts)
 		end
-	}
-	use {
+	},
+	{
 		'lukas-reineke/indent-blankline.nvim', -- インデントの可視化
-		requires = 'nvim-treesitter',
+		dependencies = 'nvim-treesitter/nvim-treesitter',
 		config = function()
 			vim.opt.list = true
 			vim.api.nvim_set_var('indent_blankline_indent_level', 4)
@@ -660,9 +654,9 @@ require 'jetpack.packer'.startup(function(use)
 				show_current_context_start = true,
 			}
 		end,
-	}
+	},
 
-	use {
+	{
 		'uga-rosa/ccc.nvim',
 		cmd = {
 			'CccPick',
@@ -683,90 +677,91 @@ require 'jetpack.packer'.startup(function(use)
 				},
 			}
 		end
-	}
+	},
 
 	-- 小機能追加
-	use 'rbtnn/vim-ambiwidth' -- 曖昧幅な文字の文字幅設定
+	'rbtnn/vim-ambiwidth', -- 曖昧幅な文字の文字幅設定
 
-	use {
+	{
 		'itchyny/vim-parenmatch',
 		event = loadevent_timer,
-	}
-	use 'cohama/lexima.vim' -- 自動括弧閉じ
-	use {
-		'kylechui/nvim-surround', -- operator 囲い文字
-		tag = 'v1.0.0',
+	},
+	{
+		'cohama/lexima.vim', -- 自動括弧閉じ
 		event = loadevent_timer,
-		config = function()
-			require 'nvim-surround'.setup {}
-		end
-	}
-	use { 'kana/vim-textobj-user', opts = 1 } -- カスタムtextobj 依存プラグイン
-	use { 'kana/vim-operator-user', opt = 1 } -- カスタムOperator 依存プラグイン
-	use {
+	},
+	{
+		'kylechui/nvim-surround', -- operator 囲い文字
+		version = '*',
+		event = loadevent_timer,
+		config = true,
+	},
+	{
 		'glts/vim-textobj-comment', -- コメントに対する textobj
 		event = loadevent_timer,
-		requires = 'vim-textobj-user',
-	}
-	use {
+		dependencies = 'kana/vim-textobj-user',
+	},
+	{
 		'kana/vim-textobj-entire', -- バッファ全体に対する textobj
 		event = loadevent_timer,
-		requires = 'vim-textobj-user',
-	}
-	use {
+		dependencies = 'kana/vim-textobj-user',
+	},
+	{
 		'osyo-manga/vim-operator-stay-cursor', -- カーソルを固定したOperatorをつくる
 		event = loadevent_timer,
-		requires = 'vim-operator-user',
+		dependencies = 'kana/vim-operator-user',
 		config = function()
 			vim.cmd 'map <expr> gq operator#stay_cursor#wrapper("gq")'
 		end
-	}
-	use {
+	},
+	{
 		'gbprod/substitute.nvim', -- vim-operator-replace
 		event = loadevent_timer,
+		keys = { '_' },
 		config = function()
 			require 'substitute'.setup {}
 			vim.keymap.set("n", "_", "<cmd>lua require('substitute').operator()<cr>", { noremap = true })
 			vim.keymap.set("n", "__", "<cmd>lua require('substitute').line()<cr>", { noremap = true })
 			vim.keymap.set("x", "_", "<cmd>lua require('substitute').visual()<cr>", { noremap = true })
 		end
-	}
-	if vim.fn.executable 'silicon' then
-		use {
-			'segeljakt/vim-silicon', -- ソースコードを画像化するsiliconコマンドのラッパー
-			cmd = 'Silicon',
-			config = function()
-				vim.api.nvim_set_var('silicon', {
-					font = 'HackGenNerd Console',
-				})
-			end
-		}
-	end
-	use {
+	},
+	-- if vim.fn.executable 'silicon' then
+	-- 	{
+	-- 		'segeljakt/vim-silicon', -- ソースコードを画像化するsiliconコマンドのラッパー
+	-- 		cmd = 'Silicon',
+	-- 		config = function()
+	-- 			vim.api.nvim_set_var('silicon', {
+	-- 				font = 'HackGenNerd Console',
+	-- 			})
+	-- 		end
+	-- 	},
+	-- end
+	{
 		'lambdalisue/gin.vim', -- Git連携
 		event = loadevent_timer,
 		config = function()
 			vim.api.nvim_set_var('gin_patch_default_args', { '++no-head', '%' })
 		end
-	}
-	use {
+	},
+	{
 		'lewis6991/gitsigns.nvim', -- Gitの行毎ステータス
+		event = loadevent_timer,
 		config = function()
 			require 'gitsigns'.setup {
 				numhl = true,
 				signcolumn = false,
 			}
 		end
-	}
-	use {
+	},
+	{
 		'phaazon/hop.nvim', -- 画面内ジャンプ
 		event = loadevent_timer,
 		config = function()
 			require 'hop'.setup {}
 			vim.keymap.set('n', '<space>', function() require 'hop'.hint_words { multi_windows = true } end, {})
 		end,
-	}
-	use {
+	},
+	{
 		'mbbill/undotree',
 		cmd = {
 			'UndotreeShow',
@@ -774,12 +769,11 @@ require 'jetpack.packer'.startup(function(use)
 			'UndotreeFocus',
 			'UndotreeToggle',
 		}
-	}
-	vim.api.nvim_set_var('winresizer_start_key', '<C-W>c')
-	use 'simeji/winresizer' -- ウィンドウサイズ変更
-	use 'thinca/vim-partedit' -- 分割編集
+	},
+	'simeji/winresizer', -- ウィンドウサイズ変更
+	'thinca/vim-partedit', -- 分割編集
 
-	use {
+	{
 		'navarasu/onedark.nvim', -- テーマ
 		config = function()
 			require 'onedark'.setup {
@@ -793,23 +787,21 @@ require 'jetpack.packer'.startup(function(use)
 			}
 			require 'onedark'.load()
 		end,
-	}
-	use { 'gw31415/deepl.vim', opt = 1 }
-	use {
+	},
+	{
 		'gw31415/deepl-commands.nvim', -- deeplとの連携
 		event = { 'CmdlineEnter' },
-		requires = 'deepl.vim',
+		dependencies = 'gw31415/deepl.vim',
 		config = function()
 			require 'deepl-commands'.setup {
 				selector_func = require 'fzyselect'.start
 			}
 		end
-	}
-	use 'vim-jp/vimdoc-ja' -- 日本語のヘルプ
-	use { 'gw31415/skkeletal.vim', opt = 1 }
-	use {
+	},
+	'vim-jp/vimdoc-ja', -- 日本語のヘルプ
+	{
 		'vim-skk/skkeleton', -- 日本語入力
-		requires = 'skkeletal.vim',
+		dependencies = 'gw31415/skkeletal.vim',
 		event = loadevent_timer,
 		config = function()
 			-- StatusLine
@@ -865,14 +857,5 @@ require 'jetpack.packer'.startup(function(use)
 				vim.fn['skkeleton#register_keymap'](map[1], map[2], map[3])
 			end
 		end,
-	}
-end)
-
--- インストールされていないプラグインがあった時の自動Sync
-local jetpack = require('jetpack')
-for _, name in ipairs(jetpack.names()) do
-	if not jetpack.tap(name) then
-		jetpack.sync()
-		break
-	end
-end
+	},
+}
