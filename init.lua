@@ -2,6 +2,7 @@
 -- 依存: NVim nightly, Git, cURL, Deno
 -- siliconコマンドがあれば対応。
 -- ]]
+local vim = vim
 
 -- Emacs Keybindings
 vim.keymap.set('i', '<c-f>', '<c-g>U<right>', {})
