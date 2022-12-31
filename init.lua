@@ -724,9 +724,7 @@ require 'lazy'.setup {
 	{
 		'segeljakt/vim-silicon', -- ソースコードを画像化するsiliconコマンドのラッパー
 		cmd = 'Silicon',
-		enabled = function()
-			return vim.fn.executable 'silicon'
-		end,
+		enabled = function() return vim.fn.executable 'silicon' == 1 end,
 		config = function()
 			vim.api.nvim_set_var('silicon', {
 				font = 'HackGenNerd Console',
