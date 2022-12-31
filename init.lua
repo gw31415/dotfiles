@@ -508,7 +508,14 @@ require 'lazy'.setup {
 	'lambdalisue/readablefold.vim', -- より良い foldtext
 	{
 		'monaqa/dial.nvim', -- 拡張版<C-a><C-x>
-		keys = { '<C-a>', '<C-x>', 'g' },
+		keys = {
+			{ '<C-a>' },
+			{ '<C-x>' },
+			{ '<C-a>', mode = 'v' },
+			{ '<C-x>', mode = 'v' },
+			{ 'g<C-a>', mode = 'v' },
+			{ 'g<C-x>', mode = 'v' },
+		},
 		config = function()
 			local augend = require 'dial.augend'
 			require 'dial.config'.augends:register_group {
@@ -631,6 +638,12 @@ require 'lazy'.setup {
 	{
 		'David-Kunz/treesitter-unit',
 		dependencies = 'nvim-treesitter/nvim-treesitter',
+		keys = {
+			{ 'iu', mode = 'x' },
+			{ 'au', mode = 'x' },
+			{ 'iu', mode = 'o' },
+			{ 'au', mode = 'o' },
+		},
 		config = function()
 			local opts = { noremap = true, silent = true }
 			vim.keymap.set('x', 'iu', '<cmd>lua require"treesitter-unit".select(false)<CR>', opts)
@@ -712,8 +725,10 @@ require 'lazy'.setup {
 	},
 	{
 		'gbprod/substitute.nvim', -- vim-operator-replace
-		event = 'VeryLazy',
-		keys = { '_' },
+		keys = {
+			{ '_', mode = 'n' },
+			{ '_', mode = 'x' },
+		},
 		config = function()
 			require 'substitute'.setup {}
 			vim.keymap.set("n", "_", "<cmd>lua require('substitute').operator()<cr>", { noremap = true })
@@ -750,7 +765,7 @@ require 'lazy'.setup {
 	},
 	{
 		'phaazon/hop.nvim', -- 画面内ジャンプ
-		event = 'VeryLazy',
+		keys = '<Space>',
 		config = function()
 			require 'hop'.setup {}
 			vim.keymap.set('n', '<space>', function() require 'hop'.hint_words { multi_windows = true } end, {})
