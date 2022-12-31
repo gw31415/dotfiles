@@ -715,17 +715,18 @@ require 'lazy'.setup {
 			vim.keymap.set("x", "_", "<cmd>lua require('substitute').visual()<cr>", { noremap = true })
 		end
 	},
-	-- if vim.fn.executable 'silicon' then
-	-- 	{
-	-- 		'segeljakt/vim-silicon', -- ソースコードを画像化するsiliconコマンドのラッパー
-	-- 		cmd = 'Silicon',
-	-- 		config = function()
-	-- 			vim.api.nvim_set_var('silicon', {
-	-- 				font = 'HackGenNerd Console',
-	-- 			})
-	-- 		end
-	-- 	},
-	-- end
+	{
+		'segeljakt/vim-silicon', -- ソースコードを画像化するsiliconコマンドのラッパー
+		cmd = 'Silicon',
+		enabled = function()
+			return vim.fn.executable 'silicon'
+		end,
+		config = function()
+			vim.api.nvim_set_var('silicon', {
+				font = 'HackGenNerd Console',
+			})
+		end
+	},
 	{
 		'lambdalisue/gin.vim', -- Git連携
 		event = 'VeryLazy',
