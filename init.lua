@@ -203,7 +203,7 @@ require 'lazy'.setup {
 				end
 				require 'lspconfig'[server_name].setup(opts)
 			end }
-			vim.cmd 'LspStart'
+			vim.cmd 'LspStart' -- 初回起動時はBufEnterが発火しない
 		end,
 	},
 	{
