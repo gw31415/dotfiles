@@ -382,7 +382,6 @@ require 'lazy'.setup {
 	{ 'hrsh7th/vim-vsnip', event = { 'InsertCharPre' } },
 	{
 		'hrsh7th/nvim-cmp',
-		lazy = true,
 		dependencies = { 'onsails/lspkind.nvim' },
 		config = function()
 			local cmp = require 'cmp'
