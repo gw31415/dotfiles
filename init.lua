@@ -2,7 +2,6 @@
 -- 依存: NVim nightly, Git, cURL, Deno
 -- siliconコマンドがあれば対応。
 -- ]]
-local vim = vim
 
 -- Emacs Keybindings
 vim.keymap.set('i', '<c-f>', '<c-g>U<right>', {})
@@ -156,20 +155,28 @@ require 'lazy'.setup {
 	},
 
 	-- LSP
-	{ 'folke/neodev.nvim', lazy = true },
 	{
 		'williamboman/mason.nvim', -- LSP Installer
 		dependencies = {
 			'williamboman/mason-lspconfig.nvim',
 			'hrsh7th/cmp-nvim-lsp',
 			'neovim/nvim-lspconfig',
-			'folke/neodev.nvim',
+			{
+				"folke/neodev.nvim",
+				ft = 'lua',
+				config = {
+					override = function(_, library)
+						library.enabled = true
+						library.plugins = true
+					end,
+				},
+			},
 		},
 		event = 'VeryLazy',
 		config = function()
 			require 'mason'.setup {}
-			local mason_lspconfig = require('mason-lspconfig')
-			local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+			local mason_lspconfig = require 'mason-lspconfig'
+			local capabilities = require 'cmp_nvim_lsp'.default_capabilities(vim.lsp.protocol.make_client_capabilities())
 			mason_lspconfig.setup_handlers { function(server_name)
 				local opts = {
 					capabilities = capabilities,
@@ -182,7 +189,10 @@ require 'lazy'.setup {
 						Lua = {
 							workspace = {
 								checkThirdParty = false,
-							}
+							},
+							completion = {
+								callSnippet = "Replace"
+							},
 						},
 						['rust-analyzer'] = {
 							checkOnSave = {
@@ -191,10 +201,7 @@ require 'lazy'.setup {
 						},
 					}
 				}
-				if server_name == 'sumneko_lua' then
-					vim.cmd 'Lazy load neodev.nvim'
-					require 'neodev'.setup {}
-				elseif server_name == 'rust_analyzer' then
+				if server_name == 'rust_analyzer' then
 					local on_attach_prev = opts.on_attach
 					opts.on_attach = function(i, bufnr)
 						on_attach_prev(i, bufnr)
