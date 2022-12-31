@@ -54,8 +54,6 @@ vim.o.splitbelow = true
 vim.o.hidden = true
 vim.o.laststatus = 3
 vim.api.nvim_set_var('tex_conceal', '')
-vim.api.nvim_set_var('netrw_banner', 0)
-vim.api.nvim_set_var('netrw_liststyle', 3)
 vim.diagnostic.config { signs = false }
 
 -- Neovide
@@ -141,13 +139,11 @@ require 'lazy'.setup {
 	{
 		'akinsho/flutter-tools.nvim',
 		ft = { 'dart' },
-		config = function()
-			require 'flutter-tools'.setup {
-				lsp = {
-					on_attach = _G.lsp_onattach_func,
-				}
+		config = {
+			lsp = {
+				on_attach = _G.lsp_onattach_func,
 			}
-		end,
+		}
 	},
 	{
 		'tranvansang/octave.vim',
@@ -676,18 +672,16 @@ require 'lazy'.setup {
 			'CccHighlighterDisable',
 			'CccHighlighterToggle',
 		},
-		config = function()
-			require 'ccc'.setup {
-				bar_char = '-',
-				point_char = '+',
-				highlighter = {
-					auto_enable = true,
-					filetypes = { 'css', 'sass', 'scss', 'js', 'html', 'json' },
-					events = { 'WinScrolled', 'TextChanged', 'TextChangedI', 'BufEnter' },
-					lsp = true,
-				},
-			}
-		end
+		config = {
+			bar_char = '-',
+			point_char = '+',
+			highlighter = {
+				auto_enable = true,
+				filetypes = { 'css', 'sass', 'scss', 'js', 'html', 'json' },
+				events = { 'WinScrolled', 'TextChanged', 'TextChangedI', 'BufEnter' },
+				lsp = true,
+			},
+		}
 	},
 
 	-- 小機能追加
@@ -756,20 +750,15 @@ require 'lazy'.setup {
 	{
 		'lewis6991/gitsigns.nvim', -- Gitの行毎ステータス
 		event = 'VeryLazy',
-		config = function()
-			require 'gitsigns'.setup {
-				numhl = true,
-				signcolumn = false,
-			}
-		end
+		config = {
+			numhl = true,
+			signcolumn = false,
+		}
 	},
 	{
 		'phaazon/hop.nvim', -- 画面内ジャンプ
-		keys = '<Space>',
-		config = function()
-			require 'hop'.setup {}
-			vim.keymap.set('n', '<space>', function() require 'hop'.hint_words { multi_windows = true } end, {})
-		end,
+		keys = { { '<Space>', function() require 'hop'.hint_words { multi_windows = true } end } },
+		config = true,
 	},
 	{
 		'mbbill/undotree',
