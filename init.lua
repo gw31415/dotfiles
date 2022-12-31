@@ -34,10 +34,10 @@ function _G.lsp_onattach_func(_, bufnr)
 	vim.keymap.set('n', '<leader>a', vim.lsp.buf.code_action, bufopts)
 	vim.keymap.set('n', '<leader>n', vim.lsp.buf.rename, bufopts)
 	vim.keymap.set('n', '<leader>r', function() vim.lsp.buf.references({}, nil) end, bufopts)
-	vim.api.nvim_create_autocmd('BufWritePre', {
-		callback = function() vim.lsp.buf.format { async = false } end,
-		buffer = bufnr,
-	})
+	-- vim.api.nvim_create_autocmd('BufWritePre', {
+	-- 	callback = function() vim.lsp.buf.format { async = false } end,
+	-- 	buffer = bufnr,
+	-- })
 end
 
 -- Configure
