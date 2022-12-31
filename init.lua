@@ -127,9 +127,7 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 	end
 })
 
-vim.api.nvim_set_var('winresizer_start_key', '<C-W>c')
-
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+local lazypath = vim.fn.stdpath 'data' .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({ "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", lazypath })
 	vim.fn.system({ "git", "-C", lazypath, "checkout", "tags/stable" }) -- last stable release
@@ -762,7 +760,12 @@ require 'lazy'.setup {
 			'UndotreeToggle',
 		}
 	},
-	'simeji/winresizer', -- ウィンドウサイズ変更
+	{
+		'simeji/winresizer', -- ウィンドウサイズ変更
+		init = function()
+			vim.api.nvim_set_var('winresizer_start_key', '<C-W>c')
+		end
+	},
 	'thinca/vim-partedit', -- 分割編集
 
 	{
