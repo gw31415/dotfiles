@@ -83,18 +83,6 @@ if vim.fn.executable('rg') then
 	vim.api.nvim_set_option_value('grepformat', '%f:%l:%c:%m', {})
 end
 
--- Lazy loading events
-local default_updatetime = vim.o.updatetime
-vim.o.updatetime = 100
-vim.api.nvim_create_autocmd('CursorHold', {
-	once = true,
-	callback = function()
-		vim.o.updatetime = default_updatetime
-	end
-})
-
-local loadevent_timer = { 'VeryLazy' }
-
 -- default plugins
 vim.api.nvim_set_var('loaded_matchparen', true)
 vim.api.nvim_set_var('loaded_matchit', true)
@@ -147,7 +135,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 require 'lazy'.setup {
-	{ 'vim-denops/denops.vim', event = loadevent_timer },
+	{ 'vim-denops/denops.vim', event = 'VeryLazy' },
 	'nvim-lua/plenary.nvim',
 	{ 'eandrju/cellular-automaton.nvim', cmd = { 'CellularAutomaton' } },
 
@@ -172,8 +160,13 @@ require 'lazy'.setup {
 	{ 'folke/neodev.nvim', lazy = true },
 	{
 		'williamboman/mason.nvim', -- LSP Installer
-		dependencies = { 'williamboman/mason-lspconfig.nvim', 'hrsh7th/cmp-nvim-lsp', 'neovim/nvim-lspconfig' },
-		event = loadevent_timer,
+		dependencies = {
+			'williamboman/mason-lspconfig.nvim',
+			'hrsh7th/cmp-nvim-lsp',
+			'neovim/nvim-lspconfig',
+			'folke/neodev.nvim',
+		},
+		event = 'VeryLazy',
 		config = function()
 			require 'mason'.setup {}
 			local mason_lspconfig = require('mason-lspconfig')
@@ -216,7 +209,7 @@ require 'lazy'.setup {
 	},
 	{
 		'jose-elias-alvarez/null-ls.nvim',
-		event = loadevent_timer,
+		event = 'VeryLazy',
 		dependencies = { 'williamboman/mason.nvim', 'nvim-lua/plenary.nvim' },
 		config = function()
 			local mason = require 'mason'
@@ -500,11 +493,11 @@ require 'lazy'.setup {
 	-- UI
 	{
 		'kevinhwang91/nvim-bqf', -- quickfixのハイジャック
-		event = loadevent_timer,
+		event = 'VeryLazy',
 	},
 	{
 		'rcarriga/nvim-notify', -- vim.notifyのハイジャック
-		event = loadevent_timer,
+		event = 'VeryLazy',
 		config = function() vim.notify = require 'notify' end
 	},
 	'lambdalisue/readablefold.vim', -- より良い foldtext
@@ -563,7 +556,7 @@ require 'lazy'.setup {
 
 	{
 		'gw31415/fzyselect.vim', -- vim.ui.select
-		event = loadevent_timer,
+		event = 'VeryLazy',
 		config = function()
 			vim.api.nvim_create_autocmd('FileType', {
 				pattern = 'fzyselect',
@@ -684,31 +677,29 @@ require 'lazy'.setup {
 
 	{
 		'itchyny/vim-parenmatch',
-		event = loadevent_timer,
+		event = 'VeryLazy',
 	},
 	{
 		'cohama/lexima.vim', -- 自動括弧閉じ
-		event = loadevent_timer,
+		event = 'VeryLazy',
 	},
 	{
-		'kylechui/nvim-surround', -- operator 囲い文字
-		version = '*',
-		event = loadevent_timer,
-		config = true,
+		'machakann/vim-sandwich', -- operator 囲い文字
+		event = 'VeryLazy',
 	},
 	{
 		'glts/vim-textobj-comment', -- コメントに対する textobj
-		event = loadevent_timer,
+		event = 'VeryLazy',
 		dependencies = 'kana/vim-textobj-user',
 	},
 	{
 		'kana/vim-textobj-entire', -- バッファ全体に対する textobj
-		event = loadevent_timer,
+		event = 'VeryLazy',
 		dependencies = 'kana/vim-textobj-user',
 	},
 	{
 		'osyo-manga/vim-operator-stay-cursor', -- カーソルを固定したOperatorをつくる
-		event = loadevent_timer,
+		event = 'VeryLazy',
 		dependencies = 'kana/vim-operator-user',
 		config = function()
 			vim.cmd 'map <expr> gq operator#stay_cursor#wrapper("gq")'
@@ -716,7 +707,7 @@ require 'lazy'.setup {
 	},
 	{
 		'gbprod/substitute.nvim', -- vim-operator-replace
-		event = loadevent_timer,
+		event = 'VeryLazy',
 		keys = { '_' },
 		config = function()
 			require 'substitute'.setup {}
@@ -738,14 +729,14 @@ require 'lazy'.setup {
 	-- end
 	{
 		'lambdalisue/gin.vim', -- Git連携
-		event = loadevent_timer,
+		event = 'VeryLazy',
 		config = function()
 			vim.api.nvim_set_var('gin_patch_default_args', { '++no-head', '%' })
 		end
 	},
 	{
 		'lewis6991/gitsigns.nvim', -- Gitの行毎ステータス
-		event = loadevent_timer,
+		event = 'VeryLazy',
 		config = function()
 			require 'gitsigns'.setup {
 				numhl = true,
@@ -755,7 +746,7 @@ require 'lazy'.setup {
 	},
 	{
 		'phaazon/hop.nvim', -- 画面内ジャンプ
-		event = loadevent_timer,
+		event = 'VeryLazy',
 		config = function()
 			require 'hop'.setup {}
 			vim.keymap.set('n', '<space>', function() require 'hop'.hint_words { multi_windows = true } end, {})
@@ -802,7 +793,7 @@ require 'lazy'.setup {
 	{
 		'vim-skk/skkeleton', -- 日本語入力
 		dependencies = 'gw31415/skkeletal.vim',
-		event = loadevent_timer,
+		event = 'VeryLazy',
 		config = function()
 			-- StatusLine
 			function _G.get_warn_count()
