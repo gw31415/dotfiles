@@ -651,6 +651,7 @@ require 'lazy'.setup {
 	{
 		'lukas-reineke/indent-blankline.nvim', -- インデントの可視化
 		dependencies = 'nvim-treesitter/nvim-treesitter',
+		event = 'VeryLazy',
 		config = function()
 			vim.opt.list = true
 			vim.api.nvim_set_var('indent_blankline_indent_level', 4)
@@ -771,11 +772,12 @@ require 'lazy'.setup {
 	},
 	{
 		'simeji/winresizer', -- ウィンドウサイズ変更
+		keys = '<c-w>',
 		init = function()
 			vim.api.nvim_set_var('winresizer_start_key', '<C-W>c')
 		end
 	},
-	'thinca/vim-partedit', -- 分割編集
+	{ 'thinca/vim-partedit', event = 'CmdlineEnter' }, -- 分割編集
 
 	{
 		'navarasu/onedark.nvim', -- テーマ
