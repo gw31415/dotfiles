@@ -34,6 +34,7 @@ function _G.lsp_onattach_func(_, bufnr)
 	vim.keymap.set('n', '<leader>a', vim.lsp.buf.code_action, bufopts)
 	vim.keymap.set('n', '<leader>n', vim.lsp.buf.rename, bufopts)
 	vim.keymap.set('n', '<leader>r', function() vim.lsp.buf.references({}, nil) end, bufopts)
+	vim.keymap.set('n', 'gq', function() vim.lsp.buf.format { async = true } end, { buffer = bufnr, nowait = true })
 	-- vim.api.nvim_create_autocmd('BufWritePre', {
 	-- 	callback = function() vim.lsp.buf.format { async = false } end,
 	-- 	buffer = bufnr,
@@ -197,13 +198,6 @@ require 'lazy'.setup {
 						},
 					}
 				}
-				if server_name == 'rust_analyzer' then
-					local on_attach_prev = opts.on_attach
-					opts.on_attach = function(i, bufnr)
-						on_attach_prev(i, bufnr)
-						vim.keymap.set('n', 'gqae', function() vim.lsp.buf.format { async = true } end, { buffer = bufnr })
-					end
-				end
 				require 'lspconfig'[server_name].setup(opts)
 			end }
 			vim.cmd 'LspStart' -- 初回起動時はBufEnterが発火しない
