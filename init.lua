@@ -691,8 +691,10 @@ require 'lazy'.setup {
 		event = 'VeryLazy',
 	},
 	{
-		'machakann/vim-sandwich', -- operator 囲い文字
+		"kylechui/nvim-surround", -- operator 囲い文字
 		event = 'VeryLazy',
+		tag = "v1.0.0",
+		config = true,
 	},
 	{
 		'glts/vim-textobj-comment', -- コメントに対する textobj
