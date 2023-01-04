@@ -380,7 +380,7 @@ require 'lazy'.setup {
 	},
 
 	-- 補完
-	{ 'hrsh7th/vim-vsnip', event = { 'InsertCharPre' } },
+	{ 'hrsh7th/vim-vsnip', event = 'InsertEnter' },
 	{
 		'hrsh7th/nvim-cmp',
 		dependencies = { 'onsails/lspkind.nvim' },
