@@ -134,7 +134,11 @@ vim.opt.rtp:prepend(lazypath)
 require 'lazy'.setup {
 	{ 'vim-denops/denops.vim', event = 'VeryLazy' },
 	'nvim-lua/plenary.nvim',
-	{ 'eandrju/cellular-automaton.nvim', cmd = { 'CellularAutomaton' } },
+
+	-- Games
+	{ 'eandrju/cellular-automaton.nvim', cmd = 'CellularAutomaton' },
+	{ 'alec-gibson/nvim-tetris', cmd = 'Tetris' },
+	{ 'seandewar/nvimesweeper', cmd = 'Nvimesweeper' },
 
 	-- 言語別プラグイン
 	{
