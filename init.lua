@@ -674,9 +674,10 @@ require 'lazy'.setup {
 		dependencies = 'nvim-treesitter/nvim-treesitter',
 		event = 'VeryLazy',
 		config = function()
-			vim.opt.list = true
 			vim.api.nvim_set_var('indent_blankline_indent_level', 4)
 			vim.api.nvim_set_var('indent_blankline_use_treesitter', true)
+			vim.opt.list = true
+			vim.opt.listchars:append('tab:│ ')
 			require 'indent_blankline'.setup {
 				space_char_blankline = ' ',
 				show_current_context = true,
