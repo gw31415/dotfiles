@@ -685,6 +685,10 @@ require 'lazy'.setup {
 			}
 		end,
 	},
+	{
+		'nmac427/guess-indent.nvim', -- インデント設定の自動認識
+		config = true,
+	},
 
 	{
 		'uga-rosa/ccc.nvim',
