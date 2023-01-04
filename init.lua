@@ -379,6 +379,29 @@ require 'lazy'.setup {
 		end
 	},
 
+	{
+		'CRAG666/code_runner.nvim',
+		requires = 'nvim-lua/plenary.nvim',
+		event = 'VeryLazy',
+		config = {
+			mode = "term",
+			focus = true,
+			startinsert = true,
+			filetype = {
+				java = "cd $dir && javac $fileName && java $fileNameWithoutExt",
+				python = "python3 -u",
+				typescript = "deno run",
+				rust = "cd $dir && rustc $fileName && $dir/$fileNameWithoutExt"
+			},
+			term = {
+				position = "bot",
+				size = 8,
+			},
+			-- filetype_path = vim.fn.expand('~/.config/nvim/code_runner.json'),
+			-- project_path = vim.fn.expand('~/.config/nvim/project_manager.json')
+		}
+	},
+
 	-- 補完
 	{ 'hrsh7th/vim-vsnip', event = 'InsertEnter' },
 	{
