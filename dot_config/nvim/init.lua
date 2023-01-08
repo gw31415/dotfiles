@@ -24,6 +24,13 @@ vim.keymap.set('c', '<c-d>', '<del>', {})
 vim.keymap.set('c', '<c-a>', '<home>', {})
 vim.keymap.set('c', '<c-e>', '<end>', {})
 
+vim.api.nvim_create_autocmd('BufRead', {
+	pattern = '*.mdx',
+	callback = function()
+		vim.bo.filetype = "markdown"
+	end,
+})
+
 function _G.lsp_onattach_func(_, bufnr)
 	vim.api.nvim_create_user_command('Implementation', function() vim.lsp.buf.implementation() end, { force = true })
 	local bufopts = { silent = true, buffer = bufnr }
@@ -62,7 +69,6 @@ vim.diagnostic.config { signs = false }
 vim.opt.guifont = { 'HackGenNerd Console', 'h13' }
 if vim.g.neovide then
 	vim.api.nvim_set_var('neovide_remember_window_size', false)
-	vim.api.nvim_set_var('neovide_hide_mouse_when_typing', true)
 end
 
 -- Mac Keybindings
@@ -133,8 +139,8 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 require 'lazy'.setup {
-	{ 'vim-denops/denops.vim', event = 'VeryLazy' },
 	'nvim-lua/plenary.nvim',
+	{ 'vim-denops/denops.vim', event = 'VeryLazy' },
 
 	-- Games
 	{ 'eandrju/cellular-automaton.nvim', cmd = 'CellularAutomaton' },
@@ -143,9 +149,16 @@ require 'lazy'.setup {
 
 	-- 言語別プラグイン
 	{
+		'nvim-orgmode/orgmode',
+		config = function()
+			require 'orgmode'.setup_ts_grammar()
+		end,
+	},
+	{
 		'akinsho/flutter-tools.nvim',
 		ft = { 'dart' },
-		config = {
+		config = true,
+		opts = {
 			lsp = {
 				on_attach = _G.lsp_onattach_func,
 			}
@@ -166,7 +179,8 @@ require 'lazy'.setup {
 			{
 				"folke/neodev.nvim",
 				ft = 'lua',
-				config = {
+				config = true,
+				opts = {
 					override = function(_, library)
 						library.enabled = true
 						library.plugins = true
@@ -210,7 +224,8 @@ require 'lazy'.setup {
 	},
 	{
 		'tamago324/nlsp-settings.nvim',
-		config = {
+		config = true,
+		opts = {
 			config_home = vim.fn.stdpath('config') .. '/nlsp-settings',
 			local_settings_dir = ".vscode",
 			local_settings_root_markers_fallback = { '.git' },
@@ -394,7 +409,8 @@ require 'lazy'.setup {
 		'CRAG666/code_runner.nvim',
 		requires = 'nvim-lua/plenary.nvim',
 		event = 'VeryLazy',
-		config = {
+		config = true,
+		opts = {
 			mode = "term",
 			focus = true,
 			startinsert = true,
@@ -402,7 +418,8 @@ require 'lazy'.setup {
 				java = "cd $dir && javac $fileName && java $fileNameWithoutExt",
 				python = "python3 -u",
 				typescript = "deno run",
-				rust = "cd $dir && rustc $fileName && $dir/$fileNameWithoutExt"
+				rust = "cd $dir && rustc $fileName && $dir/$fileNameWithoutExt",
+				go = "go run",
 			},
 			term = {
 				position = "bot",
@@ -497,6 +514,11 @@ require 'lazy'.setup {
 			cmp.setup.filetype('octave', {
 				sources = cmp.config.sources {
 					{ name = 'omni' },
+				}
+			})
+			cmp.setup.filetype('org', {
+				sources = cmp.config.sources {
+					{ name = 'orgmode' }
 				}
 			})
 			cmp.setup.cmdline(':', {
@@ -699,10 +721,9 @@ require 'lazy'.setup {
 		end,
 	},
 	{
-		'nmac427/guess-indent.nvim', -- インデント設定の自動認識
+		'nmac427/guess-indent.nvim',
 		config = true,
 	},
-
 	{
 		'uga-rosa/ccc.nvim',
 		cmd = {
@@ -712,7 +733,8 @@ require 'lazy'.setup {
 			'CccHighlighterDisable',
 			'CccHighlighterToggle',
 		},
-		config = {
+		config = true,
+		opts = {
 			bar_char = '-',
 			point_char = '+',
 			highlighter = {
@@ -792,7 +814,8 @@ require 'lazy'.setup {
 	{
 		'lewis6991/gitsigns.nvim', -- Gitの行毎ステータス
 		event = 'VeryLazy',
-		config = {
+		config = true,
+		opts = {
 			numhl = true,
 			signcolumn = false,
 		}
