@@ -1,2 +1,3 @@
+mode = "symlink"
 [edit]
 command = "nvim"
