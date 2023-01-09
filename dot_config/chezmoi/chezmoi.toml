@@ -1,7 +1,1 @@
 mode = "symlink"
-
-[edit]
-command = "nvim"
-
-[git]
-autoPush = true
