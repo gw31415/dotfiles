@@ -29,3 +29,18 @@
         ("fontsize=\\footnotesize")
         ("breaklines")
         ))
+
+(add-to-list 'org-latex-classes
+             '("jsarticle"
+               "\\documentclass[uplatex]{jsarticle}
+[NO-DEFAULT-PACKAGES]
+\\usepackage[dvipdfmx]{graphicx}
+\\usepackage[dvipdfmx]{color}
+\\usepackage[dvipdfmx]{hyperref}
+\\usepackage{pxjahyper}"
+	("\\section{%s}" . "\\section*{%s}")
+	("\\subsection{%s}" . "\\subsection*{%s}")
+	("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+	("\\paragraph{%s}" . "\\paragraph*{%s}")
+	("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+(setq org-latex-default-class "jsarticle")

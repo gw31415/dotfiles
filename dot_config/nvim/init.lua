@@ -166,8 +166,10 @@ require("lazy").setup({
 					},
 				},
 			},
+			'tpope/vim-repeat',
 		},
 		config = function()
+			vim.keymap.set('n', '<Leader>o', '<Nop>', {})
 			require("orgmode").setup_ts_grammar()
 			require("orgmode").setup({
 				org_agenda_files = { "~/iCloud_Drive/org/*" },
