@@ -160,10 +160,11 @@ require("lazy").setup({
 			{
 				"akinsho/org-bullets.nvim",
 				config = true,
-			},
-			{
-				"lukas-reineke/headlines.nvim",
-				config = true,
+				opts = {
+					symbols = {
+						headlines = { "◉", "◊", "▹" },
+					},
+				},
 			},
 		},
 		config = function()
@@ -171,6 +172,27 @@ require("lazy").setup({
 			require("orgmode").setup({
 				org_agenda_files = { "~/iCloud_Drive/org/*" },
 				org_default_notes_file = "~/iCloud_Drive/org/refile.org",
+				org_capture_templates = {
+					n = {
+						description = "Default Note",
+						template = "* %?\n %U",
+					},
+					t = {
+						description = "Task",
+						template = "* TODO %?\n  %u",
+						target = "~/iCloud_Drive/org/tasks.org",
+					},
+				},
+			})
+			vim.api.nvim_create_autocmd("BufEnter", {
+				pattern = "*.org",
+				callback = function()
+					vim.opt_local.formatoptions:append('mM')
+					vim.bo.textwidth = 70
+					vim.bo.expandtab = true
+					vim.bo.tabstop = 1
+					vim.bo.shiftwidth = 1
+				end
 			})
 		end,
 	},
@@ -213,7 +235,7 @@ require("lazy").setup({
 			require("mason").setup({})
 			local mason_lspconfig = require("mason-lspconfig")
 			local capabilities =
-				require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
+			require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 			mason_lspconfig.setup_handlers({
 				function(server_name)
 					local opts = {
@@ -557,6 +579,11 @@ require("lazy").setup({
 					{ name = "orgmode" },
 				}),
 			})
+			cmp.setup.filetype({ "org", "markdown" }, {
+				sources = cmp.config.sources({
+					{ name = "emoji" },
+				}),
+			})
 			cmp.setup.cmdline(":", {
 				mapping = cmp.mapping.preset.cmdline(),
 				sources = cmp.config.sources({
@@ -580,6 +607,7 @@ require("lazy").setup({
 	{ "hrsh7th/cmp-omni", dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
 	{ "hrsh7th/cmp-buffer", dependencies = "hrsh7th/nvim-cmp", event = { "InsertCharPre", "CmdlineEnter" } },
 	{ "uga-rosa/cmp-skkeleton", dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
+	{ "hrsh7th/cmp-emoji", dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
 
 	-- UI
 	{
@@ -669,7 +697,9 @@ require("lazy").setup({
 				end,
 			})
 			-- Line Selector
-			vim.cmd("nn gl <cmd>cal fzyselect#start(getline(1, '$'), #{prompt:'Fuzzy search'}, {_,i->i==v:null?v:null:cursor(i, 0)})<cr>")
+			vim.cmd(
+				"nn gl <cmd>cal fzyselect#start(getline(1, '$'), #{prompt:'Fuzzy search'}, {_,i->i==v:null?v:null:cursor(i, 0)})<cr>"
+			)
 			-- git ls-files
 			vim.cmd([[
 				fu! s:fzyselect_lsfiles() abort
@@ -749,6 +779,17 @@ require("lazy").setup({
 		"lukas-reineke/indent-blankline.nvim", -- インデントの可視化
 		dependencies = "nvim-treesitter/nvim-treesitter",
 		event = "VeryLazy",
+		init = function()
+			vim.api.nvim_set_var("indent_blankline_filetype_exclude", {
+				"lspinfo",
+				"packer",
+				"checkhealth",
+				"help",
+				"man",
+				"",
+				"org",
+			})
+		end,
 		config = function()
 			vim.api.nvim_set_var("indent_blankline_indent_level", 4)
 			vim.api.nvim_set_var("indent_blankline_use_treesitter", true)
@@ -950,7 +991,9 @@ require("lazy").setup({
 				end
 			end
 
-			vim.cmd([[set statusline=[%{v:lua.get_skkeleton_modestring()}]%f%r%m%h%w%=E%{v:lua.get_error_count()}W%{v:lua.get_warn_count()}\ %l/%L]])
+			vim.cmd(
+				[[set statusline=[%{v:lua.get_skkeleton_modestring()}]%f%r%m%h%w%=E%{v:lua.get_error_count()}W%{v:lua.get_warn_count()}\ %l/%L]]
+			)
 
 			vim.keymap.set("i", "<C-j>", "<Plug>(skkeleton-enable)", {})
 			vim.keymap.set("c", "<C-j>", "<Plug>(skkeleton-enable)", {})
