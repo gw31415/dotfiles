@@ -7,4 +7,5 @@ return {
 	font_size = 14,
 	initial_cols = 150,
 	initial_rows = 50,
+	front_end = "WebGpu",
 }

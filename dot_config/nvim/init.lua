@@ -46,7 +46,7 @@ function _G.lsp_onattach_func(_, bufnr)
 	vim.keymap.set("n", "<leader>r", function()
 		vim.lsp.buf.references({}, nil)
 	end, bufopts)
-	vim.keymap.set("n", "gq", function()
+	vim.keymap.set("n", "gqae", function()
 		vim.lsp.buf.format({ async = true })
 	end, { buffer = bufnr, nowait = true })
 	-- vim.api.nvim_create_autocmd('BufWritePre', {
@@ -70,6 +70,14 @@ vim.o.hidden = true
 vim.o.laststatus = 3
 vim.api.nvim_set_var("tex_conceal", "")
 vim.diagnostic.config({ signs = false })
+
+-- Terminal
+vim.api.nvim_create_autocmd('TermOpen', {
+	callback = function()
+		vim.cmd.setl("nonumber")
+		vim.cmd.setl("norelativenumber")
+	end
+})
 
 -- Neovide
 vim.opt.guifont = { "HackGenNerd Console", "h13" }
@@ -173,6 +181,7 @@ require("lazy").setup({
 			require("orgmode").setup_ts_grammar()
 			require("orgmode").setup({
 				org_agenda_files = { "~/iCloud_Drive/org/*" },
+				org_agenda_skip_deadline_if_done = true,
 				org_default_notes_file = "~/iCloud_Drive/org/refile.org",
 				org_capture_templates = {
 					n = {
@@ -744,12 +753,13 @@ require("lazy").setup({
 				parser_install_dir = parser_install_dir,
 				highlight = {
 					enable = true,
-					additional_vim_regex_highlighting = { "org" },
+					additional_vim_regex_highlighting = { "org", "markdown" },
 				},
 				indent = {
 					enable = true,
 				},
 				auto_install = true,
+				ensure_installed = {'org'},
 			})
 			vim.wo.foldmethod = "expr"
 			vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
