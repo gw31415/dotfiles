@@ -199,7 +199,7 @@ require("lazy").setup({
 				pattern = "*.org",
 				callback = function()
 					vim.opt_local.formatoptions:append('mM')
-					vim.bo.textwidth = 70
+					vim.wo.foldlevel = 0
 					vim.bo.expandtab = true
 					vim.bo.tabstop = 1
 					vim.bo.shiftwidth = 1
@@ -498,8 +498,8 @@ require("lazy").setup({
 				position = "bot",
 				size = 8,
 			},
-			-- filetype_path = vim.fn.expand('~/.config/nvim/code_runner.json'),
-			-- project_path = vim.fn.expand('~/.config/nvim/project_manager.json')
+			filetype_path = vim.fn.expand('~/.config/nvim/code_runner.json'),
+			project_path = vim.fn.expand('~/.config/nvim/project_manager.json')
 		},
 	},
 
