@@ -195,7 +195,7 @@ require("lazy").setup({
 					},
 				},
 			})
-			vim.api.nvim_create_autocmd("BufEnter", {
+			vim.api.nvim_create_autocmd("BufRead", {
 				pattern = "*.org",
 				callback = function()
 					vim.opt_local.formatoptions:append('mM')
@@ -588,6 +588,10 @@ require("lazy").setup({
 			cmp.setup.filetype("org", {
 				sources = cmp.config.sources({
 					{ name = "orgmode" },
+					{ name = "path" },
+					{ name = "skkeleton" },
+					{ name = "vsnip" },
+					{ name = "buffer" },
 				}),
 			})
 			cmp.setup.filetype({ "org", "markdown" }, {

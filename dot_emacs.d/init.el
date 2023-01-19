@@ -8,6 +8,11 @@
 
 (define-key key-translation-map [?\C-h] [?\C-?])
 
+;; plantumlの設定：graphbizが必要
+(setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/lib/plantuml-1.2023.0.jar"))
+(org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t) (dot . t) (latex . t)))
+(setq org-confirm-babel-evaluate nil)
+
 (require 'package)
 (require 'ox-latex)
 
@@ -115,16 +120,18 @@
 	("\\paragraph{%s}" . "\\paragraph*{%s}")
 	("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
+(setq org-export-allow-bind-keywords t)
 (add-to-list 'org-latex-classes
              '("bxjsarticle"
-               "\\documentclass[a4paper,xelatex,ja=standard]{bxjsarticle}
+               "\\documentclass[a4paper,xelatex,ja=standard,everyparhook=compat]{bxjsarticle}
 [NO-DEFAULT-PACKAGES]
 
 % フォント設定
-\\usepackage{fontspec}
+\\usepackage[no-math]{fontspec}
 \\setmainfont{Times New Roman}
+\\setsansfont{Helvetica Neue}
 \\setCJKmainfont[AutoFakeSlant=0.25,BoldFont=HaranoAjiGothic-Medium]{HaranoAjiMincho}
-\\setsansfont[AutoFakeSlant=0.25]{HaranoAjiGothic}
+\\setCJKsansfont[AutoFakeSlant=0.25]{HaranoAjiGothic}
 
 % 引用は斜体
 \\AtBeginEnvironment{quote}{\\itshape}
@@ -135,12 +142,20 @@
 \\usepackage{xurl}
 \\hypersetup{unicode,bookmarksnumbered=true,hidelinks,final}
 
-% パッケージ
+\\usepackage{tikz}
+\\usetikzlibrary{positioning,graphs,quotes}
+
+% その他のパッケージ
+\\usetikzlibrary{graphs}
 \\usepackage{amsmath}
 \\usepackage{amsthm}
 \\usepackage{amssymb}
+\\usepackage{here}
 \\usepackage{mathtools}
 \\usepackage[version]{mhchem}
+\\usepackage{wrapfig}
+
+\\newcommand{\\uline}[1]{\\underline{#1}}
 
 "
 	("\\section{%s}" . "\\section{%s}")
