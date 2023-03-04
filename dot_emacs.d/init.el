@@ -28,7 +28,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-(setq org-export-default-language 'ja)
+(setq org-export-default-language "ja")
 
 (setq org-latex-pdf-process '("tectonic %f"))
 (add-to-list 'org-latex-logfiles-extensions "tex~")
@@ -152,10 +152,15 @@
 \\usepackage{amssymb}
 \\usepackage{here}
 \\usepackage{mathtools}
+\\usepackage{pgfplots}
+\\usepackage{physics}
+\\usepackage{ulem}
 \\usepackage[version]{mhchem}
 \\usepackage{wrapfig}
 
-\\newcommand{\\uline}[1]{\\underline{#1}}
+\\pgfplotsset{compat=1.14}
+
+\\renewcommand{\\uline}[1]{\\underline{#1}}
 
 "
 	("\\section{%s}" . "\\section{%s}")

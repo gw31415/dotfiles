@@ -2,7 +2,6 @@
 -- 依存: NVim nightly, Git, cURL, Deno
 -- siliconコマンドがあれば対応。
 -- ]]
-
 -- Emacs Keybindings
 
 vim.keymap.set("i", "<c-f>", "<c-g>U<right>", {})
@@ -154,12 +153,12 @@ end
 vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	"nvim-lua/plenary.nvim",
-	{ "vim-denops/denops.vim", event = "VeryLazy" },
+	{ "vim-denops/denops.vim",           event = "VeryLazy" },
 
 	-- Games
 	{ "eandrju/cellular-automaton.nvim", cmd = "CellularAutomaton" },
-	{ "alec-gibson/nvim-tetris", cmd = "Tetris" },
-	{ "seandewar/nvimesweeper", cmd = "Nvimesweeper" },
+	{ "alec-gibson/nvim-tetris",         cmd = "Tetris" },
+	{ "seandewar/nvimesweeper",          cmd = "Nvimesweeper" },
 
 	-- 言語別プラグイン
 	{
@@ -246,7 +245,7 @@ require("lazy").setup({
 			require("mason").setup({})
 			local mason_lspconfig = require("mason-lspconfig")
 			local capabilities =
-			require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
+				require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 			mason_lspconfig.setup_handlers({
 				function(server_name)
 					local opts = {
@@ -498,13 +497,13 @@ require("lazy").setup({
 				position = "bot",
 				size = 8,
 			},
-			filetype_path = vim.fn.expand('~/.config/nvim/code_runner.json'),
-			project_path = vim.fn.expand('~/.config/nvim/project_manager.json')
+			-- filetype_path = vim.fn.expand('~/.config/nvim/code_runner.json'),
+			-- project_path = vim.fn.expand('~/.config/nvim/project_manager.json')
 		},
 	},
 
 	-- 補完
-	{ "hrsh7th/vim-vsnip", event = "InsertEnter" },
+	{ "hrsh7th/vim-vsnip",                   event = "InsertEnter" },
 	{
 		"hrsh7th/nvim-cmp",
 		dependencies = { "onsails/lspkind.nvim" },
@@ -548,7 +547,7 @@ require("lazy").setup({
 							fallback()
 						end
 					end, { "i", "s" }),
-					["<C-b>"] = cmp.mapping.scroll_docs(-4),
+					["<C-b>"] = cmp.mapping.scroll_docs( -4),
 					["<C-f>"] = cmp.mapping.scroll_docs(4),
 					["<C-e>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
@@ -572,7 +571,7 @@ require("lazy").setup({
 						end
 					end, { "i", "s", "c" }),
 					["<s-tab>"] = cmp.mapping(function(fallback)
-						if vim.fn["vsnip#jumpable"](-1) == 1 then
+						if vim.fn["vsnip#jumpable"]( -1) == 1 then
 							feedkeys("<Plug>(vsnip-jump-prev)")
 						else
 							fallback()
@@ -615,14 +614,14 @@ require("lazy").setup({
 			end
 		end,
 	},
-	{ "hrsh7th/cmp-vsnip", dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
+	{ "hrsh7th/cmp-vsnip",                   dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
 	{ "hrsh7th/cmp-nvim-lsp-signature-help", dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
-	{ "hrsh7th/cmp-cmdline", dependencies = "hrsh7th/nvim-cmp", event = "CmdlineEnter" },
-	{ "hrsh7th/cmp-path", dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
-	{ "hrsh7th/cmp-omni", dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
-	{ "hrsh7th/cmp-buffer", dependencies = "hrsh7th/nvim-cmp", event = { "InsertCharPre", "CmdlineEnter" } },
-	{ "uga-rosa/cmp-skkeleton", dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
-	{ "hrsh7th/cmp-emoji", dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
+	{ "hrsh7th/cmp-cmdline",                 dependencies = "hrsh7th/nvim-cmp", event = "CmdlineEnter" },
+	{ "hrsh7th/cmp-path",                    dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
+	{ "hrsh7th/cmp-omni",                    dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
+	{ "hrsh7th/cmp-buffer",                  dependencies = "hrsh7th/nvim-cmp", event = { "InsertCharPre", "CmdlineEnter" } },
+	{ "uga-rosa/cmp-skkeleton",              dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
+	{ "hrsh7th/cmp-emoji",                   dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
 
 	-- UI
 	{
@@ -642,8 +641,8 @@ require("lazy").setup({
 		keys = {
 			{ "<C-a>" },
 			{ "<C-x>" },
-			{ "<C-a>", mode = "v" },
-			{ "<C-x>", mode = "v" },
+			{ "<C-a>",  mode = "v" },
+			{ "<C-x>",  mode = "v" },
 			{ "g<C-a>", mode = "v" },
 			{ "g<C-x>", mode = "v" },
 		},
@@ -763,7 +762,7 @@ require("lazy").setup({
 					enable = true,
 				},
 				auto_install = true,
-				ensure_installed = {'org'},
+				ensure_installed = { 'org' },
 			})
 			vim.wo.foldmethod = "expr"
 			vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
@@ -973,6 +972,19 @@ require("lazy").setup({
 			})
 		end,
 	},
+	{
+		"gw31415/mastodon.nvim", -- Mastodon
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"rcarriga/nvim-notify",
+			"kkharji/sqlite.lua",
+		},
+		event = "VeryLazy",
+		config = function()
+			require "mastodon".setup()
+			vim.api.nvim_set_var("mastodon_toot_visibility", "public")
+		end
+	},
 	"vim-jp/vimdoc-ja", -- 日本語のヘルプ
 	{
 		"vim-skk/skkeleton", -- 日本語入力
@@ -1022,12 +1034,12 @@ require("lazy").setup({
 			})
 
 			for _, map in pairs({
-				{ "input", "<c-e>", "" },
+				{ "input",  "<c-e>", "" },
 				{ "henkan", "<c-e>", "" },
-				{ "input", "<c-n>", "henkanFirst" },
+				{ "input",  "<c-n>", "henkanFirst" },
 				{ "henkan", "<c-n>", "henkanForward" },
 				{ "henkan", "<c-p>", "henkanBackward" },
-				{ "henkan", "<bs>", "henkanBackward" },
+				{ "henkan", "<bs>",  "henkanBackward" },
 				{ "henkan", "<c-h>", "" },
 				{ "henkan", "<c-h>", "henkanBackward" },
 			}) do
