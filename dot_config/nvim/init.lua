@@ -41,10 +41,8 @@ function _G.lsp_onattach_func(_, bufnr)
 	vim.keymap.set("n", "<C-j>", vim.diagnostic.goto_next, bufopts)
 	vim.keymap.set("n", "<C-k>", vim.diagnostic.goto_prev, bufopts)
 	vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, bufopts)
-	vim.keymap.set("n", "<leader>n", vim.lsp.buf.rename, bufopts)
-	vim.keymap.set("n", "<leader>r", function()
-		vim.lsp.buf.references({}, nil)
-	end, bufopts)
+	vim.keymap.set("n", "cI", vim.lsp.buf.rename, bufopts)
+	vim.keymap.set("n", "z*", vim.lsp.buf.references, bufopts)
 	vim.keymap.set("n", "gqae", function()
 		vim.lsp.buf.format({ async = true })
 	end, { buffer = bufnr, nowait = true })
@@ -153,7 +151,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	"nvim-lua/plenary.nvim",
-	{ "vim-denops/denops.vim",           event = "VeryLazy" },
+	"vim-denops/denops.vim",
 
 	-- Games
 	{ "eandrju/cellular-automaton.nvim", cmd = "CellularAutomaton" },
@@ -169,7 +167,12 @@ require("lazy").setup({
 				config = true,
 				opts = {
 					symbols = {
-						headlines = { "◉", "◊", "▹" },
+						headlines = {
+							"◉", "◊", "▹",
+							"◉", "◊", "▹",
+							"◉", "◊", "▹",
+							"◉", "◊", "▹",
+						}
 					},
 				},
 			},
@@ -479,7 +482,7 @@ require("lazy").setup({
 
 	{
 		"CRAG666/code_runner.nvim",
-		requires = "nvim-lua/plenary.nvim",
+		dependencies = "nvim-lua/plenary.nvim",
 		event = "VeryLazy",
 		config = true,
 		opts = {
@@ -547,7 +550,7 @@ require("lazy").setup({
 							fallback()
 						end
 					end, { "i", "s" }),
-					["<C-b>"] = cmp.mapping.scroll_docs( -4),
+					["<C-b>"] = cmp.mapping.scroll_docs(-4),
 					["<C-f>"] = cmp.mapping.scroll_docs(4),
 					["<C-e>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
@@ -571,7 +574,7 @@ require("lazy").setup({
 						end
 					end, { "i", "s", "c" }),
 					["<s-tab>"] = cmp.mapping(function(fallback)
-						if vim.fn["vsnip#jumpable"]( -1) == 1 then
+						if vim.fn["vsnip#jumpable"](-1) == 1 then
 							feedkeys("<Plug>(vsnip-jump-prev)")
 						else
 							fallback()
@@ -619,9 +622,14 @@ require("lazy").setup({
 	{ "hrsh7th/cmp-cmdline",                 dependencies = "hrsh7th/nvim-cmp", event = "CmdlineEnter" },
 	{ "hrsh7th/cmp-path",                    dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
 	{ "hrsh7th/cmp-omni",                    dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
-	{ "hrsh7th/cmp-buffer",                  dependencies = "hrsh7th/nvim-cmp", event = { "InsertCharPre", "CmdlineEnter" } },
-	{ "uga-rosa/cmp-skkeleton",              dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
-	{ "hrsh7th/cmp-emoji",                   dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
+	{
+		"hrsh7th/cmp-buffer",
+		dependencies = "hrsh7th/nvim-cmp",
+		event = { "InsertCharPre",
+			"CmdlineEnter" }
+	},
+	{ "uga-rosa/cmp-skkeleton", dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
+	{ "hrsh7th/cmp-emoji",      dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
 
 	-- UI
 	{
@@ -637,7 +645,7 @@ require("lazy").setup({
 	},
 	"lambdalisue/readablefold.vim", -- より良い foldtext
 	{
-		"monaqa/dial.nvim", -- 拡張版<C-a><C-x>
+		"monaqa/dial.nvim",      -- 拡張版<C-a><C-x>
 		keys = {
 			{ "<C-a>" },
 			{ "<C-x>" },
@@ -987,9 +995,18 @@ require("lazy").setup({
 	},
 	"vim-jp/vimdoc-ja", -- 日本語のヘルプ
 	{
+		'epwalsh/obsidian.nvim',
+		tag = "v1.8.0",
+		opts = {
+			dir = "~/Documents/Obsidian Vault",
+			completion = {
+				nvim_cmp = true, -- if using nvim-cmp, otherwise set to false
+			}
+		},
+	},
+	{
 		"vim-skk/skkeleton", -- 日本語入力
-		dependencies = "gw31415/skkeletal.vim",
-		event = "VeryLazy",
+		dependencies = { "gw31415/skkeletal.vim", "vim-denops/denops.vim" },
 		config = function()
 			-- StatusLine
 			function _G.get_warn_count()

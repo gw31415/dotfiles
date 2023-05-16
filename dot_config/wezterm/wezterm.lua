@@ -8,4 +8,5 @@ return {
 	initial_cols = 150,
 	initial_rows = 50,
 	front_end = "WebGpu",
+	macos_forward_to_ime_modifier_mask = "SHIFT|CTRL",
 }
