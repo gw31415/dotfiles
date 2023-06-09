@@ -4,5 +4,8 @@
         "/Users/ama/.local/share/nvim/lazy/neodev.nvim/types/nightly",
         "/usr/local/Cellar/neovim/HEAD-cb9d68f/share/nvim/runtime",
         "${3rd}/luassert/library"
+    ],
+    "diagnostics.globals": [
+        "opts"
     ]
 }

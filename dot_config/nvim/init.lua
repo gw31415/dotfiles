@@ -25,9 +25,7 @@ vim.keymap.set("c", "<c-e>", "<end>", {})
 
 vim.api.nvim_create_autocmd("BufRead", {
 	pattern = "*.mdx",
-	callback = function()
-		vim.bo.filetype = "markdown"
-	end,
+	callback = function() vim.bo.filetype = "markdown" end,
 })
 
 function _G.lsp_onattach_func(_, bufnr)
@@ -43,9 +41,7 @@ function _G.lsp_onattach_func(_, bufnr)
 	vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, bufopts)
 	vim.keymap.set("n", "cI", vim.lsp.buf.rename, bufopts)
 	vim.keymap.set("n", "z*", vim.lsp.buf.references, bufopts)
-	vim.keymap.set("n", "gqae", function()
-		vim.lsp.buf.format({ async = true })
-	end, { buffer = bufnr, nowait = true })
+	vim.keymap.set("n", "gqae", function() vim.lsp.buf.format({ async = true }) end, { buffer = bufnr, nowait = true })
 	-- vim.api.nvim_create_autocmd('BufWritePre', {
 	-- 	callback = function() vim.lsp.buf.format { async = false } end,
 	-- 	buffer = bufnr,
@@ -100,8 +96,24 @@ if vim.fn.executable("rg") then
 	vim.api.nvim_set_option_value("grepformat", "%f:%l:%c:%m", {})
 end
 
+-- StatusLine
+function _G.get_warn_count()
+	local warns = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
+	return #warns
+end
+
+function _G.get_error_count()
+	local errors = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
+	return #errors
+end
+
+_G.get_skkeleton_modestring = function() return "英数" end
+
+vim.cmd(
+	[[set statusline=[%{v:lua.get_skkeleton_modestring()}]%f%r%m%h%w%=E%{v:lua.get_error_count()}W%{v:lua.get_warn_count()}\ %l/%L]]
+)
+
 -- default plugins
-vim.api.nvim_set_var("loaded_matchparen", true)
 vim.api.nvim_set_var("loaded_matchit", true)
 vim.api.nvim_set_var("loaded_netrwPlugin", true)
 vim.api.nvim_set_var("loaded_remote_plugins", true)
@@ -254,21 +266,16 @@ require("lazy").setup({
 					local opts = {
 						capabilities = capabilities,
 						on_attach = function(i, bufnr)
-							vim.api.nvim_buf_set_option(
-								bufnr,
-								"formatexpr",
-								"v:lua.vim.lsp.formatexpr(#{timeout_ms:250})"
-							)
+							---@diagnostic disable-next-line: redundant-parameter
+							vim.api.nvim_buf_set_option(bufnr, "formatexpr",
+								---@diagnostic disable-next-line: redundant-parameter
+								"v:lua.vim.lsp.formatexpr(#{timeout_ms:250})")
 							_G.lsp_onattach_func(i, bufnr)
 						end,
 						settings = {
 							Lua = {
-								workspace = {
-									checkThirdParty = false,
-								},
-								completion = {
-									callSnippet = "Replace",
-								},
+								workspace = { checkThirdParty = false },
+								completion = { callSnippet = "Replace" },
 							},
 							["rust-analyzer"] = {
 								checkOnSave = {
@@ -352,8 +359,8 @@ require("lazy").setup({
 	-- Debug Adapter Protocol
 	{
 		"mfussenegger/nvim-dap",
-		lazy = true,
 		dependencies = { "rcarriga/nvim-dap-ui" },
+		keys = { "<F5>", "<F10>", "<F11>", "<F12>", "bb", },
 		config = function()
 			require("dapui").setup()
 
@@ -405,7 +412,6 @@ require("lazy").setup({
 	},
 	{
 		"theHamsta/nvim-dap-virtual-text",
-		lazy = true,
 		dependencies = "mfussenegger/nvim-dap",
 		config = function()
 			require("nvim-dap-virtual-text").setup({
@@ -415,11 +421,11 @@ require("lazy").setup({
 	},
 	{
 		"rcarriga/cmp-dap",
-		lazy = true,
 		dependencies = { "hrsh7th/nvim-cmp", "mfussenegger/nvim-dap" },
 		config = function()
 			require("cmp").setup({
 				enabled = function()
+					---@diagnostic disable-next-line: redundant-parameter
 					return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt" or require("cmp_dap").is_dap_buffer()
 				end,
 			})
@@ -625,8 +631,7 @@ require("lazy").setup({
 	{
 		"hrsh7th/cmp-buffer",
 		dependencies = "hrsh7th/nvim-cmp",
-		event = { "InsertCharPre",
-			"CmdlineEnter" }
+		event = { "InsertCharPre", "CmdlineEnter" }
 	},
 	{ "uga-rosa/cmp-skkeleton", dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
 	{ "hrsh7th/cmp-emoji",      dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
@@ -707,8 +712,6 @@ require("lazy").setup({
 
 	{
 		"gw31415/fzyselect.vim", -- vim.ui.select
-		event = "VeryLazy",
-		module = false,
 		config = function()
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = "fzyselect",
@@ -799,6 +802,13 @@ require("lazy").setup({
 		end,
 	},
 	{
+		"Wansmer/treesj",
+		keys = {
+			{ "J", "<cmd>TSJToggle<cr>", desc = "Join Toggle" },
+		},
+		opts = { use_default_keymaps = false, max_join_length = 150 },
+	},
+	{
 		"lukas-reineke/indent-blankline.nvim", -- インデントの可視化
 		dependencies = "nvim-treesitter/nvim-treesitter",
 		event = "VeryLazy",
@@ -855,12 +865,8 @@ require("lazy").setup({
 	"rbtnn/vim-ambiwidth", -- 曖昧幅な文字の文字幅設定
 
 	{
-		"itchyny/vim-parenmatch",
-		event = "VeryLazy",
-	},
-	{
 		"cohama/lexima.vim", -- 自動括弧閉じ
-		event = "VeryLazy",
+		event = "InsertEnter",
 	},
 	{
 		"kylechui/nvim-surround", -- operator 囲い文字
@@ -870,20 +876,24 @@ require("lazy").setup({
 	},
 	{
 		"glts/vim-textobj-comment", -- コメントに対する textobj
-		event = "VeryLazy",
+		keys = {
+			{ "c", mode = "o" },
+		},
 		dependencies = "kana/vim-textobj-user",
 	},
 	{
 		"kana/vim-textobj-entire", -- バッファ全体に対する textobj
-		event = "VeryLazy",
+		keys = {
+			{ "ae", mode = "o" },
+		},
 		dependencies = "kana/vim-textobj-user",
 	},
 	{
 		"osyo-manga/vim-operator-stay-cursor", -- カーソルを固定したOperatorをつくる
-		event = "VeryLazy",
+		keys = "gq",
 		dependencies = "kana/vim-operator-user",
 		config = function()
-			vim.cmd('map <expr> gq operator#stay_cursor#wrapper("gq")')
+			vim.cmd('nmap <expr> gq operator#stay_cursor#wrapper("gq")')
 		end,
 	},
 	{
@@ -954,9 +964,9 @@ require("lazy").setup({
 		end,
 	},
 	{ "thinca/vim-partedit", event = "CmdlineEnter" }, -- 分割編集
-
 	{
-		"navarasu/onedark.nvim", -- テーマ
+		"navarasu/onedark.nvim",                    -- テーマ
+		lazy = false,
 		config = function()
 			require("onedark").setup({
 				style = "darker",
@@ -973,12 +983,65 @@ require("lazy").setup({
 	{
 		"gw31415/deepl-commands.nvim", -- deeplとの連携
 		event = { "CmdlineEnter" },
-		dependencies = "gw31415/deepl.vim",
+		dependencies = { "gw31415/deepl.vim", "gw31415/fzyselect.vim" },
 		config = function()
 			require("deepl-commands").setup({
 				selector_func = require("fzyselect").start,
 			})
 		end,
+	},
+	{
+		"gw31415/gpt.nvim",
+		config = function()
+			local function setup_authkey(path)
+				---@diagnostic disable: param-type-mismatch
+				path = vim.fn.expand(path, nil, nil)
+				local key
+				if vim.fn.filereadable(path) == 1 then
+					key = vim.fn.trim(vim.fn.readfile(path, nil, 1)[1])
+				else
+					key = vim.fn.input('OPENAI_API_KEY = ')
+					if key == '' then
+						return nil
+					end
+					vim.fn.writefile({ key }, path)
+					vim.fn.system({ 'chmod', '600', path })
+					vim.notify(string.format(
+							'Successfully saved OPENAI_API_KEY at `%s`.', path),
+						vim.log.levels.INFO, {
+							title = 'gpt.nvim'
+						})
+				end
+				return key
+			end
+
+			require 'gpt'.setup {
+				api_key = function() return setup_authkey('~/.ssh/openai_api_key.txt') end,
+			}
+
+			vim.keymap.set({ 'n', 'x' }, '<C-g>r', '<Plug>(gpt-replace)')
+			vim.keymap.set({ 'n', 'i' }, '<C-g>p', require 'gpt'.prompt)
+			vim.keymap.set('n', '<C-g>c', require 'gpt'.cancel)
+			vim.keymap.set('n', '<C-g>o', function()
+				require 'gpt'.order {
+					opener = "10split",
+					setup_window = function()
+						---@diagnostic disable-next-line: redundant-parameter
+						vim.api.nvim_win_set_option(0, "stl", "order-result")
+					end
+				}
+			end)
+			vim.api.nvim_create_autocmd('BufReadPost', {
+				pattern = "COMMIT_EDITMSG",
+				callback = function()
+					vim.keymap.set('n', '<C-g><tab>', function()
+						local diff = vim.fn.system({ 'git', '--git-dir', vim.fn.expand('%:p:h'), 'diff', 'HEAD' })
+						require 'gpt'.stream(
+							'Write a commit message describing the changes and the reasoning:\n\n========\n' .. diff)
+					end, { buffer = true })
+				end
+			})
+		end
 	},
 	{
 		"gw31415/mastodon.nvim", -- Mastodon
@@ -993,33 +1056,13 @@ require("lazy").setup({
 			vim.api.nvim_set_var("mastodon_toot_visibility", "public")
 		end
 	},
-	"vim-jp/vimdoc-ja", -- 日本語のヘルプ
+	{ "vim-jp/vimdoc-ja",    lazy = false }, -- 日本語のヘルプ
 	{
-		'epwalsh/obsidian.nvim',
-		tag = "v1.8.0",
-		opts = {
-			dir = "~/Documents/Obsidian Vault",
-			completion = {
-				nvim_cmp = true, -- if using nvim-cmp, otherwise set to false
-			}
-		},
-	},
-	{
-		"vim-skk/skkeleton", -- 日本語入力
+		"vim-skk/skkeleton",              -- 日本語入力
+		event = { "InsertEnter", "CmdlineEnter" },
 		dependencies = { "gw31415/skkeletal.vim", "vim-denops/denops.vim" },
 		config = function()
-			-- StatusLine
-			function _G.get_warn_count()
-				local warns = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
-				return #warns
-			end
-
-			function _G.get_error_count()
-				local errors = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
-				return #errors
-			end
-
-			function _G.get_skkeleton_modestring()
+			_G.get_skkeleton_modestring = function()
 				local mode = vim.fn["skkeleton#mode"]()
 				if mode == "hira" then
 					return "ひら"
@@ -1035,10 +1078,6 @@ require("lazy").setup({
 					return "英数"
 				end
 			end
-
-			vim.cmd(
-				[[set statusline=[%{v:lua.get_skkeleton_modestring()}]%f%r%m%h%w%=E%{v:lua.get_error_count()}W%{v:lua.get_warn_count()}\ %l/%L]]
-			)
 
 			vim.keymap.set("i", "<C-j>", "<Plug>(skkeleton-enable)", {})
 			vim.keymap.set("c", "<C-j>", "<Plug>(skkeleton-enable)", {})
@@ -1064,4 +1103,8 @@ require("lazy").setup({
 			end
 		end,
 	},
+}, {
+	defaults = {
+		lazy = true,
+	}
 })
