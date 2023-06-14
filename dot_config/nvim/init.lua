@@ -27,6 +27,16 @@ vim.api.nvim_create_autocmd("BufRead", {
 	pattern = "*.mdx",
 	callback = function() vim.bo.filetype = "markdown" end,
 })
+vim.api.nvim_create_autocmd('BufReadPost', {
+	pattern = "COMMIT_EDITMSG",
+	callback = function()
+		vim.keymap.set('n', '<C-g><tab>', function()
+			local diff = vim.fn.system({ 'git', '--git-dir', vim.fn.expand('%:p:h'), 'diff', 'HEAD' })
+			require 'gpt'.stream(
+				'Write a commit message describing the changes and the reasoning:\n\n========\n' .. diff)
+		end, { buffer = true })
+	end
+})
 
 function _G.lsp_onattach_func(_, bufnr)
 	vim.api.nvim_create_user_command("Implementation", function()
@@ -992,6 +1002,11 @@ require("lazy").setup({
 	},
 	{
 		"gw31415/gpt.nvim",
+		keys = {
+			{ "<C-g>", mode = "n" },
+			{ "<C-g>", mode = "x" },
+			{ "<C-g>", mode = "i" },
+		},
 		config = function()
 			local function setup_authkey(path)
 				---@diagnostic disable: param-type-mismatch
@@ -1031,16 +1046,6 @@ require("lazy").setup({
 					end
 				}
 			end)
-			vim.api.nvim_create_autocmd('BufReadPost', {
-				pattern = "COMMIT_EDITMSG",
-				callback = function()
-					vim.keymap.set('n', '<C-g><tab>', function()
-						local diff = vim.fn.system({ 'git', '--git-dir', vim.fn.expand('%:p:h'), 'diff', 'HEAD' })
-						require 'gpt'.stream(
-							'Write a commit message describing the changes and the reasoning:\n\n========\n' .. diff)
-					end, { buffer = true })
-				end
-			})
 		end
 	},
 	{
