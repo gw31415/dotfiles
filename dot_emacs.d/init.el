@@ -39,9 +39,9 @@
 
 (setq org-latex-text-markup-alist '((bold . "\\textbf{%s}")
                 (code . verb)
-                (italic . "\\it{%s}")
+				(italic . "\\textit{%s}")
                 (strike-through . "\\sout{%s}")
-                (underline . "\\uline{%s}")
+                (underline . "\\underline{%s}")
                 (verbatim . protectedtexttt)))
 (setq org-export-latex-listings t)
 (setq org-latex-listings 'minted)
@@ -159,9 +159,6 @@
 \\usepackage{wrapfig}
 
 \\pgfplotsset{compat=1.14}
-
-\\renewcommand{\\uline}[1]{\\underline{#1}}
-
 "
 	("\\section{%s}" . "\\section{%s}")
 	("\\subsection{%s}" . "\\subsection*{%s}")
