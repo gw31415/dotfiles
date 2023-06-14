@@ -972,9 +972,9 @@ require("lazy").setup({
 			vim.api.nvim_set_var("winresizer_start_key", "<C-W>c")
 		end,
 	},
-	{ "thinca/vim-partedit", event = "CmdlineEnter" }, -- 分割編集
+	{ "thinca/vim-partedit",         event = "CmdlineEnter" }, -- 分割編集
 	{
-		"navarasu/onedark.nvim",                    -- テーマ
+		"navarasu/onedark.nvim",                            -- テーマ
 		lazy = false,
 		config = function()
 			require("onedark").setup({
@@ -1060,9 +1060,9 @@ require("lazy").setup({
 			vim.api.nvim_set_var("mastodon_toot_visibility", "public")
 		end
 	},
-	{ "vim-jp/vimdoc-ja",    lazy = false }, -- 日本語のヘルプ
+	{ "vim-jp/vimdoc-ja", lazy = false }, -- 日本語のヘルプ
 	{
-		"vim-skk/skkeleton",              -- 日本語入力
+		"vim-skk/skkeleton",           -- 日本語入力
 		event = { "InsertEnter", "CmdlineEnter" },
 		dependencies = { "gw31415/skkeletal.vim", "vim-denops/denops.vim" },
 		config = function()
