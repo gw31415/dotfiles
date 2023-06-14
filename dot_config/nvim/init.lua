@@ -38,6 +38,8 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 	end
 })
 
+vim.keymap.set("n", "<C-n>", "<cmd>Fern . -drawer -toggle -reveal=% <cr>")
+
 function _G.lsp_onattach_func(_, bufnr)
 	vim.api.nvim_create_user_command("Implementation", function()
 		vim.lsp.buf.implementation()
@@ -704,22 +706,18 @@ require("lazy").setup({
 	"lambdalisue/nerdfont.vim",
 	{
 		"lambdalisue/fern.vim",
-		dependencies = "lambdalisue/fern-renderer-nerdfont.vim",
+		cmd = "Fern",
+		dependencies = {
+			"lambdalisue/fern-renderer-nerdfont.vim",
+			"lambdalisue/nerdfont.vim",
+			"lambdalisue/fern-git-status.vim",
+		},
 		config = function()
 			vim.api.nvim_set_var("fern#renderer", "nerdfont")
 			vim.api.nvim_set_var("fern#renderer#nerdfont#indent_markers", 1)
-			vim.keymap.set("n", "<C-n>", "<cmd>Fern . -drawer -toggle -reveal=% <cr>")
 		end,
 	},
-	{
-		"lambdalisue/fern-hijack.vim",
-		dependencies = "lambdalisue/fern.vim",
-	},
-	{
-		"lambdalisue/fern-git-status.vim",
-		dependencies = "lambdalisue/fern.vim",
-	},
-
+	{ "lambdalisue/fern-hijack.vim", lazy = false },
 	{
 		"gw31415/fzyselect.vim", -- vim.ui.select
 		config = function()
