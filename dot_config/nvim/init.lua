@@ -202,6 +202,7 @@ require("lazy").setup({
 			},
 			'tpope/vim-repeat',
 		},
+		ft = "org",
 		config = function()
 			vim.keymap.set('n', '<Leader>o', '<Nop>', {})
 			require("orgmode").setup_ts_grammar()
