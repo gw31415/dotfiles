@@ -177,7 +177,7 @@ require("lazy").setup({
 
 	-- Games
 	{ "eandrju/cellular-automaton.nvim", cmd = "CellularAutomaton" },
-	{ "alec-gibson/nvim-tetris",         cmd = "Tetris" },
+	{ "gw31415/nvim-tetris",                cmd = "Tetris" },
 	{ "seandewar/nvimesweeper",          cmd = "Nvimesweeper" },
 
 	-- 言語別プラグイン
