@@ -852,6 +852,18 @@ require("lazy").setup({
 		},
 	},
 	{
+		"ziontee113/syntax-tree-surfer",
+		config = true,
+		keys = {
+			{ "<c-j>", '<cmd>STSSelectNextSiblingNode<cr>', mode = "x" },
+			{ "<c-k>", '<cmd>STSSelectPrevSiblingNode<cr>', mode = "x" },
+			{ "<c-h>", '<cmd>STSSelectParentNode<cr>',      mode = "x" },
+			{ "<c-l>", '<cmd>STSSelectChildNode<cr>',       mode = "x" },
+			{ "<A-j>", '<cmd>STSSwapNextVisual<cr>',        mode = "x" },
+			{ "<A-k>", '<cmd>STSSwapPrevVisual<cr>',        mode = "x" },
+		}
+	},
+	{
 		"Wansmer/treesj",
 		keys = {
 			{ "J", "<cmd>TSJToggle<cr>", desc = "Join Toggle" },
