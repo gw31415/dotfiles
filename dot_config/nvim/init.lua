@@ -823,21 +823,33 @@ require("lazy").setup({
 		end,
 	},
 	{
-		"David-Kunz/treesitter-unit",
-		dependencies = "nvim-treesitter/nvim-treesitter",
+		"kiyoon/treesitter-indent-object.nvim",
 		keys = {
-			{ "iu", mode = "x" },
-			{ "au", mode = "x" },
-			{ "iu", mode = "o" },
-			{ "au", mode = "o" },
+			{
+				"ai",
+				function() require 'treesitter_indent_object.textobj'.select_indent_outer() end,
+				mode = { "x", "o" },
+				desc = "Select context-aware indent (outer)",
+			},
+			{
+				"aI",
+				function() require 'treesitter_indent_object.textobj'.select_indent_outer(true) end,
+				mode = { "x", "o" },
+				desc = "Select context-aware indent (outer, line-wise)",
+			},
+			{
+				"ii",
+				function() require 'treesitter_indent_object.textobj'.select_indent_inner() end,
+				mode = { "x", "o" },
+				desc = "Select context-aware indent (inner, partial range)",
+			},
+			{
+				"iI",
+				function() require 'treesitter_indent_object.textobj'.select_indent_inner(true) end,
+				mode = { "x", "o" },
+				desc = "Select context-aware indent (inner, entire range)",
+			},
 		},
-		config = function()
-			local opts = { noremap = true, silent = true }
-			vim.keymap.set("x", "iu", '<cmd>lua require"treesitter-unit".select(false)<CR>', opts)
-			vim.keymap.set("x", "au", '<cmd>lua require"treesitter-unit".select(true)<CR>', opts)
-			vim.keymap.set("o", "iu", ':<c-u>lua require"treesitter-unit".select(false)<CR>', opts)
-			vim.keymap.set("o", "au", ':<c-u>lua require"treesitter-unit".select(true)<CR>', opts)
-		end,
 	},
 	{
 		"Wansmer/treesj",
