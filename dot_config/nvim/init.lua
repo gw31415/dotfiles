@@ -39,6 +39,16 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 		end, { buffer = true })
 	end
 })
+vim.api.nvim_create_autocmd("BufRead", {
+	pattern = "*.org",
+	callback = function()
+		vim.opt_local.formatoptions:append('mM')
+		vim.opt_local.foldlevel = 0
+		vim.opt_local.expandtab = true
+		vim.opt_local.tabstop = 2
+		vim.opt_local.shiftwidth = 2
+	end
+})
 
 vim.keymap.set("n", "<C-n>", "<cmd>Fern . -drawer -toggle -reveal=% <cr>")
 if vim.g.goneovim then
