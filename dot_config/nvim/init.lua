@@ -282,16 +282,6 @@ require("lazy").setup({
 					},
 				},
 			})
-			vim.api.nvim_create_autocmd("BufRead", {
-				pattern = "*.org",
-				callback = function()
-					vim.opt_local.formatoptions:append('mM')
-					vim.wo.foldlevel = 0
-					vim.bo.expandtab = true
-					vim.bo.tabstop = 1
-					vim.bo.shiftwidth = 1
-				end
-			})
 		end,
 	},
 	{
