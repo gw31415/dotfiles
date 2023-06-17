@@ -424,7 +424,13 @@ require("lazy").setup({
 	{
 		"mfussenegger/nvim-dap",
 		dependencies = { "rcarriga/nvim-dap-ui" },
-		keys = { "<F5>", "<F10>", "<F11>", "<F12>", "bb", },
+		keys = {
+			{ "<F5>",  function() require "dap".continue() end },
+			{ "<F10>", function() require "dap".step_over() end },
+			{ "<F11>", function() require "dap".step_into() end },
+			{ "<F12>", function() require "dap".step_out() end },
+			{ "bb",    function() require "dap".toggle_breakpoint() end },
+		},
 		config = function()
 			require("dapui").setup()
 
@@ -456,22 +462,6 @@ require("lazy").setup({
 			require("dap").listeners.before["event_terminated"]["custom"] = function()
 				require("dapui").close({})
 			end
-
-			vim.keymap.set("n", "<F5>", function()
-				require("dap").continue()
-			end, {})
-			vim.keymap.set("n", "<F10>", function()
-				require("dap").step_over()
-			end, {})
-			vim.keymap.set("n", "<F11>", function()
-				require("dap").step_into()
-			end, {})
-			vim.keymap.set("n", "<F12>", function()
-				require("dap").step_out()
-			end, {})
-			vim.keymap.set("n", "bb", function()
-				require("dap").toggle_breakpoint()
-			end, {})
 		end,
 	},
 	{
