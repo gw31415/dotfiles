@@ -416,7 +416,7 @@ require("lazy").setup({
 	},
 	{
 		"numToStr/Comment.nvim", -- コメントのトグル
-		event = { "LspAttach" },
+		keys = { { "gc", mode = { "n", "x" } } },
 		config = true,
 	},
 
