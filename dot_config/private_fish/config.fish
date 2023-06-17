@@ -9,3 +9,7 @@ export WASMER_DIR="$HOME/.wasmer"
 # if type -q docker
 # export DOCKER_HOST=$(docker context inspect --format '{{.Endpoints.docker.Host}}')
 # end
+
+if type -q goneovim
+	abbr -a nv goneovim --nofork
+end
