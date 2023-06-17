@@ -5,23 +5,43 @@ name: Go
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
 
-    - name: Set up Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.19
-        
-    - name: Setup vim-startuptime
-      run: go install github.com/rhysd/vim-startuptime@latest
-        
-    - name: Setup Chezmoi
-      run: sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply ${GITHUB_REPOSITORY%/*}
+      - name: Setup vim-startuptime
+        run: go install github.com/rhysd/vim-startuptime@latest
+
+      - name: Setup Chezmoi
+        run: sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply ${GITHUB_REPOSITORY%/*}
+
+      - name: Setup Neovim
+        run: |
+          sudo add-apt-repository -y ppa:neovim-ppa/unstable
+          sudo apt update -y
+          sudo apt install -y neovim
+
+      - name: Measure vim-startuptime & Create tweet
+        id: measure-vim
+        run: |
+          RESULT=$(vim-startuptime -vimpath nvim)
+          TWEET=$(echo "${RESULT}" | head -n 6 | awk 'NR==1{print "Update init.lua:\n>  " $0; next} {print ">  " $0}')
+          echo "::set-output name=TWEET::${TWEET}"
+
+      - name: Post tweet
+        uses: infraway/tweet-action@v1
+        with:
+          status: ${{ steps.measure-vim.outputs.TWEET }}
+          api_key: ${{ secrets.TWITTER_API_KEY }}
+          api_key_secret: ${{ secrets.TWITTER_API_KEY_SECRET }}
+          access_token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          access_token_secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
