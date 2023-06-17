@@ -703,12 +703,10 @@ require("lazy").setup({
 	{
 		"monaqa/dial.nvim",      -- 拡張版<C-a><C-x>
 		keys = {
-			{ "<C-a>" },
-			{ "<C-x>" },
-			{ "<C-a>",  mode = "v" },
-			{ "<C-x>",  mode = "v" },
-			{ "g<C-a>", mode = "v" },
-			{ "g<C-x>", mode = "v" },
+			{ "<C-a>",  "<Plug>(dial-increment)",                                             mode = { "n", "x" } },
+			{ "<C-x>",  "<Plug>(dial-decrement)",                                             mode = { "n", "x" } },
+			{ "g<C-a>", function() require 'dial.map'.manipulate("increment", "gvisual") end, mode = "x" },
+			{ "g<C-x>", function() require 'dial.map'.manipulate("decrement", "gvisual") end, mode = "x" },
 		},
 		config = function()
 			local augend = require("dial.augend")
@@ -722,12 +720,6 @@ require("lazy").setup({
 					augend.date.alias["%Y-%m-%d"],
 				},
 			})
-			vim.keymap.set("n", "<C-a>", require("dial.map").inc_normal(), { noremap = true })
-			vim.keymap.set("n", "<C-x>", require("dial.map").dec_normal(), { noremap = true })
-			vim.keymap.set("v", "<C-a>", require("dial.map").inc_visual(), { noremap = true })
-			vim.keymap.set("v", "<C-x>", require("dial.map").dec_visual(), { noremap = true })
-			vim.keymap.set("v", "g<C-a>", require("dial.map").inc_gvisual(), { noremap = true })
-			vim.keymap.set("v", "g<C-x>", require("dial.map").dec_gvisual(), { noremap = true })
 		end,
 	},
 	-- 'andymass/vim-matchup',
