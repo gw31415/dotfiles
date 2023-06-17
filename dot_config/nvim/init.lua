@@ -402,6 +402,7 @@ require("lazy").setup({
 	},
 	{
 		"j-hui/fidget.nvim", -- LSPのステータスを右下に表示
+		tag = "legacy",
 		event = { "LspAttach" },
 		config = function()
 			vim.api.nvim_create_autocmd("VimLeavePre", { command = "silent! FidgetClose" })
