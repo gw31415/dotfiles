@@ -939,7 +939,8 @@ require("lazy").setup({
 	{
 		"glts/vim-textobj-comment", -- コメントに対する textobj
 		keys = {
-			{ "c", mode = "o" },
+			{ "ic", mode = { "o", "x" } },
+			{ "ac", mode = { "o", "x" } },
 		},
 		dependencies = "kana/vim-textobj-user",
 	},
