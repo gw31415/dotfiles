@@ -38,7 +38,7 @@ jobs:
           echo "::set-output name=TWEET::${TWEET}"
 
       - name: Post tweet
-        uses: infraway/tweet-action@v1
+        uses: InfraWay/tweet-action@v1.0.1
         with:
           status: ${{ steps.measure-vim.outputs.TWEET }}
           api_key: ${{ secrets.TWITTER_API_KEY }}
