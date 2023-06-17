@@ -591,9 +591,9 @@ require("lazy").setup({
 					{ name = "path" },
 				}),
 				formatting = {
-					format = require("lspkind").cmp_format({
+					format = require("lspkind").cmp_format {
 						mode = "symbol_text",
-					}),
+					},
 				},
 				mapping = {
 					["<c-n>"] = cmp.mapping(function(fallback)
