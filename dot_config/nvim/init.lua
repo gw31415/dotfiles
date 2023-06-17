@@ -41,6 +41,13 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 })
 
 vim.keymap.set("n", "<C-n>", "<cmd>Fern . -drawer -toggle -reveal=% <cr>")
+if vim.g.goneovim then
+	vim.keymap.set("n", "<C-w>O", function()
+		local width = vim.api.nvim_win_get_width(0)
+		local height = vim.api.nvim_win_get_height(0)
+		vim.api.nvim_win_set_config(0, { external = true, width = width, height = height })
+	end)
+end
 
 function _G.lsp_onattach_func(_, bufnr)
 	vim.api.nvim_create_user_command("Implementation", function()
@@ -87,7 +94,7 @@ vim.api.nvim_create_autocmd('TermOpen', {
 })
 
 -- Neovide
-vim.opt.guifont = { "HackGenNerd Console", "h13" }
+vim.opt.guifont = "Hack Nerd Font:h13,HackGenNerd Console:h13"
 if vim.g.neovide then
 	vim.api.nvim_set_var("neovide_remember_window_size", false)
 end
