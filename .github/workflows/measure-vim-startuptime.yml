@@ -31,16 +31,15 @@ jobs:
           sudo apt install -y neovim
 
       - name: Measure vim-startuptime & Create tweet
-        id: measure-vim
         run: |
           RESULT=$(vim-startuptime -vimpath nvim)
           TWEET=$(echo "${RESULT}" | head -n 6 | awk 'NR==1{print "Update init.lua:\n>  " $0; next} {print ">  " $0}')
-          echo "::set-output name=TWEET::${TWEET}"
+          echo "TWEET=${TWEET//$'\n'/\\n}" >> $GITHUB_ENV
 
       - name: Post tweet
         uses: InfraWay/tweet-action@v1.0.1
         with:
-          status: ${{ steps.measure-vim.outputs.TWEET }}
+          status: ${{ env.TWEET }}
           api_key: ${{ secrets.TWITTER_API_KEY }}
           api_key_secret: ${{ secrets.TWITTER_API_KEY_SECRET }}
           access_token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
