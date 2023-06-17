@@ -219,7 +219,7 @@ require("lazy").setup({
 
 	-- Games
 	{ "eandrju/cellular-automaton.nvim", cmd = "CellularAutomaton" },
-	{ "gw31415/nvim-tetris",                cmd = "Tetris" },
+	{ "gw31415/nvim-tetris",             cmd = "Tetris" },
 	{ "seandewar/nvimesweeper",          cmd = "Nvimesweeper" },
 
 	-- 言語別プラグイン
@@ -666,14 +666,12 @@ require("lazy").setup({
 					{ name = "cmdline" },
 				}),
 			})
-			for _, c in pairs({ "/", "?" }) do
-				cmp.setup.cmdline(c, {
-					mapping = cmp.mapping.preset.cmdline(),
-					sources = cmp.config.sources({
-						{ name = "buffer" },
-					}),
-				})
-			end
+			cmp.setup.cmdline({ "/", "?" }, {
+				mapping = cmp.mapping.preset.cmdline(),
+				sources = cmp.config.sources({
+					{ name = "buffer" },
+				}),
+			})
 		end,
 	},
 	{ "hrsh7th/cmp-vsnip",                   dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
@@ -687,7 +685,7 @@ require("lazy").setup({
 		event = { "InsertCharPre", "CmdlineEnter" }
 	},
 	{ "uga-rosa/cmp-skkeleton", dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
-	{ "hrsh7th/cmp-emoji",      dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
+	{ "hrsh7th/cmp-emoji",           dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
 
 	-- UI
 	{
@@ -737,12 +735,7 @@ require("lazy").setup({
 	-- ファイラ
 	{
 		"gw31415/onlybrowsex.vim",
-		keys = { "gx" },
-		config = function()
-			vim.keymap.set("n", "gx", function()
-				vim.fn["onlybrowsex#BrowseX"](vim.fn.expand("<cfile>"))
-			end, { noremap = true, silent = true })
-		end,
+		keys = { { "gx", function() vim.fn["onlybrowsex#BrowseX"](vim.fn.expand("<cfile>")) end } },
 	},
 	"lambdalisue/nerdfont.vim",
 	{
@@ -951,15 +944,11 @@ require("lazy").setup({
 	{
 		"gbprod/substitute.nvim", -- vim-operator-replace
 		keys = {
-			{ "_", mode = "n" },
-			{ "_", mode = "x" },
+			{ "_",  function() require('substitute').operator() end },
+			{ "_",  function() require('substitute').visual() end,  mode = "x" },
+			{ "__", function() require('substitute').line() end },
 		},
-		config = function()
-			require("substitute").setup({})
-			vim.keymap.set("n", "_", "<cmd>lua require('substitute').operator()<cr>", { noremap = true })
-			vim.keymap.set("n", "__", "<cmd>lua require('substitute').line()<cr>", { noremap = true })
-			vim.keymap.set("x", "_", "<cmd>lua require('substitute').visual()<cr>", { noremap = true })
-		end,
+		config = true,
 	},
 	{
 		"segeljakt/vim-silicon", -- ソースコードを画像化するsiliconコマンドのラッパー
@@ -1015,9 +1004,9 @@ require("lazy").setup({
 			vim.api.nvim_set_var("winresizer_start_key", "<C-W>c")
 		end,
 	},
-	{ "thinca/vim-partedit",         event = "CmdlineEnter" }, -- 分割編集
+	{ "thinca/vim-partedit", event = "CmdlineEnter" }, -- 分割編集
 	{
-		"navarasu/onedark.nvim",                            -- テーマ
+		"navarasu/onedark.nvim",                    -- テーマ
 		lazy = false,
 		config = function()
 			require("onedark").setup({
@@ -1082,7 +1071,7 @@ require("lazy").setup({
 			vim.api.nvim_set_var("mastodon_toot_visibility", "public")
 		end
 	},
-	{ "vim-jp/vimdoc-ja", lazy = false }, -- 日本語のヘルプ
+	{ "vim-jp/vimdoc-ja",    lazy = false }, -- 日本語のヘルプ
 	{
 		"vim-skk/skkeleton",           -- 日本語入力
 		event = { "InsertEnter", "CmdlineEnter" },
