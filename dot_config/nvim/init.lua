@@ -981,6 +981,22 @@ require("lazy").setup({
 		end,
 	},
 	{
+		"itchyny/calendar.vim",
+		cmd = "Calendar",
+		config = function()
+			vim.g.calendar_google_api_key = setup_authkey("~/.ssh/google_calender_api_key.txt", {
+				prompt = "GOOGLE_API_KEY = ",
+			})
+			vim.g.calendar_google_client_id = setup_authkey("~/.ssh/google_calender_client_id.txt", {
+				prompt = "GOOGLE_CALENDER_CLIENT_ID = ",
+			})
+			vim.g.calendar_google_client_secret = setup_authkey("~/.ssh/google_calender_client_secret.txt", {
+				prompt = "GOOGLE_CALENDER_CLIENT_SECRET = ",
+			})
+			vim.g.calendar_google_calendar = 1
+		end
+	},
+	{
 		"lambdalisue/gin.vim", -- Git連携
 		event = "VeryLazy",
 		config = function()
