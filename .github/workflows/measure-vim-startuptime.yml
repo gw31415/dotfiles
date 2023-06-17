@@ -6,8 +6,12 @@ name: Go
 on:
   push:
     branches: ["main"]
+    paths:
+      - "dot_config/nvim/init.lua"
   pull_request:
     branches: ["main"]
+    paths:
+      - "dot_config/nvim/init.lua"
 
 jobs:
   build:
