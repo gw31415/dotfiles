@@ -241,12 +241,32 @@ require("lazy").setup({
 				},
 			},
 			'tpope/vim-repeat',
+			"danilshvalov/org-modern.nvim",
 		},
 		ft = "org",
 		config = function()
+			local Menu = require("org-modern.menu")
 			vim.keymap.set('n', '<Leader>o', '<Nop>', {})
 			require("orgmode").setup_ts_grammar()
 			require("orgmode").setup({
+				ui = {
+					menu = {
+						handler = function(data)
+							Menu:new({
+								window = {
+									margin = { 1, 0, 1, 0 },
+									padding = { 0, 1, 0, 1 },
+									title_pos = "center",
+									border = "single",
+									zindex = 1000,
+								},
+								icons = {
+									separator = "➜",
+								},
+							}):open(data)
+						end,
+					},
+				},
 				org_agenda_files = { "~/iCloud_Drive/org/*" },
 				org_agenda_skip_deadline_if_done = true,
 				org_default_notes_file = "~/iCloud_Drive/org/refile.org",
