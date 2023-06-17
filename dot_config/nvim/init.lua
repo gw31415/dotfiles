@@ -749,6 +749,7 @@ require("lazy").setup({
 	{ "lambdalisue/fern-hijack.vim", lazy = false },
 	{
 		"gw31415/fzyselect.vim", -- vim.ui.select
+		keys = { "gl", "<c-p>", "B" },
 		config = function()
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = "fzyselect",
