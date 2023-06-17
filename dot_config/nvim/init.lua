@@ -1012,15 +1012,27 @@ require("lazy").setup({
 			signcolumn = false,
 		},
 	},
+	-- {
+	-- 	"phaazon/hop.nvim", -- 画面内ジャンプ
+	-- 	keys = { {
+	-- 		"<Space>",
+	-- 		function()
+	-- 			require("hop").hint_words({ multi_windows = true })
+	-- 		end,
+	-- 	} },
+	-- 	config = true,
+	-- },
 	{
-		"phaazon/hop.nvim", -- 画面内ジャンプ
-		keys = { {
-			"<Space>",
-			function()
-				require("hop").hint_words({ multi_windows = true })
-			end,
-		} },
-		config = true,
+		"yuki-yano/fuzzy-motion.vim", -- 画面内ジャンプ
+		dependencies = { "vim-denops/denops.vim", "yuki-yano/denops-lazy.nvim", "lambdalisue/kensaku.vim" },
+		keys = { { "<Space>", "<cmd>FuzzyMotion<cr>" } },
+		config = function()
+			require 'denops-lazy'.load 'fuzzy-motion.vim'
+			vim.g.fuzzy_motion_labels = {
+				'A', 'O', 'E', 'U', 'I', 'D', 'H', 'T', 'N', 'S'
+			}
+			vim.g.fuzzy_motion_matchers = { 'fzf', 'kensaku' }
+		end
 	},
 	{
 		"mbbill/undotree",
@@ -1068,29 +1080,24 @@ require("lazy").setup({
 	{
 		"gw31415/gpt.nvim",
 		keys = {
-			{ "<C-g>", mode = "n" },
-			{ "<C-g>", mode = "x" },
-			{ "<C-g>", mode = "i" },
-		},
-		config = function()
-
-			require 'gpt'.setup {
-				api_key = function() return setup_authkey('~/.ssh/openai_api_key.txt') end,
-			}
-
-			vim.keymap.set({ 'n', 'x' }, '<C-g>r', '<Plug>(gpt-replace)')
-			vim.keymap.set({ 'n', 'i' }, '<C-g>p', require 'gpt'.prompt)
-			vim.keymap.set('n', '<C-g>c', require 'gpt'.cancel)
-			vim.keymap.set('n', '<C-g>o', function()
+			{ "<C-g>r", '<Plug>(gpt-replace)',                 mode = { "n", "x" } },
+			{ "<C-g>p", function() require 'gpt'.prompt() end, mode = { "n", "i" } },
+			{ "<C-g>c", function() require 'gpt'.cancel() end, },
+			{ "<C-g>o", function()
 				require 'gpt'.order {
 					opener = "10split",
+					-- opener = "call nvim_open_win(bufnr('%'), v:true, { 'external': v:true, 'width': 50, 'height': 20 })",
 					setup_window = function()
 						---@diagnostic disable-next-line: redundant-parameter
 						vim.api.nvim_win_set_option(0, "stl", "order-result")
 					end
 				}
-			end)
-		end
+			end, },
+		},
+		opts = {
+			api_key = function() return setup_authkey('~/.ssh/openai_api_key.txt', { prompt = 'OPENAI_API_KEY = ' }) end,
+		},
+		config = true,
 	},
 	{
 		"gw31415/mastodon.nvim", -- Mastodon
