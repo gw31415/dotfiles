@@ -35,7 +35,7 @@
 (add-to-list 'org-latex-logfiles-extensions "tex")
 
 (setq org-latex-title-command "\\maketitle")
-(setq org-latex-toc-command "\\tableofcontents\n")
+(setq org-latex-toc-command "\\tableofcontents\n\\pagebreak")
 
 (setq org-latex-text-markup-alist '((bold . "\\textbf{%s}")
                 (code . verb)
@@ -113,6 +113,7 @@
 \\usepackage{amsthm}
 \\usepackage{amssymb}
 \\usepackage{mathtools}
+\\usepackage{here}
 \\usepackage{mhchem}"
 	("\\section{%s}" . "\\section{%s}")
 	("\\subsection{%s}" . "\\subsection*{%s}")
