@@ -32,9 +32,11 @@ jobs:
 
       - name: Measure vim-startuptime & Create tweet
         run: |
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "TWEET<<$EOF" >> "$GITHUB_ENV"
           RESULT=$(vim-startuptime -vimpath nvim)
-          TWEET=$(echo "${RESULT}" | head -n 6 | awk 'NR==1{print "Update init.lua:\n>  " $0; next} {print ">  " $0}')
-          echo "TWEET=${TWEET//$'\n'/\\n}" >> $GITHUB_ENV
+          echo "${RESULT}" | head -n 6 | awk '{print ">  " $0}' >> "$GITHUB_ENV"
+          echo "$EOF" >> "$GITHUB_ENV"
 
       - name: Post tweet
         uses: InfraWay/tweet-action@v1.0.1
