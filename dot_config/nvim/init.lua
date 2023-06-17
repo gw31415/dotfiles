@@ -1,3 +1,5 @@
+if vim.loader then vim.loader.enable() end
+
 --[[
 -- 依存: NVim nightly, Git, cURL, Deno
 -- siliconコマンドがあれば対応。
