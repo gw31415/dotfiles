@@ -685,7 +685,6 @@ require("lazy").setup({
 		dependencies = "hrsh7th/nvim-cmp",
 		event = { "InsertCharPre", "CmdlineEnter" }
 	},
-	{ "uga-rosa/cmp-skkeleton", dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
 	{ "hrsh7th/cmp-emoji",           dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
 
 	-- UI
@@ -1074,10 +1073,16 @@ require("lazy").setup({
 	},
 	{ "vim-jp/vimdoc-ja",    lazy = false }, -- 日本語のヘルプ
 	{
-		"vim-skk/skkeleton",           -- 日本語入力
-		event = { "InsertEnter", "CmdlineEnter" },
-		dependencies = { "gw31415/skkeletal.vim", "vim-denops/denops.vim" },
+		"vim-skk/skkeleton",              -- 日本語入力
+		keys = { { "<C-j>", "<Plug>(skkeleton-enable)", mode = { "i", "c" } } },
+		dependencies = {
+			"gw31415/skkeletal.vim",
+			"vim-denops/denops.vim",
+			"yuki-yano/denops-lazy.nvim",
+			{ "uga-rosa/cmp-skkeleton", dependencies = "hrsh7th/nvim-cmp" },
+		},
 		config = function()
+			require 'denops-lazy'.load 'skkeleton'
 			_G.get_skkeleton_modestring = function()
 				local mode = vim.fn["skkeleton#mode"]()
 				if mode == "hira" then
@@ -1094,9 +1099,6 @@ require("lazy").setup({
 					return "英数"
 				end
 			end
-
-			vim.keymap.set("i", "<C-j>", "<Plug>(skkeleton-enable)", {})
-			vim.keymap.set("c", "<C-j>", "<Plug>(skkeleton-enable)", {})
 			vim.fn["skkeletal#config"]({
 				eggLikeNewline = true,
 				globalJisyo = "~/.skk/SKK-JISYO.L",
