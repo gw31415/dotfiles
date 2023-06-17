@@ -50,7 +50,6 @@ vim.api.nvim_create_autocmd("BufRead", {
 	end
 })
 
-vim.keymap.set("n", "<C-n>", "<cmd>Fern . -drawer -toggle -reveal=% <cr>")
 if vim.g.goneovim then
 	vim.keymap.set("n", "<C-w>O", function()
 		local width = vim.api.nvim_win_get_width(0)
@@ -727,6 +726,9 @@ require("lazy").setup({
 	{
 		"lambdalisue/fern.vim",
 		cmd = "Fern",
+		keys = {
+			{ "<C-n>", "<cmd>Fern . -drawer -toggle -reveal=% <cr>" }
+		},
 		dependencies = {
 			"lambdalisue/fern-renderer-nerdfont.vim",
 			"lambdalisue/nerdfont.vim",
