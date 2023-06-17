@@ -1035,7 +1035,7 @@ require("lazy").setup({
 		"simeji/winresizer", -- ウィンドウサイズ変更
 		keys = "<c-w>",
 		init = function()
-			vim.api.nvim_set_var("winresizer_start_key", "<C-W>c")
+			vim.api.nvim_set_var("winresizer_start_key", "<C-W>e")
 		end,
 	},
 	{ "thinca/vim-partedit", event = "CmdlineEnter" }, -- 分割編集
