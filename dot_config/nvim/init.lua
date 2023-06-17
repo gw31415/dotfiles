@@ -151,6 +151,28 @@ vim.api.nvim_set_var("skip_loading_mswin", true)
 vim.api.nvim_set_var("loaded_tutor_mode_plugin", true)
 vim.api.nvim_set_var("loaded_2html_plugin", true)
 
+-- APIキーの読みこみ関数
+local function setup_authkey(path, opts)
+	---@diagnostic disable: param-type-mismatch
+	opts = opts or {}
+	path = vim.fn.expand(path, nil, nil)
+	local key
+	if vim.fn.filereadable(path) == 1 then
+		key = vim.fn.trim(vim.fn.readfile(path, nil, 1)[1])
+	else
+		key = vim.fn.input(opts.prompt or 'Input api key: ')
+		if key == '' then return nil end
+		vim.fn.writefile({ key }, path)
+		vim.fn.system({ 'chmod', '600', path })
+		vim.notify(string.format(
+				'Successfully saved OPENAI_API_KEY at `%s`.', path),
+			vim.log.levels.INFO, {
+				title = 'gpt.nvim'
+			})
+	end
+	return key
+end
+
 --LaTeXの自動コンパイル設定
 vim.api.nvim_create_autocmd("BufReadPost", {
 	pattern = "*.tex",
@@ -1028,27 +1050,6 @@ require("lazy").setup({
 			{ "<C-g>", mode = "i" },
 		},
 		config = function()
-			local function setup_authkey(path)
-				---@diagnostic disable: param-type-mismatch
-				path = vim.fn.expand(path, nil, nil)
-				local key
-				if vim.fn.filereadable(path) == 1 then
-					key = vim.fn.trim(vim.fn.readfile(path, nil, 1)[1])
-				else
-					key = vim.fn.input('OPENAI_API_KEY = ')
-					if key == '' then
-						return nil
-					end
-					vim.fn.writefile({ key }, path)
-					vim.fn.system({ 'chmod', '600', path })
-					vim.notify(string.format(
-							'Successfully saved OPENAI_API_KEY at `%s`.', path),
-						vim.log.levels.INFO, {
-							title = 'gpt.nvim'
-						})
-				end
-				return key
-			end
 
 			require 'gpt'.setup {
 				api_key = function() return setup_authkey('~/.ssh/openai_api_key.txt') end,
