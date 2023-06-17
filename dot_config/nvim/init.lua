@@ -25,7 +25,7 @@ vim.keymap.set("c", "<c-e>", "<end>", {})
 
 vim.api.nvim_create_autocmd("BufRead", {
 	pattern = "*.mdx",
-	callback = function() vim.bo.filetype = "markdown" end,
+	callback = function() vim.opt_local.filetype = "markdown" end,
 })
 vim.api.nvim_create_autocmd('BufReadPost', {
 	pattern = "COMMIT_EDITMSG",
@@ -61,18 +61,18 @@ function _G.lsp_onattach_func(_, bufnr)
 end
 
 -- Configure
-vim.o.tabstop = 4
-vim.o.shiftwidth = 4
-vim.wo.number = true
-vim.o.imdisable = true
-vim.wo.winblend = 20
-vim.o.pumblend = vim.wo.winblend
-vim.wo.cursorline = true
-vim.wo.cursorcolumn = true
-vim.o.shellslash = true
-vim.o.splitbelow = true
-vim.o.hidden = true
-vim.o.laststatus = 3
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.number = true
+vim.opt.imdisable = true
+vim.opt.winblend = 20
+vim.opt.pumblend = vim.wo.winblend
+vim.opt.cursorline = true
+vim.opt.cursorcolumn = true
+vim.opt.shellslash = true
+vim.opt.splitbelow = true
+vim.opt.hidden = true
+vim.opt.laststatus = 3
 vim.api.nvim_set_var("tex_conceal", "")
 vim.diagnostic.config({ signs = false })
 
