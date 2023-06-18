@@ -759,10 +759,11 @@ require("lazy").setup({
 					vim.keymap.set("n", "<esc>", "<cmd>clo<cr>", { buffer = true })
 				end,
 			})
-			-- Line Selector
+			-- fuzzy search
 			vim.keymap.set('n', "gl", function()
 				local winid = vim.api.nvim_get_current_win()
-				require 'fzyselect'.start(vim.api.nvim_buf_get_lines(0, 0, -1, true), { prompt = "Fuzzy search" },
+				require 'fzyselect'.start(vim.api.nvim_buf_get_lines(0, 0, -1, true),
+					{ prompt = "fuzzy search: <Enter> to jump" },
 					function(_, i)
 						if i then
 							vim.api.nvim_win_set_cursor(winid, { i, 0 })
@@ -775,12 +776,13 @@ require("lazy").setup({
 				if vim.v.shell_error ~= 0 then
 					vim.notify(out, vim.log.levels.ERROR, { title = "fzyselect: git ls-files" })
 				else
-					require 'fzyselect'.start(vim.fn.split(out, '\n'), { prompt = 'git ls-files' }, function(path)
-						if path then vim.cmd.edit(path) end
-					end)
+					require 'fzyselect'.start(vim.fn.split(out, '\n'), { prompt = 'git ls-files: <Enter> to edit' },
+						function(path)
+							if path then vim.cmd.edit(path) end
+						end)
 				end
 			end)
-			-- Buffer Selector
+			-- buffer manager
 			vim.keymap.set("n", "gb", function()
 				local winid = vim.api.nvim_get_current_win()
 				local bufs = {}
@@ -794,16 +796,22 @@ require("lazy").setup({
 					pattern = 'fzyselect',
 					callback = function()
 						vim.keymap.set('n', 'dd', function()
-							local pos = vim.api.nvim_win_get_cursor(0)
+							local buf = bufs[vim.api.nvim_win_get_cursor(0)[1]]
+							local bufname = vim.api.nvim_buf_get_name(buf)
 							vim.cmd.close()
-							vim.api.nvim_buf_delete(bufs[pos[1]], {})
+							vim.api.nvim_buf_delete(buf, {})
+							vim.notify('deleted buffer: ' .. bufname, vim.log.levels.INFO, {
+								title = "fzyselect: buffer manager"
+							})
 						end, { buffer = true })
 					end
 				})
 				require 'fzyselect'.start(bufs, {
 					format_item = vim.api.nvim_buf_get_name,
-					prompt = 'buffers: <Enter> to switch or dd to delete'
-				}, function(buf) if buf then vim.api.nvim_win_set_buf(winid, buf) end end)
+					prompt = 'buffer manager: <Enter> to switch or dd to delete'
+				}, function(buf)
+					if buf then vim.api.nvim_win_set_buf(winid, buf) end
+				end)
 			end)
 			vim.ui.select = require("fzyselect").start
 		end,
