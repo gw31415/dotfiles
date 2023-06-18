@@ -749,7 +749,7 @@ require("lazy").setup({
 	{ "lambdalisue/fern-hijack.vim", lazy = false },
 	{
 		"gw31415/fzyselect.vim", -- vim.ui.select
-		keys = { "gl", "<c-p>", "B" },
+		event = "VeryLazy",
 		config = function()
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = "fzyselect",
@@ -760,39 +760,51 @@ require("lazy").setup({
 				end,
 			})
 			-- Line Selector
-			vim.cmd(
-				"nn gl <cmd>cal fzyselect#start(getline(1, '$'), #{prompt:'Fuzzy search'}, {_,i->i==v:null?v:null:cursor(i, 0)})<cr>"
-			)
+			vim.keymap.set('n', "gl", function()
+				local winid = vim.api.nvim_get_current_win()
+				require 'fzyselect'.start(vim.api.nvim_buf_get_lines(0, 0, -1, true), { prompt = "Fuzzy search" },
+					function(_, i)
+						if i then
+							vim.api.nvim_win_set_cursor(winid, { i, 0 })
+						end
+					end)
+			end)
 			-- git ls-files
-			vim.cmd([[
-				fu! s:fzyselect_lsfiles() abort
-					let out = system(['git', 'ls-files'])
-					if v:shell_error
-						echo out
-					el
-						cal fzyselect#start(split(out, '\n'), #{prompt:'git ls-files'}, {p-><SID>edit(p)})
-					en
-				endfu
-				fu! s:edit(path) abort
-					if a:path != v:null
-						exe 'e ' .. a:path
-					en
-				endfu
-				nn <c-p> <cmd>cal <SID>fzyselect_lsfiles()<cr>
-			]])
-
+			vim.keymap.set("n", "<c-p>", function()
+				local out = vim.fn.system({ 'git', 'ls-files' })
+				if vim.v.shell_error ~= 0 then
+					vim.notify(out, vim.log.levels.ERROR, { title = "fzyselect: git ls-files" })
+				else
+					require 'fzyselect'.start(vim.fn.split(out, '\n'), { prompt = 'git ls-files' }, function(path)
+						if path then vim.cmd.edit(path) end
+					end)
+				end
+			end)
 			-- Buffer Selector
-			vim.cmd([[
-				fu! s:buffer(i) abort
-					if a:i != v:null
-						exe 'b ' .. a:i
-					en
-				endfu
-				nn B <cmd>cal fzyselect#start(
-							\ filter(range(1, bufnr('$')), 'buflisted(v:val)'),
-							\ #{prompt:'Select buffer',format_item:{i->split(execute('ls!'), "\n")[i-1]}},
-							\ {li-><SID>buffer(li)})<cr>
-			]])
+			vim.keymap.set("n", "gb", function()
+				local winid = vim.api.nvim_get_current_win()
+				local bufs = {}
+				for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+					if vim.api.nvim_buf_is_loaded(buf) and vim.fn.buflisted(buf) and vim.api.nvim_buf_get_name(buf) ~= "" then
+						table.insert(bufs, buf)
+					end
+				end
+				vim.api.nvim_create_autocmd('FileType', {
+					once = true,
+					pattern = 'fzyselect',
+					callback = function()
+						vim.keymap.set('n', 'dd', function()
+							local pos = vim.api.nvim_win_get_cursor(0)
+							vim.cmd.close()
+							vim.api.nvim_buf_delete(bufs[pos[1]], {})
+						end, { buffer = true })
+					end
+				})
+				require 'fzyselect'.start(bufs, {
+					format_item = vim.api.nvim_buf_get_name,
+					prompt = 'buffers: <Enter> to switch or dd to delete'
+				}, function(buf) if buf then vim.api.nvim_win_set_buf(winid, buf) end end)
+			end)
 			vim.ui.select = require("fzyselect").start
 		end,
 	},
