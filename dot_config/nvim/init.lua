@@ -1024,9 +1024,10 @@ require("lazy").setup({
 	-- },
 	{
 		"yuki-yano/fuzzy-motion.vim", -- 画面内ジャンプ
+		event        = "VeryLazy",
 		dependencies = { "vim-denops/denops.vim", "yuki-yano/denops-lazy.nvim", "lambdalisue/kensaku.vim" },
-		keys = { { "<Space>", "<cmd>FuzzyMotion<cr>" } },
-		config = function()
+		keys         = { { "<Space>", "<cmd>FuzzyMotion<cr>" } },
+		config       = function()
 			require 'denops-lazy'.load 'fuzzy-motion.vim'
 			vim.g.fuzzy_motion_labels = {
 				'A', 'O', 'E', 'U', 'I', 'D', 'H', 'T', 'N', 'S'
