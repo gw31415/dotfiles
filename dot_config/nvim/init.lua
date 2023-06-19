@@ -704,10 +704,12 @@ require("lazy").setup({
 	{
 		"monaqa/dial.nvim",      -- 拡張版<C-a><C-x>
 		keys = {
-			{ "<C-a>",  "<Plug>(dial-increment)",                                             mode = { "n", "x" } },
-			{ "<C-x>",  "<Plug>(dial-decrement)",                                             mode = { "n", "x" } },
-			{ "g<C-a>", function() require 'dial.map'.manipulate("increment", "gvisual") end, mode = "x" },
-			{ "g<C-x>", function() require 'dial.map'.manipulate("decrement", "gvisual") end, mode = "x" },
+			{ "<C-a>",  "<Plug>(dial-increment)",                                              mode = { "n", "x" } },
+			{ "<C-x>",  "<Plug>(dial-decrement)",                                              mode = { "n", "x" } },
+			{ "g<C-a>", function() require 'dial.map'.manipulate("increment", "gvisual") end,  mode = "x" },
+			{ "g<C-x>", function() require 'dial.map'.manipulate("decrement", "gvisual") end,  mode = "x" },
+			{ "g<C-a>", function() require("dial.map").manipulate("increment", "gnormal") end, mode = "n" },
+			{ "g<C-x>", function() require("dial.map").manipulate("decrement", "gnormal") end, mode = "n" },
 		},
 		config = function()
 			local augend = require("dial.augend")
