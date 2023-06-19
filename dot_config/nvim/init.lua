@@ -1035,16 +1035,6 @@ require("lazy").setup({
 			signcolumn = false,
 		},
 	},
-	-- {
-	-- 	"phaazon/hop.nvim", -- 画面内ジャンプ
-	-- 	keys = { {
-	-- 		"<Space>",
-	-- 		function()
-	-- 			require("hop").hint_words({ multi_windows = true })
-	-- 		end,
-	-- 	} },
-	-- 	config = true,
-	-- },
 	{
 		"yuki-yano/fuzzy-motion.vim", -- 画面内ジャンプ
 		event        = "VeryLazy",
