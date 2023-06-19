@@ -91,6 +91,7 @@ vim.opt.shellslash = true
 vim.opt.splitbelow = true
 vim.opt.hidden = true
 vim.opt.laststatus = 3
+vim.opt.smoothscroll = true
 vim.api.nvim_set_var("tex_conceal", "")
 vim.diagnostic.config({ signs = false })
 
@@ -772,25 +773,40 @@ require("lazy").setup({
 			end)
 			-- git ls-files
 			vim.keymap.set("n", "<c-p>", function()
-				local out = vim.fn.system({ 'git', 'ls-files' })
-				if vim.v.shell_error ~= 0 then
-					vim.notify(out, vim.log.levels.ERROR, { title = "fzyselect: git ls-files" })
+				---@diagnostic disable-next-line: undefined-field
+				local res = vim.system({ 'git', 'ls-files' }, { text = true }):wait()
+				if res.code ~= 0 then
+					vim.notify(vim.fn.trim(res.stderr), vim.log.levels.ERROR, { title = "fzyselect: git ls-files" })
 				else
-					require 'fzyselect'.start(vim.fn.split(out, '\n'), { prompt = 'git ls-files: <Enter> to edit' },
+					require 'fzyselect'.start(vim.fn.split(res.stdout, '\n'),
+						{ prompt = 'git ls-files: <Enter> to edit' },
 						function(path)
 							if path then vim.cmd.edit(path) end
 						end)
 				end
 			end)
 			-- buffer manager
+			local last_access = {}
+			vim.api.nvim_create_autocmd('BufEnter', {
+				callback = function() last_access[vim.api.nvim_get_current_buf()] = vim.fn.localtime() end,
+			})
+			vim.api.nvim_create_autocmd('BufDelete', {
+				callback = function() last_access[vim.api.nvim_get_current_buf()] = nil end,
+			})
 			vim.keymap.set("n", "gb", function()
 				local winid = vim.api.nvim_get_current_win()
 				local bufs = {}
 				for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-					if vim.api.nvim_buf_is_loaded(buf) and vim.fn.buflisted(buf) and vim.api.nvim_buf_get_name(buf) ~= "" then
+					if vim.api.nvim_buf_is_loaded(buf)
+						and vim.fn.buflisted(buf)
+						and vim.api.nvim_buf_get_name(buf) ~= ""
+						and buf ~= vim.api.nvim_get_current_buf() then
 						table.insert(bufs, buf)
 					end
 				end
+				table.sort(bufs, function(a, b)
+					return (last_access[a] or 0) > (last_access[b] or 0)
+				end)
 				vim.api.nvim_create_autocmd('FileType', {
 					once = true,
 					pattern = 'fzyselect',
