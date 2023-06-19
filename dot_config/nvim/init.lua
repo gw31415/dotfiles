@@ -307,6 +307,9 @@ require("lazy").setup({
 			"williamboman/mason-lspconfig.nvim",
 			"hrsh7th/cmp-nvim-lsp",
 			"neovim/nvim-lspconfig",
+			"jose-elias-alvarez/null-ls.nvim",
+			"nvim-lua/plenary.nvim",
+			"jay-babu/mason-null-ls.nvim",
 			{
 				"folke/neodev.nvim",
 				ft = "lua",
@@ -321,7 +324,7 @@ require("lazy").setup({
 		},
 		event = "VeryLazy",
 		config = function()
-			require("mason").setup({})
+			require "mason".setup {}
 			local mason_lspconfig = require("mason-lspconfig")
 			local capabilities =
 				require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -351,6 +354,13 @@ require("lazy").setup({
 					require("lspconfig")[server_name].setup(opts)
 				end,
 			})
+			require('mason-null-ls').setup({
+				automatic_setup = true,
+				handlers = {},
+			})
+			require "null-ls".setup({
+				on_attach = _G.lsp_onattach_func,
+			})
 			vim.cmd("LspStart") -- 初回起動時はBufEnterが発火しない
 		end,
 	},
@@ -364,31 +374,6 @@ require("lazy").setup({
 			append_default_schemas = true,
 			loader = "json",
 		},
-	},
-	{
-		"jose-elias-alvarez/null-ls.nvim",
-		event = "VeryLazy",
-		dependencies = { "williamboman/mason.nvim", "nvim-lua/plenary.nvim" },
-		config = function()
-			local mason = require("mason")
-			local mason_package = require("mason-core.package")
-			local mason_registry = require("mason-registry")
-			local null_ls = require("null-ls")
-			mason.setup({})
-			local null_sources = {}
-			for _, package in ipairs(mason_registry.get_installed_packages()) do
-				local package_categories = package.spec.categories[1]
-				if package_categories == mason_package.Cat.Formatter then
-					table.insert(null_sources, null_ls.builtins.formatting[package.name])
-				elseif package_categories == mason_package.Cat.Linter then
-					table.insert(null_sources, null_ls.builtins.diagnostics[package.name])
-				end
-			end
-			null_ls.setup({
-				sources = null_sources,
-				on_attach = _G.lsp_onattach_func,
-			})
-		end,
 	},
 	{
 		"onsails/diaglist.nvim", -- Diagnosticの自動更新Quickfixリスト
