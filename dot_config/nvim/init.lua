@@ -1043,7 +1043,7 @@ require("lazy").setup({
 		config       = function()
 			require 'denops-lazy'.load 'fuzzy-motion.vim'
 			vim.g.fuzzy_motion_labels = {
-				'A', 'O', 'E', 'U', 'I', 'D', 'H', 'T', 'N', 'S'
+				'U', 'H', 'E', 'T', 'O', 'N', 'A', 'S', 'P', 'G', 'I', 'D', 'K', 'B', 'J', 'M',
 			}
 			vim.g.fuzzy_motion_matchers = { 'fzf', 'kensaku' }
 		end
