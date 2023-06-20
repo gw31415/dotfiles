@@ -29,6 +29,13 @@ vim.api.nvim_create_autocmd("BufRead", {
 	pattern = "*.mdx",
 	callback = function() vim.opt_local.filetype = "markdown" end,
 })
+vim.api.nvim_create_autocmd("BufRead", {
+	pattern = "*.saty",
+	callback = function()
+		vim.opt_local.filetype = "satysfi"
+		require("indent_blankline.commands").disable()
+	end,
+})
 vim.api.nvim_create_autocmd('BufReadPost', {
 	pattern = "COMMIT_EDITMSG",
 	callback = function()
@@ -361,6 +368,10 @@ require("lazy").setup({
 			require "null-ls".setup({
 				on_attach = _G.lsp_onattach_func,
 			})
+			require('lspconfig')['obsidian'].setup { autostart = true }
+			if vim.fn.executable("satysfi-language-server") == 1 then
+				require('lspconfig')['satysfi-ls'].setup { autostart = true }
+			end
 			vim.cmd("LspStart") -- 初回起動時はBufEnterが発火しない
 		end,
 	},
@@ -822,6 +833,16 @@ require("lazy").setup({
 	{
 		"nvim-treesitter/nvim-treesitter", -- Treesitter
 		config = function()
+			-- satysfiサーバのセットアップ
+			local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+			parser_config.satysfi = {
+				install_info = {
+					url = "https://github.com/monaqa/tree-sitter-satysfi",
+					files = { "src/parser.c", "src/scanner.c" }
+				},
+				filetype = "satysfi",
+			}
+
 			local parser_install_dir = vim.fn.stdpath("data") .. "/treesitter"
 			vim.opt.runtimepath:append(vim.fn.stdpath("data") .. "/treesitter")
 			require("nvim-treesitter.configs").setup({
@@ -834,7 +855,7 @@ require("lazy").setup({
 					enable = true,
 				},
 				auto_install = true,
-				ensure_installed = { 'org' },
+				ensure_installed = { 'org', 'satysfi' },
 			})
 			vim.wo.foldmethod = "expr"
 			vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
