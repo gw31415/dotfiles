@@ -309,6 +309,27 @@ require("lazy").setup({
 		"tranvansang/octave.vim",
 		ft = { "matlab", "octave" },
 	},
+	{
+		"gw31415/obsidian-lsp",
+		ft = "markdown",
+		dependencies = "neovim/nvim-lspconfig",
+		build = "npm i && npm bulid && npm link",
+		config = function()
+			local lspconfig = require('lspconfig')
+			local configs = require('lspconfig.configs')
+			if not configs.obsidian then
+				configs.obsidian = {
+					default_config = {
+						cmd = { "obsidian-lsp", "--stdio" },
+						single_file_support = false,
+						root_dir = lspconfig.util.root_pattern ".obsidian",
+						filetypes = { 'markdown' },
+					},
+				}
+			end
+			lspconfig.obsidian.setup {}
+		end
+	},
 
 	-- LSP
 	{
@@ -374,7 +395,6 @@ require("lazy").setup({
 			require "null-ls".setup({
 				-- on_attach = _G.lsp_onattach_func,
 			})
-			require('lspconfig')['obsidian'].setup { autostart = true }
 			if vim.fn.executable("satysfi-language-server") == 1 then
 				require('lspconfig')['satysfi-ls'].setup { autostart = true }
 			end
@@ -664,6 +684,11 @@ require("lazy").setup({
 					{ name = "emoji" },
 				}),
 			})
+			cmp.setup.filetype({ "markdown" }, {
+				completion = {
+					keyword_pattern = ".",
+				}
+			})
 			cmp.setup.cmdline(":", {
 				mapping = cmp.mapping.preset.cmdline(),
 				sources = cmp.config.sources({
@@ -839,6 +864,9 @@ require("lazy").setup({
 	{
 		"nvim-treesitter/nvim-treesitter", -- Treesitter
 		config = function()
+			-- markdown treesitter のPluginの有効化
+			vim.fn.setenv("EXTENSION_WIKI_LINK", 1)
+
 			-- satysfiサーバのセットアップ
 			local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
 			parser_config.satysfi = {
@@ -861,7 +889,7 @@ require("lazy").setup({
 					enable = true,
 				},
 				auto_install = true,
-				ensure_installed = { 'org', 'satysfi' },
+				ensure_installed = { 'org', 'satysfi', 'markdown' },
 			})
 			vim.wo.foldmethod = "expr"
 			vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
