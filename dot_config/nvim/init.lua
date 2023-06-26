@@ -1086,8 +1086,10 @@ require("lazy").setup({
 	},
 	{
 		"lambdalisue/gin.vim", -- Git連携
+		dependencies = { "vim-denops/denops.vim", "yuki-yano/denops-lazy.nvim" },
 		event = "VeryLazy",
 		config = function()
+			require 'denops-lazy'.load 'gin.vim'
 			vim.api.nvim_set_var("gin_patch_default_args", { "++no-head", "%" })
 		end,
 	},
