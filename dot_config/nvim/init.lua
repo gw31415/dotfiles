@@ -65,25 +65,28 @@ if vim.g.goneovim then
 	end)
 end
 
-function _G.lsp_onattach_func(_, bufnr)
-	vim.api.nvim_create_user_command("Implementation", function()
-		vim.lsp.buf.implementation()
-	end, { force = true })
-	local bufopts = { silent = true, buffer = bufnr }
-	vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
-	vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
-	vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
-	vim.keymap.set("n", "<C-j>", vim.diagnostic.goto_next, bufopts)
-	vim.keymap.set("n", "<C-k>", vim.diagnostic.goto_prev, bufopts)
-	vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, bufopts)
-	vim.keymap.set("n", "cI", vim.lsp.buf.rename, bufopts)
-	vim.keymap.set("n", "z*", vim.lsp.buf.references, bufopts)
-	vim.keymap.set("n", "gqae", function() vim.lsp.buf.format({ async = true }) end, { buffer = bufnr, nowait = true })
-	-- vim.api.nvim_create_autocmd('BufWritePre', {
-	-- 	callback = function() vim.lsp.buf.format { async = false } end,
-	-- 	buffer = bufnr,
-	-- })
-end
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function()
+		vim.api.nvim_create_user_command("Implementation", function()
+			vim.lsp.buf.implementation()
+		end, { force = true })
+		local bufopts = { silent = true, buffer = true }
+		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
+		vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
+		vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
+		vim.keymap.set("n", "<C-j>", vim.diagnostic.goto_next, bufopts)
+		vim.keymap.set("n", "<C-k>", vim.diagnostic.goto_prev, bufopts)
+		vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, bufopts)
+		vim.keymap.set("n", "cI", vim.lsp.buf.rename, bufopts)
+		vim.keymap.set("n", "z*", vim.lsp.buf.references, bufopts)
+		vim.keymap.set("n", "gqae", function() vim.lsp.buf.format({ async = true }) end,
+			{ buffer = true, nowait = true })
+		-- vim.api.nvim_create_autocmd('BufWritePre', {
+		-- 	callback = function() vim.lsp.buf.format { async = false } end,
+		-- 	buffer = bufnr,
+		-- })
+	end
+})
 
 -- Configure
 vim.opt.tabstop = 4
@@ -296,11 +299,11 @@ require("lazy").setup({
 		"akinsho/flutter-tools.nvim",
 		ft = { "dart" },
 		config = true,
-		opts = {
-			lsp = {
-				on_attach = _G.lsp_onattach_func,
-			},
-		},
+		-- opts = {
+		-- 	lsp = {
+		-- 		on_attach = _G.lsp_onattach_func,
+		-- 	},
+		-- },
 	},
 	{
 		"tranvansang/octave.vim",
@@ -339,12 +342,12 @@ require("lazy").setup({
 				function(server_name)
 					local opts = {
 						capabilities = capabilities,
-						on_attach = function(i, bufnr)
+						on_attach = function(_, bufnr)
 							---@diagnostic disable-next-line: redundant-parameter
 							vim.api.nvim_buf_set_option(bufnr, "formatexpr",
 								---@diagnostic disable-next-line: redundant-parameter
 								"v:lua.vim.lsp.formatexpr(#{timeout_ms:250})")
-							_G.lsp_onattach_func(i, bufnr)
+							-- _G.lsp_onattach_func(i, bufnr)
 						end,
 						settings = {
 							Lua = {
@@ -366,7 +369,7 @@ require("lazy").setup({
 				handlers = {},
 			})
 			require "null-ls".setup({
-				on_attach = _G.lsp_onattach_func,
+				-- on_attach = _G.lsp_onattach_func,
 			})
 			require('lspconfig')['obsidian'].setup { autostart = true }
 			if vim.fn.executable("satysfi-language-server") == 1 then
