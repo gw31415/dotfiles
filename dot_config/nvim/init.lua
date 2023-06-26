@@ -384,6 +384,18 @@ require("lazy").setup({
 							},
 						},
 					}
+
+					local node_root_dir = require 'lspconfig'.util.root_pattern("package.json")
+					local is_node_repo = node_root_dir(vim.api.nvim_buf_get_name(0)) ~= nil
+
+					if server_name == "tsserver" then
+						if not is_node_repo then return end
+						opts["root_dir"] = node_root_dir
+						opts["single_file_support"] = false
+					elseif server_name == "denols" then
+						if is_node_repo then return end
+					end
+
 					require("lspconfig")[server_name].setup(opts)
 				end,
 			})
