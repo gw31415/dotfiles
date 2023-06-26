@@ -17,7 +17,7 @@
   "deepl-commands.nvim": { "branch": "main", "commit": "455e8778a8c6a8bb36cd5e3adccf2f6adade9f00" },
   "deepl.vim": { "branch": "main", "commit": "9267f8ebaf6fb8ef654cbd28d4bcf8e6037e5d93" },
   "denops-lazy.nvim": { "branch": "main", "commit": "aee18b31b15dafddc7674b6cd256789d56431efe" },
-  "denops.vim": { "branch": "main", "commit": "df65c22ed88264aa3e264cace46a29d1a1263842" },
+  "denops.vim": { "branch": "main", "commit": "62b1d22b3e60fcc9e570a531a5af1e4b2393c15a" },
   "diaglist.nvim": { "branch": "master", "commit": "afc124a0976d56db43cc840e62757193ccab7856" },
   "dial.nvim": { "branch": "master", "commit": "b3916370c24c498117a4c790b2752c437dab661a" },
   "fern-git-status.vim": { "branch": "master", "commit": "151336335d3b6975153dad77e60049ca7111da8e" },
@@ -58,8 +58,8 @@
   "nvim-notify": { "branch": "master", "commit": "ea9c8ce7a37f2238f934e087c255758659948e0f" },
   "nvim-surround": { "branch": "main", "commit": "a06dea11e7fdcf338776fa51fa5277163ffb048d" },
   "nvim-tetris": { "branch": "master", "commit": "593375c1967dad5bb49218ceab7f1d5ac2940320" },
-  "nvim-treesitter": { "branch": "master", "commit": "68c619f2e3bbace5d2e885dbe44289dc68d776e5" },
-  "nvim-ts-rainbow2": { "branch": "master", "commit": "3edad7f978513499651d8b068880948f42c16d79" },
+  "nvim-treesitter": { "branch": "master", "commit": "b75f79bc5f68b552743d2136b80fe545871d5501" },
+  "nvim-ts-rainbow2": { "branch": "master", "commit": "1c7980dadb9d702d063c968cc240e282bb574995" },
   "nvimesweeper": { "branch": "master", "commit": "a75828943e4279cd850ad6a6cff4c49238997573" },
   "obsidian-lsp": { "branch": "main", "commit": "8f01d696e9106abc9e33b1693452cfab0af68a02" },
   "octave.vim": { "branch": "master", "commit": "83f7c67c124f831123b3dbfd0f97ca7e15eee169" },
@@ -89,6 +89,6 @@
   "vim-textobj-entire": { "branch": "master", "commit": "64a856c9dff3425ed8a863b9ec0a21dbaee6fb3a" },
   "vim-textobj-user": { "branch": "master", "commit": "41a675ddbeefd6a93664a4dc52f302fe3086a933" },
   "vim-vsnip": { "branch": "master", "commit": "7753ba9c10429c29d25abfd11b4c60b76718c438" },
-  "vimdoc-ja": { "branch": "master", "commit": "bf2676277a5cc64b39c7d6f2822317eb8b2b6a6a" },
+  "vimdoc-ja": { "branch": "master", "commit": "3223ad58fd7ad66afb2ceb2cec56df988b752328" },
   "winresizer": { "branch": "master", "commit": "9bd559a03ccec98a458e60c705547119eb5350f3" }
 }

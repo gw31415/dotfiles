@@ -312,6 +312,24 @@ require("lazy").setup({
 
 	-- LSP
 	{
+		"folke/neodev.nvim",
+		ft = "lua",
+		dependencies = "neovim/nvim-lspconfig",
+		config = function()
+			-- IMPORTANT: make sure to setup neodev BEFORE lspconfig
+			require 'neodev'.setup {}
+			require 'lspconfig'.lua_ls.setup {
+				settings = {
+					Lua = {
+						completion = {
+							callSnippet = "Replace"
+						}
+					}
+				}
+			}
+		end,
+	},
+	{
 		"williamboman/mason.nvim", -- LSP Installer
 		dependencies = {
 			"williamboman/mason-lspconfig.nvim",
@@ -320,17 +338,6 @@ require("lazy").setup({
 			"jose-elias-alvarez/null-ls.nvim",
 			"nvim-lua/plenary.nvim",
 			"jay-babu/mason-null-ls.nvim",
-			{
-				"folke/neodev.nvim",
-				ft = "lua",
-				config = true,
-				opts = {
-					override = function(_, library)
-						library.enabled = true
-						library.plugins = true
-					end,
-				},
-			},
 		},
 		event = "VeryLazy",
 		config = function()
@@ -350,10 +357,6 @@ require("lazy").setup({
 							-- _G.lsp_onattach_func(i, bufnr)
 						end,
 						settings = {
-							Lua = {
-								workspace = { checkThirdParty = false },
-								completion = { callSnippet = "Replace" },
-							},
 							["rust-analyzer"] = {
 								checkOnSave = {
 									command = "clippy",
