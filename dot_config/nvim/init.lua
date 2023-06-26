@@ -863,6 +863,7 @@ require("lazy").setup({
 	},
 	{
 		"nvim-treesitter/nvim-treesitter", -- Treesitter
+		dependencies = { "HiPhish/nvim-ts-rainbow2" },
 		config = function()
 			-- markdown treesitter のPluginの有効化
 			vim.fn.setenv("EXTENSION_WIKI_LINK", 1)
@@ -890,6 +891,15 @@ require("lazy").setup({
 				},
 				auto_install = true,
 				ensure_installed = { 'org', 'satysfi', 'markdown' },
+				rainbow = {
+					enable = true,
+					-- list of languages you want to disable the plugin for
+					disable = { 'jsx', 'cpp' },
+					-- Which query to use for finding delimiters
+					query = 'rainbow-parens',
+					-- Highlight the entire buffer all at once
+					strategy = require('ts-rainbow').strategy.global,
+				},
 			})
 			vim.wo.foldmethod = "expr"
 			vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
