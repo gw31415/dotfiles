@@ -155,7 +155,6 @@ vim.cmd(
 )
 
 -- default plugins
-vim.api.nvim_set_var("loaded_matchit", true)
 vim.api.nvim_set_var("loaded_netrwPlugin", true)
 vim.api.nvim_set_var("loaded_remote_plugins", true)
 vim.api.nvim_set_var("skip_loading_mswin", true)
@@ -395,7 +394,7 @@ require("lazy").setup({
 			require "null-ls".setup({
 				-- on_attach = _G.lsp_onattach_func,
 			})
-			if vim.fn.executable("satysfi-language-server") == 1 then
+			if vim.fn.executable "satysfi-language-server" == 1 then
 				require('lspconfig')['satysfi-ls'].setup { autostart = true }
 			end
 			vim.cmd("LspStart") -- 初回起動時はBufEnterが発火しない
