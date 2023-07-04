@@ -46,7 +46,102 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 		end, { buffer = true })
 	end
 })
-vim.api.nvim_create_autocmd("BufRead", {
+
+vim.api.nvim_create_autocmd("BufEnter", {
+	pattern = "*.md",
+	once = true,
+	callback = function()
+		local lspconfig = require('lspconfig')
+		local configs = require('lspconfig.configs')
+		if not configs.obsidian then
+			configs.obsidian = {
+				default_config = {
+					didChangeWatchedFiles = {
+						dynamicRegistration = true,
+						relativePatternSupport = true
+					},
+					-- cmd = { "npx", "obsidian-lsp", "--", "--stdio" },
+					cmd = { "npm", "--prefix", "/Users/ama/obsidian-lsp", "run", "dev", "--", "--stdio" },
+					single_file_support = false,
+					root_dir = lspconfig.util.root_pattern ".obsidian",
+					filetypes = { 'markdown' },
+				},
+			}
+		end
+		lspconfig.obsidian.setup {}
+		vim.cmd 'LspStart'
+	end
+})
+vim.keymap.set("n", "<Leader>ob", function()
+	local path = "/Users/ama/Library/Mobile Documents/iCloud~md~obsidian/Documents/Zettelkasten/"
+	local filename = vim.fn.strftime("%Y%m%d%H%M%S") .. ".md"
+	vim.cmd(string.format("sp %s%s", path, filename))
+end)
+
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function()
+		for _, value in pairs(vim.lsp.get_active_clients()) do
+			if value.name == "obsidian" then
+				local root_dir = value.config.root_dir
+				vim.keymap.set("n", "zz", function()
+					vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("ZZ<Leader>ob", true, true, true) or "", "",
+						true)
+				end, { buffer = true })
+				vim.keymap.set("n", "<c-p>", function()
+					local query = vim.fn.input("検索: ")
+					if query == "" then return end
+					---@diagnostic disable-next-line: undefined-field
+					local res = vim.system({ "rg", "--json", "-g", "**/*.md", query }, {
+						text = true,
+						cwd = root_dir,
+					}):wait()
+					local json = {}
+					for _, jsonstr in pairs(vim.fn.split(res.stdout, '\n')) do
+						local j = vim.fn.json_decode(jsonstr)
+						if j and j.type == "match" then
+							table.insert(json, j)
+						end
+					end
+					require 'fzyselect'.start(json,
+						{
+							prompt = 'Obsidian note files: <Enter> to edit',
+							format_item = function(j)
+								return string.format("%s | %s", j.data.path.text, vim.fn.trim(j.data.lines.text))
+							end,
+						},
+						function(j)
+							if j then vim.cmd.edit(j.data.path.text) end
+						end)
+				end, { buffer = true })
+				vim.keymap.set({ "n", "i" }, "<M-v>", function()
+					local filename = vim.fn.strftime("%Y%m%d%H%M%S") .. ".png"
+					local res = vim.system({ "pngpaste", filename }, {
+						text = true,
+						cwd = root_dir,
+					}):wait()
+					if res.signal ~= 0 then
+						vim.notify(res.stderr, vim.log.levels.ERROR)
+					else
+						vim.notify("pngpaste: " .. filename, vim.log.levels.INFO)
+						vim.api.nvim_feedkeys(
+							vim.api.nvim_replace_termcodes(
+								"<Esc>a![](" .. filename .. ")<Esc>%hi",
+								true,
+								true,
+								true
+							) or "",
+							"",
+							true
+						)
+					end
+				end, { buffer = true })
+				break
+			end
+		end
+	end
+})
+
+vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = "*.org",
 	callback = function()
 		vim.opt_local.formatoptions:append('mM')
@@ -54,6 +149,28 @@ vim.api.nvim_create_autocmd("BufRead", {
 		vim.opt_local.expandtab = true
 		vim.opt_local.tabstop = 2
 		vim.opt_local.shiftwidth = 2
+		vim.keymap.set({ "n", "i" }, "<M-v>", function()
+			local filename = vim.fn.strftime("%Y%m%d%H%M%S") .. ".png"
+			local res = vim.system({ "pngpaste", filename }, {
+				text = true,
+				cwd = vim.fn.expand('%:p:h'),
+			}):wait()
+			if res.signal ~= 0 then
+				vim.notify(res.stderr, vim.log.levels.ERROR)
+			else
+				vim.notify("pngpaste: " .. filename, vim.log.levels.INFO)
+				vim.api.nvim_feedkeys(
+					vim.api.nvim_replace_termcodes(
+						"<Esc>a!#CAPTION:<Space><CR>[[file:" .. filename .. "]]<Esc>%kA",
+						true,
+						true,
+						true
+					) or "",
+					"",
+					true
+				)
+			end
+		end, { buffer = true })
 	end
 })
 
@@ -73,10 +190,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		local bufopts = { silent = true, buffer = true }
 		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
-		vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
+		-- vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
 		vim.keymap.set("n", "<C-j>", vim.diagnostic.goto_next, bufopts)
 		vim.keymap.set("n", "<C-k>", vim.diagnostic.goto_prev, bufopts)
-		vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, bufopts)
+		vim.keymap.set("n", "<Leader>a", vim.lsp.buf.code_action, bufopts)
 		vim.keymap.set("n", "cI", vim.lsp.buf.rename, bufopts)
 		vim.keymap.set("n", "z*", vim.lsp.buf.references, bufopts)
 		vim.keymap.set("n", "gqae", function() vim.lsp.buf.format({ async = true }) end,
@@ -225,7 +342,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	"nvim-lua/plenary.nvim",
-	"vim-denops/denops.vim",
+	{ "vim-denops/denops.vim",           lazy = false },
 
 	-- Games
 	{ "eandrju/cellular-automaton.nvim", cmd = "CellularAutomaton" },
@@ -254,6 +371,7 @@ require("lazy").setup({
 			"danilshvalov/org-modern.nvim",
 		},
 		ft = "org",
+		keys = "<Leader>o",
 		config = function()
 			local Menu = require("org-modern.menu")
 			vim.keymap.set('n', '<Leader>o', '<Nop>', {})
@@ -309,25 +427,8 @@ require("lazy").setup({
 		ft = { "matlab", "octave" },
 	},
 	{
-		"gw31415/obsidian-lsp",
-		ft = "markdown",
-		dependencies = "neovim/nvim-lspconfig",
-		build = "npm i && npm bulid && npm link",
-		config = function()
-			local lspconfig = require('lspconfig')
-			local configs = require('lspconfig.configs')
-			if not configs.obsidian then
-				configs.obsidian = {
-					default_config = {
-						cmd = { "obsidian-lsp", "--stdio" },
-						single_file_support = false,
-						root_dir = lspconfig.util.root_pattern ".obsidian",
-						filetypes = { 'markdown' },
-					},
-				}
-			end
-			lspconfig.obsidian.setup {}
-		end
+		"gw31415/zk-obsidian.nvim",
+		event = "VeryLazy",
 	},
 
 	-- LSP
@@ -452,6 +553,14 @@ require("lazy").setup({
 		"numToStr/Comment.nvim", -- コメントのトグル
 		keys = { { "gc", mode = { "n", "x" } } },
 		config = true,
+		opts = {
+			toggler = {
+				block = 'gCC',
+			},
+			opleader = {
+				block = 'gC',
+			},
+		},
 	},
 
 	-- Debug Adapter Protocol
@@ -697,8 +806,21 @@ require("lazy").setup({
 			})
 			cmp.setup.filetype({ "markdown" }, {
 				completion = {
-					keyword_pattern = ".",
-				}
+					keyword_pattern = [[\[\[.*\k]],
+				},
+				-- sources = cmp.config.sources({
+				-- 	{
+				-- 		name = "nvim_lsp",
+				-- 		completion = {
+				-- 			keyword_pattern = [[.]] --[[\[\[\k]],
+				-- 		}
+				-- 	},
+				-- 	{ name = "vsnip" },
+				-- 	{ name = "buffer" },
+				-- 	{ name = "nvim_lsp_signature_help" },
+				-- 	{ name = "skkeleton" },
+				-- 	{ name = "path" },
+				-- }),
 			})
 			cmp.setup.cmdline(":", {
 				mapping = cmp.mapping.preset.cmdline(),
@@ -738,6 +860,32 @@ require("lazy").setup({
 			vim.notify = require("notify")
 		end,
 	},
+	{
+		"lewis6991/hover.nvim",
+		keys = {
+			{ "K",  function() require "hover".hover() end,        desc = "hover.nvim" },
+			{ "gK", function() require "hover".hover_select() end, desc = "hover.nvim (select)" },
+		},
+		config = true,
+		opts = {
+			init = function()
+				-- Require providers
+				require 'hover.providers.lsp'
+				require 'hover.providers.gh'
+				require 'hover.providers.gh_user'
+				-- require 'hover.providers.jira'
+				-- require'hover.providers.man'
+				require 'hover.providers.dictionary'
+			end,
+			preview_opts = {
+				border = nil
+			},
+			-- Whether the contents of a currently open hover window should be moved
+			-- to a :h preview-window when pressing the hover keymap.
+			preview_window = false,
+			title = true
+		},
+	},
 	"lambdalisue/readablefold.vim", -- より良い foldtext
 	{
 		"monaqa/dial.nvim",      -- 拡張版<C-a><C-x>
@@ -763,6 +911,16 @@ require("lazy").setup({
 			})
 		end,
 	},
+	-- {
+	-- 	"folke/which-key.nvim",
+	-- 	event = "VeryLazy",
+	-- 	init = function()
+	-- 		vim.o.timeout = true
+	-- 		vim.o.timeoutlen = 300
+	-- 	end,
+	-- 	opts = {
+	-- 	}
+	-- },
 	-- 'andymass/vim-matchup',
 
 	-- ファイラ
@@ -871,6 +1029,11 @@ require("lazy").setup({
 			end)
 			vim.ui.select = require("fzyselect").start
 		end,
+	},
+	{
+		'nvim-telescope/telescope.nvim',
+		tag = '0.1.1',
+		cmd = "Telescope",
 	},
 	{
 		"nvim-treesitter/nvim-treesitter", -- Treesitter
@@ -1021,6 +1184,12 @@ require("lazy").setup({
 			},
 		},
 	},
+	{
+		"folke/todo-comments.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		config = true,
+		event = "VeryLazy",
+	},
 
 	-- 小機能追加
 	"rbtnn/vim-ambiwidth", -- 曖昧幅な文字の文字幅設定
@@ -1097,12 +1266,8 @@ require("lazy").setup({
 	},
 	{
 		"lambdalisue/gin.vim", -- Git連携
-		dependencies = { "vim-denops/denops.vim", "yuki-yano/denops-lazy.nvim" },
-		event = "VeryLazy",
-		config = function()
-			require 'denops-lazy'.load 'gin.vim'
-			vim.api.nvim_set_var("gin_patch_default_args", { "++no-head", "%" })
-		end,
+		dependencies = "vim-denops/denops.vim",
+		lazy = false,
 	},
 	{
 		"lewis6991/gitsigns.nvim", -- Gitの行毎ステータス
@@ -1115,11 +1280,10 @@ require("lazy").setup({
 	},
 	{
 		"yuki-yano/fuzzy-motion.vim", -- 画面内ジャンプ
-		event        = "VeryLazy",
-		dependencies = { "vim-denops/denops.vim", "yuki-yano/denops-lazy.nvim", "lambdalisue/kensaku.vim" },
+		lazy         = false,
+		dependencies = { "vim-denops/denops.vim", "lambdalisue/kensaku.vim" },
 		keys         = { { "<Space>", "<cmd>FuzzyMotion<cr>" } },
 		config       = function()
-			require 'denops-lazy'.load 'fuzzy-motion.vim'
 			vim.g.fuzzy_motion_labels = {
 				'U', 'H', 'E', 'T', 'O', 'N', 'A', 'S', 'P', 'G', 'I', 'D', 'K', 'B', 'J', 'M',
 			}
@@ -1149,12 +1313,11 @@ require("lazy").setup({
 		config = function()
 			require("onedark").setup({
 				style = "darker",
-				code_style = {
+				code_style = vim.g.goneovim ~= 1 and {
 					comments = "none",
 					functions = "bold",
 					keywords = "none",
-				},
-				highlights = { ParenMatch = { fg = "$red", bg = "$bg_yellow" } },
+				} or nil,
 			})
 			require("onedark").load()
 		end,
@@ -1208,6 +1371,7 @@ require("lazy").setup({
 	{
 		"vim-skk/skkeleton",              -- 日本語入力
 		keys = { { "<C-j>", "<Plug>(skkeleton-enable)", mode = { "i", "c" } } },
+		lazy = false,
 		dependencies = {
 			"gw31415/skkeletal.vim",
 			"vim-denops/denops.vim",
@@ -1215,7 +1379,6 @@ require("lazy").setup({
 			{ "uga-rosa/cmp-skkeleton", dependencies = "hrsh7th/nvim-cmp" },
 		},
 		config = function()
-			require 'denops-lazy'.load 'skkeleton'
 			_G.get_skkeleton_modestring = function()
 				local mode = vim.fn["skkeleton#mode"]()
 				if mode == "hira" then

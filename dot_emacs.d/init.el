@@ -35,7 +35,7 @@
 (add-to-list 'org-latex-logfiles-extensions "tex")
 
 (setq org-latex-title-command "\\maketitle")
-(setq org-latex-toc-command "\\tableofcontents\n\\pagebreak")
+(setq org-latex-toc-command "\\pagebreak\\tableofcontents\n\\pagebreak")
 
 (setq org-latex-text-markup-alist '((bold . "\\textbf{%s}")
                 (code . verb)
