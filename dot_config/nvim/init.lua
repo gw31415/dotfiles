@@ -2,7 +2,7 @@ if vim.loader then vim.loader.enable() end
 
 --[[
 -- 依存: NVim nightly, Git, cURL, Deno
--- siliconコマンドがあれば対応。
+-- silicon, ra-multiplexがあれば対応。
 -- ]]
 -- Emacs Keybindings
 
@@ -46,6 +46,20 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 		end, { buffer = true })
 	end
 })
+vim.api.nvim_create_autocmd('BufReadPost', {
+	pattern = { "*.json", "*.ts", "*.js", "*.jsx", "*.tsx" },
+	callback = function()
+		vim.opt_local.shiftwidth = 2
+		vim.opt_local.expandtab = true
+		vim.opt_local.tabstop = 2
+	end
+})
+vim.api.nvim_create_autocmd("BufRead", {
+	pattern = "*.njk",
+	callback = function()
+		vim.opt_local.filetype = "html"
+	end,
+})
 
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = "*.md",
@@ -80,8 +94,10 @@ end)
 
 vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function()
-		for _, value in pairs(vim.lsp.get_active_clients()) do
+		for _, value in pairs(vim.lsp.get_clients()) do
+			---@diagnostic disable-next-line: undefined-field
 			if value.name == "obsidian" then
+				---@diagnostic disable-next-line: undefined-field
 				local root_dir = value.config.root_dir
 				vim.keymap.set("n", "zz", function()
 					vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("ZZ<Leader>ob", true, true, true) or "", "",
@@ -94,6 +110,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 					local res = vim.system({ "rg", "--json", "-g", "**/*.md", query }, {
 						text = true,
 						cwd = root_dir,
+						---@diagnostic disable-next-line: undefined-field
 					}):wait()
 					local json = {}
 					for _, jsonstr in pairs(vim.fn.split(res.stdout, '\n')) do
@@ -110,7 +127,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 							end,
 						},
 						function(j)
-							if j then vim.cmd.edit(j.data.path.text) end
+							if j then vim.cmd.edit(root_dir .. '/' .. j.data.path.text) end
 						end)
 				end, { buffer = true })
 				vim.keymap.set({ "n", "i" }, "<M-v>", function()
@@ -118,6 +135,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 					local res = vim.system({ "pngpaste", filename }, {
 						text = true,
 						cwd = root_dir,
+						---@diagnostic disable-next-line: undefined-field
 					}):wait()
 					if res.signal ~= 0 then
 						vim.notify(res.stderr, vim.log.levels.ERROR)
@@ -154,6 +172,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 			local res = vim.system({ "pngpaste", filename }, {
 				text = true,
 				cwd = vim.fn.expand('%:p:h'),
+				---@diagnostic disable-next-line: undefined-field
 			}):wait()
 			if res.signal ~= 0 then
 				vim.notify(res.stderr, vim.log.levels.ERROR)
@@ -161,7 +180,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 				vim.notify("pngpaste: " .. filename, vim.log.levels.INFO)
 				vim.api.nvim_feedkeys(
 					vim.api.nvim_replace_termcodes(
-						"<Esc>a!#CAPTION:<Space><CR>[[file:" .. filename .. "]]<Esc>%kA",
+						"<Esc>a[[file:" .. filename .. "]]<Esc>%O#+CAPTION:<Space>",
 						true,
 						true,
 						true
@@ -209,12 +228,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.number = true
-vim.opt.imdisable = true
 vim.opt.winblend = 20
 vim.opt.pumblend = vim.wo.winblend
 vim.opt.cursorline = true
 vim.opt.cursorcolumn = true
-vim.opt.shellslash = true
 vim.opt.splitbelow = true
 vim.opt.hidden = true
 vim.opt.laststatus = 3
@@ -231,7 +248,7 @@ vim.api.nvim_create_autocmd('TermOpen', {
 })
 
 -- Neovide
-vim.opt.guifont = "Hack Nerd Font:h13,HackGenNerd Console:h13"
+vim.opt.guifont = "Hack Nerd Font:h13,HackGen Console NF:h13"
 if vim.g.neovide then
 	vim.api.nvim_set_var("neovide_remember_window_size", false)
 end
@@ -466,21 +483,32 @@ require("lazy").setup({
 			local mason_lspconfig = require("mason-lspconfig")
 			local capabilities =
 				require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
+			local on_attach = function(_, bufnr)
+				---@diagnostic disable-next-line: redundant-parameter
+				vim.api.nvim_buf_set_option(bufnr, "formatexpr",
+					---@diagnostic disable-next-line: redundant-parameter
+					"v:lua.vim.lsp.formatexpr(#{timeout_ms:250})")
+				-- _G.lsp_onattach_func(i, bufnr)
+			end
 			mason_lspconfig.setup_handlers({
 				function(server_name)
 					local opts = {
 						capabilities = capabilities,
-						on_attach = function(_, bufnr)
-							---@diagnostic disable-next-line: redundant-parameter
-							vim.api.nvim_buf_set_option(bufnr, "formatexpr",
-								---@diagnostic disable-next-line: redundant-parameter
-								"v:lua.vim.lsp.formatexpr(#{timeout_ms:250})")
-							-- _G.lsp_onattach_func(i, bufnr)
-						end,
+						on_attach = on_attach,
 						settings = {
 							["rust-analyzer"] = {
 								checkOnSave = {
 									command = "clippy",
+								},
+							},
+							["pylsp"] = {
+								plugins = {
+									autopep8 = {
+										enabled = false,
+									},
+									yapf = {
+										enabled = false,
+									},
 								},
 							},
 						},
@@ -1037,7 +1065,21 @@ require("lazy").setup({
 	},
 	{
 		"nvim-treesitter/nvim-treesitter", -- Treesitter
-		dependencies = { "HiPhish/nvim-ts-rainbow2" },
+		dependencies = {
+			"HiPhish/nvim-ts-rainbow2",
+			{
+				"nvim-treesitter/nvim-treesitter-context",
+				config = function()
+					require 'treesitter-context'.setup {
+						line_numbers = true,
+						mode = 'topline',
+						separator = '~'
+					}
+				end
+			},
+			"windwp/nvim-ts-autotag",
+			"JoosepAlviste/nvim-ts-context-commentstring",
+		},
 		config = function()
 			-- markdown treesitter のPluginの有効化
 			vim.fn.setenv("EXTENSION_WIKI_LINK", 1)
@@ -1063,7 +1105,7 @@ require("lazy").setup({
 				indent = {
 					enable = true,
 				},
-				auto_install = true,
+				auto_install = false,
 				ensure_installed = { 'org', 'satysfi', 'markdown' },
 				rainbow = {
 					enable = true,
@@ -1073,6 +1115,12 @@ require("lazy").setup({
 					query = 'rainbow-parens',
 					-- Highlight the entire buffer all at once
 					strategy = require('ts-rainbow').strategy.global,
+				},
+				autotag = {
+					enable = true,
+				},
+				context_commentstring = {
+					enable = true,
 				},
 			})
 			vim.wo.foldmethod = "expr"
@@ -1158,6 +1206,15 @@ require("lazy").setup({
 				show_current_context_start = true,
 			})
 		end,
+	},
+	{
+		'stevearc/aerial.nvim',
+		opts = {},
+		event = "VeryLazy",
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter",
+			"nvim-tree/nvim-web-devicons"
+		},
 	},
 	{
 		"nmac427/guess-indent.nvim",

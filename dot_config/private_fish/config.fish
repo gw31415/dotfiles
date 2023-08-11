@@ -13,3 +13,8 @@ export WASMER_DIR="$HOME/.wasmer"
 if type -q goneovim
 	abbr -a nv goneovim --nofork
 end
+
+# Rust compile cache
+# if type -q sccache
+# 	export RUSTC_WRAPPER=(which sccache)
+# end
