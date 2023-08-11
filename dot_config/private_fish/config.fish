@@ -15,6 +15,8 @@ if type -q goneovim
 end
 
 # Rust compile cache
-# if type -q sccache
-# 	export RUSTC_WRAPPER=(which sccache)
-# end
+if type -q sccache
+	export RUSTC_WRAPPER=(which sccache)
+end
+
+eval "$(/opt/homebrew/bin/brew shellenv)"

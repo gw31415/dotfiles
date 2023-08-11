@@ -447,6 +447,13 @@ require("lazy").setup({
 		"gw31415/zk-obsidian.nvim",
 		event = "VeryLazy",
 	},
+	{
+		"OmniSharp/Omnisharp-vim",
+		ft = { "cs" },
+		init = function()
+			vim.g.OmniSharp_server_use_mono = 1
+		end
+	},
 
 	-- LSP
 	{
@@ -511,6 +518,9 @@ require("lazy").setup({
 									},
 								},
 							},
+							["omniSharp"] = {
+								useGlobalMono = "always"
+							}
 						},
 					}
 
