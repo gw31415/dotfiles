@@ -113,7 +113,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 						---@diagnostic disable-next-line: undefined-field
 					}):wait()
 					local json = {}
-					for _, jsonstr in pairs(vim.fn.split(res.stdout, '\n')) do
+					for _, jsonstr in pairs(vim.fn.split(res.stdout, '\n') or {}) do
 						local j = vim.fn.json_decode(jsonstr)
 						if j and j.type == "match" then
 							table.insert(json, j)
@@ -209,7 +209,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		local bufopts = { silent = true, buffer = true }
 		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
-		-- vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
+		vim.keymap.set("n", "K", function()
+			local winid = require('ufo').peekFoldedLinesUnderCursor()
+			if not winid then
+				vim.lsp.buf.hover()
+			end
+		end, bufopts)
 		vim.keymap.set("n", "<C-j>", vim.diagnostic.goto_next, bufopts)
 		vim.keymap.set("n", "<C-k>", vim.diagnostic.goto_prev, bufopts)
 		vim.keymap.set("n", "<Leader>a", vim.lsp.buf.code_action, bufopts)
@@ -365,6 +370,20 @@ require("lazy").setup({
 	{ "eandrju/cellular-automaton.nvim", cmd = "CellularAutomaton" },
 	{ "gw31415/nvim-tetris",             cmd = "Tetris" },
 	{ "seandewar/nvimesweeper",          cmd = "Nvimesweeper" },
+	{
+		"m4xshen/hardtime.nvim",
+		dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
+		opts = {},
+		cmd = "Hardtime",
+	},
+	{
+		"gw31415/pets.nvim",
+		dependencies = { "MunifTanjim/nui.nvim", "giusgad/hologram.nvim" },
+		event = "VeryLazy",
+		opts = {
+			row = 6,
+		}
+	},
 
 	-- 言語別プラグイン
 	{
@@ -899,34 +918,46 @@ require("lazy").setup({
 		end,
 	},
 	{
-		"lewis6991/hover.nvim",
-		keys = {
-			{ "K",  function() require "hover".hover() end,        desc = "hover.nvim" },
-			{ "gK", function() require "hover".hover_select() end, desc = "hover.nvim (select)" },
-		},
-		config = true,
-		opts = {
-			init = function()
-				-- Require providers
-				require 'hover.providers.lsp'
-				require 'hover.providers.gh'
-				require 'hover.providers.gh_user'
-				-- require 'hover.providers.jira'
-				-- require'hover.providers.man'
-				require 'hover.providers.dictionary'
-			end,
-			preview_opts = {
-				border = nil
-			},
-			-- Whether the contents of a currently open hover window should be moved
-			-- to a :h preview-window when pressing the hover keymap.
-			preview_window = false,
-			title = true
-		},
+		'kevinhwang91/nvim-ufo',
+		event = "VeryLazy",
+		dependencies = "kevinhwang91/promise-async",
+		config = function()
+			require "ufo".setup {
+				provider_selector = function()
+					return { "treesitter", "indent" }
+				end,
+				fold_virt_text_handler = function(virtText, lnum, endLnum, width, truncate)
+					local newVirtText = {}
+					local suffix = ('   %d '):format(endLnum - lnum)
+					local sufWidth = vim.fn.strdisplaywidth(suffix)
+					local targetWidth = width - sufWidth
+					local curWidth = 0
+					for _, chunk in ipairs(virtText) do
+						local chunkText = chunk[1]
+						local chunkWidth = vim.fn.strdisplaywidth(chunkText)
+						if targetWidth > curWidth + chunkWidth then
+							table.insert(newVirtText, chunk)
+						else
+							chunkText = truncate(chunkText, targetWidth - curWidth)
+							local hlGroup = chunk[2]
+							table.insert(newVirtText, { chunkText, hlGroup })
+							chunkWidth = vim.fn.strdisplaywidth(chunkText)
+							-- str width returned from truncate() may less than 2nd argument, need padding
+							if curWidth + chunkWidth < targetWidth then
+								suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
+							end
+							break
+						end
+						curWidth = curWidth + chunkWidth
+					end
+					table.insert(newVirtText, { suffix, 'MoreMsg' })
+					return newVirtText
+				end
+			}
+		end
 	},
-	"lambdalisue/readablefold.vim", -- より良い foldtext
 	{
-		"monaqa/dial.nvim",      -- 拡張版<C-a><C-x>
+		"monaqa/dial.nvim", -- 拡張版<C-a><C-x>
 		keys = {
 			{ "<C-a>",  "<Plug>(dial-increment)",                                              mode = { "n", "x" } },
 			{ "<C-x>",  "<Plug>(dial-decrement)",                                              mode = { "n", "x" } },
@@ -978,9 +1009,16 @@ require("lazy").setup({
 			"lambdalisue/nerdfont.vim",
 			"lambdalisue/fern-git-status.vim",
 		},
-		config = function()
+		init = function()
 			vim.api.nvim_set_var("fern#renderer", "nerdfont")
 			vim.api.nvim_set_var("fern#renderer#nerdfont#indent_markers", 1)
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = "fern",
+				callback = function()
+					local opts = { buffer = true }
+					vim.keymap.set("n", "K", "<Plug>(fern-action-new-dir)", opts)
+				end,
+			})
 		end,
 	},
 	{ "lambdalisue/fern-hijack.vim", lazy = false },
@@ -1192,9 +1230,21 @@ require("lazy").setup({
 	},
 	{
 		"lukas-reineke/indent-blankline.nvim", -- インデントの可視化
-		dependencies = "nvim-treesitter/nvim-treesitter",
 		event = "VeryLazy",
+		opts = function()
+			return require("indent-rainbowline").make_opts({
+				show_current_context_start = true,
+				show_current_context = true,
+			}, {
+				color_transparency = 0.07,
+			})
+		end,
+		dependencies = {
+			"TheGLander/indent-rainbowline.nvim",
+			"nvim-treesitter/nvim-treesitter",
+		},
 		init = function()
+			vim.api.nvim_set_var("indent_blankline_use_treesitter", true)
 			vim.api.nvim_set_var("indent_blankline_filetype_exclude", {
 				"lspinfo",
 				"packer",
@@ -1203,17 +1253,6 @@ require("lazy").setup({
 				"man",
 				"",
 				"org",
-			})
-		end,
-		config = function()
-			vim.api.nvim_set_var("indent_blankline_indent_level", 4)
-			vim.api.nvim_set_var("indent_blankline_use_treesitter", true)
-			vim.opt.list = true
-			vim.opt.listchars:append("tab:│ ")
-			require("indent_blankline").setup({
-				space_char_blankline = " ",
-				show_current_context = true,
-				show_current_context_start = true,
 			})
 		end,
 	},
@@ -1259,7 +1298,13 @@ require("lazy").setup({
 	},
 
 	-- 小機能追加
-	"rbtnn/vim-ambiwidth", -- 曖昧幅な文字の文字幅設定
+	-- "rbtnn/vim-ambiwidth",
+	{
+		"delphinus/cellwidths.nvim", -- 曖昧幅な文字の文字幅設定
+		opts = {
+			name = "cica",
+		}
+	},
 
 	{
 		"cohama/lexima.vim", -- 自動括弧閉じ
@@ -1285,14 +1330,6 @@ require("lazy").setup({
 			{ "ae", mode = "o" },
 		},
 		dependencies = "kana/vim-textobj-user",
-	},
-	{
-		"osyo-manga/vim-operator-stay-cursor", -- カーソルを固定したOperatorをつくる
-		keys = "gq",
-		dependencies = "kana/vim-operator-user",
-		config = function()
-			vim.cmd('nmap <expr> gq operator#stay_cursor#wrapper("gq")')
-		end,
 	},
 	{
 		"gbprod/substitute.nvim", -- vim-operator-replace
@@ -1375,7 +1412,16 @@ require("lazy").setup({
 	},
 	{ "thinca/vim-partedit", event = "CmdlineEnter" }, -- 分割編集
 	{
-		"navarasu/onedark.nvim",                    -- テーマ
+		"thinca/vim-ambicmd",                       -- コマンドの曖昧展開
+		event = "CmdlineEnter",
+		config = function()
+			vim.keymap.set("c", "<Space>", function()
+				return vim.fn["ambicmd#expand"]("<Space>")
+			end, { expr = true })
+		end
+	},
+	{
+		"navarasu/onedark.nvim", -- テーマ
 		lazy = false,
 		config = function()
 			require("onedark").setup({
