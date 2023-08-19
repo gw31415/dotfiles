@@ -1,3 +1,5 @@
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 if type -q opam
 	eval (opam env)
 end
@@ -18,7 +20,5 @@ end
 if type -q sccache
 	export RUSTC_WRAPPER=(which sccache)
 end
-
-eval "$(/opt/homebrew/bin/brew shellenv)"
 
 export LDFLAGS="-L/opt/homebrew/lib"; export CPPFLAGS="-I/opt/homebrew/include"

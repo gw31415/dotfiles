@@ -382,7 +382,10 @@ require("lazy").setup({
 		event = "VeryLazy",
 		opts = {
 			row = 6,
-		}
+		},
+		enabled = function()
+			return vim.fn.environ()["TERM"] == "xterm-kitty"
+		end,
 	},
 
 	-- 言語別プラグイン
@@ -459,19 +462,18 @@ require("lazy").setup({
 		-- },
 	},
 	{
+		'saecki/crates.nvim',
+		dependencies = "nvim-lua/plenary.nvim",
+		ft = "toml",
+		config = true,
+	},
+	{
 		"tranvansang/octave.vim",
 		ft = { "matlab", "octave" },
 	},
 	{
 		"gw31415/zk-obsidian.nvim",
 		event = "VeryLazy",
-	},
-	{
-		"OmniSharp/Omnisharp-vim",
-		ft = { "cs" },
-		init = function()
-			vim.g.OmniSharp_server_use_mono = 1
-		end
 	},
 
 	-- LSP
@@ -1008,6 +1010,7 @@ require("lazy").setup({
 			"lambdalisue/fern-renderer-nerdfont.vim",
 			"lambdalisue/nerdfont.vim",
 			"lambdalisue/fern-git-status.vim",
+			"lambdalisue/fern-mapping-git.vim",
 		},
 		init = function()
 			vim.api.nvim_set_var("fern#renderer", "nerdfont")
@@ -1020,6 +1023,9 @@ require("lazy").setup({
 				end,
 			})
 		end,
+		config = function()
+			vim.fn["fern_git_status#init"]()
+		end
 	},
 	{ "lambdalisue/fern-hijack.vim", lazy = false },
 	{
@@ -1114,7 +1120,6 @@ require("lazy").setup({
 	{
 		"nvim-treesitter/nvim-treesitter", -- Treesitter
 		dependencies = {
-			"HiPhish/nvim-ts-rainbow2",
 			{
 				"nvim-treesitter/nvim-treesitter-context",
 				config = function()
@@ -1125,7 +1130,6 @@ require("lazy").setup({
 					}
 				end
 			},
-			"windwp/nvim-ts-autotag",
 			"JoosepAlviste/nvim-ts-context-commentstring",
 		},
 		config = function()
@@ -1153,20 +1157,8 @@ require("lazy").setup({
 				indent = {
 					enable = true,
 				},
-				auto_install = false,
+				auto_install = true,
 				ensure_installed = { 'org', 'satysfi', 'markdown' },
-				rainbow = {
-					enable = true,
-					-- list of languages you want to disable the plugin for
-					disable = { 'jsx', 'cpp' },
-					-- Which query to use for finding delimiters
-					query = 'rainbow-parens',
-					-- Highlight the entire buffer all at once
-					strategy = require('ts-rainbow').strategy.global,
-				},
-				autotag = {
-					enable = true,
-				},
 				context_commentstring = {
 					enable = true,
 				},
@@ -1179,6 +1171,11 @@ require("lazy").setup({
 				command = "TSEnable highlight",
 			})
 		end,
+	},
+	{
+		"https://gitlab.com/HiPhish/rainbow-delimiters.nvim",
+		lazy = false,
+		dependencies = "nvim-treesitter/nvim-treesitter",
 	},
 	{
 		"kiyoon/treesitter-indent-object.nvim",
