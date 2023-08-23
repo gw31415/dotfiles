@@ -100,6 +100,7 @@ brew "toot"
 brew "tree"
 brew "wasmer"
 brew "wget"
+brew "yt-dlp"
 brew "zbar"
 brew "zig"
 brew "carlocab/personal/unrar"
@@ -130,7 +131,9 @@ cask "vlc"
 cask "wezterm-nightly"
 cask "wkhtmltopdf"
 cask "xquartz"
+cask "zoom"
 mas "1Blocker", id: 1365531024
+mas "Amphetamine", id: 937984704
 mas "DuckDuckGo Privacy for Safari", id: 1482920575
 mas "GarageBand", id: 682658836
 mas "Keynote", id: 409183694
