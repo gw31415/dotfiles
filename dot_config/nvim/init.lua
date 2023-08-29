@@ -1440,6 +1440,7 @@ require("lazy").setup({
 			{ "uga-rosa/cmp-skkeleton", dependencies = "hrsh7th/nvim-cmp" },
 		},
 		config = function()
+			vim.api.nvim_create_autocmd("User", { pattern = "skkeleton-mode-changed", command = "redraws" })
 			_G.get_skkeleton_modestring = function()
 				local mode = vim.fn["skkeleton#mode"]()
 				if mode == "hira" then
