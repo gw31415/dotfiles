@@ -6,24 +6,24 @@ if vim.loader then vim.loader.enable() end
 -- ]]
 -- Emacs Keybindings
 
-vim.keymap.set("i", "<c-f>", "<c-g>U<right>", {})
-vim.keymap.set("i", "<c-b>", "<c-g>U<left>", {})
-vim.keymap.set("i", "<c-p>", "<c-g>U<up>", {})
-vim.keymap.set("i", "<c-n>", "<c-g>U<down>", {})
-vim.keymap.set("i", "<c-d>", "<c-g>U<del>", {})
+vim.keymap.set("i", "<c-f>", "<c-g>U<right>")
+vim.keymap.set("i", "<c-b>", "<c-g>U<left>")
+vim.keymap.set("i", "<c-p>", "<c-g>U<up>")
+vim.keymap.set("i", "<c-n>", "<c-g>U<down>")
+vim.keymap.set("i", "<c-d>", "<c-g>U<del>")
 vim.cmd([[ inoremap <expr> <c-a> col('.') == match(getline('.'), '\S') + 1 ?
          \ repeat('<C-G>U<Left>', col('.') - 1) :
 		 \ (col('.') < match(getline('.'), '\S') ?
          \     repeat('<C-G>U<Right>', match(getline('.'), '\S') + 0) :
          \     repeat('<C-G>U<Left>', col('.') - 1 - match(getline('.'), '\S')))]])
 vim.cmd([[ inoremap <expr> <c-e> repeat('<C-G>U<Right>', col('$') - col('.')) ]])
-vim.keymap.set("c", "<c-f>", "<right>", {})
-vim.keymap.set("c", "<c-b>", "<left>", {})
-vim.keymap.set("c", "<c-p>", "<up>", {})
-vim.keymap.set("c", "<c-n>", "<down>", {})
-vim.keymap.set("c", "<c-d>", "<del>", {})
-vim.keymap.set("c", "<c-a>", "<home>", {})
-vim.keymap.set("c", "<c-e>", "<end>", {})
+vim.keymap.set("c", "<c-f>", "<right>")
+vim.keymap.set("c", "<c-b>", "<left>")
+vim.keymap.set("c", "<c-p>", "<up>")
+vim.keymap.set("c", "<c-n>", "<down>")
+vim.keymap.set("c", "<c-d>", "<del>")
+vim.keymap.set("c", "<c-a>", "<home>")
+vim.keymap.set("c", "<c-e>", "<end>")
 
 vim.api.nvim_create_autocmd("BufRead", {
 	pattern = "*.mdx",
@@ -74,8 +74,8 @@ vim.api.nvim_create_autocmd("BufEnter", {
 						dynamicRegistration = true,
 						relativePatternSupport = true
 					},
-					-- cmd = { "npx", "obsidian-lsp", "--", "--stdio" },
-					cmd = { "npm", "--prefix", "/Users/ama/obsidian-lsp", "run", "dev", "--", "--stdio" },
+					cmd = { "npx", "obsidian-lsp", "--", "--stdio" },
+					-- cmd = { "npm", "--prefix", "/Users/ama/obsidian-lsp", "run", "dev", "--", "--stdio" },
 					single_file_support = false,
 					root_dir = lspconfig.util.root_pattern ".obsidian",
 					filetypes = { 'markdown' },
@@ -203,6 +203,10 @@ end
 
 vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function()
+		vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+			vim.lsp.handlers.hover,
+			{ border = "single", title = "hover" }
+		)
 		vim.api.nvim_create_user_command("Implementation", function()
 			vim.lsp.buf.implementation()
 		end, { force = true })
@@ -465,7 +469,6 @@ require("lazy").setup({
 		"williamboman/mason.nvim", -- LSP Installer
 		dependencies = {
 			"williamboman/mason-lspconfig.nvim",
-			"hrsh7th/cmp-nvim-lsp",
 			"neovim/nvim-lspconfig",
 			"jose-elias-alvarez/null-ls.nvim",
 			"nvim-lua/plenary.nvim",
@@ -475,19 +478,14 @@ require("lazy").setup({
 		config = function()
 			require "mason".setup {}
 			local mason_lspconfig = require("mason-lspconfig")
-			local capabilities =
-				require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 			local on_attach = function(_, bufnr)
-				---@diagnostic disable-next-line: redundant-parameter
 				vim.api.nvim_buf_set_option(bufnr, "formatexpr",
-					---@diagnostic disable-next-line: redundant-parameter
 					"v:lua.vim.lsp.formatexpr(#{timeout_ms:250})")
 				-- _G.lsp_onattach_func(i, bufnr)
 			end
 			mason_lspconfig.setup_handlers({
 				function(server_name)
 					local opts = {
-						capabilities = capabilities,
 						on_attach = on_attach,
 						settings = {
 							["rust-analyzer"] = {
@@ -570,11 +568,6 @@ require("lazy").setup({
 		end,
 	},
 	{
-		"ray-x/lsp_signature.nvim", -- 関数の引数の入力時のシグネチャヘルプ
-		event = { "LspAttach" },
-		config = true,
-	},
-	{
 		"numToStr/Comment.nvim", -- コメントのトグル
 		keys = { { "gc", mode = { "n", "x" } } },
 		config = true,
@@ -638,23 +631,6 @@ require("lazy").setup({
 		config = function()
 			require("nvim-dap-virtual-text").setup({
 				enabled_commands = false,
-			})
-		end,
-	},
-	{
-		"rcarriga/cmp-dap",
-		dependencies = { "hrsh7th/nvim-cmp", "mfussenegger/nvim-dap" },
-		config = function()
-			require("cmp").setup({
-				enabled = function()
-					---@diagnostic disable-next-line: redundant-parameter
-					return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt" or require("cmp_dap").is_dap_buffer()
-				end,
-			})
-			require("cmp").setup.filetype({ "dap-repl", "dapui_watches" }, {
-				sources = {
-					{ name = "dap" },
-				},
 			})
 		end,
 	},
@@ -734,144 +710,139 @@ require("lazy").setup({
 	},
 
 	-- 補完
-	{ "hrsh7th/vim-vsnip",                   event = "InsertEnter" },
 	{
-		"hrsh7th/nvim-cmp",
-		dependencies = { "onsails/lspkind.nvim" },
+		"Shougo/ddc.vim",
+		dependencies = {
+			"vim-denops/denops.vim",
+			"hrsh7th/vim-vsnip",
+			"Shougo/pum.vim",
+			"Shougo/ddc-ui-pum",
+			"Shougo/ddc-source-nvim-lsp",
+			"tani/ddc-fuzzy",
+			{ "uga-rosa/ddc-nvim-lsp-setup", config = true },
+			"Shougo/ddc-source-cmdline",
+			"Shougo/ddc-source-input",
+			"Shougo/ddc-source-around",
+			"Shougo/neco-vim",
+		},
+		event = "InsertEnter",
+		keys = { ":", "/", "?" },
 		config = function()
-			local cmp = require("cmp")
-			local function feedkeys(keys)
-				vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(keys, true, true, true) or "", "", true)
+			local function feedkeys(key)
+				vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true) or "", "", true)
 			end
-
-			cmp.setup({
-				snippet = {
-					expand = function(args)
-						vim.fn["vsnip#anonymous"](args.body)
-					end,
+			vim.fn["pum#set_option"] {
+				preview = true,
+				preview_delay = 10,
+				preview_height = 20,
+				preview_width = 80,
+				preview_border = "single",
+				use_complete = true,
+			}
+			vim.fn["ddc#custom#patch_global"] {
+				ui = 'pum',
+				autoCompleteEvents = {
+					'InsertEnter', 'TextChangedI', 'TextChangedP', 'CmdlineChanged',
 				},
-				sources = cmp.config.sources({
-					{ name = "nvim_lsp" },
-					{ name = "vsnip" },
-					{ name = "buffer" },
-					{ name = "nvim_lsp_signature_help" },
-					{ name = "skkeleton" },
-					{ name = "path" },
-				}),
-				formatting = {
-					format = require("lspkind").cmp_format {
-						mode = "symbol_text",
+				sources = { 'nvim-lsp' },
+				sourceOptions = {
+					_ = {
+						matchers              = { 'matcher_fuzzy' },
+						sorters               = { 'sorter_fuzzy' },
+						converters            = { 'converter_fuzzy' },
+						ignoreCase            = true,
+						minAutoCompleteLength = 1,
 					},
+					["nvim-lsp"] = {
+						dup            = 'keep',
+						keywordPattern = '\\k+',
+					},
+					cmdline = {
+						keywordPattern = "[\\w#:~_-]*",
+					},
+					input = {
+						isVolatile = true,
+					}
 				},
-				mapping = {
-					["<c-n>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_next_item()
-						else
-							fallback()
-						end
-					end, { "i", "s" }),
-					["<c-p>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_prev_item()
-						else
-							fallback()
-						end
-					end, { "i", "s" }),
-					["<C-b>"] = cmp.mapping.scroll_docs(-4),
-					["<C-f>"] = cmp.mapping.scroll_docs(4),
-					["<C-e>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.abort()
-						else
-							fallback()
-						end
-					end),
-					["<tab>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							local entry = cmp.get_selected_entry()
-							if not entry then
-								cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-							else
-								cmp.confirm()
-							end
-						elseif vim.fn["vsnip#jumpable"](1) == 1 then
-							feedkeys("<Plug>(vsnip-jump-next)")
-						else
-							fallback()
-						end
-					end, { "i", "s", "c" }),
-					["<s-tab>"] = cmp.mapping(function(fallback)
-						if vim.fn["vsnip#jumpable"](-1) == 1 then
-							feedkeys("<Plug>(vsnip-jump-prev)")
-						else
-							fallback()
-						end
-					end, { "i", "s", "c" }),
+				sourceParams = {
+					["nvim-lsp"] = {
+						snippetEngine = vim.fn["denops#callback#register"](vim.fn["vsnip#anonymous"]),
+						enableResolveItem = true,
+						enableAdditionalTextEdit = true,
+						confirmBehavior = 'replace',
+					}
 				},
-			})
-			cmp.setup.filetype("octave", {
-				sources = cmp.config.sources({
-					{ name = "omni" },
-				}),
-			})
-			cmp.setup.filetype("org", {
-				sources = cmp.config.sources({
-					{ name = "orgmode" },
-					{ name = "path" },
-					{ name = "skkeleton" },
-					{ name = "vsnip" },
-					{ name = "buffer" },
-				}),
-			})
-			cmp.setup.filetype({ "org", "markdown" }, {
-				sources = cmp.config.sources({
-					{ name = "emoji" },
-				}),
-			})
-			cmp.setup.filetype({ "markdown" }, {
-				completion = {
-					keyword_pattern = [[\[\[.*\k]],
-				},
-				-- sources = cmp.config.sources({
-				-- 	{
-				-- 		name = "nvim_lsp",
-				-- 		completion = {
-				-- 			keyword_pattern = [[.]] --[[\[\[\k]],
-				-- 		}
-				-- 	},
-				-- 	{ name = "vsnip" },
-				-- 	{ name = "buffer" },
-				-- 	{ name = "nvim_lsp_signature_help" },
-				-- 	{ name = "skkeleton" },
-				-- 	{ name = "path" },
-				-- }),
-			})
-			cmp.setup.cmdline(":", {
-				mapping = cmp.mapping.preset.cmdline(),
-				sources = cmp.config.sources({
-					{ name = "cmdline" },
-				}),
-			})
-			cmp.setup.cmdline({ "/", "?" }, {
-				mapping = cmp.mapping.preset.cmdline(),
-				sources = cmp.config.sources({
-					{ name = "buffer" },
-				}),
-			})
-		end,
+				cmdlineSources = {
+					[":"] = { "cmdline", "neco-vim" },
+					["="] = { "input" },
+					["/"] = { "around", "line" },
+					["?"] = { "around", "line" },
+				}
+			}
+			vim.fn["ddc#enable"]()
+			vim.keymap.set({ "i", "c" }, "<C-y>", function()
+				if vim.fn["pum#visible"]() then
+					vim.fn["pum#map#confirm"]()
+				else
+					return "<C-y>"
+				end
+			end, { expr = true })
+			vim.keymap.set("i", "<Tab>", function()
+				if vim.fn["pum#visible"]() then
+					vim.fn["pum#map#confirm"]()
+					return ""
+				elseif vim.fn["vsnip#jumpable"](1) == 1 then
+					return "<Plug>(vsnip-jump-next)"
+				else
+					return "<Tab>"
+				end
+			end, { expr = true })
+			vim.keymap.set("c", "<Tab>", function()
+				vim.fn["pum#map#confirm"]()
+			end)
+			vim.keymap.set({ "i", "c" }, "<C-e>", function()
+				if vim.fn["pum#visible"]() then
+					vim.fn["pum#map#cancel"]()
+				end
+			end, { expr = true })
+			vim.keymap.set("i", "<C-p>", function()
+				if vim.fn["pum#visible"]() then
+					vim.fn["pum#map#insert_relative"](-1)
+				else
+					feedkeys("<C-g>U<Up>")
+				end
+			end)
+			vim.keymap.set("c", "<C-p>", function()
+				if vim.fn["pum#visible"]() then
+					vim.fn["pum#map#insert_relative"](-1)
+				else
+					feedkeys("<Up>")
+					vim.fn["pum#map#cancel"]()
+				end
+			end)
+			vim.keymap.set("i", "<C-n>", function()
+				if vim.fn["pum#visible"]() then
+					vim.fn["pum#map#insert_relative"](1)
+				else
+					feedkeys("<C-g>U<Down>")
+				end
+			end)
+			vim.keymap.set("c", "<C-n>", function()
+				if vim.fn["pum#visible"]() then
+					vim.fn["pum#map#insert_relative"](1)
+				else
+					feedkeys("<Down>")
+					vim.fn["pum#map#cancel"]()
+				end
+			end)
+			for _, key in pairs { ":", "?", "/" } do
+				vim.keymap.set("n", key, function()
+					vim.fn["ddc#enable_cmdline_completion"]()
+					return key
+				end, { expr = true })
+			end
+		end
 	},
-	{ "hrsh7th/cmp-vsnip",                   dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
-	{ "hrsh7th/cmp-nvim-lsp-signature-help", dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
-	{ "hrsh7th/cmp-cmdline",                 dependencies = "hrsh7th/nvim-cmp", event = "CmdlineEnter" },
-	{ "hrsh7th/cmp-path",                    dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
-	{ "hrsh7th/cmp-omni",                    dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
-	{
-		"hrsh7th/cmp-buffer",
-		dependencies = "hrsh7th/nvim-cmp",
-		event = { "InsertCharPre", "CmdlineEnter" }
-	},
-	{ "hrsh7th/cmp-emoji",           dependencies = "hrsh7th/nvim-cmp", event = "InsertCharPre" },
 
 	-- UI
 	{
@@ -886,7 +857,7 @@ require("lazy").setup({
 		end,
 	},
 	{
-		'kevinhwang91/nvim-ufo',
+		'kevinhwang91/nvim-ufo', -- 折りたたみの改良
 		event = "VeryLazy",
 		dependencies = "kevinhwang91/promise-async",
 		config = function()
@@ -1358,9 +1329,9 @@ require("lazy").setup({
 			vim.api.nvim_set_var("winresizer_start_key", "<C-W>e")
 		end,
 	},
-	{ "thinca/vim-partedit", event = "CmdlineEnter" }, -- 分割編集
+	{ "thinca/vim-partedit",         event = "CmdlineEnter" }, -- 分割編集
 	{
-		"thinca/vim-ambicmd",                       -- コマンドの曖昧展開
+		"thinca/vim-ambicmd",                               -- コマンドの曖昧展開
 		event = "CmdlineEnter",
 		config = function()
 			vim.keymap.set("c", "<Space>", function()
@@ -1428,16 +1399,15 @@ require("lazy").setup({
 			vim.api.nvim_set_var("mastodon_toot_visibility", "public")
 		end
 	},
-	{ "vim-jp/vimdoc-ja",    lazy = false }, -- 日本語のヘルプ
+	{ "vim-jp/vimdoc-ja", lazy = false }, -- 日本語のヘルプ
 	{
-		"vim-skk/skkeleton",              -- 日本語入力
+		"vim-skk/skkeleton",           -- 日本語入力
 		keys = { { "<C-j>", "<Plug>(skkeleton-enable)", mode = { "i", "c" } } },
 		lazy = false,
 		dependencies = {
 			"gw31415/skkeletal.vim",
 			"vim-denops/denops.vim",
-			"yuki-yano/denops-lazy.nvim",
-			{ "uga-rosa/cmp-skkeleton", dependencies = "hrsh7th/nvim-cmp" },
+			-- "yuki-yano/denops-lazy.nvim",
 		},
 		config = function()
 			vim.api.nvim_create_autocmd("User", { pattern = "skkeleton-mode-changed", command = "redraws" })
