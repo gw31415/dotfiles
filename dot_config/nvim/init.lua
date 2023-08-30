@@ -1407,7 +1407,6 @@ require("lazy").setup({
 		dependencies = {
 			"gw31415/skkeletal.vim",
 			"vim-denops/denops.vim",
-			-- "yuki-yano/denops-lazy.nvim",
 		},
 		config = function()
 			vim.api.nvim_create_autocmd("User", { pattern = "skkeleton-mode-changed", command = "redraws" })
