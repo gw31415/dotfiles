@@ -1291,7 +1291,7 @@ require("lazy").setup({
 		},
 		keys = {
 			{ "cx", "<Plug>(ts-clipping-clip)" },
-			{ "cx", "<Plug>(ts-clipping-select)", mode = { "x", "o" } },
+			-- { "cx", "<Plug>(ts-clipping-select)", mode = { "x", "o" } },
 		},
 	},
 	{
