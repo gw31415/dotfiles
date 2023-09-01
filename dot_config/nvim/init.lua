@@ -11,11 +11,13 @@ vim.keymap.set("i", "<c-b>", "<c-g>U<left>")
 vim.keymap.set("i", "<c-p>", "<c-g>U<up>")
 vim.keymap.set("i", "<c-n>", "<c-g>U<down>")
 vim.keymap.set("i", "<c-d>", "<c-g>U<del>")
-vim.cmd([[ inoremap <expr> <c-a> col('.') == match(getline('.'), '\S') + 1 ?
-         \ repeat('<C-G>U<Left>', col('.') - 1) :
-		 \ (col('.') < match(getline('.'), '\S') ?
-         \     repeat('<C-G>U<Right>', match(getline('.'), '\S') + 0) :
-         \     repeat('<C-G>U<Left>', col('.') - 1 - match(getline('.'), '\S')))]])
+vim.cmd [[
+	inoremap <expr> <c-a> col('.') == match(getline('.'), '\S') + 1 ?
+		\ repeat('<C-G>U<Left>', col('.') - 1) :
+		\ (col('.') < match(getline('.'), '\S') ?
+		\     repeat('<C-G>U<Right>', match(getline('.'), '\S') + 0) :
+		\     repeat('<C-G>U<Left>', col('.') - 1 - match(getline('.'), '\S')))
+]]
 vim.cmd([[ inoremap <expr> <c-e> repeat('<C-G>U<Right>', col('$') - col('.')) ]])
 vim.keymap.set("c", "<c-f>", "<right>")
 vim.keymap.set("c", "<c-b>", "<left>")
@@ -436,6 +438,10 @@ require("lazy").setup({
 		ft = { "matlab", "octave" },
 	},
 	{
+		"mattn/emmet-vim",
+		ft = { "html", "jsx", "tsx" }
+	},
+	{
 		"gw31415/zk-obsidian.nvim",
 		event = "VeryLazy",
 	},
@@ -573,6 +579,11 @@ require("lazy").setup({
 				block = 'gC',
 			},
 		},
+	},
+	{
+		'stevearc/overseer.nvim', -- タスクランナーを起動する
+		event = "VeryLazy",
+		config = true,
 	},
 
 	-- Debug Adapter Protocol
@@ -1125,7 +1136,7 @@ require("lazy").setup({
 		},
 	},
 	{
-		"nmac427/guess-indent.nvim",
+		"Darazaki/indent-o-matic",
 		config = true,
 	},
 	{
@@ -1166,8 +1177,11 @@ require("lazy").setup({
 	},
 
 	{
-		"cohama/lexima.vim", -- 自動括弧閉じ
+		"hrsh7th/nvim-insx", -- 自動括弧閉じ
 		event = "InsertEnter",
+		config = function()
+			require('insx.preset.standard').setup()
+		end
 	},
 	{
 		"kylechui/nvim-surround", -- operator 囲い文字
@@ -1269,9 +1283,19 @@ require("lazy").setup({
 			vim.api.nvim_set_var("winresizer_start_key", "<C-W>e")
 		end,
 	},
-	{ "thinca/vim-partedit",         event = "CmdlineEnter" }, -- 分割編集
 	{
-		"thinca/vim-ambicmd",                               -- コマンドの曖昧展開
+		"monaqa/nvim-treesitter-clipping",
+		dependencies = {
+			"thinca/vim-partedit",
+			"nvim-treesitter/nvim-treesitter",
+		},
+		keys = {
+			{ "cx", "<Plug>(ts-clipping-clip)" },
+			{ "cx", "<Plug>(ts-clipping-select)", mode = { "x", "o" } },
+		},
+	},
+	{
+		"thinca/vim-ambicmd", -- コマンドの曖昧展開
 		event = "CmdlineEnter",
 		config = function()
 			vim.keymap.set("c", "<Space>", function()
@@ -1339,9 +1363,9 @@ require("lazy").setup({
 			vim.api.nvim_set_var("mastodon_toot_visibility", "public")
 		end
 	},
-	{ "vim-jp/vimdoc-ja", lazy = false }, -- 日本語のヘルプ
+	{ "vim-jp/vimdoc-ja",            lazy = false }, -- 日本語のヘルプ
 	{
-		"vim-skk/skkeleton",           -- 日本語入力
+		"vim-skk/skkeleton",                      -- 日本語入力
 		keys = { { "<C-j>", "<Plug>(skkeleton-enable)", mode = { "i", "c" } } },
 		lazy = false,
 		dependencies = {
