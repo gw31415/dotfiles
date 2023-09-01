@@ -1268,6 +1268,13 @@ require("lazy").setup({
 		end
 	},
 	{
+		'jbyuki/instant.nvim', -- ペアプロ
+		event = "CmdlineEnter",
+		init = function()
+			vim.g.instant_username = "ama"
+		end
+	},
+	{
 		"mbbill/undotree",
 		cmd = {
 			"UndotreeShow",
