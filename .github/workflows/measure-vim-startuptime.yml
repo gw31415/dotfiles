@@ -5,13 +5,13 @@ name: Go
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
     paths:
       - ".github/workflows/measure-vim-startuptime.yml"
       - "dot_config/nvim/init.vim"
       - "dot_config/nvim/dein/*"
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
     paths:
       - ".github/workflows/measure-vim-startuptime.yml"
       - "dot_config/nvim/init.vim"
@@ -36,18 +36,18 @@ jobs:
         run: |
           sudo add-apt-repository -y ppa:neovim-ppa/unstable
           sudo apt update -y
-          sudo apt install -y neovim
-          nvim -c "au VimEnter * q"
+          sudo apt install -y neovim deno
+          nvim -c "au VimEnter * q" # Install Plugins before measurement
 
       - name: Measure vim-startuptime & Create tweet
         run: |
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "TWEET<<$EOF" >> "$GITHUB_ENV"
-          echo "Update init.lua:" >> "$GITHUB_ENV"
+          echo "Update .config/nvim:" >> "$GITHUB_ENV"
           RESULT=$(vim-startuptime -vimpath nvim)
           echo "${RESULT}" | head -n 6 | awk '{print ">  " $0}' >> "$GITHUB_ENV"
           echo >> "$GITHUB_ENV"
-          echo "View latest init.lua → https://github.com/gw31415/dotfiles/blob/main/dot_config/nvim/init.lua" >> "$GITHUB_ENV"
+          echo "View latest Neovim Configuration → https://github.com/gw31415/dotfiles/tree/main/dot_config/nvim" >> "$GITHUB_ENV"
           echo "#Vim #Neovim #dotfiles" >> "$GITHUB_ENV"
           echo "$EOF" >> "$GITHUB_ENV"
 
