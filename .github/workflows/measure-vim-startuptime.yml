@@ -42,6 +42,9 @@ jobs:
         with:
           tag: nightly
 
+      - name: Setup Neovim Plugins
+        run: nvim -c "au VimEnter * q"
+
       - name: Measure vim-startuptime & Create tweet
         run: |
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
