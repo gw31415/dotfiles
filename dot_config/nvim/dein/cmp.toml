@@ -1,0 +1,89 @@
+[[plugins]]
+repo = "hrsh7th/cmp-nvim-lsp"
+[[plugins]]
+repo = "hrsh7th/vim-vsnip"
+[[plugins]]
+repo = "hrsh7th/cmp-buffer"
+[[plugins]]
+repo = "hrsh7th/cmp-cmdline"
+[[plugins]]
+repo = "hrsh7th/cmp-nvim-lsp-signature-help"
+[[plugins]]
+repo = "petertriho/cmp-git"
+depends = "plenary.nvim"
+lua_source = "require 'cmp_git'.setup()"
+
+[[plugins]]
+repo = "hrsh7th/nvim-cmp"
+depends = [
+	"cmp-nvim-lsp",
+	"vim-vsnip",
+	"cmp-buffer",
+	"cmp-cmdline",
+	"cmp-nvim-lsp-signature-help",
+	"cmp-git",
+]
+on_event = [ "InsertEnter", "CmdlineEnter" ]
+lua_source = '''
+	local cmp = require 'cmp'
+	local function feedkeys(key)
+		vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true) or "", "", true)
+	end
+	cmp.setup {
+		snippet = {
+			expand = function(args)
+				vim.fn["vsnip#anonymous"](args.body)
+			end
+		},
+		window = {
+			documentation = cmp.config.window.bordered()
+		},
+		sources = cmp.config.sources {
+			{ name = 'nvim_lsp' },
+			{ name = 'vsnip' },
+			{ name = 'nvim_lsp_signature_help' },
+		},
+		mapping = cmp.mapping.preset.insert {
+			["<C-b>"] = cmp.mapping.scroll_docs(-4),
+			["<C-f>"] = cmp.mapping.scroll_docs(4),
+			["<tab>"] = cmp.mapping(function(fallback)
+				if cmp.visible() then
+					local entry = cmp.get_selected_entry()
+					if not entry then
+						cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+					else
+						cmp.confirm()
+					end
+				elseif vim.fn["vsnip#jumpable"](1) == 1 then
+					feedkeys("<Plug>(vsnip-jump-next)")
+				else
+					fallback()
+				end
+			end),
+			["<s-tab>"] = cmp.mapping(function(fallback)
+				if vim.fn["vsnip#jumpable"](-1) == 1 then
+					feedkeys("<Plug>(vsnip-jump-prev)")
+				else
+					fallback()
+				end
+			end),
+		}
+	}
+	cmp.setup.cmdline({ '/', '?' }, {
+		mapping = cmp.mapping.preset.cmdline(),
+		sources = {
+			{ name = 'buffer' }
+		}
+	})
+	cmp.setup.cmdline(':', {
+		mapping = cmp.mapping.preset.cmdline(),
+		sources = cmp.config.sources {
+			{ name = 'cmdline' }
+		}
+	})
+	cmp.setup.filetype('gitcommit', {
+		sources = cmp.config.sources({
+			{ name = 'git' },
+		})
+	})
+'''

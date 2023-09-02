@@ -1,0 +1,19 @@
+[[plugins]]
+repo = "onsails/diaglist.nvim"
+on_event = "LspAttach"
+lua_source = '''
+	vim.api.nvim_create_user_command("Diaglist", function()
+		require("diaglist.quickfix").populate_qflist()
+	end, { force = true })
+	require("diaglist").init()
+	require("diaglist.quickfix").populate_qflist()
+'''
+
+[[plugins]]
+repo = "j-hui/fidget.nvim"
+on_event = "LspAttach"
+rev = "legacy"
+lua_source = '''
+	vim.api.nvim_create_autocmd("VimLeavePre", { command = "silent! FidgetClose" })
+	require("fidget").setup()
+'''

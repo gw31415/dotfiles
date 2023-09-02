@@ -1,0 +1,130 @@
+[[plugins]]
+repo = "folke/neodev.nvim"
+on_ft = "lua"
+depends = "nvim-lspconfig"
+lua_source = '''
+	-- IMPORTANT: make sure to setup neodev BEFORE lspconfig
+	require 'neodev'.setup {}
+	require 'lspconfig'.lua_ls.setup {
+		settings = {
+			Lua = {
+				completion = {
+					callSnippet = "Replace"
+				}
+			}
+		}
+	}
+'''
+
+[[plugins]]
+repo = "neovim/nvim-lspconfig"
+lua_source = '''
+	if vim.fn.executable "satysfi-language-server" == 1 then
+		require('lspconfig')['satysfi-ls'].setup { autostart = true }
+	end
+'''
+
+[[plugins]]
+repo = "williamboman/mason.nvim"
+lua_source = "require 'mason'.setup()"
+
+[[plugins]]
+repo = "jose-elias-alvarez/null-ls.nvim"
+depends = "plenary.nvim"
+lua_source = "require 'null-ls'.setup()"
+
+[[plugins]]
+repo = "williamboman/mason-lspconfig.nvim"
+depends = ["mason.nvim", "nvim-lspconfig"]
+on_event = "CursorHold"
+lua_source = '''
+	vim.api.nvim_create_autocmd("LspAttach", {
+		callback = function()
+			vim.diagnostic.config { signs = false }
+			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+				vim.lsp.handlers.hover,
+				{ border = "single", title = "hover" }
+			)
+			vim.api.nvim_create_user_command("Implementation", function()
+				vim.lsp.buf.implementation()
+			end, { force = true })
+			local bufopts = { silent = true, buffer = true }
+			vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
+			vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
+			vim.keymap.set("n", "K", function()
+				local winid = require('ufo').peekFoldedLinesUnderCursor()
+				if not winid then
+					vim.lsp.buf.hover()
+				end
+			end, bufopts)
+			vim.keymap.set("n", "<C-j>", vim.diagnostic.goto_next, bufopts)
+			vim.keymap.set("n", "<C-k>", vim.diagnostic.goto_prev, bufopts)
+			vim.keymap.set("n", "<Leader>a", vim.lsp.buf.code_action, bufopts)
+			vim.keymap.set("n", "cI", vim.lsp.buf.rename, bufopts)
+			vim.keymap.set("n", "z*", vim.lsp.buf.references, bufopts)
+			vim.keymap.set("n", "gqae", function() vim.lsp.buf.format({ async = true }) end,
+				{ buffer = true, nowait = true })
+			-- vim.api.nvim_create_autocmd('BufWritePre', {
+			-- 	callback = function() vim.lsp.buf.format { async = false } end,
+			-- 	buffer = bufnr,
+			-- })
+		end
+	})
+	local mason_lspconfig = require "mason-lspconfig"
+	local on_attach = function(_, bufnr)
+		vim.api.nvim_buf_set_option(bufnr, "formatexpr",
+			"v:lua.vim.lsp.formatexpr(#{timeout_ms:250})")
+		-- _G.lsp_onattach_func(i, bufnr)
+	end
+	mason_lspconfig.setup_handlers({
+		function(server_name)
+			local opts = {
+				on_attach = on_attach,
+				settings = {
+					["rust-analyzer"] = {
+						checkOnSave = {
+							command = "clippy",
+						},
+					},
+					["pylsp"] = {
+						plugins = {
+							autopep8 = {
+								enabled = false,
+							},
+							yapf = {
+								enabled = false,
+							},
+						},
+					},
+					["omniSharp"] = {
+						useGlobalMono = "always"
+					}
+				},
+			}
+
+			local node_root_dir = require 'lspconfig'.util.root_pattern("package.json")
+			local is_node_repo = node_root_dir(vim.api.nvim_buf_get_name(0)) ~= nil
+
+			if server_name == "tsserver" then
+				if not is_node_repo then return end
+				opts["root_dir"] = node_root_dir
+				opts["single_file_support"] = false
+			elseif server_name == "denols" then
+				if is_node_repo then return end
+			end
+
+			require("lspconfig")[server_name].setup(opts)
+		end,
+	})
+'''
+
+[[plugins]]
+repo = "jay-babu/mason-null-ls.nvim"
+depends = ["mason.nvim", "null-ls.nvim"]
+on_event = "CursorHold"
+lua_source = '''
+	require('mason-null-ls').setup({
+		automatic_setup = true,
+		handlers = {},
+	})
+'''

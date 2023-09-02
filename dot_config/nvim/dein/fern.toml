@@ -1,0 +1,30 @@
+[[plugins]]
+repo = "lambdalisue/fern-renderer-nerdfont.vim"
+[[plugins]]
+repo = "lambdalisue/fern-git-status.vim"
+[[plugins]]
+repo = "lambdalisue/fern-mapping-git.vim"
+
+[[plugins]]
+repo = "lambdalisue/fern.vim"
+depends = [
+	"nerdfont.vim",
+	"fern-renderer-nerdfont.vim",
+	"fern-git-status.vim",
+	"fern-mapping-git.vim",
+]
+on_cmd = "Fern"
+on_map = { n = "<C-n>" }
+lua_source = '''
+	vim.keymap.set("n", "<C-n>", "<cmd>Fern . -drawer -toggle -reveal=% <cr>")
+	vim.api.nvim_set_var("fern#renderer", "nerdfont")
+	vim.api.nvim_set_var("fern#renderer#nerdfont#indent_markers", 1)
+	vim.api.nvim_create_autocmd("FileType", {
+		pattern = "fern",
+		callback = function()
+			local opts = { buffer = true }
+			vim.keymap.set("n", "K", "<Plug>(fern-action-new-dir)", opts)
+		end,
+	})
+	vim.fn["fern_git_status#init"]()
+'''

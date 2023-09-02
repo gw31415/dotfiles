@@ -1,0 +1,23 @@
+[[plugins]]
+repo = "vim-jp/vimdoc-ja"
+
+[[plugins]]
+repo = "MunifTanjim/nui.nvim"
+
+[[plugins]]
+repo = "nvim-lua/plenary.nvim"
+
+[[plugins]]
+repo = "giusgad/hologram.nvim"
+
+[[plugins]]
+repo = "nvim-tree/nvim-web-devicons"
+
+[[plugins]]
+repo = "lambdalisue/nerdfont.vim"
+
+[[plugins]]
+repo = "kana/vim-textobj-user"
+
+[[plugins]]
+repo = "tpope/vim-repeat"
