@@ -86,4 +86,31 @@ repo = "thinca/vim-partedit"
 repo = "monaqa/nvim-treesitter-clipping"
 on_map = "<Plug>(ts-clipping-clip)"
 lua_add = "vim.keymap.set('n', 'cx', '<Plug>(ts-clipping-clip)')"
-depends = [ "nvim-treesitter", "vim-partedit" ]
+depends = ["nvim-treesitter", "vim-partedit"]
+
+[[plugins]]
+repo = "TheGLander/indent-rainbowline.nvim"
+[[plugins]]
+repo = "lukas-reineke/indent-blankline.nvim"
+depends = ["nvim-treesitter", "indent-rainbowline.nvim"]
+on_event = "CursorHold"
+lua_source = '''
+	vim.api.nvim_set_var("indent_blankline_use_treesitter", true)
+	vim.api.nvim_set_var("indent_blankline_filetype_exclude", {
+		"lspinfo",
+		"packer",
+		"checkhealth",
+		"help",
+		"man",
+		"",
+		"org",
+	})
+	require 'indent_blankline'.setup(
+		require "indent-rainbowline".make_opts({
+			show_current_context_start = true,
+			show_current_context = true,
+		}, {
+			color_transparency = .07,
+		})
+	)
+'''

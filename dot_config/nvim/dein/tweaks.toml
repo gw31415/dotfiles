@@ -257,3 +257,13 @@ lua_source = '''
 repo = "wsdjeg/dein-ui.vim"
 on_cmd = "DeinUpdate"
 frozen = true
+
+[[plugins]]
+repo = "lewis6991/gitsigns.nvim"
+on_event = "CursorHold"
+lua_source = '''
+	require 'gitsigns'.setup {
+		numhl = true,
+		signcolumn = false,
+	}
+'''
