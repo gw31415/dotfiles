@@ -7,11 +7,15 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "dot_config/nvim/init.lua"
+      - ".github/workflows/measure-vim-startuptime.yml"
+      - "dot_config/nvim/init.vim"
+      - "dot_config/nvim/dein/*"
   pull_request:
     branches: ["main"]
     paths:
-      - "dot_config/nvim/init.lua"
+      - ".github/workflows/measure-vim-startuptime.yml"
+      - "dot_config/nvim/init.vim"
+      - "dot_config/nvim/dein/*"
 
 jobs:
   build:
@@ -33,6 +37,7 @@ jobs:
           sudo add-apt-repository -y ppa:neovim-ppa/unstable
           sudo apt update -y
           sudo apt install -y neovim
+          nvim -c "au VimEnter * q"
 
       - name: Measure vim-startuptime & Create tweet
         run: |
