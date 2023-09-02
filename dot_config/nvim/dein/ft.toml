@@ -99,6 +99,11 @@ lua_source = '''
 '''
 
 [[plugins]]
+repo = "iamcco/markdown-preview.nvim"
+on_ft = ["markdown", "pandoc.markdown", "rmd"]
+build = 'sh -c "cd app && npm install"'
+
+[[plugins]]
 repo = "akinsho/flutter-tools.nvim"
 on_ft = "dart"
 lua_source = "require 'flutter-tools'.setup()"
@@ -109,4 +114,4 @@ on_ft = ["matlab", "octave"]
 
 [[plugins]]
 repo = "mattn/emmet-vim"
-on_ft = [ "html", "jsx", "tsx" ]
+on_ft = ["html", "jsx", "tsx"]
