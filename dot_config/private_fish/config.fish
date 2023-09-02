@@ -1,4 +1,6 @@
-eval "$(/opt/homebrew/bin/brew shellenv)"
+if type -q brew
+	eval (/opt/homebrew/bin/brew shellenv)
+end
 
 if type -q opam
 	eval (opam env)
