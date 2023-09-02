@@ -65,5 +65,5 @@ lua_add = '''
 	end
 '''
 
-# [[plugins]]
-# repo = "lambdalisue/fern-hijack.vim"
+[[plugins]]
+repo = "gw31415/fern-hijack.vim"
