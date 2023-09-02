@@ -21,3 +21,6 @@ repo = "kana/vim-textobj-user"
 
 [[plugins]]
 repo = "tpope/vim-repeat"
+
+[[plugins]]
+repo = "kevinhwang91/promise-async"

@@ -71,6 +71,7 @@ if dein#load_state(s:dein)
 	cal dein#load_toml(s:toml .. "/tweaks.toml", #{lazy:1})
 	cal dein#load_toml(s:toml .. "/ft.toml", #{lazy:1})
 	cal dein#load_toml(s:toml .. "/fern.toml", #{lazy:1})
+	cal dein#load_toml(s:toml .. "/ui.toml", #{lazy:1})
 	cal dein#end()
 	cal dein#save_state()
 endi

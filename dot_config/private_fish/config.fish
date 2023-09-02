@@ -1,6 +1,4 @@
-if type -q brew
-	eval (/opt/homebrew/bin/brew shellenv)
-end
+eval (/opt/homebrew/bin/brew shellenv)
 
 if type -q opam
 	eval (opam env)
