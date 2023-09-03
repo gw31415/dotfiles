@@ -1,4 +1,8 @@
 [[plugins]]
+repo = "Shougo/dein.vim"
+on_event = "CmdlineEnter"
+
+[[plugins]]
 repo = "delphinus/cellwidths.nvim"
 on_event = "CursorHold"
 lua_source = "require 'cellwidths'.setup { name = 'cica' }"
@@ -267,3 +271,7 @@ lua_source = '''
 		signcolumn = false,
 	}
 '''
+
+[[plugins]]
+repo = "Darazaki/indent-o-matic"
+on_event = "CursorHold"

@@ -82,6 +82,9 @@ lua_source = '''
 
 [[plugins]]
 repo = "thinca/vim-partedit"
+hook_source = '''
+	let g:partedit#prefix_pattern = '\v^\s*'
+'''
 [[plugins]]
 repo = "monaqa/nvim-treesitter-clipping"
 on_map = "<Plug>(ts-clipping-clip)"
