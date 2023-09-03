@@ -1,5 +1,6 @@
 [[plugins]]
 repo = "nvim-treesitter/nvim-treesitter"
+hook_post_update = "TSUpdate"
 lua_source = '''
 	-- markdown treesitter のPluginの有効化
 	vim.fn.setenv("EXTENSION_WIKI_LINK", 1)
@@ -20,13 +21,14 @@ lua_source = '''
 		parser_install_dir = parser_install_dir,
 		highlight = {
 			enable = true,
-			additional_vim_regex_highlighting = { "org", "markdown" },
+			additional_vim_regex_highlighting = { 'org', 'markdown' },
+			disable = { 'vimdoc' },
 		},
 		indent = {
 			enable = true,
 		},
 		auto_install = true,
-		ensure_installed = { 'org', 'satysfi', 'markdown' },
+		ensure_installed = { 'org', 'query', 'satysfi', 'markdown', 'lua', 'vim' },
 	})
 	vim.wo.foldmethod = "expr"
 	vim.wo.foldexpr = "nvim_treesitter#foldexpr()"

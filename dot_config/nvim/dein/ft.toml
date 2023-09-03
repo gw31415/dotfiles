@@ -115,3 +115,10 @@ on_ft = ["matlab", "octave"]
 [[plugins]]
 repo = "mattn/emmet-vim"
 on_ft = ["html", "jsx", "tsx"]
+
+[[plugins]]
+repo = "saecki/crates.nvim"
+rev = "v0.3.0"
+depends = "plenary.nvim"
+on_ft = "toml"
+lua_source = "require 'crates'.setup()"
