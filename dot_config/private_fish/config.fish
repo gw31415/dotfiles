@@ -1,3 +1,7 @@
+if [ $TERM = "xterm-kitty" ]
+	alias ssh="kitty +kitten ssh"
+end
+
 if test -f /opt/homebrew/bin/brew
 	eval (/opt/homebrew/bin/brew shellenv)
 end

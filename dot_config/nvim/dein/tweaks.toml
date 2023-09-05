@@ -275,3 +275,9 @@ lua_source = '''
 [[plugins]]
 repo = "Darazaki/indent-o-matic"
 on_event = "CursorHold"
+
+# Discord Rich Presence
+[[plugins]]
+repo = "andweeb/presence.nvim"
+on_event = "CursorHold"
+lua_source = "require 'presence'.setup()"
