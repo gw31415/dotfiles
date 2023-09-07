@@ -4,6 +4,8 @@ repo = "lambdalisue/fern-renderer-nerdfont.vim"
 repo = "lambdalisue/fern-git-status.vim"
 [[plugins]]
 repo = "lambdalisue/fern-mapping-git.vim"
+[[plugins]]
+repo = "lambdalisue/fern-mapping-project-top.vim"
 
 [[plugins]]
 repo = "lambdalisue/fern.vim"
@@ -12,6 +14,7 @@ depends = [
 	"fern-renderer-nerdfont.vim",
 	"fern-git-status.vim",
 	"fern-mapping-git.vim",
+	"fern-mapping-project-top.vim",
 ]
 on_cmd = "Fern"
 on_map = { n = "<C-n>" }
@@ -24,6 +27,7 @@ lua_source = '''
 		callback = function()
 			local opts = { buffer = true }
 			vim.keymap.set("n", "K", "<Plug>(fern-action-new-dir)", opts)
+			vim.opt_local.number = false
 		end,
 	})
 	vim.fn["fern_git_status#init"]()

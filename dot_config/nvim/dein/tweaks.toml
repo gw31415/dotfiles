@@ -3,14 +3,14 @@ repo = "Shougo/dein.vim"
 on_event = "CmdlineEnter"
 
 [[plugins]]
-repo = "delphinus/cellwidths.nvim"
-on_event = "CursorHold"
-lua_source = "require 'cellwidths'.setup { name = 'cica' }"
-
-[[plugins]]
 repo = "hrsh7th/nvim-insx"
 on_event = "InsertEnter"
 lua_source = "require 'insx.preset.standard'.setup()"
+
+[[plugins]]
+repo = "delphinus/cellwidths.nvim"
+on_event = "UIEnter"
+lua_source = "require 'cellwidths'.setup { name = 'cica' }"
 
 [[plugins]]
 repo = "kylechui/nvim-surround"
@@ -137,6 +137,30 @@ lua_post_source = "vim.ui.select = require 'fzyselect'.start"
 
 [[plugins]]
 repo = "gw31415/deepl.vim"
+lua_source = '''
+	local function setup_authkey(path)
+		path = vim.fn.expand(path, nil, nil)
+		local key
+		if vim.fn.filereadable(path) == 1 then
+			key = vim.fn.trim(vim.fn.readfile(path, nil, 1)[1])
+		else
+			key = vim.fn.input('`g:deepl_authkey`: ')
+			if key == '' then
+				return false
+			end
+			vim.fn.writefile({ key }, path)
+			vim.fn.system({ 'chmod', '600', path })
+			vim.notify(vim.fn.printf(
+					'Successfully saved g:deepl_authkey at `%s`.', path),
+				vim.log.levels.INFO, {
+					title = 'DeepL.vim'
+				})
+		end
+		vim.api.nvim_set_var('deepl_authkey', key)
+		return true
+	end
+	setup_authkey '~/.ssh/deepl_authkey.txt'
+'''
 [[plugins]]
 repo = "gw31415/deepl-commands.nvim"
 on_event = "CmdlineEnter"
@@ -145,6 +169,14 @@ lua_source = '''
 	require "deepl-commands".setup {
 		selector_func = require "fzyselect".start,
 	}
+'''
+[[plugins]]
+repo = "gw31415/deepl-operator.vim"
+depends = ["deepl.vim"]
+on_map = { nx = "cl" }
+lua_source = '''
+	vim.keymap.set({ "n", "x" }, "cl", "<Plug>(deepl-replace)")
+	vim.keymap.set("n", "cll", "<Plug>(deepl-replace)_")
 '''
 
 [[plugins]]

@@ -1,7 +1,7 @@
 [[plugins]]
 repo = "folke/neodev.nvim"
 on_ft = "lua"
-depends = "nvim-lspconfig"
+depends = [ "nvim-lspconfig", "mason.nvim" ]
 lua_source = '''
 	require 'neodev'.setup {
 		override = function(_, library)
