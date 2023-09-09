@@ -61,6 +61,7 @@ lua_source = '''
 			vim.keymap.set("n", "i", "<Plug>(fzyselect-fzy)", { buffer = true })
 			vim.keymap.set("n", "<cr>", "<Plug>(fzyselect-retu)", { buffer = true })
 			vim.keymap.set("n", "<esc>", "<cmd>clo<cr>", { buffer = true })
+			vim.opt_local.number = false
 		end,
 	})
 	-- fuzzy search
@@ -88,64 +89,24 @@ lua_source = '''
 				end)
 		end
 	end)
-	-- buffer manager
-	local last_access = {}
-	vim.api.nvim_create_autocmd('BufEnter', {
-		callback = function() last_access[vim.api.nvim_get_current_buf()] = vim.fn.localtime() end,
-	})
-	vim.api.nvim_create_autocmd('BufDelete', {
-		callback = function() last_access[vim.api.nvim_get_current_buf()] = nil end,
-	})
-	vim.keymap.set("n", "gb", function()
-		local current_win = vim.api.nvim_get_current_win()
-		local current_buf = vim.api.nvim_get_current_buf()
-		local bufs
-		local function retain_bufs()
-			bufs = {}
-			for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-				if vim.api.nvim_buf_is_loaded(buf)
-					and vim.fn.buflisted(buf)
-					and vim.api.nvim_buf_get_name(buf) ~= ""
-					and buf ~= current_buf then
-					table.insert(bufs, buf)
-				end
-			end
-			table.sort(bufs, function(a, b)
-				return (last_access[a] or 0) > (last_access[b] or 0)
-			end)
-		end
-		retain_bufs()
-		vim.api.nvim_create_autocmd('FileType', {
-			once = true,
-			pattern = 'fzyselect',
-			callback = function()
-				vim.keymap.set('n', 'dd', function()
-					local buf = vim.fn["fzyselect#getitem"]('.')[1]
-					local bufname = vim.api.nvim_buf_get_name(buf)
-					vim.api.nvim_buf_delete(buf, {})
-					retain_bufs()
-					vim.fn["fzyselect#refresh"](bufs)
-					if #bufs == 0 then
-						vim.cmd "close"
-					end
-					vim.notify('deleted buffer: ' .. bufname, vim.log.levels.INFO, {
-						title = "fzyselect: buffer manager"
-					})
-				end, { buffer = true })
-			end
-		})
-		require 'fzyselect'.start(bufs, {
-			format_item = vim.api.nvim_buf_get_name,
-			prompt = 'buffer manager: <Enter> to switch or dd to delete'
-		}, function(buf)
-			if buf then vim.api.nvim_win_set_buf(current_win, buf) end
-		end)
-	end)
 '''
 lua_post_source = "vim.ui.select = require 'fzyselect'.start"
 [[plugins]]
 repo = "gw31415/bufmanager.nvim"
 depends = "fzyselect.vim"
+on_event = "BufAdd"
+lua_source = '''
+vim.keymap.set("n", "gb", function()
+	vim.api.nvim_create_autocmd("BufEnter", {
+		once = true,
+		callback = function()
+			vim.keymap.set({ "n", "x" }, "d", "<Plug>(bufmanager-bdelete)", { buffer = true })
+			vim.keymap.set("n", "dd", "<Plug>(bufmanager-bdelete)_", { buffer = true })
+		end,
+	})
+	vim.fn["bufmanager#open"]()
+end)
+'''
 
 [[plugins]]
 repo = "gw31415/deepl.vim"

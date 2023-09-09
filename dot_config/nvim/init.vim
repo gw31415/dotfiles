@@ -20,7 +20,7 @@ lua << EOF
 		return #errors
 	end
 EOF
-se stl=[%{v:lua.get_skkeleton_modestring()}]\ %f%r%m%h%w%=sw=%{&sw}\ E%{v:lua.get_error_count()}W%{v:lua.get_warn_count()}\ %l/%L
+se stl=[%{v:lua.get_skkeleton_modestring()}]\ %f%r%m%h%w%=%{&et?'(et)':''}sw=%{&sw}\ E%{v:lua.get_error_count()}W%{v:lua.get_warn_count()}\ %l/%L
 
 ino <c-f> <c-g>U<right>
 ino <c-b> <c-g>U<left>
