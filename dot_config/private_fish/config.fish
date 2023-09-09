@@ -10,6 +10,10 @@ if type -q opam
 	eval (opam env)
 end
 
+if type -q rye
+	set -x PATH "$HOME/.rye/shims" $PATH
+end
+
 # Wasmer
 export WASMER_DIR="$HOME/.wasmer"
 [ -s "$WASMER_DIR/wasmer.sh" ] && source "$WASMER_DIR/wasmer.sh"

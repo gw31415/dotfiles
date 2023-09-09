@@ -97,28 +97,37 @@ lua_source = '''
 		callback = function() last_access[vim.api.nvim_get_current_buf()] = nil end,
 	})
 	vim.keymap.set("n", "gb", function()
-		local winid = vim.api.nvim_get_current_win()
-		local bufs = {}
-		for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-			if vim.api.nvim_buf_is_loaded(buf)
-			    and vim.fn.buflisted(buf)
-			    and vim.api.nvim_buf_get_name(buf) ~= ""
-			    and buf ~= vim.api.nvim_get_current_buf() then
-				table.insert(bufs, buf)
+		local current_win = vim.api.nvim_get_current_win()
+		local current_buf = vim.api.nvim_get_current_buf()
+		local bufs
+		local function retain_bufs()
+			bufs = {}
+			for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+				if vim.api.nvim_buf_is_loaded(buf)
+					and vim.fn.buflisted(buf)
+					and vim.api.nvim_buf_get_name(buf) ~= ""
+					and buf ~= current_buf then
+					table.insert(bufs, buf)
+				end
 			end
+			table.sort(bufs, function(a, b)
+				return (last_access[a] or 0) > (last_access[b] or 0)
+			end)
 		end
-		table.sort(bufs, function(a, b)
-			return (last_access[a] or 0) > (last_access[b] or 0)
-		end)
+		retain_bufs()
 		vim.api.nvim_create_autocmd('FileType', {
 			once = true,
 			pattern = 'fzyselect',
 			callback = function()
 				vim.keymap.set('n', 'dd', function()
-					local buf = bufs[vim.api.nvim_win_get_cursor(0)[1]]
+					local buf = vim.fn["fzyselect#getitem"]('.')[1]
 					local bufname = vim.api.nvim_buf_get_name(buf)
-					vim.cmd.close()
 					vim.api.nvim_buf_delete(buf, {})
+					retain_bufs()
+					vim.fn["fzyselect#refresh"](bufs)
+					if #bufs == 0 then
+						vim.cmd "close"
+					end
 					vim.notify('deleted buffer: ' .. bufname, vim.log.levels.INFO, {
 						title = "fzyselect: buffer manager"
 					})
@@ -129,11 +138,14 @@ lua_source = '''
 			format_item = vim.api.nvim_buf_get_name,
 			prompt = 'buffer manager: <Enter> to switch or dd to delete'
 		}, function(buf)
-			if buf then vim.api.nvim_win_set_buf(winid, buf) end
+			if buf then vim.api.nvim_win_set_buf(current_win, buf) end
 		end)
 	end)
 '''
 lua_post_source = "vim.ui.select = require 'fzyselect'.start"
+[[plugins]]
+repo = "gw31415/bufmanager.nvim"
+depends = "fzyselect.vim"
 
 [[plugins]]
 repo = "gw31415/deepl.vim"
@@ -237,7 +249,7 @@ lua_source = '''
 
 [[plugins]]
 repo = "stevearc/overseer.nvim"
-on_event = "CmdlineEnter"
+on_event = "VimEnter"
 lua_source = "require 'overseer'.setup()"
 
 [[plugins]]
@@ -306,7 +318,8 @@ lua_source = '''
 
 [[plugins]]
 repo = "Darazaki/indent-o-matic"
-on_event = "CursorHold"
+on_event = "BufEnter"
+lua_source = "require 'indent-o-matic'.setup{}"
 
 # Discord Rich Presence
 [[plugins]]

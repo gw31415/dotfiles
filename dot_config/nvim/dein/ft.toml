@@ -122,3 +122,6 @@ rev = "v0.3.0"
 depends = "plenary.nvim"
 on_ft = "toml"
 lua_source = "require 'crates'.setup()"
+
+[ftplugin]
+erg = "setl et"

@@ -27,6 +27,9 @@ lua_source = '''
 	if vim.fn.executable "satysfi-language-server" == 1 then
 		require('lspconfig')['satysfi-ls'].setup { autostart = true }
 	end
+	if vim.fn.executable "erg" == 1 then
+		require('lspconfig')['erg'].setup { autostart = true }
+	end
 '''
 
 [[plugins]]

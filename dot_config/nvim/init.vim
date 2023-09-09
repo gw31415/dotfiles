@@ -1,12 +1,3 @@
-se ut=1
-au CursorHold * ++once se ut=4000
-
-let g:loaded_netrwPlugin = v:true
-let g:loaded_remote_plugins = v:true
-let g:skip_loading_mswin = v:true
-let g:loaded_tutor_mode_plugin = v:true
-let g:loaded_2html_plugin = v:true
-
 se ts=4
 se sw=4
 se nu
@@ -29,7 +20,7 @@ lua << EOF
 		return #errors
 	end
 EOF
-se stl=[%{v:lua.get_skkeleton_modestring()}]%f%r%m%h%w%=E%{v:lua.get_error_count()}W%{v:lua.get_warn_count()}\ %l/%L
+se stl=[%{v:lua.get_skkeleton_modestring()}]\ %f%r%m%h%w%=sw=%{&sw}\ E%{v:lua.get_error_count()}W%{v:lua.get_warn_count()}\ %l/%L
 
 ino <c-f> <c-g>U<right>
 ino <c-b> <c-g>U<left>
@@ -51,6 +42,15 @@ cno <c-d> <del>
 cno <c-a> <home>
 cno <c-e> <end>
 
+se ut=1
+au CursorHold * ++once se ut=4000
+
+let g:loaded_netrwPlugin = v:true
+let g:loaded_remote_plugins = v:true
+let g:skip_loading_mswin = v:true
+let g:loaded_tutor_mode_plugin = v:true
+let g:loaded_2html_plugin = v:true
+
 let s:dein = expand(stdpath("cache") .. "/dein")
 let s:dein_plugin = s:dein .. "/repos/github.com/Shougo/dein.vim"
 if !(s:dein_plugin->isdirectory())
@@ -58,7 +58,7 @@ if !(s:dein_plugin->isdirectory())
 endi
 exe "set rtp^=" .. s:dein_plugin
 
-if dein#load_state(s:dein)
+if dein#min#load_state(s:dein)
 	cal dein#begin(s:dein)
 	let s:toml = stdpath("config") .. "/dein"
 	cal dein#load_toml(s:toml .. "/plugin.toml", #{lazy:0})
@@ -73,6 +73,7 @@ if dein#load_state(s:dein)
 	cal dein#load_toml(s:toml .. "/fern.toml", #{lazy:1})
 	cal dein#load_toml(s:toml .. "/ui.toml", #{lazy:1})
 	cal dein#end()
+	let g:dein#auto_recache = v:true
 	cal dein#save_state()
 endi
 
@@ -80,3 +81,5 @@ if dein#check_install()
 	cal dein#install()
 	cal dein#deno_cache()
 endi
+
+au BufEnter *.er setl ft=erg
