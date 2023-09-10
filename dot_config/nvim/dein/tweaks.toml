@@ -279,7 +279,7 @@ lua_source = '''
 
 [[plugins]]
 repo = "Darazaki/indent-o-matic"
-on_event = "BufEnter"
+on_event = "BufRead"
 lua_source = "require 'indent-o-matic'.setup{}"
 
 # Discord Rich Presence
