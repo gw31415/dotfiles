@@ -43,7 +43,7 @@ lua_source = "require 'null-ls'.setup()"
 
 [[plugins]]
 repo = "williamboman/mason-lspconfig.nvim"
-depends = ["mason.nvim", "nvim-lspconfig"]
+depends = ["mason.nvim", "nvim-lspconfig", "nvim-ufo", "nvim-cmp"]
 on_event = "CursorHold"
 lua_source = '''
 	vim.api.nvim_create_autocmd("LspAttach", {
@@ -83,6 +83,11 @@ lua_source = '''
 			-- })
 		end
 	})
+	local capabilities = require('cmp_nvim_lsp').default_capabilities()
+	capabilities.textDocument.foldingRange = {
+		dynamicRegistration = false,
+		lineFoldingOnly = true
+	}
 	local mason_lspconfig = require "mason-lspconfig"
 	local on_attach = function(_, bufnr)
 		vim.api.nvim_buf_set_option(bufnr, "formatexpr",
@@ -93,6 +98,7 @@ lua_source = '''
 		function(server_name)
 			local opts = {
 				on_attach = on_attach,
+				capabilities = capabilities,
 				settings = {
 					["rust-analyzer"] = {
 						checkOnSave = {
