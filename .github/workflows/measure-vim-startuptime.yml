@@ -43,7 +43,7 @@ jobs:
           tag: nightly
 
       - name: Setup Neovim Plugins
-        run: nvim -c "au VimEnter * q"
+        run: nvim -c "au VimEnter * cal dein#recache_runtimepath() | q"
 
       - name: Measure vim-startuptime & Create tweet
         run: |
