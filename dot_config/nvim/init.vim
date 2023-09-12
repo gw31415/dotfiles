@@ -1,3 +1,11 @@
+aug remember_folds
+	au!
+	au BufWinLeave *.* mkvie!
+	au BufWinEnter *.* sil! lo
+aug END
+
+se fdc=1
+se vop=folds
 se ts=4
 se sw=4
 se nu

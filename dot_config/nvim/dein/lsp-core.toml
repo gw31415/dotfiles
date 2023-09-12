@@ -43,7 +43,7 @@ lua_source = "require 'null-ls'.setup()"
 
 [[plugins]]
 repo = "williamboman/mason-lspconfig.nvim"
-depends = ["mason.nvim", "nvim-lspconfig", "nvim-ufo", "nvim-cmp"]
+depends = ["mason.nvim", "nvim-lspconfig", "nvim-cmp"]
 on_event = "CursorHold"
 lua_source = '''
 	vim.api.nvim_create_autocmd("LspAttach", {

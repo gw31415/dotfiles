@@ -1,6 +1,6 @@
 [[plugins]]
 repo = "kevinhwang91/nvim-bqf"
-on_event = "CursorHold"
+on_event = "QuickFixCmdPre"
 
 [[plugins]]
 repo = "rcarriga/nvim-notify"
@@ -9,9 +9,13 @@ lua_post_source = "vim.notify = require 'notify'"
 
 [[plugins]]
 repo = "kevinhwang91/nvim-ufo"
-on_event = "CursorHold"
+on_map = "z"
+on_cmd = "loadview"
 depends = ["promise-async", "nvim-treesitter"]
 lua_source = '''
+	vim.o.foldlevel = 99
+	vim.o.foldlevelstart = 99
+	vim.o.foldenable = true
 	require "ufo".setup {
 		provider_selector = function()
 			return { "treesitter", "indent" }
@@ -44,4 +48,5 @@ lua_source = '''
 			return newVirtText
 		end
 	}
+	vim.cmd "sil! lo"
 '''
