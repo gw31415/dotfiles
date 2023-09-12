@@ -58,8 +58,9 @@ end, { expr = true })
 
 [[plugins]]
 repo = "gw31415/fzyselect.vim"
-on_event = "CursorHold"
-lua_source = '''
+on_lua = "fzyselect"
+on_func = "fzyselect#start"
+lua_add = '''
 	vim.api.nvim_create_autocmd("FileType", {
 		pattern = "fzyselect",
 		callback = function()
@@ -82,9 +83,9 @@ lua_source = '''
 	end)
 	-- git ls-files
 	vim.keymap.set("n", "<c-p>", function()
-		---@diagnostic disable-next-line: undefined-field
 		local res = vim.system({ 'git', 'ls-files' }, { text = true }):wait()
 		if res.code ~= 0 then
+			---@diagnostic disable-next-line: param-type-mismatch
 			vim.notify(vim.fn.trim(res.stderr), vim.log.levels.ERROR, { title = "fzyselect: git ls-files" })
 		else
 			require 'fzyselect'.start(vim.fn.split(res.stdout, '\n'),
@@ -95,7 +96,8 @@ lua_source = '''
 		end
 	end)
 '''
-lua_post_source = "vim.ui.select = require 'fzyselect'.start"
+lua_post_source = "vim.ui.select = function(a, b, c) require 'fzyselect'.start(a, b, c) end"
+
 [[plugins]]
 repo = "gw31415/bufmanager.nvim"
 depends = "fzyselect.vim"
