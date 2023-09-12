@@ -9,6 +9,7 @@ se sb
 se hid
 se ls=3
 se sms
+au BufRead,BufNewFile,WinEnter * let &l:so=str2nr(string(floor((line('w$')-line('w0'))* 0.2)))
 lua << EOF
 	_G.get_skkeleton_modestring = function() return "英数" end
 	function _G.get_warn_count()
@@ -83,3 +84,4 @@ if dein#check_install()
 endi
 
 au BufEnter *.er setl ft=erg
+colo onedark

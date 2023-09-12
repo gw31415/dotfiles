@@ -34,8 +34,13 @@ lua_add = '''
 lua_source = "require 'substitute'.setup()"
 
 [[plugins]]
-repo = "mbbill/undotree"
-on_cmd = ["UndotreeShow", "UndotreeHide", "UndotreeFocus", "UndotreeToggle"]
+repo = "jiaoshijie/undotree"
+depends = "plenary.nvim"
+on_map = { n = '<Leader>u' }
+lua_source = '''
+	require 'undotree'.setup { keymaps = { ["<Esc>"] = "quit" } }
+	vim.keymap.set('n', '<Leader>u', require 'undotree'.toggle)
+'''
 
 [[plugins]]
 repo = "simeji/winresizer"
@@ -287,3 +292,9 @@ lua_source = "require 'indent-o-matic'.setup{}"
 repo = "andweeb/presence.nvim"
 on_event = "CursorHold"
 lua_source = "require 'presence'.setup()"
+
+[[plugins]]
+repo = "tversteeg/registers.nvim"
+on_map = { nv = '"', i = "<C-R>" }
+on_cmd = "Registers"
+lua_source = "require 'registers'.setup()"

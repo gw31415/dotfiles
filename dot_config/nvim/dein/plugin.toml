@@ -1,4 +1,7 @@
 [[plugins]]
+repo = "navarasu/onedark.nvim"
+
+[[plugins]]
 repo = "vim-denops/denops.vim"
 
 [[plugins]]
@@ -66,4 +69,4 @@ lua_add = '''
 '''
 
 [[plugins]]
-repo = "gw31415/fern-hijack.vim"
+repo = "lambdalisue/fern-hijack.vim"

@@ -16,6 +16,15 @@ depends = ["nui.nvim", "plenary.nvim"]
 on_cmd = "Hardtime"
 lua_source = "require 'hardtime'.setup()"
 
+[[plugins]]
+repo = "jim-fx/sudoku.nvim"
+on_cmd = "Sudoku"
+lua_source = "require 'sudoku'.setup{}"
+
+[[plugins]]
+repo = "seandewar/killersheep.nvim"
+on_cmd = "KillKillKill"
+
 # [[plugins]]
 # repo = "gw31415/pets.nvim"
 # depends = ["nui.nvim", "hologram.nvim"]

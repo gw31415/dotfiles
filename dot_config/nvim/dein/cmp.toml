@@ -12,6 +12,8 @@ repo = "hrsh7th/cmp-nvim-lsp-signature-help"
 repo = "petertriho/cmp-git"
 depends = "plenary.nvim"
 lua_source = "require 'cmp_git'.setup()"
+[[plugins]]
+repo = "lukas-reineke/cmp-under-comparator"
 
 [[plugins]]
 repo = "hrsh7th/nvim-cmp"
@@ -22,6 +24,7 @@ depends = [
 	"cmp-cmdline",
 	"cmp-nvim-lsp-signature-help",
 	"cmp-git",
+	"cmp-under-comparator",
 ]
 on_event = [ "InsertEnter", "CmdlineEnter" ]
 lua_source = '''
@@ -42,6 +45,16 @@ lua_source = '''
 			{ name = 'nvim_lsp' },
 			{ name = 'vsnip' },
 			{ name = 'nvim_lsp_signature_help' },
+		},
+		comparators = {
+			cmp.config.compare.offset,
+			cmp.config.compare.exact,
+			cmp.config.compare.score,
+			require "cmp-under-comparator".under,
+			cmp.config.compare.kind,
+			cmp.config.compare.sort_text,
+			cmp.config.compare.length,
+			cmp.config.compare.order,
 		},
 		mapping = cmp.mapping.preset.insert {
 			["<C-b>"] = cmp.mapping.scroll_docs(-4),
