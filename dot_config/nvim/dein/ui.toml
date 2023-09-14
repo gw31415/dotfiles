@@ -9,7 +9,8 @@ lua_post_source = "vim.notify = require 'notify'"
 
 [[plugins]]
 repo = "kevinhwang91/nvim-ufo"
-on_map = "z"
+on_source = "nvim-treesitter"
+on_lua = "ufo"
 on_cmd = "loadview"
 depends = ["promise-async", "nvim-treesitter"]
 lua_source = '''
@@ -50,3 +51,8 @@ lua_source = '''
 	}
 	vim.cmd "sil! lo"
 '''
+
+[[plugins]]
+repo = "nvim-zh/colorful-winsep.nvim"
+on_event = "WinNew"
+lua_source = "require 'colorful-winsep'.setup()"
