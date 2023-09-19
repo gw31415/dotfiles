@@ -1,9 +1,3 @@
-aug remember_folds
-	au!
-	au BufWinLeave *.* mkvie!
-	au BufWinEnter *.* sil! lo
-aug END
-
 se fdc=1
 se vop=folds
 se ts=4
@@ -65,7 +59,7 @@ let s:dein_plugin = s:dein .. "/repos/github.com/Shougo/dein.vim"
 if !(s:dein_plugin->isdirectory())
 	exe '!git clone https://github.com/Shougo/dein.vim' s:dein_plugin
 endi
-exe "set rtp^=" .. s:dein_plugin
+exe "se rtp^=" .. s:dein_plugin
 
 if dein#min#load_state(s:dein)
 	cal dein#begin(s:dein)

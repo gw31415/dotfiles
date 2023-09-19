@@ -1,6 +1,8 @@
 [[plugins]]
 repo = "kevinhwang91/nvim-bqf"
 on_event = "QuickFixCmdPre"
+on_cmd = "copen"
+on_source = "diaglist.nvim"
 
 [[plugins]]
 repo = "rcarriga/nvim-notify"
@@ -49,7 +51,6 @@ lua_source = '''
 			return newVirtText
 		end
 	}
-	vim.cmd "sil! lo"
 '''
 
 [[plugins]]
