@@ -4,9 +4,7 @@ return {
 	default_config = {
 		cmd = { 'erg', 'server' },
 		filetypes = { 'erg' },
-		get_root_dir = function()
-			return util.root_pattern('.git')
-		end,
+		root_dir = util.find_git_ancestor,
 		single_file_support = true,
 	},
 	docs = {

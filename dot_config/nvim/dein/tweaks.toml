@@ -24,6 +24,19 @@ on_map = { ox = ["ic", "ac"] }
 depends = "vim-textobj-user"
 
 [[plugins]]
+repo = "kana/vim-textobj-entire"
+on_map = { ox = ["ae", "ie"] }
+depends = "vim-textobj-user"
+
+[[plugins]]
+repo = "osyo-manga/vim-operator-stay-cursor"
+on_func = "operator#stay_cursor#wrapper"
+depends = "vim-operator-user"
+hook_add = '''
+	map <expr> gq operator#stay_cursor#wrapper("gq")
+'''
+
+[[plugins]]
 repo = "gbprod/substitute.nvim"
 on_lua = "substitute"
 lua_add = '''

@@ -27,6 +27,9 @@ lua_source = '''
 	if vim.fn.executable "satysfi-language-server" == 1 then
 		require('lspconfig')['satysfi-ls'].setup { autostart = true }
 	end
+	if vim.fn.executable "sourcekit-lsp" == 1 then
+		require('lspconfig')['sourcekit-lsp'].setup { autostart = true }
+	end
 	if vim.fn.executable "erg" == 1 then
 		require('lspconfig')['erg'].setup { autostart = true }
 	end
@@ -121,15 +124,15 @@ lua_source = '''
 				},
 			}
 
-			local node_root_dir = require 'lspconfig'.util.root_pattern "package.json"
-			local is_node_repo = node_root_dir(vim.api.nvim_buf_get_name(0)) ~= nil
+			local deno_root_dir = require 'lspconfig'.util.root_pattern "deno.json"
+			local is_deno_repo = deno_root_dir(vim.api.nvim_buf_get_name(0)) ~= nil
 
-			if server_name == "tsserver" then
-				if not is_node_repo then return end
-				opts["root_dir"] = node_root_dir
+			if server_name == "denols" then
+				if not is_deno_repo then return end
+				opts["root_dir"] = deno_root_dir
 				opts["single_file_support"] = false
-			elseif server_name == "denols" then
-				if is_node_repo then return end
+			elseif server_name == "tsserver" then
+				if is_deno_repo then return end
 			end
 
 			require "lspconfig"[server_name].setup(opts)
