@@ -13,7 +13,7 @@ se ls=3
 se sms
 se so=3
 lua << EOF
-	_G.get_skkeleton_modestring = function() return "英数" end
+	_G.get_skkeleton_modestring = function() return "󱌯" end
 	function _G.get_warn_count()
 		local warns = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
 		return #warns
@@ -23,7 +23,7 @@ lua << EOF
 		return #errors
 	end
 EOF
-se stl=[%{v:lua.get_skkeleton_modestring()}]\ %f%r%m%h%w%=%{&et?'(et)':''}sw=%{&sw}\ E%{v:lua.get_error_count()}W%{v:lua.get_warn_count()}\ %l/%L
+se stl=%f%r%m%h%w%=%{v:lua.get_skkeleton_modestring()}\ %{&et?'(et)':''}sw=%{&sw}\ E%{v:lua.get_error_count()}W%{v:lua.get_warn_count()}\ %l/%L
 
 ino <c-f> <c-g>U<right>
 ino <c-b> <c-g>U<left>

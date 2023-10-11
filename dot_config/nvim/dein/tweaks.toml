@@ -32,9 +32,7 @@ depends = "vim-textobj-user"
 repo = "osyo-manga/vim-operator-stay-cursor"
 on_func = "operator#stay_cursor#wrapper"
 depends = "vim-operator-user"
-hook_add = '''
-	map <expr> gq operator#stay_cursor#wrapper("gq")
-'''
+hook_add = "map <expr> gq operator#stay_cursor#wrapper('gq')"
 
 [[plugins]]
 repo = "gbprod/substitute.nvim"

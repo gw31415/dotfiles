@@ -33,17 +33,17 @@ lua_add = '''
 	_G.get_skkeleton_modestring = function()
 		local mode = vim.fn["skkeleton#mode"]()
 		if mode == "hira" then
-			return "ひら"
+			return "󱌴"
 		elseif mode == "kata" then
-			return "カタ"
+			return "󱌵"
 		elseif mode == "hankata" then
-			return "半ｶﾀ"
+			return "󱌶"
 		elseif mode == "zenkaku" then
-			return "全英"
+			return "󱌭"
 		elseif mode == "abbrev" then
-			return "Abbr"
+			return "󰥤"
 		else -- if mode == ''
-			return "英数"
+			return "󱌯"
 		end
 	end
 	vim.fn["skkeletal#config"]({
