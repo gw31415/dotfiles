@@ -115,7 +115,7 @@ on_ft = ["matlab", "octave"]
 
 [[plugins]]
 repo = "mattn/emmet-vim"
-on_ft = ["html", "jsx", "tsx"]
+on_ft = ["html", "jsx", "tsx", "astro"]
 
 [[plugins]]
 repo = "saecki/crates.nvim"

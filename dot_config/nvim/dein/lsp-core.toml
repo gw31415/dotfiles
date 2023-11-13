@@ -33,6 +33,7 @@ lua_source = '''
 	if vim.fn.executable "erg" == 1 then
 		require('lspconfig')['erg'].setup { autostart = true }
 	end
+	require('lspconfig')['obsidian'].setup{}
 '''
 
 [[plugins]]
@@ -124,7 +125,7 @@ lua_source = '''
 				},
 			}
 
-			local deno_root_dir = require 'lspconfig'.util.root_pattern "deno.json"
+			local deno_root_dir = require 'lspconfig'.util.root_pattern "deno.*"
 			local is_deno_repo = deno_root_dir(vim.api.nvim_buf_get_name(0)) ~= nil
 
 			if server_name == "denols" then

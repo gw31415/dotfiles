@@ -207,6 +207,7 @@ lua_source = '''
 
 	require 'gpt'.setup {
 		api_key = function() return setup_authkey('~/.ssh/openai_api_key.txt', { prompt = 'OPENAI_API_KEY = ' }) end,
+		model = "gpt-4-1106-preview",
 	}
 '''
 
