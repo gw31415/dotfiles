@@ -5,9 +5,15 @@ on_cmd = "copen"
 on_source = "diaglist.nvim"
 
 [[plugins]]
-repo = "rcarriga/nvim-notify"
+repo = "j-hui/fidget.nvim"
 on_event = "CursorHold"
-lua_post_source = "vim.notify = require 'notify'"
+lua_source = '''
+	require("fidget").setup {
+		notification = {
+			override_vim_notify = true,
+		}
+	}
+'''
 
 [[plugins]]
 repo = "kevinhwang91/nvim-ufo"

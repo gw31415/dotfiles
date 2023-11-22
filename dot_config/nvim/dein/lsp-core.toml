@@ -41,7 +41,7 @@ repo = "williamboman/mason.nvim"
 lua_source = "require 'mason'.setup()"
 
 [[plugins]]
-repo = "jose-elias-alvarez/null-ls.nvim"
+repo = "nvimtools/none-ls.nvim"
 depends = "plenary.nvim"
 lua_source = "require 'null-ls'.setup()"
 
@@ -143,7 +143,7 @@ lua_source = '''
 
 [[plugins]]
 repo = "jay-babu/mason-null-ls.nvim"
-depends = ["mason.nvim", "null-ls.nvim"]
+depends = ["mason.nvim", "none-ls.nvim"]
 on_event = "CursorHold"
 lua_source = '''
 	require 'mason-null-ls'.setup {
