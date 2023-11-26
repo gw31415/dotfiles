@@ -8,6 +8,18 @@ on_event = "InsertEnter"
 lua_source = "require 'insx.preset.standard'.setup()"
 
 [[plugins]]
+repo = "cshuaimin/ssr.nvim"
+on_lua = "ssr"
+lua_add = '''
+vim.keymap.set({ "n", "x" }, "<leader>/", function() require("ssr").open() end)
+'''
+
+[[plugins]]
+repo = "gw31415/scrollUptoLastLine.vim"
+on_map = { niv = '<MouseUp>' }
+lua_source = "vim.keymap.set({'', 'i'}, '<S-MouseUp>', '<Nop>')"
+
+[[plugins]]
 repo = "delphinus/cellwidths.nvim"
 on_event = "UIEnter"
 lua_source = "require 'cellwidths'.setup { name = 'cica' }"
