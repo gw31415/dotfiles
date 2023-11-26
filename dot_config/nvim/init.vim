@@ -54,27 +54,27 @@ let g:skip_loading_mswin = v:true
 let g:loaded_tutor_mode_plugin = v:true
 let g:loaded_2html_plugin = v:true
 
-let s:dein = expand(stdpath("cache") .. "/dein")
-let s:dein_plugin = s:dein .. "/repos/github.com/Shougo/dein.vim"
+let s:dein = $"{stdpath('cache')}/dein"
+let s:dein_plugin = $"{s:dein}/repos/github.com/Shougo/dein.vim"
 if !(s:dein_plugin->isdirectory())
 	exe '!git clone https://github.com/Shougo/dein.vim' s:dein_plugin
 endi
-exe "se rtp^=" .. s:dein_plugin
+exe $"se rtp^={s:dein_plugin}"
 
 if dein#min#load_state(s:dein)
 	cal dein#begin(s:dein)
-	let s:toml = stdpath("config") .. "/dein"
-	cal dein#load_toml(s:toml .. "/plugin.toml", #{lazy:0})
-	cal dein#load_toml(s:toml .. "/common.toml", #{lazy:1})
-	cal dein#load_toml(s:toml .. "/game.toml", #{lazy:1})
-	cal dein#load_toml(s:toml .. "/treesitter.toml", #{lazy:1})
-	cal dein#load_toml(s:toml .. "/lsp-core.toml", #{lazy:1})
-	cal dein#load_toml(s:toml .. "/lsp.toml", #{lazy:1})
-	cal dein#load_toml(s:toml .. "/cmp.toml", #{lazy:1})
-	cal dein#load_toml(s:toml .. "/tweaks.toml", #{lazy:1})
-	cal dein#load_toml(s:toml .. "/ft.toml", #{lazy:1})
-	cal dein#load_toml(s:toml .. "/fern.toml", #{lazy:1})
-	cal dein#load_toml(s:toml .. "/ui.toml", #{lazy:1})
+	let s:toml = $"{stdpath('config')}/dein"
+	cal dein#load_toml($'{s:toml}/plugin.toml', #{lazy:0})
+	cal dein#load_toml($'{s:toml}/common.toml', #{lazy:1})
+	cal dein#load_toml($'{s:toml}/game.toml', #{lazy:1})
+	cal dein#load_toml($'{s:toml}/treesitter.toml', #{lazy:1})
+	cal dein#load_toml($'{s:toml}/lsp-core.toml', #{lazy:1})
+	cal dein#load_toml($'{s:toml}/lsp.toml', #{lazy:1})
+	cal dein#load_toml($'{s:toml}/cmp.toml', #{lazy:1})
+	cal dein#load_toml($'{s:toml}/tweaks.toml', #{lazy:1})
+	cal dein#load_toml($'{s:toml}/ft.toml', #{lazy:1})
+	cal dein#load_toml($'{s:toml}/fern.toml', #{lazy:1})
+	cal dein#load_toml($'{s:toml}/ui.toml', #{lazy:1})
 	cal dein#end()
 	let g:dein#auto_recache = v:true
 	cal dein#save_state()
