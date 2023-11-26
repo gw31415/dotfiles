@@ -310,3 +310,8 @@ lua_source = "require 'presence'.setup()"
 # on_map = { nv = '"', i = "<C-R>" }
 # on_cmd = "Registers"
 # lua_source = "require 'registers'.setup()"
+
+[[plugins]]
+repo = "boltlessengineer/smart-tab.nvim"
+on_event = "InsertEnter"
+lua_source = "require 'smart-tab'.setup()"
