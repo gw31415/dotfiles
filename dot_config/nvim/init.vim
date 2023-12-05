@@ -12,6 +12,7 @@ se hid
 se ls=3
 se sms
 se so=3
+se guifont=HackGenNerd_Console:h13
 lua << EOF
 	_G.get_skkeleton_modestring = function() return "󱌯" end
 	function _G.get_warn_count()
