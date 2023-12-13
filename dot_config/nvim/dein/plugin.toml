@@ -3,12 +3,54 @@ repo = "navarasu/onedark.nvim"
 
 [[plugins]]
 repo = "vim-denops/denops.vim"
+# hook_add = "let g:denops#debug = 1"
 
 [[plugins]]
 repo = "lambdalisue/gin.vim"
 
 [[plugins]]
 repo = "lambdalisue/kensaku.vim"
+
+[[plugins]]
+repo = "gw31415/mstdn.vim"
+lua_add = '''
+vim.api.nvim_create_autocmd("BufReadCmd", {
+	pattern = "mstdn://*",
+	callback = function()
+		vim.cmd "setl nonu so=0"
+		vim.keymap.set('n', "G", function()
+			if vim.fn.getcurpos()[2] == vim.fn.line('$') then
+				-- 最下部で `G` するとさらに取得
+				vim.fn["mstdn#timeline#load_more"]()
+			end
+			vim.cmd "norm! G"
+		end, { buffer = true })
+		vim.keymap.set('n', "<Enter>", function()
+			-- アイテム選択だが、今のところload_moreくらいしかない
+			vim.fn["mstdn#timeline#load_more"]()
+		end, { buffer = true })
+		vim.keymap.set('n', ">>", function() vim.fn["mstdn#timeline#favourite"]() end, { buffer = true })
+		vim.keymap.set('n', "<<", function() vim.fn["mstdn#timeline#unfavourite"]() end, { buffer = true })
+		vim.keymap.set('n', "i", "<Plug>(mstdn-open-editor)", { buffer = true })
+	end
+})
+
+vim.api.nvim_create_autocmd("BufReadCmd", {
+	pattern = "mstdn://*",
+	once = true,
+	callback = function()
+		vim.fn.timer_start("1500", function()
+			vim.fn["mstdn#timeline#reconnect_all"]()
+		end, { ["repeat"] = -1 })
+	end
+})
+'''
+
+[[plugins]]
+repo = "gw31415/mstdn-editor.vim"
+
+# [[plugins]]
+# repo = "skanehira/denops-gh.vim"
 
 [[plugins]]
 repo = "yuki-yano/fuzzy-motion.vim"
