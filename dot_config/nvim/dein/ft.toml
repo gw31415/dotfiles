@@ -124,5 +124,12 @@ depends = "plenary.nvim"
 on_ft = "toml"
 lua_source = "require 'crates'.setup()"
 
+[[plugins]]
+repo = "rest-nvim/rest.nvim"
+on_ft = "http"
+depends = "plenary.nvim"
+hook_add = "au BufEnter *.http setl ft=http"
+hook_source = "require 'rest-nvim'.setup {}"
+
 [ftplugin]
 erg = "setl et"
