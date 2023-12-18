@@ -2,6 +2,18 @@
 repo = "nvim-treesitter/nvim-treesitter"
 hook_post_update = "TSUpdate"
 on_event = "CursorHold"
+lua_add = '''
+	-- Vimdocの無効化
+	vim.treesitter.start = (function(wrapped)
+		return function(bufnr, lang)
+			lang = lang or vim.fn.getbufvar(bufnr or '', '&filetype')
+			if lang == 'help' then
+				return
+			end
+			wrapped(bufnr, lang)
+		end
+	end)(vim.treesitter.start)
+'''
 lua_source = '''
 	-- markdown treesitter のPluginの有効化
 	vim.fn.setenv("EXTENSION_WIKI_LINK", 1)
@@ -27,14 +39,14 @@ lua_source = '''
 		},
 		indent = {
 			enable = true,
-			disable = {'dart'},
+			disable = { 'dart', 'vimdoc' },
 		},
 		auto_install = true,
 		ensure_installed = { 'org', 'query', 'satysfi', 'markdown', 'lua', 'vim' },
 	})
-	vim.api.nvim_create_autocmd("BufRead", {
-		command = "TSEnable highlight",
-	})
+	-- vim.api.nvim_create_autocmd("BufRead", {
+	-- command = "TSEnable highlight",
+	-- })
 '''
 
 [[plugins]]
