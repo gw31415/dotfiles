@@ -296,9 +296,8 @@ lua_source = '''
 '''
 
 [[plugins]]
-repo = "wsdjeg/dein-ui.vim"
+repo = "gw31415/dein-ui.vim"
 on_cmd = "DeinUpdate"
-frozen = true
 
 [[plugins]]
 repo = "lewis6991/gitsigns.nvim"
