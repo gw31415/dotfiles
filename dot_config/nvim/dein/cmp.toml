@@ -14,6 +14,13 @@ depends = "plenary.nvim"
 lua_source = "require 'cmp_git'.setup()"
 [[plugins]]
 repo = "lukas-reineke/cmp-under-comparator"
+[[plugins]]
+repo = "github/copilot.vim"
+hook_add = '''
+let g:copilot_no_tab_map = v:true
+let g:copilot_assume_mapped = v:true
+let g:copilot_tab_fallback = ""
+'''
 
 [[plugins]]
 repo = "hrsh7th/nvim-cmp"
@@ -25,6 +32,7 @@ depends = [
 	"cmp-nvim-lsp-signature-help",
 	"cmp-git",
 	"cmp-under-comparator",
+	"copilot.vim",
 ]
 on_event = [ "InsertEnter", "CmdlineEnter" ]
 lua_source = '''
@@ -72,7 +80,13 @@ lua_source = '''
 				elseif vim.fn["vsnip#jumpable"](1) == 1 then
 					feedkeys("<Plug>(vsnip-jump-next)")
 				else
-					fallback()
+					local copilot_keys = vim.fn["copilot#Accept"]()
+					if copilot_keys ~= "" then
+						vim.api.nvim_feedkeys(copilot_keys, "i", true)
+					else
+						fallback()
+					end
+					-- fallback()
 				end
 			end),
 			["<s-tab>"] = cmp.mapping(function(fallback)

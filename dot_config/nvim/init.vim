@@ -1,3 +1,5 @@
+se encoding=utf-8
+se fencs=utf-8,iso-2022-jp,euc-jp,sjis
 se fdc=1
 se vop=folds
 se ts=4
@@ -14,7 +16,7 @@ se sms
 se so=3
 se guifont=HackGenNerd_Console:h13
 lua << EOF
-	_G.get_skkeleton_modestring = function() return "󱌯" end
+	_G.get_skkeleton_modestring = function() return "s1/" end
 	function _G.get_warn_count()
 		local warns = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
 		return #warns
@@ -66,6 +68,7 @@ if dein#min#load_state(s:dein)
 	cal dein#begin(s:dein)
 	let s:toml = $"{stdpath('config')}/dein"
 	cal dein#load_toml($'{s:toml}/plugin.toml', #{lazy:0})
+	cal dein#load_toml($'{s:toml}/dap.toml', #{lazy:1})
 	cal dein#load_toml($'{s:toml}/common.toml', #{lazy:1})
 	cal dein#load_toml($'{s:toml}/game.toml', #{lazy:1})
 	cal dein#load_toml($'{s:toml}/treesitter.toml', #{lazy:1})
@@ -88,3 +91,17 @@ endi
 
 au BufEnter *.er setl ft=erg
 colo onedark
+
+com Dap cal dein#source([
+				\ "nvim-dap",
+				\ "nvim-dap-ui",
+				\ "nvim-dap-virtual-text",
+				\ "cmp-dap",
+				\ "nvim-dap-python",
+				\ "nvim-dap-go",
+				\])
+
+if executable('rg')
+	set grepprg=rg\ --vimgrep
+	set grepformat=%f:%l:%c:%m
+endif

@@ -128,8 +128,25 @@ lua_source = "require 'crates'.setup()"
 repo = "rest-nvim/rest.nvim"
 on_ft = "http"
 depends = "plenary.nvim"
-hook_add = "au BufEnter *.http setl ft=http"
-hook_source = "require 'rest-nvim'.setup {}"
+hook_add = '''
+autocmd BufEnter *.http call s:set_rest_keymap()
+function! s:set_rest_keymap()
+	setl ft=http
+	nn <buffer> <C-m> <Plug>RestNvim
+endfunction
+'''
+lua_source = '''
+require 'rest-nvim'.setup {
+	result_split_horizontal = false,
+}
+'''
 
 [ftplugin]
 erg = "setl et"
+python = '''
+let s:venv = finddir('.venv/..', expand('%:p:h').';')
+if s:venv != ''
+	let s:venv = s:venv . '/.venv/bin/python'
+	" exe $"autocmd InsertEnter <buffer> ++once PyrightSetPythonPath {s:venv}/.venv/bin/python"
+endif
+'''
