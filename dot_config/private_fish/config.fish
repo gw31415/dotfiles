@@ -24,3 +24,5 @@ export LDFLAGS="-L/opt/homebrew/lib"; export CPPFLAGS="-I/opt/homebrew/include"
 if type -q starship
 	starship init fish | source
 end
+
+source /opt/homebrew/opt/asdf/libexec/asdf.fish

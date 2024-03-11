@@ -1,4 +1,4 @@
-local wezterm = require 'wezterm';
+local wezterm = require("wezterm")
 return {
 	color_scheme = "Tomorrow Night",
 	default_prog = { "/opt/homebrew/bin/fish", "-l" },
