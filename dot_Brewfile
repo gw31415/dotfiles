@@ -30,7 +30,7 @@ brew "aria2"
 brew "gcc"
 brew "arpack"
 brew "asciinema"
-brew "black"
+brew "asdf"
 brew "boost"
 brew "glib"
 brew "cargo-make"
@@ -87,7 +87,6 @@ brew "mas"
 brew "midnight-commander"
 brew "neovim", args: ["HEAD"]
 brew "nghttp2"
-brew "nim"
 brew "opam"
 brew "p7zip"
 brew "pandoc"
@@ -128,30 +127,27 @@ brew "carlocab/personal/unrar"
 brew "filosottile/musl-cross/musl-cross"
 brew "itchyny/tap/mmv"
 brew "joerdav/xc/xc"
-brew "koekeishiya/formulae/yabai"
 brew "modularml/packages/modular"
 brew "oven-sh/bun/bun"
 cask "alt-tab"
-cask "aquaskk"
 cask "discord"
-cask "flutter"
+cask "figma"
 cask "git-credential-manager-core"
 cask "google-drive"
 cask "inkscape"
 cask "keepassxc"
 cask "keycastr"
-cask "kitty"
 cask "microsoft-auto-update"
 cask "microsoft-teams"
 cask "musicbrainz-picard"
 cask "onedrive"
 cask "orbstack"
 cask "vlc"
+cask "wezterm"
 cask "wkhtmltopdf"
 cask "zoom"
 mas "1Blocker", id: 1365531024
 mas "Amphetamine", id: 937984704
-mas "DuckDuckGo Privacy for Safari", id: 1482920575
 mas "GarageBand", id: 682658836
 mas "Goodnotes", id: 1444383602
 mas "Keynote", id: 409183694
@@ -161,4 +157,5 @@ mas "OmniFocus", id: 1542143627
 mas "Pages", id: 409201541
 mas "Sequel Ace", id: 1518036000
 mas "Slack", id: 803453959
+mas "Xcode", id: 497799835
 mas "宛名印刷", id: 1598123076
