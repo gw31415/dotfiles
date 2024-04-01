@@ -109,6 +109,7 @@ on_ft = "dart"
 depends = ["plenary.nvim"]
 lua_source = '''
 require 'flutter-tools'.setup {
+	flutter_lookup_cmd = "mise where flutter",
 	lsp = {
 		color = {
 			enabled = true,
