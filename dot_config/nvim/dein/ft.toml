@@ -107,7 +107,16 @@ build = 'sh -c "cd app && npm install"'
 repo = "akinsho/flutter-tools.nvim"
 on_ft = "dart"
 depends = ["plenary.nvim"]
-lua_source = "require 'flutter-tools'.setup()"
+lua_source = '''
+require 'flutter-tools'.setup {
+	lsp = {
+		color = {
+			enabled = true,
+			virtual_text = true,
+		}
+	},
+}
+'''
 
 [[plugins]]
 repo = "tranvansang/octave.vim"

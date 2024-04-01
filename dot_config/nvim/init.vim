@@ -68,7 +68,7 @@ if dein#min#load_state(s:dein)
 	cal dein#begin(s:dein)
 	let s:toml = $"{stdpath('config')}/dein"
 	cal dein#load_toml($'{s:toml}/plugin.toml', #{lazy:0})
-	cal dein#load_toml($'{s:toml}/dap.toml', #{lazy:1})
+	" cal dein#load_toml($'{s:toml}/dap.toml', #{lazy:1})
 	cal dein#load_toml($'{s:toml}/common.toml', #{lazy:1})
 	cal dein#load_toml($'{s:toml}/game.toml', #{lazy:1})
 	cal dein#load_toml($'{s:toml}/treesitter.toml', #{lazy:1})
@@ -104,4 +104,8 @@ com Dap cal dein#source([
 if executable('rg')
 	set grepprg=rg\ --vimgrep
 	set grepformat=%f:%l:%c:%m
+endif
+
+if executable('mise')
+	lua vim.env.PATH = vim.env.HOME .. "/.local/share/mise/shims:" .. vim.env.PATH
 endif

@@ -65,7 +65,6 @@ lua_source = '''
 repo = "https://gitlab.com/HiPhish/rainbow-delimiters.nvim"
 depends = "nvim-treesitter"
 on_source = "nvim-treesitter"
-if = false
 
 [[plugins]]
 repo = "Wansmer/treesj"

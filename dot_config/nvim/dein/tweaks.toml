@@ -11,7 +11,7 @@ lua_source = "require 'insx.preset.standard'.setup()"
 repo = "cshuaimin/ssr.nvim"
 on_lua = "ssr"
 lua_add = '''
-vim.keymap.set({ "n", "x" }, "<leader>/", function() require("ssr").open() end)
+	vim.keymap.set({ "n", "x" }, "<leader>/", function() require("ssr").open() end)
 '''
 
 [[plugins]]
@@ -30,9 +30,36 @@ lua_source = "require 'cellwidths'.setup { name = 'cica' }"
 
 [[plugins]]
 repo = "kylechui/nvim-surround"
-rev = "v2.1.1"
-on_map = { n = ["ys", "cs", "ds"] }
-lua_source = "require 'nvim-surround'.setup()"
+rev = "v2.1.5"
+on_map = {
+	n = [
+		"ys",
+		"yss",
+		"yS",
+		"ySS",
+		"ds",
+		"cs",
+		"cS",
+	], 
+	i = [
+		"<C-g>s",
+		"<C-g>S",
+	],
+	x = [
+		"S",
+		"gS",
+	],
+}
+lua_source = """
+local M = require 'nvim-surround'
+require 'nvim-surround'.setup {
+	surrounds = {
+		["3"] = {
+			add = { "'''", "'''" },
+		},
+	}
+}
+"""
 
 [[plugins]]
 repo = "glts/vim-textobj-comment"

@@ -1,5 +1,10 @@
 [[plugins]]
 repo = "navarasu/onedark.nvim"
+lua_add = '''
+	require('onedark').setup({
+		transparent = true,
+	})
+'''
 
 [[plugins]]
 repo = "vim-denops/denops.vim"
