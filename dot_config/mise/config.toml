@@ -4,6 +4,8 @@ flutter = "latest"
 "cargo:math2img" = "latest"
 deno = "latest"
 python = "latest"
+go = "latest"
+"go:github.com/rhysd/vim-startuptime" = "latest"
 
 [settings]
 experimental = true
