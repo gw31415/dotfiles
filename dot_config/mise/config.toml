@@ -1,3 +1,9 @@
 [tools]
 usage = "latest"
-flutter = "3.19.5"
+flutter = "latest"
+"cargo:math2img" = "latest"
+deno = "latest"
+python = "latest"
+
+[settings]
+experimental = true
