@@ -120,6 +120,10 @@ require 'flutter-tools'.setup {
 '''
 
 [[plugins]]
+repo = "mrcjkb/rustaceanvim"
+on_ft = "rust"
+
+[[plugins]]
 repo = "tranvansang/octave.vim"
 on_ft = ["matlab", "octave"]
 
