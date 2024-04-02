@@ -1,0 +1,13 @@
+complete -c sxp -n "__fish_use_subcommand" -s h -l help -d 'Print help'
+complete -c sxp -n "__fish_use_subcommand" -f -a "extract" -d 'Extract a single PDF file to SVG files'
+complete -c sxp -n "__fish_use_subcommand" -f -a "merge" -d 'Merge SVG files into a single PDF'
+complete -c sxp -n "__fish_use_subcommand" -f -a "complete" -d 'Generate shell completions'
+complete -c sxp -n "__fish_use_subcommand" -f -a "help" -d 'Print this message or the help of the given subcommand(s)'
+complete -c sxp -n "__fish_seen_subcommand_from extract" -l prefix -d 'The prefix string of the output files' -r
+complete -c sxp -n "__fish_seen_subcommand_from extract" -s h -l help -d 'Print help'
+complete -c sxp -n "__fish_seen_subcommand_from merge" -s h -l help -d 'Print help'
+complete -c sxp -n "__fish_seen_subcommand_from complete" -s h -l help -d 'Print help'
+complete -c sxp -n "__fish_seen_subcommand_from help; and not __fish_seen_subcommand_from extract; and not __fish_seen_subcommand_from merge; and not __fish_seen_subcommand_from complete; and not __fish_seen_subcommand_from help" -f -a "extract" -d 'Extract a single PDF file to SVG files'
+complete -c sxp -n "__fish_seen_subcommand_from help; and not __fish_seen_subcommand_from extract; and not __fish_seen_subcommand_from merge; and not __fish_seen_subcommand_from complete; and not __fish_seen_subcommand_from help" -f -a "merge" -d 'Merge SVG files into a single PDF'
+complete -c sxp -n "__fish_seen_subcommand_from help; and not __fish_seen_subcommand_from extract; and not __fish_seen_subcommand_from merge; and not __fish_seen_subcommand_from complete; and not __fish_seen_subcommand_from help" -f -a "complete" -d 'Generate shell completions'
+complete -c sxp -n "__fish_seen_subcommand_from help; and not __fish_seen_subcommand_from extract; and not __fish_seen_subcommand_from merge; and not __fish_seen_subcommand_from complete; and not __fish_seen_subcommand_from help" -f -a "help" -d 'Print this message or the help of the given subcommand(s)'

@@ -24,16 +24,29 @@ lua_source = '''
 [[plugins]]
 repo = "neovim/nvim-lspconfig"
 lua_source = '''
+	local lspconfig = require('lspconfig')
+
 	if vim.fn.executable "satysfi-language-server" == 1 then
-		require('lspconfig')['satysfi-ls'].setup { autostart = true }
+		lspconfig['satysfi-ls'].setup { autostart = true }
 	end
 	-- if vim.fn.executable "sourcekit-lsp" == 1 then
 	-- 	require('lspconfig')['sourcekit-lsp'].setup { autostart = true }
 	-- end
+
 	if vim.fn.executable "erg" == 1 then
-		require('lspconfig')['erg'].setup { autostart = true }
+		lspconfig['erg'].setup { autostart = true }
 	end
-	require('lspconfig')['obsidian'].setup{}
+
+	if vim.fn.executable "gopls" == 1 then
+		lspconfig['gopls'].setup { autostart = true }
+	end
+
+	if vim.fn.executable "markdown-oxide" then
+		lspconfig.markdown_oxide.setup({
+			-- capabilities = capabilities -- ensure that capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true
+			root_dir = lspconfig.util.root_pattern('.git', vim.fn.getcwd()), -- this is a temp fix for an error in the lspconfig for this LS
+		})
+	end
 '''
 
 [[plugins]]
@@ -81,6 +94,14 @@ lua_source = '''
 				end,
 				{ buffer = true }
 			)
+			-- refresh codelens on TextChanged and InsertLeave as well
+			vim.api.nvim_create_autocmd({ 'TextChanged', 'InsertLeave', 'CursorHold', 'LspAttach' }, {
+				buffer = 0,
+				callback = vim.lsp.codelens.refresh,
+			})
+
+			-- trigger codelens refresh
+			vim.api.nvim_exec_autocmds('User', { pattern = 'LspAttached' })
 			-- vim.api.nvim_create_autocmd('BufWritePre', {
 			-- 	callback = function() vim.lsp.buf.format { async = false } end,
 			-- 	buffer = bufnr,
