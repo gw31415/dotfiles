@@ -361,6 +361,14 @@ repo = "9seconds/repolink.nvim"
 on_cmd = "RepoLink"
 lua_source = "require 'repolink'.setup()"
 
+[[plugins]]
+repo = "4513ECHO/nvim-keycastr"
+on_lua = "keycastr"
+hook_add = '''
+command KeycastrEnable lua require 'keycastr'.enable()
+command KeycastrDisable lua require 'keycastr'.disable()
+'''
+
 # [[plugins]]
 # repo = "tversteeg/registers.nvim"
 # on_map = { nv = '"', i = "<C-R>" }
