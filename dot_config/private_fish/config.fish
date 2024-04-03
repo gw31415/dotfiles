@@ -14,7 +14,11 @@ if type -q starship
 end
 
 if type -q mise
-	mise activate fish | source
+	if status is-interactive
+	  mise activate fish | source
+	else
+	  mise activate fish --shims | source
+	end
 end
 
 source "$HOME/.cargo/env.fish"
