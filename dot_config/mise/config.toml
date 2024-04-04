@@ -6,6 +6,8 @@ deno = "latest"
 python = "latest"
 go = "latest"
 "go:github.com/rhysd/vim-startuptime" = "latest"
+act = "latest"
+bun = "latest"
 
 [settings]
 experimental = true
