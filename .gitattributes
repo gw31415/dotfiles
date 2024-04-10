@@ -1,1 +1,2 @@
-/dot_config/private_fish/completions/* linguist-vendored
+/dot_config/private_fish/* linguist-vendored
+/dot_config/private_fish/config.fish linguist-vendored=false

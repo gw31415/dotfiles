@@ -96,6 +96,16 @@ lua_source = '''
 '''
 
 [[plugins]]
+repo = "David-Kunz/treesitter-unit"
+# on_lua = "treesitter-unit"
+on_source = "nvim-treesitter"
+depends = "nvim-treesitter"
+lua_source = '''
+vim.keymap.set({'x', 'o'}, 'iu', '<cmd>lua require"treesitter-unit".select()<cr>')
+vim.keymap.set({'x', 'o'}, 'au', '<cmd>lua require"treesitter-unit".select(true)<cr>')
+'''
+
+[[plugins]]
 repo = "stevearc/aerial.nvim"
 on_source = "nvim-treesitter"
 lua_source = '''

@@ -8,6 +8,7 @@ go = "latest"
 "go:github.com/rhysd/vim-startuptime" = "latest"
 act = "latest"
 bun = "latest"
+"go:golang.org/x/tools/gopls" = "latest"
 
 [settings]
 experimental = true

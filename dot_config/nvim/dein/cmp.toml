@@ -14,6 +14,7 @@ depends = "plenary.nvim"
 lua_source = "require 'cmp_git'.setup()"
 [[plugins]]
 repo = "lukas-reineke/cmp-under-comparator"
+
 [[plugins]]
 repo = "github/copilot.vim"
 hook_add = '''
@@ -34,7 +35,7 @@ depends = [
 	"cmp-under-comparator",
 	"copilot.vim",
 ]
-on_event = [ "InsertEnter", "CmdlineEnter" ]
+on_event = ["InsertEnter", "CmdlineEnter"]
 lua_source = '''
 	local cmp = require 'cmp'
 	local function feedkeys(key)

@@ -40,25 +40,21 @@ lua_source = "require 'cellwidths'.setup { name = 'cica' }"
 [[plugins]]
 repo = "kylechui/nvim-surround"
 rev = "v2.1.5"
-on_map = {
-	n = [
-		"ys",
-		"yss",
-		"yS",
-		"ySS",
-		"ds",
-		"cs",
-		"cS",
-	], 
-	i = [
-		"<C-g>s",
-		"<C-g>S",
-	],
-	x = [
-		"S",
-		"gS",
-	],
-}
+on_map = { n = [
+	"ys",
+	"yss",
+	"yS",
+	"ySS",
+	"ds",
+	"cs",
+	"cS",
+], i = [
+	"<C-g>s",
+	"<C-g>S",
+], x = [
+	"S",
+	"gS",
+] }
 lua_source = """
 local M = require 'nvim-surround'
 require 'nvim-surround'.setup {
@@ -263,19 +259,20 @@ lua_source = '''
 	}
 '''
 
-[[plugins]]
-repo = "numToStr/Comment.nvim"
-on_map = { nx = "gc" }
-lua_source = '''
-	require 'Comment'.setup {
-		toggler = {
-			block = 'gCC',
-		},
-		opleader = {
-			block = 'gC',
-		},
-	}
-'''
+# [[plugins]]
+# repo = "numToStr/Comment.nvim"
+# on_if = "!has('nvim-0.10')"
+# on_map = { nx = "gc" }
+# lua_source = '''
+# 	require 'Comment'.setup {
+# 		toggler = {
+# 			block = 'gCC',
+# 		},
+# 		opleader = {
+# 			block = 'gC',
+# 		},
+# 	}
+# '''
 
 [[plugins]]
 repo = "stevearc/overseer.nvim"
@@ -379,6 +376,16 @@ command KeycastrDisable lua require 'keycastr'.disable()
 # repo = "boltlessengineer/smart-tab.nvim"
 # on_event = "InsertEnter"
 # lua_source = "require 'smart-tab'.setup()"
+[[plugins]]
+repo = "ziontee113/icon-picker.nvim"
+on_cmd = ["IconPickerInsert", "IconPickerNormal", "IconPickerYank"]
+lua_source = '''
+require("icon-picker").setup({ disable_legacy_commands = true })
+'''
+hook_add = '''
+nnoremap <M-e> <cmd>IconPickerNormal<cr>
+inoremap <M-e> <cmd>IconPickerInsert<cr>
+'''
 
 [[plugins]]
 repo = "Wansmer/symbol-usage.nvim"

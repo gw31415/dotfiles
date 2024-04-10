@@ -14,19 +14,19 @@ se hid
 se ls=3
 se sms
 se so=3
+se ch=0
 se guifont=HackGenNerd_Console:h13
 lua << EOF
-	_G.get_skkeleton_modestring = function() return "s1/" end
 	function _G.get_warn_count()
-		local warns = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
+		local warns = vim.diagnostic.get(nil, { severity = vim.diagnostic.severity.WARN })
 		return #warns
 	end
 	function _G.get_error_count()
-		local errors = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
+		local errors = vim.diagnostic.get(nil, { severity = vim.diagnostic.severity.ERROR })
 		return #errors
 	end
 EOF
-se stl=%f%r%m%h%w%=%{v:lua.get_skkeleton_modestring()}\ %{&et?'(et)':''}sw=%{&sw}\ E%{v:lua.get_error_count()}W%{v:lua.get_warn_count()}\ %l/%L
+se stl=%f%r%m%h%w%=%{&et?'(et)':''}sw=%{&sw}\ E%{v:lua.get_error_count()}W%{v:lua.get_warn_count()}\ %l/%L
 
 ino <c-f> <c-g>U<right>
 ino <c-b> <c-g>U<left>

@@ -80,23 +80,6 @@ depends = "skkeletal.vim"
 rev = "cf83df9e6044fef71df359a0aca89ae85d60dd5b"
 lua_add = '''
 	vim.keymap.set({ "i", "c", "t" }, "<C-j>", "<Plug>(skkeleton-enable)")
-	vim.api.nvim_create_autocmd("User", { pattern = "skkeleton-mode-changed", command = "redraws" })
-	_G.get_skkeleton_modestring = function()
-		local mode = vim.fn["skkeleton#mode"]()
-		if mode == "hira" then
-			return "󱌴"
-		elseif mode == "kata" then
-			return "󱌵"
-		elseif mode == "hankata" then
-			return "󱌶"
-		elseif mode == "zenkaku" then
-			return "󱌭"
-		elseif mode == "abbrev" then
-			return "󰥤"
-		else -- if mode == ''
-			return "󱌯"
-		end
-	end
 	vim.fn["skkeletal#config"]({
 		eggLikeNewline = true,
 		globalJisyo = "~/.skk/SKK-JISYO.L",
