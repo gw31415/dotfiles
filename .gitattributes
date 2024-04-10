@@ -1,2 +1,4 @@
 /dot_config/private_fish/* linguist-vendored
 /dot_config/private_fish/config.fish linguist-vendored=false
+/dot_Brewfile linguist-vendored
+private_Library/private_Containers/net.mtgto.inputmethod.macSKK/Data/Documents/Settings/kana-rule.conf.origin linguist-vendored
