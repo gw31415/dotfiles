@@ -106,11 +106,22 @@ lua_source = '''
 			-- })
 		end
 	})
-	local capabilities = require('cmp_nvim_lsp').default_capabilities()
-	capabilities.textDocument.foldingRange = {
-		dynamicRegistration = false,
-		lineFoldingOnly = true
+	local default_caps = {
+		workspace = {
+			didChangeWatchedFiles = {
+				dynamicRegistration = true,
+			},
+		},
+		textDocument = {
+			foldingRange = {
+				dynamicRegistration = false,
+				lineFoldingOnly = true
+			},
+		}
 	}
+
+	local capabilities = vim.tbl_deep_extend("keep", default_caps, require("cmp_nvim_lsp").default_capabilities())
+
 	local mason_lspconfig = require "mason-lspconfig"
 	local on_attach = function(_, bufnr)
 		vim.api.nvim_buf_set_option(bufnr, "formatexpr",

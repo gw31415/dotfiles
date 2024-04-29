@@ -49,17 +49,18 @@ lua_source = '''
 	-- })
 '''
 
-[[plugins]]
-repo = "nvim-treesitter/nvim-treesitter-context"
-depends = "nvim-treesitter"
-on_source = "nvim-treesitter"
-lua_source = '''
-	require 'treesitter-context'.setup {
-		line_numbers = true,
-		mode = 'topline',
-		separator = '~'
-	}
-'''
+# [[plugins]]
+# repo = "nvim-treesitter/nvim-treesitter-context"
+# on_if = "v:false"
+# depends = "nvim-treesitter"
+# on_source = "nvim-treesitter"
+# lua_source = '''
+# 	require 'treesitter-context'.setup {
+# 		line_numbers = true,
+# 		mode = 'topline',
+# 		separator = '~'
+# 	}
+# '''
 
 [[plugins]]
 repo = "https://gitlab.com/HiPhish/rainbow-delimiters.nvim"

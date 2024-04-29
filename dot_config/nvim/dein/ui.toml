@@ -96,3 +96,13 @@ on_event = "CursorMoved"
 lua_source = '''
 require 'visual-whitespace'.setup {}
 '''
+
+[[plugins]]
+repo = "miversen33/sunglasses.nvim"
+on_event = "UIEnter"
+lua_source = '''
+require('sunglasses').setup {
+	filter_type = 'SHADE',
+	filter_percent = .3,
+}
+'''

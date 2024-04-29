@@ -75,9 +75,22 @@ lua_add = '''
 repo = "gw31415/skkeletal.vim"
 
 [[plugins]]
+repo = "gw31415/denops-aioperator.nvim"
+lua_add = '''
+vim.api.nvim_set_var('aioperator_opts', {
+	openai = {
+		apiKey = SetupAuthkey('~/.ssh/openai_api_key.txt', { prompt = 'OPENAI_API_KEY = ' })
+	},
+})
+
+vim.keymap.set({ "n", "x" }, "gG", function(arg)
+	return require 'aioperator'.opfunc(arg)
+end, { expr = true })
+'''
+
+[[plugins]]
 repo = "vim-skk/skkeleton"
 depends = "skkeletal.vim"
-rev = "cf83df9e6044fef71df359a0aca89ae85d60dd5b"
 lua_add = '''
 	vim.keymap.set({ "i", "c", "t" }, "<C-j>", "<Plug>(skkeleton-enable)")
 	vim.fn["skkeletal#config"]({
