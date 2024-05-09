@@ -58,7 +58,7 @@ lua_source = "require 'null-ls'.setup()"
 
 [[plugins]]
 repo = "williamboman/mason-lspconfig.nvim"
-depends = ["mason.nvim", "nvim-lspconfig", "nvim-cmp"]
+depends = ["mason.nvim", "nvim-lspconfig", "nvim-cmp", "nvim-navic"]
 on_event = "CursorHold"
 lua_source = '''
 	vim.api.nvim_create_autocmd("LspAttach", {
@@ -122,10 +122,13 @@ lua_source = '''
 
 	local capabilities = vim.tbl_deep_extend("keep", default_caps, require("cmp_nvim_lsp").default_capabilities())
 
+	local navic = require("nvim-navic")
+
 	local mason_lspconfig = require "mason-lspconfig"
-	local on_attach = function(_, bufnr)
+	local on_attach = function(client, bufnr)
 		vim.api.nvim_buf_set_option(bufnr, "formatexpr",
 			"v:lua.vim.lsp.formatexpr(#{timeout_ms:250})")
+		navic.attach(client, bufnr)
 		-- _G.lsp_onattach_func(i, bufnr)
 	end
 	mason_lspconfig.setup_handlers {

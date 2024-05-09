@@ -26,4 +26,7 @@ repo = "kana/vim-textobj-user"
 repo = "tpope/vim-repeat"
 
 [[plugins]]
+repo = "SmiteshP/nvim-navic"
+
+[[plugins]]
 repo = "kevinhwang91/promise-async"
