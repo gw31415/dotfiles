@@ -42,7 +42,7 @@ lua_source = '''
 			disable = { 'dart', 'vimdoc' },
 		},
 		auto_install = true,
-		ensure_installed = { 'org', 'query', 'satysfi', 'markdown', 'lua', 'vim' },
+		ensure_installed = { 'org', 'query', 'satysfi', 'markdown', 'markdown_inline', 'lua', 'vim' },
 	})
 	-- vim.api.nvim_create_autocmd("BufRead", {
 	-- command = "TSEnable highlight",

@@ -3,6 +3,11 @@ repo = "Shougo/dein.vim"
 on_event = "CmdlineEnter"
 
 [[plugins]]
+repo = "folke/ts-comments.nvim"
+on_event = "CursorHold"
+lua_source = "require 'ts-comments'.setup()"
+
+[[plugins]]
 repo = "hrsh7th/nvim-insx"
 on_event = "InsertEnter"
 lua_source = "require 'insx.preset.standard'.setup()"
@@ -11,9 +16,7 @@ lua_source = "require 'insx.preset.standard'.setup()"
 repo = "tani/dmacro.nvim"
 on_event = "CursorHold"
 lua_source = '''
-require 'dmacro'.setup {
-	dmacro_key = '<Right>'
-}
+require 'dmacro'.setup { dmacro_key = '<C-.>' }
 '''
 
 [[plugins]]
@@ -129,7 +132,7 @@ lua_source = '''
 		end,
 	})
 	-- fuzzy search
-	vim.keymap.set('n', "gl", function()
+	vim.keymap.set('n', "g/", function()
 		local winid = vim.api.nvim_get_current_win()
 		require 'fzyselect'.start(vim.api.nvim_buf_get_lines(0, 0, -1, true),
 			{ prompt = "fuzzy search: <Enter> to jump" },

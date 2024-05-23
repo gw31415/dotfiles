@@ -6,6 +6,8 @@ repo = "lambdalisue/fern-git-status.vim"
 repo = "lambdalisue/fern-mapping-git.vim"
 [[plugins]]
 repo = "lambdalisue/fern-mapping-project-top.vim"
+[[plugins]]
+repo = "andykog/fern-highlight.vim"
 
 [[plugins]]
 repo = "lambdalisue/fern.vim"
@@ -15,6 +17,7 @@ depends = [
 	"fern-git-status.vim",
 	"fern-mapping-git.vim",
 	"fern-mapping-project-top.vim",
+	"fern-highlight.vim",
 ]
 on_cmd = "Fern"
 on_map = { n = "<C-n>" }
