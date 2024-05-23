@@ -15,7 +15,9 @@ se ls=3
 se sms
 se so=3
 se ch=0
-se guifont=HackGenNerd_Console:h13
+se guifont=HackGen_Console_NF:h14
+let g:neovide_window_blurred = v:true
+let g:neovide_transparency = 0.2
 se diffopt+=algorithm:histogram
 lua << EOF
 	function _G.get_warn_count()
@@ -27,6 +29,67 @@ lua << EOF
 		local errors = vim.diagnostic.get(nil, { severity = vim.diagnostic.severity.ERROR })
 		return #errors
 	end
+
+	if vim.g.neovide then
+		vim.keymap.set('n', '<D-s>', ':w<CR>') -- Save
+		vim.keymap.set('v', '<D-c>', '"+y') -- Copy
+		vim.keymap.set('n', '<D-v>', '"+P') -- Paste normal mode
+		vim.keymap.set('v', '<D-v>', '"+P') -- Paste visual mode
+		vim.keymap.set('c', '<D-v>', '<C-R>+') -- Paste command mode
+		vim.keymap.set('i', '<D-v>', '<ESC>l"+Pli') -- Paste insert mode
+
+		-- Allow clipboard copy paste in neovim
+		vim.api.nvim_set_keymap('', '<D-v>', '+p<CR>', { noremap = true, silent = true})
+		vim.api.nvim_set_keymap('!', '<D-v>', '<C-R>+', { noremap = true, silent = true})
+		vim.api.nvim_set_keymap('t', '<D-v>', '<C-R>+', { noremap = true, silent = true})
+		vim.api.nvim_set_keymap('v', '<D-v>', '<C-R>+', { noremap = true, silent = true})
+	end
+
+	function LspAttach()
+		vim.diagnostic.config { signs = false }
+		vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+			vim.lsp.handlers.hover,
+			{ border = "single", title = "hover" }
+		)
+		vim.api.nvim_create_user_command("Implementation", function()
+			vim.lsp.buf.implementation()
+		end, { force = true })
+		local bufopts = { silent = true, buffer = true }
+		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
+		vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
+		vim.keymap.set("n", "K", function()
+			local winid = require 'ufo'.peekFoldedLinesUnderCursor()
+			if not winid then
+				vim.lsp.buf.hover()
+			end
+		end, bufopts)
+		-- vim.keymap.set("n", "<C-j>", vim.diagnostic.goto_next, bufopts) -- Now default mapping is `]d`
+		-- vim.keymap.set("n", "<C-k>", vim.diagnostic.goto_prev, bufopts) -- Now default mapping is `[d`
+		vim.keymap.set("n", "glr", vim.lsp.buf.code_action, bufopts)
+		vim.keymap.set("n", "gln", vim.lsp.buf.rename, bufopts)
+		vim.keymap.set("n", "z*", vim.lsp.buf.references, bufopts)
+		vim.keymap.set("i", "<C-S>", vim.lsp.buf.signature_help, bufopts)
+		vim.keymap.set("n", "gqae", function()
+				local view = vim.fn.winsaveview()
+				vim.lsp.buf.format { async = false }
+				if view then vim.fn.winrestview(view) end
+			end,
+			{ buffer = true }
+		)
+		-- refresh codelens on TextChanged and InsertLeave as well
+		-- vim.api.nvim_create_autocmd({ 'TextChanged', 'InsertLeave', 'CursorHold', 'LspAttach' }, {
+		-- 	buffer = 0,
+		-- 	callback = vim.lsp.codelens.refresh,
+		-- })
+
+		-- trigger codelens refresh
+		-- vim.api.nvim_exec_autocmds('User', { pattern = 'LspAttached' })
+		-- vim.api.nvim_create_autocmd('BufWritePre', {
+		-- 	callback = function() vim.lsp.buf.format { async = false } end,
+		-- 	buffer = bufnr,
+		-- })
+	end
+	vim.api.nvim_create_autocmd("LspAttach", { callback = LspAttach })
 
 	-- Ignore startup treesitter errors
 	vim.treesitter.start = (function(wrapped)
