@@ -22,3 +22,5 @@ if type -q mise
 end
 
 source "$HOME/.cargo/env.fish"
+
+abbr neov neovide
