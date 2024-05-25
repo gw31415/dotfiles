@@ -17,7 +17,7 @@ se so=3
 se ch=0
 se guifont=HackGen_Console_NF:h14
 let g:neovide_window_blurred = v:true
-let g:neovide_transparency = 0.2
+let g:neovide_transparency = 0.7
 se diffopt+=algorithm:histogram
 lua << EOF
 	function _G.get_warn_count()
@@ -31,18 +31,30 @@ lua << EOF
 	end
 
 	if vim.g.neovide then
-		vim.keymap.set('n', '<D-s>', ':w<CR>') -- Save
-		vim.keymap.set('v', '<D-c>', '"+y') -- Copy
-		vim.keymap.set('n', '<D-v>', '"+P') -- Paste normal mode
-		vim.keymap.set('v', '<D-v>', '"+P') -- Paste visual mode
-		vim.keymap.set('c', '<D-v>', '<C-R>+') -- Paste command mode
-		vim.keymap.set('i', '<D-v>', '<ESC>l"+Pli') -- Paste insert mode
+		local opts = { noremap = true, silent = true }
+		vim.keymap.set({ 'i', 'n' }, '<D-a>', '<ESC>ggVG')    -- Select all
 
-		-- Allow clipboard copy paste in neovim
-		vim.api.nvim_set_keymap('', '<D-v>', '+p<CR>', { noremap = true, silent = true})
-		vim.api.nvim_set_keymap('!', '<D-v>', '<C-R>+', { noremap = true, silent = true})
-		vim.api.nvim_set_keymap('t', '<D-v>', '<C-R>+', { noremap = true, silent = true})
-		vim.api.nvim_set_keymap('v', '<D-v>', '<C-R>+', { noremap = true, silent = true})
+		vim.keymap.set('n', '<D-s>', '<cmd>w<CR>', opts)      -- Save
+		vim.keymap.set('v', '<D-c>', '"+y', opts)             -- Copy
+		vim.keymap.set('n', '<D-v>', 'i<C-r><C-o>+<ESC>l', opts) -- Paste
+		vim.keymap.set('i', '<D-v>', '<C-r><C-o>+', opts)     -- Paste insert mode
+		vim.keymap.set('x', '<D-v>', '"+P', opts)             -- Paste
+		vim.keymap.set({ 'c', 't' }, '<D-v>', '<C-r>+', opts) -- Paste command mode
+		vim.keymap.set('v', '<D-x>', '"+x', opts)             -- Cut
+
+		-- Tab navigation
+		vim.keymap.set('n', '<D-t>', '<cmd>tabnew<CR>', opts)                        -- New tab
+		vim.keymap.set('i', '<D-t>', '<C-o><cmd>tabnew<CR><ESC>')
+		vim.keymap.set('n', '<D-w>', '<cmd>q<CR>', opts)                             -- Close tab
+		vim.keymap.set({ 'i', 'n' }, '<D-]>', '<cmd>tabn<cr>', opts) -- next tab
+		vim.keymap.set({ 'i', 'n' }, '<D-[>', '<cmd>tabp<cr>', opts) -- previous tab
+
+		for i = 1, 9 do
+			vim.keymap.set('n', '<D-' .. i .. '>', i .. 'gt', opts)                  -- Go to tab i
+		end
+
+		-- toggle blur
+		vim.keymap.set('n', '<D-b>', function() vim.g.neovide_window_blurred = not vim.g.neovide_window_blurred end, opts)
 	end
 
 	function LspAttach()
@@ -89,6 +101,7 @@ lua << EOF
 		-- 	buffer = bufnr,
 		-- })
 	end
+
 	vim.api.nvim_create_autocmd("LspAttach", { callback = LspAttach })
 
 	-- Ignore startup treesitter errors
