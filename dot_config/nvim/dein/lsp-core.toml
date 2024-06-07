@@ -1,18 +1,9 @@
 [[plugins]]
-repo = "folke/neodev.nvim"
+repo = "folke/lazydev.nvim"
 on_ft = "lua"
 depends = ["nvim-lspconfig", "mason.nvim"]
 lua_source = '''
-	require "neodev".setup {}
-	require 'lspconfig'.lua_ls.setup {
-		settings = {
-			Lua = {
-				completion = {
-					callSnippet = "Replace"
-				}
-			}
-		}
-	}
+	require "lazydev".setup {}
 '''
 
 [[plugins]]

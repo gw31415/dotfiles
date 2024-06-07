@@ -11,6 +11,9 @@ bun = "latest"
 "go:golang.org/x/tools/gopls" = "latest"
 "cargo:sea-orm-cli" = "latest"
 pnpm = "latest"
+"cargo:openapi-tui" = "latest"
+"npm:carbon-now-cli" = "latest"
+typst = "latest"
 
 [settings]
 experimental = true

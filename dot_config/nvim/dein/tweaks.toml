@@ -198,20 +198,20 @@ lua_source = '''
 	vim.keymap.set("n", "cll", "<Plug>(deepl-replace)_")
 '''
 
-# [[plugins]]
-# repo = "numToStr/Comment.nvim"
-# on_if = "!has('nvim-0.10')"
-# on_map = { nx = "gc" }
-# lua_source = '''
-# 	require 'Comment'.setup {
-# 		toggler = {
-# 			block = 'gCC',
-# 		},
-# 		opleader = {
-# 			block = 'gC',
-# 		},
-# 	}
-# '''
+[[plugins]]
+repo = "numToStr/Comment.nvim"
+on_if = "!has('nvim-0.10')"
+on_map = { nx = "gc" }
+lua_source = '''
+	require 'Comment'.setup {
+		toggler = {
+			block = 'gCC',
+		},
+		opleader = {
+			block = 'gC',
+		},
+	}
+'''
 
 [[plugins]]
 repo = "stevearc/overseer.nvim"
@@ -382,3 +382,17 @@ hook_add = '''
 nno <leader>b <cmd>BlameToggle<cr>
 '''
 lua_source = "require 'blame'.setup()"
+
+[[plugins]]
+repo = "chomosuke/term-edit.nvim"
+lua_source = "require 'term-edit'.setup{ prompt_end = '%3 ' }"
+on_event = "TermOpen"
+
+[[plugins]]
+repo = "icholy/lsplinks.nvim"
+on_event = "CursorHold"
+lua_source = '''
+local lsplinks = require("lsplinks")
+lsplinks.setup()
+vim.keymap.set("n", "gx", lsplinks.gx)
+'''
