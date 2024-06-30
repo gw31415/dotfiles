@@ -396,3 +396,10 @@ local lsplinks = require("lsplinks")
 lsplinks.setup()
 vim.keymap.set("n", "gx", lsplinks.gx)
 '''
+
+# 命名規則を相互変換
+[[plugins]]
+repo = "gregorias/coerce.nvim"
+# on_key = { n = "cr", nx = "gcr" }
+on_event = "CursorHold"
+lua_source = "require 'coerce'.setup()"
