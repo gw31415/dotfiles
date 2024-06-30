@@ -11,6 +11,11 @@ local function toggle_blur(window)
 end
 
 wezterm.on("toggle-blur", toggle_blur)
+wezterm.on("gui-attached", function()
+	if wezterm.target_triple:find("apple") then
+		os.execute [[osascript -e "tell application \"System Events\" to key code 102"]]
+	end
+end)
 
 return {
 	color_scheme = "Tomorrow Night",
