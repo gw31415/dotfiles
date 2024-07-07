@@ -34,7 +34,7 @@ lua_source = '''
 		parser_install_dir = parser_install_dir,
 		highlight = {
 			enable = true,
-			additional_vim_regex_highlighting = { 'org', 'markdown' },
+			additional_vim_regex_highlighting = { 'org', 'markdown', 'edisch' },
 			disable = { 'vimdoc' },
 		},
 		indent = {

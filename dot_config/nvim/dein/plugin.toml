@@ -171,3 +171,6 @@ lua_add = '''
 
 [[plugins]]
 repo = "lambdalisue/fern-hijack.vim"
+
+[[plugins]]
+repo = "gw31415/edisch.vim"
