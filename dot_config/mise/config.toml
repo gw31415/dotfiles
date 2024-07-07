@@ -21,6 +21,15 @@ pnpm = "latest"
 python = "latest"
 typst = "latest"
 usage = "latest"
+"npm:trash-cli" = "latest"
+"cargo:bat" = "latest"
+sqlite = "latest"
+"cargo:silicon" = "latest"
+pipx = "latest"
+"pipx:litecli" = "latest"
+"pipx:yt-dlp" = "latest"
+"pipx:asciinema" = "latest"
+"go:github.com/itchyny/mmv/cmd/mmv" = "latest"
 
 [settings]
 experimental = true
