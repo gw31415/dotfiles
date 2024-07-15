@@ -18,7 +18,6 @@ let name = "ama"; in
     flyctl
     fzf
     gh
-    git-credential-manager
     go
     gopls
     hugo
@@ -47,6 +46,8 @@ let name = "ama"; in
     wget
     yt-dlp
     zig
+    git-credential-manager
+    dotnet-sdk_7
   ];
 
   home.file = {
@@ -85,6 +86,7 @@ let name = "ama"; in
   programs.git = {
     enable = true;
     userName = "gw31415";
+    extraConfig.credential.helper = "${pkgs.git-credential-manager}/bin/git-credential-manager";
     userEmail = "gw31415@amas.dev";
     delta = {
       enable = true;
