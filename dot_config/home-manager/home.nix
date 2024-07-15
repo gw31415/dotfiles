@@ -12,12 +12,14 @@ let name = "ama"; in
     chezmoi
     delta
     deno
+    dotnet-sdk_7
     emacs
     eza
     ffmpeg
     flyctl
     fzf
     gh
+    git-credential-manager
     go
     gopls
     hugo
@@ -46,8 +48,6 @@ let name = "ama"; in
     wget
     yt-dlp
     zig
-    git-credential-manager
-    dotnet-sdk_7
   ];
 
   home.file = {
