@@ -1,4 +1,0 @@
-README.md
-{{- if ne .chezmoi.os "darwin" }}
-./private_Library/private_Application Support # only manage on macOS
-{{- end }}
