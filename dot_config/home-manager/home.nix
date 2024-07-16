@@ -1,9 +1,6 @@
 { pkgs, ... }:
 let name = "ama"; in
 {
-  home.username = name;
-  home.homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${name}" else "/home/${name}";
-  home.stateVersion = "24.05";
   home.packages = with pkgs; [
     aria2
     asciinema
@@ -51,40 +48,22 @@ let name = "ama"; in
   ];
 
   home.file = {
-    # ".screenrc".source = dotfiles/screenrc;
-    ".latexmkrc".text = ''
-      #!/usr/bin/env perl
-      $latex            = 'uplatex -halt-on-error -synctex=1 -interaction=nonstopmode';
-      $latex_silent     = 'uplatex -halt-on-error -synctex=1 -interaction=nonstopmode';
-      $bibtex           = 'upbibtex %O %B';
-      $biber            = 'biber --bblencoding=utf8 -u -U --output_safechars';
-      $dvipdf           = 'dvipdfmx %O -o %D %S';
-      $makeindex        = 'mendex %O -o %D %S';
-      $max_repeat       = 5;
-      $pdf_mode         = 3;
-      @generated_exts   = (@generated_exts, 'dvi', 'synctex.gz', 'bbl');
-    '';
+    ".latexmkrc".source = ./.latexmkrc;
+    ".emacs.d" = {
+      source = ./.emacs.d;
+      recursive = true;
+    };
+    ".config" = {
+      source = ./.config;
+      recursive = true;
+    };
   };
-
-  # Home Manager can also manage your environment variables through
-  # 'home.sessionVariables'. These will be explicitly sourced when using a
-  # shell provided by Home Manager. If you don't want to manage your shell
-  # through Home Manager then you have to manually source 'hm-session-vars.sh'
-  # located at either
-  #
-  #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  ~/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  /etc/profiles/per-user/ama/etc/profile.d/hm-session-vars.sh
-  #
   home.sessionVariables = {
     EDITOR = "nvim";
+    RUSTC_WRAPPER = "${pkgs.sccache}/bin/sccache";
+    SHELL = "${pkgs.fish}/bin/fish";
   };
+
   programs.home-manager.enable = true;
   programs.git = {
     enable = true;
@@ -97,6 +76,143 @@ let name = "ama"; in
       "kls_database.db"
       "flake.lock"
     ];
+  };
+  programs.wezterm = {
+    enable = true;
+    extraConfig = ''
+      local function toggle_blur(window)
+      	local overrides = window:get_config_overrides() or {}
+      	if not overrides.macos_window_background_blur then
+      		overrides.macos_window_background_blur = 0
+      	else
+      		overrides.macos_window_background_blur = nil
+      	end
+      	window:set_config_overrides(overrides)
+      end
+
+      wezterm.on("toggle-blur", toggle_blur)
+      wezterm.on("gui-attached", function()
+      	if wezterm.target_triple:find("apple") then
+      		os.execute [[osascript -e "tell application \"System Events\" to key code 102"]]
+      	end
+      end)
+
+      return {
+      	color_scheme = "Tomorrow Night",
+      	default_prog = { "${pkgs.fish}/bin/fish" },
+      	hide_tab_bar_if_only_one_tab = true,
+      	font = wezterm.font "HackGen Console NF",
+      	font_size = 14,
+      	initial_cols = 180,
+      	initial_rows = 52,
+      	front_end = "WebGpu",
+      	macos_forward_to_ime_modifier_mask = "SHIFT|CTRL",
+      	window_background_opacity = 0.8,
+      	macos_window_background_blur = 20,
+      	keys = {
+      		{
+      			key = "]",
+      			mods = "SUPER",
+      			action = wezterm.action {
+      				ActivateTabRelative = 1,
+      			},
+      		},
+      		{
+      			key = "[",
+      			mods = "SUPER",
+      			action = wezterm.action {
+      				ActivateTabRelative = -1,
+      			},
+      		},
+      		{
+      			key = "]",
+      			mods = "SUPER|SHIFT",
+      			action = wezterm.action {
+      				MoveTabRelative = 1,
+      			},
+      		},
+      		{
+      			key = "[",
+      			mods = "SUPER|SHIFT",
+      			action = wezterm.action {
+      				MoveTabRelative = -1,
+      			},
+      		},
+      		{
+      			key = "s",
+      			mods = "SUPER",
+      			action = wezterm.action {
+      				SplitHorizontal = {
+      					domain = "CurrentPaneDomain",
+      				},
+      			},
+      		},
+      		{
+      			key = "s",
+      			mods = "SUPER|SHIFT",
+      			action = wezterm.action {
+      				SplitVertical = {
+      					domain = "CurrentPaneDomain",
+      				},
+      			},
+      		},
+      		{
+      			key = "s",
+      			mods = "CTRL|SHIFT",
+      			action = wezterm.action.PaneSelect {
+      				alphabet = "aoeuhtns"
+      			},
+      		},
+      		{
+      			key = "h",
+      			mods = "CTRL|SHIFT",
+      			action = wezterm.action.AdjustPaneSize {
+      				'Left', 3,
+      			},
+      		},
+      		{
+      			key = "j",
+      			mods = "CTRL|SHIFT",
+      			action = wezterm.action.AdjustPaneSize {
+      				'Down', 3,
+      			},
+      		},
+      		{
+      			key = "k",
+      			mods = "CTRL|SHIFT",
+      			action = wezterm.action.AdjustPaneSize {
+      				'Up', 3,
+      			},
+      		},
+      		{
+      			key = "l",
+      			mods = "CTRL|SHIFT",
+      			action = wezterm.action.AdjustPaneSize {
+      				'Right', 3,
+      			},
+      		},
+      		{
+      			key = "w",
+      			mods = "SUPER",
+      			action = wezterm.action {
+      				CloseCurrentPane = {
+      					confirm = true,
+      				},
+      			},
+      		},
+      		{
+      			key = "b",
+      			mods = "SUPER",
+      			action = wezterm.action { EmitEvent = "toggle-blur" },
+      		},
+      		{
+      			key = " ",
+      			mods = "ALT",
+      			action = wezterm.action.ToggleFullScreen,
+      		},
+      	},
+      }
+    '';
   };
   programs.fish = {
     enable = true;
@@ -112,23 +228,22 @@ let name = "ama"; in
       if test -f /opt/homebrew/bin/brew
         eval (/opt/homebrew/bin/brew shellenv)
       end
-
-      # Rust compile cache
-      export RUSTC_WRAPPER=(which sccache)
-
       starship init fish | source
-
       if status is-interactive
         mise activate fish | source
       else
         mise activate fish --shims | source
       end
-
       if test -d /Applications/Android\ Studio.app/Contents/jbr/Contents/Home
         export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jbr/Contents/Home
       end
-
       source "$HOME/.cargo/env.fish"
     '';
+  };
+  manual.manpages.enable = true;
+  home = {
+    username = name;
+    homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${name}" else "/home/${name}";
+    stateVersion = "24.05";
   };
 }

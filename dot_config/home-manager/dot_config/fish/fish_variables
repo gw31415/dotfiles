@@ -1,7 +1,5 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
-SETUVAR --export EDITOR:nvim
-SETUVAR Z_DATA_DIR:/Users/ama/\x2elocal/share/z
 SETUVAR __fish_initialized:3400
 SETUVAR _fisher_oh_2D_my_2D_fish_2F_plugin_2D_android_2D_sdk_files:\x7e/\x2econfig/fish/conf\x2ed/android\x2dsdk\x2efish
 SETUVAR _fisher_plugins:oh\x2dmy\x2dfish/plugin\x2dandroid\x2dsdk\x1eqiuxiang/flutter\x2dfish\x2dcompletions
