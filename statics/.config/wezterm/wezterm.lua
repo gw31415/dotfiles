@@ -19,7 +19,7 @@ end)
 
 return {
 	color_scheme = "Tomorrow Night",
-	default_prog = { "${pkgs.fish}/bin/fish" },
+	default_prog = { "/run/current-system/sw/bin/fish" },
 	hide_tab_bar_if_only_one_tab = true,
 	font = wezterm.font "HackGen Console NF",
 	font_size = 14,
