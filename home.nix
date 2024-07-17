@@ -1,5 +1,4 @@
-{ config, pkgs, ... }:
-let name = "ama"; in
+{ config, pkgs, username, ... }:
 {
   home.packages = with pkgs; [
     aria2
@@ -116,8 +115,8 @@ let name = "ama"; in
     goPath = ".go";
   };
   home = {
-    username = name;
-    homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${name}" else "/home/${name}";
+    inherit username;
+    homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}";
     stateVersion = "24.05";
   };
   manual.manpages.enable = true;
