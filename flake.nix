@@ -18,7 +18,7 @@
         import ./home.nix { inherit config pkgs username; };
     in
     {
-      homeConfigurations.ama = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs { inherit system; };
         modules = [ home ];
       };
