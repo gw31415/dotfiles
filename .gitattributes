@@ -1,5 +1,5 @@
-/statics/.config/fish/**/* linguist-vendored
-/statics/.config/fish/config.fish linguist-vendored=false
+/statics/config/fish/**/* linguist-vendored
+/statics/config/fish/config.fish linguist-vendored=false
 /Brewfile linguist-vendored
 /private_Library/private_Containers/net.mtgto.inputmethod.macSKK/Data/Documents/Settings/kana-rule.conf.origin linguist-vendored
 /nvim/after/queries/satysfi/*.scm linguist-vendored
