@@ -106,7 +106,9 @@
       if test -d /Applications/Android\ Studio.app/Contents/jbr/Contents/Home
         export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jbr/Contents/Home
       end
-      source "$HOME/.cargo/env.fish"
+      if test -f $HOME/.cargo/env.fish
+        source "$HOME/.cargo/env.fish"
+      end
     '';
   };
   programs.go = {
