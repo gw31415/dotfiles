@@ -10,12 +10,15 @@
   };
 
   outputs = { nixpkgs, home-manager, ... }:
+    let
+      env = builtins.fromJSON (builtins.readFile ./env.json);
+      system = env.system;
+    in
     {
-      nixpkgs.config.allowUnfree = true;
       homeConfigurations.ama = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+        pkgs = import nixpkgs { inherit system; };
         modules = [ ./home.nix ];
       };
-      packages.aarch64-darwin.default = home-manager.defaultPackage.aarch64-darwin;
+      packages.${system}.default = home-manager.defaultPackage.${system};
     };
 }

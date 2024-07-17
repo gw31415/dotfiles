@@ -49,14 +49,14 @@ let name = "ama"; in
 
   home.file = {
     ".config" = {
-      source = ./statics/.config;
+      source = ./statics/config;
       recursive = true;
     };
     ".emacs.d" = {
-      source = ./statics/.emacs.d;
+      source = ./statics/emacs.d;
       recursive = true;
     };
-    ".latexmkrc".source = ./statics/.latexmkrc;
+    ".latexmkrc".source = ./statics/latexmkrc;
 
     ".config/nvim" = {
       source = config.lib.file.mkOutOfStoreSymlink ./nvim;
