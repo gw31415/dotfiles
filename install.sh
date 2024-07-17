@@ -23,7 +23,7 @@ XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
 TARGET_PATH=$XDG_CONFIG_HOME/home-manager
 
 SYSTEM=$(nix eval --raw --expr 'builtins.currentSystem' --impure)
-USER=$(whoami)
+USERNAME=$(whoami)
 
 # Cloning the dotfiles
 if [ -d $TARGET_PATH ]; then
@@ -34,7 +34,7 @@ mkdir -p $XDG_CONFIG_HOME
 nix run nixpkgs#git -- clone https://github.com/gw31415/dotfiles $TARGET_PATH
 
 # Setting up the environment
-echo '{ "system": "'$SYSTEM'", "user": "'$USER'" }' > $TARGET_PATH/env.json
+echo '{ "system": "'$SYSTEM'", "username": "'$USERNAME'" }' > $TARGET_PATH/env.json
 
 # Installing home-manager and initial sync
 nix run nixpkgs#home-manager -- switch
