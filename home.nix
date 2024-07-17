@@ -40,7 +40,6 @@
     tectonic
     tmux
     typst
-    wasmer
     wezterm
     wget
     yt-dlp
