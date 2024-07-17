@@ -13,6 +13,7 @@ let name = "ama"; in
     emacs
     eza
     ffmpeg
+    fish
     flyctl
     fzf
     gh
