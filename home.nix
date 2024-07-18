@@ -1,4 +1,4 @@
-{ config, pkgs, username, ... }:
+{ config, pkgs, username, homeManagerPath, ... }:
 {
   home.packages = with pkgs; [
     aria2
@@ -58,10 +58,22 @@
     ".latexmkrc".source = ./statics/latexmkrc;
 
     ".config/nvim" = {
-      source = config.lib.file.mkOutOfStoreSymlink ./nvim;
+      source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/syms/nvim";
+    };
+    ".config/mise" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/syms/mise";
+    };
+    ".config/fish/completions" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/syms/fish/completions";
+    };
+    ".config/fish/functions" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/syms/fish/functions";
+    };
+    ".config/fish/fish_plugins" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/syms/fish/fish_plugins";
     };
     ".Brewfile" = {
-      source = config.lib.file.mkOutOfStoreSymlink ./Brewfile;
+      source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/sym/Brewfile";
     };
   };
   home.sessionVariables = {
@@ -85,11 +97,6 @@
   };
   programs.fish = {
     enable = true;
-    plugins = [
-      { name = "z"; src = pkgs.fishPlugins.z; }
-      { name = "fzf"; src = pkgs.fishPlugins.fzf; }
-      { name = "autopair"; src = pkgs.fishPlugins.autopair; }
-    ];
     shellAbbrs = {
       tree = "eza -T";
     };
