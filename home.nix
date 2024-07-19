@@ -12,12 +12,10 @@
     emacs
     eza
     ffmpeg
-    fish
     flyctl
     fzf
     gh
     git-credential-manager
-    go
     gopls
     hugo
     imagemagick
@@ -36,7 +34,6 @@
     rustup
     sccache
     silicon
-    starship
     tectonic
     tmux
     typst
@@ -56,26 +53,15 @@
       recursive = true;
     };
     ".latexmkrc".source = ./statics/latexmkrc;
+    # TODO: .Brewfile cannot be symlinked because it is not a directory
+    ".Brewfile".source = ./statics/Brewfile;
 
-    ".config/nvim" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/syms/nvim";
-    };
-    ".config/mise" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/syms/mise";
-    };
-    ".config/fish/completions" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/syms/fish/completions";
-    };
-    ".config/fish/functions" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/syms/fish/functions";
-    };
-    ".config/fish/fish_plugins" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/syms/fish/fish_plugins";
-    };
-    ".Brewfile" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/sym/Brewfile";
-    };
+    ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/syms/nvim";
+    ".config/mise".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/syms/mise";
+    ".config/fish/completions".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/syms/fish_completions";
+    ".config/fish/functions".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/syms/fish_functions";
   };
+
   home.sessionVariables = {
     EDITOR = "nvim";
     RUSTC_WRAPPER = "${pkgs.sccache}/bin/sccache";
@@ -95,16 +81,39 @@
       "flake.lock"
     ];
   };
+  programs.starship = {
+    enable = true;
+    enableFishIntegration = true;
+    settings = {
+      # TOML_SCHEMA: "$schema" = 'https://starship.rs/config-schema.json'
+      add_newline = true;
+      character = {
+        error_symbol = "[\\(](yellow)[´o_o](bold red)[\\)](yellow)[ =3](cyan)";
+        success_symbol = "[\\(](yellow)[´‐_‐](bold green)[\\)](yellow)[ =3](cyan)";
+      };
+      directory = {
+        truncate_to_repo = true;
+        truncation_symbol = "…/";
+      };
+      time = {
+        disabled = true;
+      };
+    };
+  };
   programs.fish = {
     enable = true;
     shellAbbrs = {
       tree = "eza -T";
     };
+    plugins = [
+      { name = "z"; src = pkgs.fishPlugins.z.src; }
+      { name = "autopair"; src = pkgs.fishPlugins.autopair.src; }
+    ];
     shellInit = ''
       if test -f /opt/homebrew/bin/brew
         eval (/opt/homebrew/bin/brew shellenv)
       end
-      starship init fish | source
+      # starship init fish | source
       if status is-interactive
         mise activate fish | source
       else

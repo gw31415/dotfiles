@@ -14,10 +14,9 @@
       env = builtins.fromJSON (builtins.readFile ./env.json);
       system = env.system;
       username = env.username;
-      homeManagerPath = env.homeManagerPath;
-      home = { config, pkgs, target_path, ... }:
+      home = { config, pkgs, homeManagerPath, ... }:
         import ./home.nix {
-          inherit config pkgs username homeManagerPath;
+          inherit config pkgs username; homeManagerPath = env.homeManagerPath;
         };
     in
     {
