@@ -55,6 +55,7 @@
     ".latexmkrc".source = ./statics/latexmkrc;
     # TODO: .Brewfile cannot be symlinked because it is not a directory
     ".Brewfile".source = ./statics/Brewfile;
+    # "Library/Containers/net.mtgto.inputmethod.macSKK/Data/Documents/Settings/kana-rule.conf".source = ./statics/kana-rule.conf;
 
     ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/syms/nvim";
     ".config/mise".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/syms/mise";
