@@ -44,6 +44,9 @@
   ];
 
   home.file = {
+    ".skk/SKK-JISYO.L" = {
+      source = "${pkgs.skk-dicts}/share/SKK-JISYO.L";
+    };
     ".config" = {
       source = ./statics/config;
       recursive = true;
