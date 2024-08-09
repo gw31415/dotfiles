@@ -129,6 +129,9 @@
       if test -f $HOME/.cargo/env.fish
         source "$HOME/.cargo/env.fish"
       end
+      if test -d $HOME/.pub-cache/bin
+        set -x PATH $HOME/.pub-cache/bin $PATH
+      end
     '';
   };
   programs.go = {
