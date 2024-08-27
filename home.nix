@@ -8,6 +8,7 @@
     chezmoi
     delta
     deno
+    direnv
     dotnet-sdk_7
     emacs
     eza
@@ -82,14 +83,12 @@
     ignores = [
       ".DS_Store"
       "kls_database.db"
-      "flake.lock"
     ];
   };
   programs.starship = {
     enable = true;
     enableFishIntegration = true;
     settings = {
-      # TOML_SCHEMA: "$schema" = 'https://starship.rs/config-schema.json'
       add_newline = true;
       character = {
         error_symbol = "[\\(](yellow)[´o_o](bold red)[\\)](yellow)[ =3](cyan)";
