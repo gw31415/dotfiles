@@ -6,6 +6,7 @@
     bat
     carbon-now-cli
     chezmoi
+    cocoapods
     delta
     deno
     direnv
