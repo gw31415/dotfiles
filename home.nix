@@ -29,7 +29,7 @@
     neovim
     nodejs
     pandoc
-    poppler
+    poppler_utils
     python3
     ripgrep
     rustup
