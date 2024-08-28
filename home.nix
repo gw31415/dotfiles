@@ -1,6 +1,7 @@
 { config, pkgs, username, homeManagerPath, ... }:
 {
   home.packages = with pkgs; [
+    awscli2
     aria2
     asciinema
     bat
