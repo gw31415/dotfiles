@@ -217,3 +217,4 @@ if executable('mise')
 endif
 
 autocmd BufRead *.typ setfiletype typst
+autocmd BufRead *.tf setfiletype terraform
