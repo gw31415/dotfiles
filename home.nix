@@ -77,13 +77,16 @@
   programs.git = {
     enable = true;
     userName = "gw31415";
-    extraConfig.credential.helper = "${pkgs.git-credential-manager}/bin/git-credential-manager";
     userEmail = "gw31415@amas.dev";
     delta.enable = true;
     ignores = [
       ".DS_Store"
       "kls_database.db"
     ];
+    extraConfig = {
+      credential.helper = "${pkgs.git-credential-manager}/bin/git-credential-manager";
+      init.defaultBranch = "main";
+    };
   };
   programs.starship = {
     enable = true;
