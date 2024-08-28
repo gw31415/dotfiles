@@ -26,6 +26,27 @@ lua_source = '''
 	-- 	lspconfig.protobuf_language_server.setup { autostart = true }
 	-- end
 
+	if vim.fn.executable "tectonic" == 1 then
+		lspconfig.texlab.setup {
+			autostart = true,
+			settings = {
+				texlab = {
+					build = {
+						executable = 'tectonic',
+						args = {
+							"-X",
+							"compile",
+							"%f",
+							"--synctex",
+							"--keep-logs",
+							"--keep-intermediates",
+						},
+					},
+				},
+			},
+		}
+	end
+
 	if vim.fn.executable "protols" == 1 then
 		lspconfig.protols.setup {
 			autostart = true,
