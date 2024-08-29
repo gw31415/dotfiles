@@ -15,8 +15,9 @@ lua_source = "require 'insx.preset.standard'.setup()"
 [[plugins]]
 repo = "tani/dmacro.nvim"
 on_event = "CursorHold"
-lua_source = '''
-require 'dmacro'.setup { dmacro_key = '<C-.>' }
+hook_source = '''
+inoremap <C-y> <Plug>(dmacro-play-macro)
+nnoremap <C-y> <Plug>(dmacro-play-macro)
 '''
 
 [[plugins]]
@@ -390,9 +391,18 @@ vim.keymap.set("n", "gx", lsplinks.gx)
 # 命名規則を相互変換
 [[plugins]]
 repo = "gregorias/coerce.nvim"
-# on_key = { n = "cr", nx = "gcr" }
 on_event = "CursorHold"
-lua_source = "require 'coerce'.setup()"
+lua_source = '''
+require 'coerce'.setup {
+	default_mode_keymap_prefixes = {
+		normal_mode = "cr",
+
+		-- Disabled because it conflicts with the Comment.nvim
+		-- motion_mode = "gcr",
+		-- visual_mode = "gcr",
+	}
+}
+'''
 
 [[plugins]]
 repo = "gw31415/emjpick.vim"

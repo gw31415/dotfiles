@@ -12,19 +12,18 @@ lua_source = '''
 	local lspconfig = require 'lspconfig'
 	local configs = require 'lspconfig.configs'
 
-	-- if not configs.protobuf_language_server then
-	--   configs.protobuf_language_server = {
-	-- 	default_config = {
-	--  		cmd = { 'protobuf-language-server' },
-	--  		filetypes = { 'proto' },
-	--  		single_file_support = true,
-	--  		root_dir = lspconfig.util.root_pattern('.git', '.gitignore', 'build.bazel', 'WORKSPACE'),
-	-- 	},
-	--   }
-	-- end
-	-- if vim.fn.executable "protobuf-language-server" == 1 then
-	-- 	lspconfig.protobuf_language_server.setup { autostart = true }
-	-- end
+	if not configs.vimscript_language_server then
+	  configs.vimscript_language_server = {
+		default_config = {
+	 		cmd = { 'vimscript-language-server' },
+	 		filetypes = { 'vim' },
+	 		single_file_support = true,
+		},
+	  }
+	end
+	if vim.fn.executable "vimscript-language-server" == 1 then
+		lspconfig.vimscript_language_server.setup { autostart = true }
+	end
 
 	if vim.fn.executable "tectonic" == 1 then
 		lspconfig.texlab.setup {
@@ -79,11 +78,45 @@ lua_source = '''
 	end
 
 	if vim.fn.executable "markdown-oxide" then
-		lspconfig.markdown_oxide.setup({
+		lspconfig.markdown_oxide.setup {
 			-- capabilities = capabilities -- ensure that capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true
 			root_dir = lspconfig.util.root_pattern('.git', vim.fn.getcwd()), -- this is a temp fix for an error in the lspconfig for this LS
-		})
+		}
 	end
+	if vim.fn.executable "rust-analyzer" == 1 then
+		lspconfig.rust_analyzer.setup {
+			autostart = true,
+			settings = {
+				["rust-analyzer"] = {
+					checkOnSave = {
+						command = "clippy",
+					},
+				},
+			},
+		}
+	end
+
+	lspconfig["denols"].setup {
+		root_dir = lspconfig.util.root_pattern("deno.*"),
+		init_options = {
+			lint = true,
+			unstable = true,
+			suggest = {
+				imports = {
+					hosts = {
+						["https://deno.land"] = true,
+						["https://cdn.nest.land"] = true,
+						["https://crux.land"] = true,
+					},
+				},
+			},
+		},
+
+	}
+
+	lspconfig["tsserver"].setup {
+		root_dir = lspconfig.util.root_pattern("package.json"),
+	}
 '''
 
 [[plugins]]
@@ -130,39 +163,7 @@ lua_source = '''
 			local opts = {
 				on_attach = on_attach,
 				capabilities = capabilities,
-				settings = {
-					["rust-analyzer"] = {
-						checkOnSave = {
-							command = "clippy",
-						},
-					},
-					pylsp = {
-						plugins = {
-							autopep8 = {
-								enabled = false,
-							},
-							yapf = {
-								enabled = false,
-							},
-						},
-					},
-					omniSharp = {
-						useGlobalMono = "always"
-					}
-				},
 			}
-
-			local deno_root_dir = require 'lspconfig'.util.root_pattern "deno.*"
-			local is_deno_repo = deno_root_dir(vim.api.nvim_buf_get_name(0)) ~= nil
-
-			if server_name == "denols" then
-				if not is_deno_repo then return end
-				opts["root_dir"] = deno_root_dir
-				opts["single_file_support"] = false
-			elseif server_name == "tsserver" then
-				if is_deno_repo then return end
-			end
-
 			require "lspconfig"[server_name].setup(opts)
 		end,
 	}
