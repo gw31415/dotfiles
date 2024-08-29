@@ -101,7 +101,7 @@
       };
       directory = {
         truncate_to_repo = true;
-        truncation_symbol = "…/";
+        truncation_symbol = "󰟐 :";
       };
       time = {
         disabled = true;
