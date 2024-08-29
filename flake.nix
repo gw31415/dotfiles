@@ -11,12 +11,11 @@
 
   outputs = { nixpkgs, home-manager, ... }:
     let
-      env = builtins.fromJSON (builtins.readFile ./env.json);
-      system = env.system;
-      username = env.username;
+      system = "aarch64-darwin";
+      username = "ama";
       home = { config, pkgs, homeManagerPath, ... }:
         import ./home.nix {
-          inherit config pkgs username; homeManagerPath = env.homeManagerPath;
+          inherit config pkgs username; homeManagerPath = "/Users/${username}/.config/home-manager";
         };
     in
     {
