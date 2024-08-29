@@ -2,9 +2,9 @@
 repo = "onsails/diaglist.nvim"
 on_event = "LspAttach"
 lua_source = '''
-	vim.api.nvim_create_user_command("Diaglist", function()
-		require("diaglist.quickfix").populate_qflist()
+	vim.api.nvim_create_user_command('Diaglist', function()
+		require 'diaglist.quickfix'.populate_qflist()
 	end, { force = true })
-	require("diaglist").init()
-	require("diaglist.quickfix").populate_qflist()
+	require 'diaglist'.init()
+	require 'diaglist.quickfix'.populate_qflist()
 '''

@@ -1,9 +1,9 @@
 [[plugins]]
 repo = "navarasu/onedark.nvim"
 lua_add = '''
-	require('onedark').setup({
+	require 'onedark'.setup {
 		transparent = true,
-	})
+	}
 '''
 
 [[plugins]]
@@ -118,7 +118,7 @@ hook_add = '''
 repo = "yuki-yano/fuzzy-motion.vim"
 depends = "kensaku.vim"
 lua_add = '''
-	vim.keymap.set("n", "<Space>", "<cmd>FuzzyMotion<cr>")
+	vim.keymap.set('n', '<Space>', '<cmd>FuzzyMotion<cr>')
 	vim.g.fuzzy_motion_labels = {
 		'U', 'H', 'E', 'T', 'O', 'N', 'A', 'S', 'P', 'G', 'I', 'D', 'K', 'B', 'J', 'M',
 	}
@@ -134,7 +134,7 @@ vim.api.nvim_set_var('aioperator_opts', {
 	},
 })
 
-vim.keymap.set({ "n", "x" }, "gG", function(arg)
+vim.keymap.set({ 'n', 'x' }, 'gG', function(arg)
 	return require 'aioperator'.opfunc(arg)
 end, { expr = true })
 '''
@@ -146,26 +146,26 @@ repo = "gw31415/skkeletal.vim"
 repo = "vim-skk/skkeleton"
 depends = "skkeletal.vim"
 lua_add = '''
-	vim.keymap.set({ "i", "c", "t" }, "<C-j>", "<Plug>(skkeleton-enable)")
-	vim.fn["skkeletal#config"]({
+	vim.keymap.set({ 'i', 'c', 't' }, '<C-j>', '<Plug>(skkeleton-enable)')
+	vim.fn['skkeletal#config'] {
 		eggLikeNewline = true,
-		globalJisyo = "~/.skk/SKK-JISYO.L",
-		markerHenkan = "▹",
-		markerHenkanSelect = "▸",
+		globalJisyo = '~/.skk/SKK-JISYO.L',
+		markerHenkan = '▹',
+		markerHenkanSelect = '▸',
 		dvorak = true,
-	})
+	}
 
-	for _, map in pairs({
-		{ "input",  "<c-e>", "" },
-		{ "henkan", "<c-e>", "" },
-		{ "input",  "<c-n>", "henkanFirst" },
-		{ "henkan", "<c-n>", "henkanForward" },
-		{ "henkan", "<c-p>", "henkanBackward" },
-		{ "henkan", "<bs>",  "henkanBackward" },
-		{ "henkan", "<c-h>", "" },
-		{ "henkan", "<c-h>", "henkanBackward" },
-	}) do
-		vim.fn["skkeleton#register_keymap"](map[1], map[2], map[3])
+	for _, map in pairs {
+		{ 'input',  '<c-e>', '' },
+		{ 'henkan', '<c-e>', '' },
+		{ 'input',  '<c-n>', 'henkanFirst' },
+		{ 'henkan', '<c-n>', 'henkanForward' },
+		{ 'henkan', '<c-p>', 'henkanBackward' },
+		{ 'henkan', '<bs>',  'henkanBackward' },
+		{ 'henkan', '<c-h>', '' },
+		{ 'henkan', '<c-h>', 'henkanBackward' },
+	} do
+		vim.fn['skkeleton#register_keymap'](map[1], map[2], map[3])
 	end
 '''
 

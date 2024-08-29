@@ -3,120 +3,82 @@ repo = "folke/lazydev.nvim"
 on_ft = "lua"
 depends = ["nvim-lspconfig", "mason.nvim"]
 lua_source = '''
-	require "lazydev".setup {}
+require 'lazydev'.setup()
 '''
 
 [[plugins]]
 repo = "neovim/nvim-lspconfig"
 lua_source = '''
-	local lspconfig = require 'lspconfig'
-	local configs = require 'lspconfig.configs'
+local lspconfig = require 'lspconfig'
+local util = require 'lspconfig/util'
 
-	if not configs.vimscript_language_server then
-	  configs.vimscript_language_server = {
-		default_config = {
-	 		cmd = { 'vimscript-language-server' },
-	 		filetypes = { 'vim' },
-	 		single_file_support = true,
-		},
-	  }
-	end
-	if vim.fn.executable "vimscript-language-server" == 1 then
-		lspconfig.vimscript_language_server.setup { autostart = true }
-	end
+function executable(cmd)
+	return vim.fn.executable(cmd) == 1
+end
 
-	if vim.fn.executable "tectonic" == 1 then
-		lspconfig.texlab.setup {
-			autostart = true,
-			settings = {
-				texlab = {
-					build = {
-						executable = 'tectonic',
-						args = {
-							"-X",
-							"compile",
-							"%f",
-							"--synctex",
-							"--keep-logs",
-							"--keep-intermediates",
-						},
-					},
-				},
-			},
-		}
-	end
-
-	if vim.fn.executable "protols" == 1 then
-		lspconfig.protols.setup {
-			autostart = true,
-			on_attach = function(client, bufnr)
-				client.server_capabilities.documentFormattingProvider = false
-			end,
-		}
-	end
-
-	lspconfig.tsp_server.setup { autostart = true }
-
-	if vim.fn.executable "satysfi-language-server" == 1 then
-		lspconfig['satysfi-ls'].setup { autostart = true }
-	end
-
-	if vim.fn.executable "sourcekit-lsp" == 1 then
-		require('lspconfig')['sourcekit'].setup { autostart = true }
-	end
-
-	if vim.fn.executable "erg" == 1 then
-		lspconfig['erg'].setup { autostart = true }
-	end
-
-	if vim.fn.executable "gopls" == 1 then
-		lspconfig['gopls'].setup { autostart = true }
-	end
-
-	if vim.fn.executable "ruff" then
-		lspconfig['ruff'].setup { autostart = true }
-	end
-
-	if vim.fn.executable "markdown-oxide" then
-		lspconfig.markdown_oxide.setup {
-			-- capabilities = capabilities -- ensure that capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true
-			root_dir = lspconfig.util.root_pattern('.git', vim.fn.getcwd()), -- this is a temp fix for an error in the lspconfig for this LS
-		}
-	end
-	if vim.fn.executable "rust-analyzer" == 1 then
-		lspconfig.rust_analyzer.setup {
-			autostart = true,
-			settings = {
-				["rust-analyzer"] = {
-					checkOnSave = {
-						command = "clippy",
-					},
-				},
-			},
-		}
-	end
-
-	lspconfig["denols"].setup {
-		root_dir = lspconfig.util.root_pattern("deno.*"),
-		init_options = {
-			lint = true,
-			unstable = true,
-			suggest = {
-				imports = {
-					hosts = {
-						["https://deno.land"] = true,
-						["https://cdn.nest.land"] = true,
-						["https://crux.land"] = true,
-					},
+lspconfig.lua_ls.setup {
+	settings = {
+		Lua = {
+			format = {
+				defaultConfig = {
+					quote_style = 'single',
+					call_arg_parentheses = 'remove',
 				},
 			},
 		},
+	},
+}
 
-	}
+-- if not configs.vimscript_language_server then
+-- 	configs.vimscript_language_server = {}
+-- end
+-- if executable 'vimscript-language-server' == 1 then
+-- 	lspconfig.vimscript_language_server.setup()
+-- end
 
-	lspconfig["tsserver"].setup {
-		root_dir = lspconfig.util.root_pattern("package.json"),
+if executable 'protols' == 1 then
+	lspconfig.protols.setup {
+		on_attach = function(client, _)
+			client.server_capabilities.documentFormattingProvider = false
+		end,
 	}
+end
+
+if executable 'satysfi-language-server' == 1 then
+	lspconfig['satysfi-ls'].setup()
+end
+
+if executable 'sourcekit-lsp' == 1 then
+	lspconfig.sourcekit.setup()
+end
+
+if executable 'markdown-oxide' then
+	lspconfig.markdown_oxide.setup {
+		-- capabilities = capabilities -- ensure that capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true
+		root_dir = lspconfig.util.root_pattern('.git', vim.fn.getcwd()), -- this is a temp fix for an error in the lspconfig for this LS
+	}
+end
+
+lspconfig.denols.setup {
+	root_dir = lspconfig.util.root_pattern 'deno.*',
+	init_options = {
+		lint = true,
+		unstable = true,
+		suggest = {
+			imports = {
+				hosts = {
+					['https://deno.land'] = true,
+					['https://cdn.nest.land'] = true,
+					['https://crux.land'] = true,
+				},
+			},
+		},
+	},
+}
+
+lspconfig 'tsserver'.setup {
+	root_dir = util.root_pattern 'package.json',
+}
 '''
 
 [[plugins]]
@@ -129,44 +91,73 @@ depends = "plenary.nvim"
 lua_source = "require 'null-ls'.setup()"
 
 [[plugins]]
+repo = "SmiteshP/nvim-navic"
+lua_source = '''
+require 'nvim-navic'.setup {
+	lsp = { auto_attach = true }
+}
+'''
+
+[[plugins]]
 repo = "williamboman/mason-lspconfig.nvim"
-depends = ["mason.nvim", "nvim-lspconfig", "nvim-cmp", "nvim-navic"]
+depends = ["mason.nvim", "nvim-lspconfig", "nvim-cmp"]
 on_event = "CursorHold"
 lua_source = '''
-	local default_caps = {
-		workspace = {
-			didChangeWatchedFiles = {
-				dynamicRegistration = true,
-			},
+local default_caps = {
+	workspace = {
+		didChangeWatchedFiles = {
+			dynamicRegistration = true,
 		},
-		textDocument = {
-			foldingRange = {
-				dynamicRegistration = false,
-				lineFoldingOnly = true
+	},
+	textDocument = {
+		foldingRange = {
+			dynamicRegistration = false,
+			lineFoldingOnly = true
+		},
+	}
+}
+
+local capabilities = vim.tbl_deep_extend('keep', default_caps, require 'cmp_nvim_lsp'.default_capabilities())
+
+require 'mason-lspconfig'.setup_handlers {
+	function(server_name)
+		if server_name == 'ruff' then
+			return
+		end
+		require 'lspconfig'[server_name].setup {
+			capabilities = capabilities,
+			settings = {
+				texlab = {
+					build = {
+						executable = 'tectonic',
+						args = {
+							'-X',
+							'compile',
+							'%f',
+							'--synctex',
+							'--keep-logs',
+							'--keep-intermediates',
+						},
+					},
+				},
+				['rust-analyzer'] = {
+					checkOnSave = {
+						command = 'clippy',
+					},
+				},
+				pylsp = {
+					plugins = {
+						mccabe = { enabled = false },
+						pycodestyle = { enabled = false },
+						pyflakes = { enabled = false },
+						autopep8 = { enabled = false },
+						yapf = { enabled = false },
+					},
+				},
 			},
 		}
-	}
-
-	local capabilities = vim.tbl_deep_extend("keep", default_caps, require("cmp_nvim_lsp").default_capabilities())
-
-	local navic = require("nvim-navic")
-
-	local mason_lspconfig = require "mason-lspconfig"
-	local on_attach = function(client, bufnr)
-		vim.api.nvim_buf_set_option(bufnr, "formatexpr",
-			"v:lua.vim.lsp.formatexpr(#{timeout_ms:250})")
-		navic.attach(client, bufnr)
-		-- _G.lsp_onattach_func(i, bufnr)
-	end
-	mason_lspconfig.setup_handlers {
-		function(server_name)
-			local opts = {
-				on_attach = on_attach,
-				capabilities = capabilities,
-			}
-			require "lspconfig"[server_name].setup(opts)
-		end,
-	}
+	end,
+}
 '''
 
 [[plugins]]

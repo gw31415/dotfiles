@@ -39,12 +39,12 @@ on_event = ["InsertEnter", "CmdlineEnter"]
 lua_source = '''
 	local cmp = require 'cmp'
 	local function feedkeys(key)
-		vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true) or "", "", true)
+		vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true) or '', '', true)
 	end
 	cmp.setup {
 		snippet = {
 			expand = function(args)
-				vim.fn["vsnip#anonymous"](args.body)
+				vim.fn['vsnip#anonymous'](args.body)
 			end
 		},
 		window = {
@@ -59,40 +59,40 @@ lua_source = '''
 			cmp.config.compare.offset,
 			cmp.config.compare.exact,
 			cmp.config.compare.score,
-			require "cmp-under-comparator".under,
+			require 'cmp-under-comparator'.under,
 			cmp.config.compare.kind,
 			cmp.config.compare.sort_text,
 			cmp.config.compare.length,
 			cmp.config.compare.order,
 		},
 		mapping = cmp.mapping.preset.insert {
-			["<C-p>"] = cmp.mapping.select_prev_item(),
-			["<C-n>"] = cmp.mapping.select_next_item(),
-			["<C-b>"] = cmp.mapping.scroll_docs(-4),
-			["<C-f>"] = cmp.mapping.scroll_docs(4),
-			["<tab>"] = cmp.mapping(function(fallback)
+			['<C-p>'] = cmp.mapping.select_prev_item(),
+			['<C-n>'] = cmp.mapping.select_next_item(),
+			['<C-b>'] = cmp.mapping.scroll_docs(-4),
+			['<C-f>'] = cmp.mapping.scroll_docs(4),
+			['<tab>'] = cmp.mapping(function(fallback)
 				if cmp.visible() then
 					local entry = cmp.get_selected_entry()
 					if not entry then
-						cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+						cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
 					else
 						cmp.confirm()
 					end
-				elseif vim.fn["vsnip#jumpable"](1) == 1 then
-					feedkeys("<Plug>(vsnip-jump-next)")
+				elseif vim.fn['vsnip#jumpable'](1) == 1 then
+					feedkeys '<Plug>(vsnip-jump-next)'
 				else
-					local copilot_keys = vim.fn["copilot#Accept"]()
-					if copilot_keys ~= "" then
-						vim.api.nvim_feedkeys(copilot_keys, "i", true)
+					local copilot_keys = vim.fn['copilot#Accept']()
+					if copilot_keys ~= '' then
+						vim.api.nvim_feedkeys(copilot_keys, 'i', true)
 					else
 						fallback()
 					end
 					-- fallback()
 				end
 			end),
-			["<s-tab>"] = cmp.mapping(function(fallback)
-				if vim.fn["vsnip#jumpable"](-1) == 1 then
-					feedkeys("<Plug>(vsnip-jump-prev)")
+			['<s-tab>'] = cmp.mapping(function(fallback)
+				if vim.fn['vsnip#jumpable'](-1) == 1 then
+					feedkeys '<Plug>(vsnip-jump-prev)'
 				else
 					fallback()
 				end
@@ -112,8 +112,8 @@ lua_source = '''
 		}
 	})
 	cmp.setup.filetype('gitcommit', {
-		sources = cmp.config.sources({
+		sources = cmp.config.sources {
 			{ name = 'git' },
-		})
+		}
 	})
 '''

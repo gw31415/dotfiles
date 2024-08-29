@@ -24,7 +24,7 @@ nnoremap <C-y> <Plug>(dmacro-play-macro)
 repo = "cshuaimin/ssr.nvim"
 on_lua = "ssr"
 lua_add = '''
-	vim.keymap.set({ "n", "x" }, "<leader>/", function() require("ssr").open() end)
+vim.keymap.set({ 'n', 'x' }, '<leader>/', function() require 'ssr'.open() end)
 '''
 
 [[plugins]]
@@ -90,9 +90,9 @@ hook_add = "map <expr> gq operator#stay_cursor#wrapper('gq')"
 repo = "gbprod/substitute.nvim"
 on_lua = "substitute"
 lua_add = '''
-	vim.keymap.set("n", "_",  function() require 'substitute'.operator() end)
-	vim.keymap.set("x", "_",  function() require 'substitute'.visual()   end)
-	vim.keymap.set("n", "__", function() require 'substitute'.line()     end)
+	vim.keymap.set('n', '_', function() require 'substitute'.operator() end)
+	vim.keymap.set('x', '_', function() require 'substitute'.visual() end)
+	vim.keymap.set('n', '__', function() require 'substitute'.line() end)
 '''
 lua_source = "require 'substitute'.setup()"
 
@@ -101,7 +101,7 @@ repo = "jiaoshijie/undotree"
 depends = "plenary.nvim"
 on_map = { n = '<Leader>u' }
 lua_source = '''
-	require 'undotree'.setup { keymaps = { ["<Esc>"] = "quit" } }
+	require 'undotree'.setup { keymaps = { ['<Esc>'] = 'quit' } }
 	vim.keymap.set('n', '<Leader>u', require 'undotree'.toggle)
 '''
 
@@ -114,8 +114,8 @@ lua_source = 'vim.api.nvim_set_var("winresizer_start_key", "<C-W>e")'
 repo = "thinca/vim-ambicmd"
 on_event = "CmdlineEnter"
 lua_source = '''
-vim.keymap.set("c", "<Space>", function()
-	return vim.fn["ambicmd#expand"]("<Space>")
+vim.keymap.set('c', '<Space>', function()
+	return vim.fn['ambicmd#expand'] '<Space>'
 end, { expr = true })
 '''
 
@@ -123,20 +123,20 @@ end, { expr = true })
 repo = "gw31415/fzyselect.vim"
 on_event = "CursorHold"
 lua_source = '''
-	vim.api.nvim_create_autocmd("FileType", {
-		pattern = "fzyselect",
+	vim.api.nvim_create_autocmd('FileType', {
+		pattern = 'fzyselect',
 		callback = function()
-			vim.keymap.set("n", "i", "<Plug>(fzyselect-fzy)", { buffer = true })
-			vim.keymap.set("n", "<cr>", "<Plug>(fzyselect-retu)", { buffer = true })
-			vim.keymap.set("n", "<esc>", "<cmd>clo<cr>", { buffer = true })
+			vim.keymap.set('n', 'i', '<Plug>(fzyselect-fzy)', { buffer = true })
+			vim.keymap.set('n', '<cr>', '<Plug>(fzyselect-retu)', { buffer = true })
+			vim.keymap.set('n', '<esc>', '<cmd>clo<cr>', { buffer = true })
 			vim.opt_local.number = false
 		end,
 	})
 	-- fuzzy search
-	vim.keymap.set('n', "g/", function()
+	vim.keymap.set('n', 'g/', function()
 		local winid = vim.api.nvim_get_current_win()
 		require 'fzyselect'.start(vim.api.nvim_buf_get_lines(0, 0, -1, true),
-			{ prompt = "fuzzy search: <Enter> to jump" },
+			{ prompt = 'fuzzy search: <Enter> to jump' },
 			function(_, i)
 				if i then
 					vim.api.nvim_win_set_cursor(winid, { i, 0 })
@@ -144,11 +144,10 @@ lua_source = '''
 			end)
 	end)
 	-- git ls-files
-	vim.keymap.set("n", "<c-p>", function()
-		---@diagnostic disable-next-line: undefined-field
+	vim.keymap.set('n', '<c-p>', function()
 		local res = vim.system({ 'git', 'ls-files' }, { text = true }):wait()
 		if res.code ~= 0 then
-			vim.notify(vim.fn.trim(res.stderr), vim.log.levels.ERROR, { title = "fzyselect: git ls-files" })
+			vim.notify(vim.fn.trim(res.stderr), vim.log.levels.ERROR, { title = 'fzyselect: git ls-files' })
 		else
 			require 'fzyselect'.start(vim.fn.split(res.stdout, '\n'),
 				{ prompt = 'git ls-files: <Enter> to edit' },
@@ -164,30 +163,30 @@ repo = "gw31415/bufmanager.nvim"
 depends = "fzyselect.vim"
 on_event = "BufAdd"
 lua_source = '''
-vim.keymap.set("n", "gb", function()
-	vim.api.nvim_create_autocmd("BufEnter", {
+vim.keymap.set('n', 'gb', function()
+	vim.api.nvim_create_autocmd('BufEnter', {
 		once = true,
 		callback = function()
-			vim.keymap.set({ "n", "x" }, "d", "<Plug>(bufmanager-bdelete)", { buffer = true })
-			vim.keymap.set("n", "dd", "<Plug>(bufmanager-bdelete)_", { buffer = true })
+			vim.keymap.set({ 'n', 'x' }, 'd', '<Plug>(bufmanager-bdelete)', { buffer = true })
+			vim.keymap.set('n', 'dd', '<Plug>(bufmanager-bdelete)_', { buffer = true })
 		end,
 	})
-	vim.fn["bufmanager#open"]()
+	vim.fn['bufmanager#open']()
 end)
 '''
 
 [[plugins]]
 repo = "gw31415/deepl.vim"
 lua_source = '''
-	vim.api.nvim_set_var('deepl_authkey', SetupAuthkey('~/.ssh/deepl_authkey.txt', { prompt = 'DEEPL_API_KEY = ' }))
+vim.api.nvim_set_var('deepl_authkey', SetupAuthkey('~/.ssh/deepl_authkey.txt', { prompt = 'DEEPL_API_KEY = ' }))
 '''
 [[plugins]]
 repo = "gw31415/deepl-commands.nvim"
 on_event = "CmdlineEnter"
 depends = ["deepl.vim", "fzyselect.vim"]
 lua_source = '''
-	require "deepl-commands".setup {
-		selector_func = require "fzyselect".start,
+	require 'deepl-commands'.setup {
+		selector_func = require 'fzyselect'.start,
 	}
 '''
 [[plugins]]
@@ -195,8 +194,8 @@ repo = "gw31415/deepl-operator.vim"
 depends = ["deepl.vim"]
 on_map = { nx = "cl" }
 lua_source = '''
-	vim.keymap.set({ "n", "x" }, "cl", "<Plug>(deepl-replace)")
-	vim.keymap.set("n", "cll", "<Plug>(deepl-replace)_")
+vim.keymap.set({ 'n', 'x' }, 'cl', '<Plug>(deepl-replace)')
+vim.keymap.set('n', 'cll', '<Plug>(deepl-replace)_')
 '''
 
 [[plugins]]
@@ -204,14 +203,14 @@ repo = "numToStr/Comment.nvim"
 on_if = "!has('nvim-0.10')"
 on_map = { nx = "gc" }
 lua_source = '''
-	require 'Comment'.setup {
-		toggler = {
-			block = 'gCC',
-		},
-		opleader = {
-			block = 'gC',
-		},
-	}
+require 'Comment'.setup {
+	toggler = {
+		block = 'gCC',
+	},
+	opleader = {
+		block = 'gC',
+	},
+}
 '''
 
 [[plugins]]
@@ -225,18 +224,18 @@ on_event = "CmdlineEnter"
 depends = "plenary.nvim"
 lua_source = '''
 	require 'code_runner'.setup {
-		mode = "term",
+		mode = 'term',
 		focus = true,
 		startinsert = false,
 		filetype = {
-			java = "cd $dir && javac $fileName && java $fileNameWithoutExt",
-			python = "python3 -u",
-			typescript = "deno run",
-			rust = "cd $dir && rustc $fileName && $dir/$fileNameWithoutExt",
-			go = "go run",
+			java = 'cd $dir && javac $fileName && java $fileNameWithoutExt',
+			python = 'python3 -u',
+			typescript = 'deno run',
+			rust = 'cd $dir && rustc $fileName && $dir/$fileNameWithoutExt',
+			go = 'go run',
 		},
 		term = {
-			position = "rightb vert",
+			position = 'rightb vert',
 			size = 70,
 		},
 		-- filetype_path = vim.fn.expand('~/.config/nvim/code_runner.json'),
@@ -248,24 +247,24 @@ lua_source = '''
 repo = "monaqa/dial.nvim"
 on_map = { nx = ["<C-a>", "<C-x>", "g<C-a>", "g<C-x>"] }
 lua_source = '''
-	vim.keymap.set({ "n", "x" }, "<C-a>", "<Plug>(dial-increment)")
-	vim.keymap.set({ "n", "x" }, "<C-x>", "<Plug>(dial-decrement)")
-	vim.keymap.set("x", "g<C-a>", function() require 'dial.map'.manipulate("increment", "gvisual") end)
-	vim.keymap.set("x", "g<C-x>", function() require 'dial.map'.manipulate("decrement", "gvisual") end)
-	vim.keymap.set("n", "g<C-a>", function() require("dial.map").manipulate("increment", "gnormal") end)
-	vim.keymap.set("n", "g<C-x>", function() require("dial.map").manipulate("decrement", "gnormal") end)
+vim.keymap.set({ 'n', 'x' }, '<C-a>', '<Plug>(dial-increment)')
+vim.keymap.set({ 'n', 'x' }, '<C-x>', '<Plug>(dial-decrement)')
+vim.keymap.set('x', 'g<C-a>', function() require 'dial.map'.manipulate('increment', 'gvisual') end)
+vim.keymap.set('x', 'g<C-x>', function() require 'dial.map'.manipulate('decrement', 'gvisual') end)
+vim.keymap.set('n', 'g<C-a>', function() require 'dial.map'.manipulate('increment', 'gnormal') end)
+vim.keymap.set('n', 'g<C-x>', function() require 'dial.map'.manipulate('decrement', 'gnormal') end)
 
-	local augend = require "dial.augend"
-	require "dial.config".augends:register_group {
-		default = {
-			augend.integer.alias.decimal,
-			augend.semver.alias.semver,
-			augend.integer.alias.hex,
-			augend.constant.alias.bool,
-			augend.date.alias["%Y/%m/%d"],
-			augend.date.alias["%Y-%m-%d"],
-		},
-	}
+local augend = require 'dial.augend'
+require 'dial.config'.augends:register_group {
+	default = {
+		augend.integer.alias.decimal,
+		augend.semver.alias.semver,
+		augend.integer.alias.hex,
+		augend.constant.alias.bool,
+		augend.date.alias['%Y/%m/%d'],
+		augend.date.alias['%Y-%m-%d'],
+	},
+}
 '''
 
 [[plugins]]
@@ -276,10 +275,10 @@ on_cmd = "DeinUpdate"
 repo = "lewis6991/gitsigns.nvim"
 on_event = "CursorHold"
 lua_source = '''
-	require 'gitsigns'.setup {
-		numhl = true,
-		signcolumn = false,
-	}
+require 'gitsigns'.setup {
+	numhl = true,
+	signcolumn = false,
+}
 '''
 
 [[plugins]]
@@ -324,11 +323,11 @@ lua_source = '''
 local function h(name) return vim.api.nvim_get_hl(0, { name = name }) end
 
 -- hl-groups can have any name
-vim.api.nvim_set_hl(0, 'SymbolUsageRounding', { fg = h('CursorLine').bg, italic = true })
-vim.api.nvim_set_hl(0, 'SymbolUsageContent', { bg = h('CursorLine').bg, fg = h('Comment').fg, italic = true })
-vim.api.nvim_set_hl(0, 'SymbolUsageRef', { fg = h('Function').fg, bg = h('CursorLine').bg, italic = true })
-vim.api.nvim_set_hl(0, 'SymbolUsageDef', { fg = h('Type').fg, bg = h('CursorLine').bg, italic = true })
-vim.api.nvim_set_hl(0, 'SymbolUsageImpl', { fg = h('@keyword').fg, bg = h('CursorLine').bg, italic = true })
+vim.api.nvim_set_hl(0, 'SymbolUsageRounding', { fg = h 'CursorLine'.bg, italic = true })
+vim.api.nvim_set_hl(0, 'SymbolUsageContent', { bg = h 'CursorLine'.bg, fg = h 'Comment'.fg, italic = true })
+vim.api.nvim_set_hl(0, 'SymbolUsageRef', { fg = h 'Function'.fg, bg = h 'CursorLine'.bg, italic = true })
+vim.api.nvim_set_hl(0, 'SymbolUsageDef', { fg = h 'Type'.fg, bg = h 'CursorLine'.bg, italic = true })
+vim.api.nvim_set_hl(0, 'SymbolUsageImpl', { fg = h '@keyword'.fg, bg = h 'CursorLine'.bg, italic = true })
 
 local function text_format(symbol)
 	local res = {}
@@ -383,9 +382,9 @@ on_event = "TermOpen"
 repo = "icholy/lsplinks.nvim"
 on_event = "CursorHold"
 lua_source = '''
-local lsplinks = require("lsplinks")
+local lsplinks = require 'lsplinks'
 lsplinks.setup()
-vim.keymap.set("n", "gx", lsplinks.gx)
+vim.keymap.set('n', 'gx', lsplinks.gx)
 '''
 
 # 命名規則を相互変換
@@ -395,11 +394,9 @@ on_event = "CursorHold"
 lua_source = '''
 require 'coerce'.setup {
 	default_mode_keymap_prefixes = {
-		normal_mode = "cr",
-
-		-- Disabled because it conflicts with the Comment.nvim
-		-- motion_mode = "gcr",
-		-- visual_mode = "gcr",
+		normal_mode = 'cr',
+		motion_mode = "cr",
+		visual_mode = "cr",
 	}
 }
 '''
