@@ -315,16 +315,6 @@ command KeycastrDisable lua require 'keycastr'.disable()
 # repo = "boltlessengineer/smart-tab.nvim"
 # on_event = "InsertEnter"
 # lua_source = "require 'smart-tab'.setup()"
-[[plugins]]
-repo = "ziontee113/icon-picker.nvim"
-on_cmd = ["IconPickerInsert", "IconPickerNormal", "IconPickerYank"]
-lua_source = '''
-require("icon-picker").setup({ disable_legacy_commands = true })
-'''
-hook_add = '''
-nnoremap <M-e> <cmd>IconPickerNormal<cr>
-inoremap <M-e> <cmd>IconPickerInsert<cr>
-'''
 
 [[plugins]]
 repo = "Wansmer/symbol-usage.nvim"
@@ -403,3 +393,10 @@ repo = "gregorias/coerce.nvim"
 # on_key = { n = "cr", nx = "gcr" }
 on_event = "CursorHold"
 lua_source = "require 'coerce'.setup()"
+
+[[plugins]]
+repo = "gw31415/emjpick.vim"
+hook_add = '''
+command! -nargs=0 Em call emjpick#insert()
+'''
+on_cmd = "Em"
