@@ -1,7 +1,6 @@
 { config, pkgs, username, homeManagerPath, ... }:
 {
   home.packages = with pkgs; [
-    awscli2
     aria2
     asciinema
     bat
@@ -16,7 +15,6 @@
     eza
     ffmpeg
     flyctl
-    fzf
     gh
     git-credential-manager
     gopls
@@ -141,6 +139,23 @@
   programs.go = {
     enable = true;
     goPath = ".go";
+  };
+  programs.fzf = {
+    enable = true;
+    enableFishIntegration = true;
+    defaultCommand = "fd --type f --hidden --exclude .git --follow --color=always";
+    defaultOptions = [ "--ansi" ];
+  };
+  programs.fd = {
+    enable = true;
+    ignores = [
+      ".local"
+      ".cache"
+      ".cargo"
+      "node_modules"
+      "Library"
+      "OrbStack"
+    ];
   };
   home = {
     inherit username;
