@@ -396,7 +396,7 @@ lua_source = "require 'coerce'.setup()"
 
 [[plugins]]
 repo = "gw31415/emjpick.vim"
+on_event = "CmdlineEnter"
 hook_add = '''
-command! -nargs=0 Em call emjpick#insert()
+command! Emoji call emjpick#insert()
 '''
-on_cmd = "Em"
