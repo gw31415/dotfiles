@@ -1,16 +1,20 @@
-{ env, ... }: {
+{ pkgs, env, ... }: {
   ########################################
   # Requires for nix-darwin to work
   ########################################
   system.stateVersion = 4;
   nixpkgs.hostPlatform = env.system;
-  nix = {
-    # To keep-enabled experimental features after installation, since nix is managed by nix-darwin.
-    settings.experimental-features = "nix-command flakes";
-    # Auto upgrade nix package and the daemon service.
-    # If you are in a multi-user environment, this is a must to avoid conflicts.
-    useDaemon = true;
-  };
+
+  # REQUIRED: To keep-enabled experimental features after installation, since nix is managed by nix-darwin.
+  nix.settings.experimental-features = "nix-command flakes";
+
+  # REQUIRED: Because this dotfiles is intended for a nix-darwin multi-user environment.
+  # Auto upgrade nix package and the daemon service.
+  services.nix-daemon.enable = true;
+  nix.package = pkgs.nix;
+
+  # REQUIRED: Create /etc/fish that loads the nix-darwin environment.
+  programs.fish.enable = true;
 
   ########################################
   # Configuration for macOS system
