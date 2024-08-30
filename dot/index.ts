@@ -1,6 +1,17 @@
+import { parseArgs } from "node:util";
 import { $ } from "jsr:@david/dax";
 import { consola } from "npm:consola";
 import { highlight } from "npm:cli-highlight";
+
+const argv = parseArgs({
+	options: {
+		update: {
+			type: "boolean",
+			short: "u",
+		},
+	},
+	allowPositionals: true, // Subcommands
+});
 
 const configHome = $.path(
 	Deno.env.get("XDG_CONFIG_HOME") || `${Deno.env.get("HOME")}/.config`,
@@ -104,7 +115,16 @@ try {
 			Deno.exit(0);
 		}
 	}
-	// Installing home-manager and initial sync
+	if (argv.values.update) {
+		consola.info("Updating flake.lock...");
+		await $`nix flake update ${homeManagerPath}`;
+		consola.success(`Updated ${homeManagerPath.join("flake.lock")}.`);
+	}
+
+	// Installing/Upgrading home-manager and initial sync
+	consola.info(
+		`Switching to ${installed ? "update" : "install"} home-manager...`,
+	);
 	const res = await $`nix run nixpkgs#home-manager -- switch`;
 	if (res.code === 0) {
 		consola.success("Success.");
