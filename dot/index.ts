@@ -54,7 +54,7 @@ try {
 	////////////////////////////////////////
 	// SHELL with Changed Directory
 	////////////////////////////////////////
-	if (eq(argv.positionals, ["shell"])) {
+	if (eq(argv.positionals, ["sh"])) {
 		await $`${Deno.env.get("SHELL") ?? "/bin/bash"}`.cwd(homeManagerPath);
 		Deno.exit(0);
 	}

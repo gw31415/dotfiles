@@ -25,9 +25,9 @@ nix run github:gw31415/dotfiles
 	dot --darwin
 	```
 
-- Enter to the Dir-Changed Shell
+- Enter to the dir-changed shell
 	```bash
-	dot shell
+	dot sh
 	```
 
 - Nix garbage-collection
