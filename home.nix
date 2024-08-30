@@ -52,20 +52,20 @@
     ".skk/SKK-JISYO.L" = {
       source = "${pkgs.skk-dicts}/share/SKK-JISYO.L";
     };
-    ".config" = {
-      source = ./statics/config;
-      recursive = true;
-    };
     ".emacs.d" = {
       source = ./statics/emacs.d;
       recursive = true;
     };
     ".latexmkrc".source = ./statics/latexmkrc;
+    "${config.xdg.configHome}" = {
+      source = ./statics/config;
+      recursive = true;
+    };
 
-    ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${env.homeManagerDirectory}/syms/nvim";
-    ".config/mise".source = config.lib.file.mkOutOfStoreSymlink "${env.homeManagerDirectory}/syms/mise";
-    ".config/fish/completions".source = config.lib.file.mkOutOfStoreSymlink "${env.homeManagerDirectory}/syms/fish_completions";
-    ".config/fish/functions".source = config.lib.file.mkOutOfStoreSymlink "${env.homeManagerDirectory}/syms/fish_functions";
+    "${config.xdg.configHome}/nvim".source = config.lib.file.mkOutOfStoreSymlink "${env.homeManagerDirectory}/syms/nvim";
+    "${config.xdg.configHome}/mise".source = config.lib.file.mkOutOfStoreSymlink "${env.homeManagerDirectory}/syms/mise";
+    "${config.xdg.configHome}/fish/completions".source = config.lib.file.mkOutOfStoreSymlink "${env.homeManagerDirectory}/syms/fish_completions";
+    "${config.xdg.configHome}/fish/functions".source = config.lib.file.mkOutOfStoreSymlink "${env.homeManagerDirectory}/syms/fish_functions";
 
   } // (if pkgs.stdenv.isDarwin then {
     ########################################
