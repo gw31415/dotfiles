@@ -117,20 +117,29 @@ local lsp_opts = {
 	}
 }
 
--- 設定に追加されていないLSPを設定する場合は以下のようにする
--- if not configs.hogehoge_lsp then
--- 	configs.hogehoge_lsp = {}
--- end
--- if executable 'hogehoge_lsp' == 1 then
--- 	lspconfig.hogehoge_lsp.setup()
--- end
-
 ------------------------------------
 -- Masonで追加されないLSPの設定
 ------------------------------------
 
+local configs = require 'lspconfig/configs'
 local function executable(cmd)
 	return vim.fn.executable(cmd) == 1
+end
+
+-- https://github.com/ndonfris/fish-lsp/
+if executable 'fish-lsp' then
+	if not configs.fish_lsp then
+		configs.fish_lsp = {
+			default_config = {
+				single_file_support = true,
+				cmd = { 'fish-lsp', 'start' },
+				filetypes = { 'fish' },
+				root_dir = nil,
+			},
+		}
+	end
+	-- NOTE: configs を追加した際は、lspconfig 変数ではなくもう一度 require して設定する
+	require 'lspconfig'.fish_lsp.setup {}
 end
 
 if executable 'protols' then
