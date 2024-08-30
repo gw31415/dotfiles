@@ -17,6 +17,7 @@
     let
       env = import ./env.nix;
       pkgs = import nixpkgs { system = env.system; };
+      dot-cli = pkgs.writeShellScriptBin "dot" "${pkgs.deno}/bin/deno run -A ${(./dot/index.ts)}";
     in
     {
       ########################################
@@ -25,7 +26,7 @@
       homeConfigurations.${env.username} = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [
-          ({ config, ... }: import ./home.nix { inherit config pkgs env; })
+          ({ config, ... }: import ./home.nix { inherit config pkgs env dot-cli; })
         ];
       };
 
@@ -43,7 +44,7 @@
       ########################################
       packages.${env.system} = {
         # https://github.com/NixOS/nixpkgs/blob/808125fff694e4eb4c73952d501e975778ffdacd/pkgs/build-support/trivial-builders.nix#L238-L250
-        default = pkgs.writeShellScriptBin "default" (builtins.readFile ./install.sh);
+        default = dot-cli;
 
         # Note: These are used by ./install.sh.
         home-manager = home-manager.defaultPackage.${env.system};

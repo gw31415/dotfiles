@@ -1,4 +1,4 @@
-{ config, pkgs, env, ... }:
+{ config, pkgs, env, dot-cli, ... }:
 {
   home.packages = with pkgs; [
     aria2
@@ -42,7 +42,7 @@
     wget
     yt-dlp
     zig
-  ];
+  ] ++ [ dot-cli ];
 
   home.file =
     let
