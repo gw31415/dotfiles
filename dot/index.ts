@@ -77,25 +77,22 @@ try {
 			}))
 		) {
 			const remove =
-				(
-					await consola.prompt(`Do you want to clean ${homeManagerPath}?`, {
-						type: "select",
-						options: [
-							{
-								label: `Leave ${envnix}`,
-								value: "leave",
-								hint: `You can edit ${envnix} and continue the installation.`,
-							},
-							{
-								label: `Remove ${envnix}`,
-								value: "remove",
-								hint: "You can re-run the script to download the dotfiles again.",
-							},
-						],
-						initial: "leave",
-					})
-				).value === "remove";
-
+				((await consola.prompt(`Do you want to clean ${homeManagerPath}?`, {
+					type: "select",
+					options: [
+						{
+							label: `Leave ${envnix}`,
+							value: "leave",
+							hint: `You can edit ${envnix} and continue the installation.`,
+						},
+						{
+							label: `Remove ${envnix}`,
+							value: "remove",
+							hint: "You can re-run the script to download the dotfiles again.",
+						},
+					],
+					initial: "leave",
+				})) as unknown) === "remove";
 			if (remove) {
 				homeManagerPath.removeSync({ recursive: true });
 				consola.info("Removed the downloaded dotfiles.");
