@@ -7,16 +7,27 @@ function eq(arr1: string[], arr2: string[]) {
 	return arr1.length === arr2.length && arr1.every((v, i) => v === arr2[i]);
 }
 
+const darwin = Deno.build.os === "darwin";
+
 const argv = parseArgs({
 	options: {
 		update: {
 			type: "boolean",
 			short: "u",
 		},
+		darwin: {
+			type: "boolean",
+		},
 	},
 	allowPositionals: true, // Subcommands
 	tokens: true,
 });
+
+if (!darwin && argv.values.darwin) {
+	consola.warn(
+		"nix-darwin is not supported on this system. Ignoring the flag.",
+	);
+}
 
 try {
 	{
@@ -155,6 +166,11 @@ try {
 		consola.success("Success.");
 	} else {
 		throw `Failed to ${installed ? "update" : "install"} home-manager.`;
+	}
+	if (darwin && argv.values.darwin) {
+		consola.info("Switching darwin-rebuild...");
+		await $`nix run github:LnL7/nix-darwin -- switch --flake ${homeManagerPath}`;
+		consola.success("Success.");
 	}
 } catch (e) {
 	if (typeof e === "string") {
