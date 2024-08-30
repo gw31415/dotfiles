@@ -1,5 +1,5 @@
 {
-  description = "My personal Nix flake of dotfiles and configurations";
+  description = "dotfiles and configurations";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -19,13 +19,9 @@
       pkgs = import nixpkgs { system = env.system; };
     in
     {
-      # Re-export home-manager flake output for convenience. It used by ./install.sh.
-      packages.${env.system}.default = home-manager.defaultPackage.${env.system};
-
       ########################################
       # Home manager configuration
       ########################################
-
       homeConfigurations.${env.username} = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [
@@ -36,12 +32,19 @@
       ########################################
       # Darwin configuration
       ########################################
-
       darwinConfigurations."${env.hostname}" = nix-darwin.lib.darwinSystem {
         modules = [
-          ({ ... }: import ./darwin.nix { inherit pkgs env; flake = self; })
+          ({ pkgs, ... }: import ./darwin.nix { inherit pkgs env; flake = self; })
         ];
       };
-      darwinPackages = self.darwinConfigurations."${env.hostname}".pkgs;
+
+      ########################################
+      # Package sets
+      ########################################
+      packages.${env.system} = {
+        # Note: These are used by ./install.sh.
+        home-manager = home-manager.defaultPackage.${env.system};
+        nix-darwin = nix-darwin.packages.${env.system}.default;
+      };
     };
 }
