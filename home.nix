@@ -45,6 +45,10 @@
   ];
 
   home.file = {
+    ########################################
+    # Common files
+    ########################################
+
     ".skk/SKK-JISYO.L" = {
       source = "${pkgs.skk-dicts}/share/SKK-JISYO.L";
     };
@@ -57,15 +61,24 @@
       recursive = true;
     };
     ".latexmkrc".source = ./statics/latexmkrc;
-    # TODO: .Brewfile cannot be symlinked because it is not a directory
-    ".Brewfile".source = ./statics/Brewfile;
-    # "Library/Containers/net.mtgto.inputmethod.macSKK/Data/Documents/Settings/kana-rule.conf".source = ./statics/kana-rule.conf;
 
     ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${env.homeManagerDirectory}/syms/nvim";
     ".config/mise".source = config.lib.file.mkOutOfStoreSymlink "${env.homeManagerDirectory}/syms/mise";
     ".config/fish/completions".source = config.lib.file.mkOutOfStoreSymlink "${env.homeManagerDirectory}/syms/fish_completions";
     ".config/fish/functions".source = config.lib.file.mkOutOfStoreSymlink "${env.homeManagerDirectory}/syms/fish_functions";
-  };
+
+  } // (if pkgs.stdenv.isDarwin then {
+    ########################################
+    # macOS specific files
+    ########################################
+
+    # TODO: .Brewfile cannot be symlinked because it is not a directory
+    ".Brewfile".source = ./statics/Brewfile;
+
+    # TODO: Files in the Containers directory cannot be symlinked.
+    # "Library/Containers/net.mtgto.inputmethod.macSKK/Data/Documents/Settings/kana-rule.conf".source = ./statics/kana-rule.conf;
+
+  } else { });
 
   home.sessionVariables = {
     EDITOR = "nvim";
@@ -116,25 +129,26 @@
       { name = "autopair"; src = pkgs.fishPlugins.autopair.src; }
     ];
     shellInit = ''
-      if test -f /opt/homebrew/bin/brew
-        eval (/opt/homebrew/bin/brew shellenv)
-      end
-      # starship init fish | source
       if status is-interactive
         mise activate fish | source
       else
         mise activate fish --shims | source
       end
-      if test -d /Applications/Android\ Studio.app/Contents/jbr/Contents/Home
-        export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jbr/Contents/Home
-      end
+
       if test -f $HOME/.cargo/env.fish
         source "$HOME/.cargo/env.fish"
       end
-      if test -d $HOME/.pub-cache/bin
-        set -x PATH $HOME/.pub-cache/bin $PATH
-      end
-    '';
+    '' + (
+      # macOS specific settings
+      if pkgs.stdenv.isDarwin then ''
+        if test -f /opt/homebrew/bin/brew
+          eval (/opt/homebrew/bin/brew shellenv)
+        end
+        if test -d /Applications/Android\ Studio.app/Contents/jbr/Contents/Home
+          export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jbr/Contents/Home
+        end
+      '' else ""
+    );
   };
   programs.go = {
     enable = true;

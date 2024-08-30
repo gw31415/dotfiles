@@ -12,12 +12,13 @@
   outputs = { nixpkgs, home-manager, ... }:
     let
       env = import ./env.nix;
+      pkgs = import nixpkgs { system = env.system; };
     in
     {
       homeConfigurations.${env.username} = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs { system = env.system; };
+        inherit pkgs;
         modules = [
-          ({ config, pkgs, opts, ... }: import ./home.nix { inherit config pkgs env; })
+          ({ config, ... }: import ./home.nix { inherit config pkgs env; })
         ];
       };
       packages.${env.system}.default = home-manager.defaultPackage.${env.system};
