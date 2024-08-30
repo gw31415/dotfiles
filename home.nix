@@ -1,4 +1,4 @@
-{ config, pkgs, username, homeManagerPath, ... }:
+{ config, pkgs, env, ... }:
 {
   home.packages = with pkgs; [
     aria2
@@ -61,10 +61,10 @@
     ".Brewfile".source = ./statics/Brewfile;
     # "Library/Containers/net.mtgto.inputmethod.macSKK/Data/Documents/Settings/kana-rule.conf".source = ./statics/kana-rule.conf;
 
-    ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/syms/nvim";
-    ".config/mise".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/syms/mise";
-    ".config/fish/completions".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/syms/fish_completions";
-    ".config/fish/functions".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerPath}/syms/fish_functions";
+    ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${env.homeManagerDirectory}/syms/nvim";
+    ".config/mise".source = config.lib.file.mkOutOfStoreSymlink "${env.homeManagerDirectory}/syms/mise";
+    ".config/fish/completions".source = config.lib.file.mkOutOfStoreSymlink "${env.homeManagerDirectory}/syms/fish_completions";
+    ".config/fish/functions".source = config.lib.file.mkOutOfStoreSymlink "${env.homeManagerDirectory}/syms/fish_functions";
   };
 
   home.sessionVariables = {
@@ -158,8 +158,8 @@
     ];
   };
   home = {
-    inherit username;
-    homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}";
+    username = env.username;
+    homeDirectory = env.homeDirectory;
     stateVersion = "24.05";
   };
   manual.manpages.enable = true;

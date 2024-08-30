@@ -1,5 +1,5 @@
 {
-  description = "Darwin configuration of ama";
+  description = "Home manager configuration of ama";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -11,18 +11,15 @@
 
   outputs = { nixpkgs, home-manager, ... }:
     let
-      system = "aarch64-darwin";
-      username = "ama";
-      home = { config, pkgs, homeManagerPath, ... }:
-        import ./home.nix {
-          inherit config pkgs username; homeManagerPath = "/Users/${username}/.config/home-manager";
-        };
+      env = import ./env.nix;
     in
     {
-      homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs { inherit system; };
-        modules = [ home ];
+      homeConfigurations.${env.username} = home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs { system = env.system; };
+        modules = [
+          ({ config, pkgs, opts, ... }: import ./home.nix { inherit config pkgs env; })
+        ];
       };
-      packages.${system}.default = home-manager.defaultPackage.${system};
+      packages.${env.system}.default = home-manager.defaultPackage.${env.system};
     };
 }
