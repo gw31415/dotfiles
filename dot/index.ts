@@ -8,7 +8,7 @@ const configHome = $.path(
 const homeManagerPath = configHome.join("home-manager");
 const envnix = homeManagerPath.join("env.nix");
 
-const installed = envnix.existsSync();
+const installed = homeManagerPath.join("flake.nix").existsSync();
 
 try {
 	if (!installed) {
