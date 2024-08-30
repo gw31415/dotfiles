@@ -44,41 +44,47 @@
     zig
   ];
 
-  home.file = {
-    ########################################
-    # Common files
-    ########################################
+  home.file =
+    let
+      configHome = "${config.xdg.configHome}";
+      homeManagerDirectory = "${configHome}/home-manager";
+    in
+    {
+      ########################################
+      # Common files
+      ########################################
 
-    ".skk/SKK-JISYO.L" = {
-      source = "${pkgs.skk-dicts}/share/SKK-JISYO.L";
-    };
-    ".emacs.d" = {
-      source = ./statics/emacs.d;
-      recursive = true;
-    };
-    ".latexmkrc".source = ./statics/latexmkrc;
-    "${config.xdg.configHome}" = {
-      source = ./statics/config;
-      recursive = true;
-    };
+      ".skk/SKK-JISYO.L" = {
+        source = "${pkgs.skk-dicts}/share/SKK-JISYO.L";
+      };
+      ".emacs.d" = {
+        source = ./statics/emacs.d;
+        recursive = true;
+      };
+      ".latexmkrc".source = ./statics/latexmkrc;
 
-    "${config.xdg.configHome}/nvim".source = config.lib.file.mkOutOfStoreSymlink "${env.homeManagerDirectory}/syms/nvim";
-    "${config.xdg.configHome}/mise".source = config.lib.file.mkOutOfStoreSymlink "${env.homeManagerDirectory}/syms/mise";
-    "${config.xdg.configHome}/fish/completions".source = config.lib.file.mkOutOfStoreSymlink "${env.homeManagerDirectory}/syms/fish_completions";
-    "${config.xdg.configHome}/fish/functions".source = config.lib.file.mkOutOfStoreSymlink "${env.homeManagerDirectory}/syms/fish_functions";
+      "${configHome}" = {
+        source = ./statics/config;
+        recursive = true;
+      };
 
-  } // (if pkgs.stdenv.isDarwin then {
-    ########################################
-    # macOS specific files
-    ########################################
+      "${configHome}/nvim".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/nvim";
+      "${configHome}/mise".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/mise";
+      "${configHome}/fish/completions".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/fish_completions";
+      "${configHome}/fish/functions".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/fish_functions";
 
-    # TODO: .Brewfile cannot be symlinked because it is not a directory
-    ".Brewfile".source = ./statics/Brewfile;
+    } // (if pkgs.stdenv.isDarwin then {
+      ########################################
+      # macOS specific files
+      ########################################
 
-    # TODO: Files in the Containers directory cannot be symlinked.
-    # "Library/Containers/net.mtgto.inputmethod.macSKK/Data/Documents/Settings/kana-rule.conf".source = ./statics/kana-rule.conf;
+      # TODO: .Brewfile cannot be symlinked because it is not a directory
+      ".Brewfile".source = ./statics/Brewfile;
 
-  } else { });
+      # TODO: Files in the Containers directory cannot be symlinked.
+      # "Library/Containers/net.mtgto.inputmethod.macSKK/Data/Documents/Settings/kana-rule.conf".source = ./statics/kana-rule.conf;
+
+    } else { });
 
   home.sessionVariables = {
     EDITOR = "nvim";
