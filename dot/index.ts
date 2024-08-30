@@ -18,6 +18,10 @@ const argv = parseArgs({
 		darwin: {
 			type: "boolean",
 		},
+		force: {
+			type: "boolean",
+			short: "f",
+		},
 	},
 	allowPositionals: true, // Subcommands
 	tokens: true,
@@ -53,6 +57,21 @@ try {
 	////////////////////////////////////////
 	if (eq(argv.positionals, ["cd"])) {
 		await $`${Deno.env.get("SHELL") ?? "/bin/bash"}`.cwd(homeManagerPath);
+		Deno.exit(0);
+	}
+
+	////////////////////////////////////////
+	// Clean up
+	////////////////////////////////////////
+	if (eq(argv.positionals, ["clean"])) {
+		consola.info("Cleaning up...");
+		if (argv.values.force) {
+			await $`nix-collect-garbage -d`;
+			consola.success("Cleaned up aggressively.");
+		} else {
+			await $`nix store gc -v`;
+			consola.success("Cleaned up.");
+		}
 		Deno.exit(0);
 	}
 
