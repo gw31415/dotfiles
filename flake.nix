@@ -1,5 +1,5 @@
 {
-  description = "Home manager configuration of ama";
+  description = "Home manager configuration";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -21,6 +21,8 @@
           ({ config, ... }: import ./home.nix { inherit config pkgs env; })
         ];
       };
+
+      # Re-export home-manager flake output for convenience. It used by ./install.sh.
       packages.${env.system}.default = home-manager.defaultPackage.${env.system};
     };
 }
