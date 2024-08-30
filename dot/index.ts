@@ -3,6 +3,10 @@ import { $ } from "jsr:@david/dax";
 import { consola } from "npm:consola";
 import { highlight } from "npm:cli-highlight";
 
+function eq(arr1: string[], arr2: string[]) {
+	return arr1.length === arr2.length && arr1.every((v, i) => v === arr2[i]);
+}
+
 const argv = parseArgs({
 	options: {
 		update: {
@@ -33,6 +37,17 @@ try {
 	const homeManagerPath = configHome.join("home-manager");
 	const envnix = homeManagerPath.join("env.nix");
 
+	////////////////////////////////////////
+	// SHELL with Changed Directory
+	////////////////////////////////////////
+	if (eq(argv.positionals, ["cd"])) {
+		await $`${Deno.env.get("SHELL") ?? "/bin/bash"}`.cwd(homeManagerPath);
+		Deno.exit(0);
+	}
+
+	////////////////////////////////////////
+	// Installation & Switching
+	////////////////////////////////////////
 	const installed = homeManagerPath.join("flake.nix").existsSync();
 	if (!installed) {
 		consola.box("dot by @gw31415");
@@ -134,9 +149,7 @@ try {
 	}
 
 	// Installing/Upgrading home-manager and initial sync
-	consola.info(
-		`Switching to ${installed ? "update" : "install"} home-manager...`,
-	);
+	consola.info("Switching home-manager...");
 	const res = await $`nix run nixpkgs#home-manager -- switch`;
 	if (res.code === 0) {
 		consola.success("Success.");
