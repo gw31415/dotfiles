@@ -30,5 +30,8 @@ fi
 mkdir -p $XDG_CONFIG_HOME
 nix run nixpkgs#git -- clone https://github.com/gw31415/dotfiles $TARGET_PATH
 
+echo "Downloaded dotfiles to $TARGET_PATH."
+echo "NOTE: If the information in $TARGET_PATH/env.nix does not match, the build will fail. In that case, edit the file and run the build again."
+
 # Installing home-manager and initial sync
 nix run $TARGET_PATH#home-manager -- switch

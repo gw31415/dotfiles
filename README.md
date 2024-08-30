@@ -1,4 +1,4 @@
-# Ama's config files
+# dotfiles and configurations for ama
 
 ## Installation
 
