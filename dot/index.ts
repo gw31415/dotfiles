@@ -18,9 +18,8 @@ const argv = parseArgs({
 		darwin: {
 			type: "boolean",
 		},
-		force: {
+		aggressive: {
 			type: "boolean",
-			short: "f",
 		},
 	},
 	allowPositionals: true, // Subcommands
@@ -55,7 +54,7 @@ try {
 	////////////////////////////////////////
 	// SHELL with Changed Directory
 	////////////////////////////////////////
-	if (eq(argv.positionals, ["cd"])) {
+	if (eq(argv.positionals, ["shell"])) {
 		await $`${Deno.env.get("SHELL") ?? "/bin/bash"}`.cwd(homeManagerPath);
 		Deno.exit(0);
 	}
@@ -65,7 +64,7 @@ try {
 	////////////////////////////////////////
 	if (eq(argv.positionals, ["gc"])) {
 		consola.info("Cleaning up...");
-		if (argv.values.force) {
+		if (argv.values.aggressive) {
 			await $`nix-collect-garbage -d`;
 			consola.success("Cleaned up aggressively.");
 		} else {
