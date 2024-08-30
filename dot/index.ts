@@ -2,9 +2,10 @@ import { $ } from "jsr:@david/dax";
 import { consola } from "npm:consola";
 import { highlight } from "npm:cli-highlight";
 
-const homeManagerPath = $.path(
+const configHome = $.path(
 	Deno.env.get("XDG_CONFIG_HOME") || `${Deno.env.get("HOME")}/.config`,
-).join("home-manager");
+);
+const homeManagerPath = configHome.join("home-manager");
 const envnix = homeManagerPath.join("env.nix");
 
 const installed = envnix.existsSync();
@@ -42,11 +43,6 @@ try {
 		consola.success("nix-command and flakes are set.");
 
 		// Obtaining various variables
-		const configHome = $.path(
-			Deno.env.get("XDG_CONFIG_HOME") || `${Deno.env.get("HOME")}/.config`,
-		);
-
-		const homeManagerPath = configHome.join("home-manager");
 		consola.info(`Installing path: ${homeManagerPath}`);
 
 		// Cloning the dotfiles
@@ -59,7 +55,7 @@ try {
 		await $`nix run nixpkgs#git -- clone https://github.com/gw31415/dotfiles ${homeManagerPath}`;
 		consola.success(`Downloaded dotfiles to ${homeManagerPath}.`);
 
-		const envnix = homeManagerPath.join("env.nix");
+		console.log("");
 		console.log(`> ${envnix}`);
 		console.log(
 			highlight(
@@ -70,6 +66,7 @@ try {
 				},
 			),
 		);
+		console.log("");
 		consola.info(
 			`If the information in ${envnix} does not match, the build will fail.`,
 			`You can edit ${envnix} before running the next command.`,
