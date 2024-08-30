@@ -25,7 +25,7 @@ nix run github:gw31415/dotfiles
 	dot --darwin
 	```
 
-- Enter to the dir-changed shell
+- Enter the dir-changed shell
 	```bash
 	dot sh
 	```
