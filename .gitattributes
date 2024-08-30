@@ -1,4 +1,4 @@
+/statics/Brewfile linguist-vendored
+/statics/kana-rule.conf linguist-vendored
 /syms/fish_*/** linguist-vendored
-/Brewfile linguist-vendored
-/private_Library/private_Containers/net.mtgto.inputmethod.macSKK/Data/Documents/Settings/kana-rule.conf.origin linguist-vendored
-/nvim/after/queries/satysfi/*.scm linguist-vendored
+/syms/nvim/after/queries/satysfi/*.scm linguist-vendored
