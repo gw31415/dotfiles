@@ -63,7 +63,7 @@ try {
 	////////////////////////////////////////
 	// Clean up
 	////////////////////////////////////////
-	if (eq(argv.positionals, ["clean"])) {
+	if (eq(argv.positionals, ["gc"])) {
 		consola.info("Cleaning up...");
 		if (argv.values.force) {
 			await $`nix-collect-garbage -d`;
