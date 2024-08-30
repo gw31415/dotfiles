@@ -11,17 +11,29 @@ const argv = parseArgs({
 		},
 	},
 	allowPositionals: true, // Subcommands
+	tokens: true,
 });
 
-const configHome = $.path(
-	Deno.env.get("XDG_CONFIG_HOME") || `${Deno.env.get("HOME")}/.config`,
-);
-const homeManagerPath = configHome.join("home-manager");
-const envnix = homeManagerPath.join("env.nix");
-
-const installed = homeManagerPath.join("flake.nix").existsSync();
-
 try {
+	{
+		// Check if the positional arguments are correctly positioned
+		const pos_index = argv.tokens
+			.filter((x) => x.kind === "positional")
+			.map((x) => x.index)
+			.sort();
+		const pos_count = pos_index.length;
+		if (pos_count !== 0 && pos_count !== pos_index[pos_count - 1] + 1) {
+			throw "Arguments are not correctly positioned.";
+		}
+	}
+
+	const configHome = $.path(
+		Deno.env.get("XDG_CONFIG_HOME") || `${Deno.env.get("HOME")}/.config`,
+	);
+	const homeManagerPath = configHome.join("home-manager");
+	const envnix = homeManagerPath.join("env.nix");
+
+	const installed = homeManagerPath.join("flake.nix").existsSync();
 	if (!installed) {
 		consola.box("dot by @gw31415");
 		consola.info("GitHub: https://github.com/gw31415/dotfiles");
