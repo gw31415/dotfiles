@@ -18,8 +18,11 @@ function __fish_complete_dot-sh_argcmd
 	if test $status -ne 0
 		set subcmd ""
 	end
+    set dir (pwd)
+    cd $HOME/.config/home-manager
     complete -C $subcmd
     complete -C "$subcmd"-
+    cd $dir
 end
 
 complete -c dot -n __fish_use_subcommand -a sh -d "Enter \$SHELL in the home-manager dir"
