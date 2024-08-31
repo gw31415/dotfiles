@@ -147,14 +147,21 @@
     ];
     shellInit = ''
       set fish_greeting
+      if test -d "/opt/homebrew/share/fish/completions"
+          set -p fish_complete_path /opt/homebrew/share/fish/completions
+      end
+      if test -d "/opt/homebrew/share/fish/vendor_completions.d"
+          set -p fish_complete_path /opt/homebrew/share/fish/vendor_completions.d
+      end
+
       if status is-interactive
-        mise activate fish | source
+          mise activate fish | source
       else
-        mise activate fish --shims | source
+          mise activate fish --shims | source
       end
 
       if test -f $HOME/.cargo/env.fish
-        source "$HOME/.cargo/env.fish"
+          source "$HOME/.cargo/env.fish"
       end
     '' + (
       # macOS specific settings
