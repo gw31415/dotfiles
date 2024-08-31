@@ -1,7 +1,9 @@
 import { parseArgs } from "node:util";
-import { $ } from "jsr:@david/dax";
-import { consola } from "npm:consola";
 import { highlight } from "npm:cli-highlight";
+import { consola } from "npm:consola";
+import { $ } from "jsr:@david/dax";
+import { crypto } from "jsr:@std/crypto/crypto";
+import { encodeHex } from "jsr:@std/encoding/hex";
 
 function eq(arr1: string[], arr2: string[]) {
 	return arr1.length === arr2.length && arr1.every((v, i) => v === arr2[i]);
@@ -200,8 +202,22 @@ try {
 		}
 		if (argv.values.update) {
 			consola.info("Updating flake.lock...");
+			const flakeLock = homeManagerPath.join("flake.lock");
+			const hash = async () =>
+				encodeHex(
+					await crypto.subtle.digest(
+						"BLAKE3",
+						await Deno.readFile(flakeLock.toFileUrl()),
+					),
+				);
+			const hashBefore = flakeLock.existsSync() ? await hash() : "";
 			await $`nix flake update ${homeManagerPath}`;
-			consola.success(`Updated ${homeManagerPath.join("flake.lock")}.`);
+			const hashAfter = await hash();
+			if (hashBefore === hashAfter) {
+				consola.info("No changes. Update skipped.");
+			} else {
+				consola.success(`Updated ${homeManagerPath.join("flake.lock")}.`);
+			}
 		}
 
 		// Installing/Upgrading home-manager and initial sync
