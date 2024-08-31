@@ -23,19 +23,19 @@ nix run github:gw31415/dotfiles
 	dot --home # or `dot -h`
 	```
 
-- Switch env `nix-darwin` (not only `home-manager`)
+- Switch env of nix-darwin
 	```bash
 	dot --darwin # or `dot -d`
-	```
-
-- Switch with updating the `flake.lock`
-	```bash
-	dot --update # or `dot -u`
 	```
 
 - Switch all envs
 	```bash
 	dot --all # or `dot -a`
+	```
+
+- Fetch & update the `flake.lock`
+	```bash
+	dot --update # or `dot -u`
 	```
 
 ### Utilities
