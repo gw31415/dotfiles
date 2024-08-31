@@ -25,9 +25,9 @@ nix run github:gw31415/dotfiles
 	dot --darwin
 	```
 
-- Enter the dir-changed shell
+- Open shell in the dotfiles directory and run a command. Without `<cmd>`, it will open `$SHELL`.
 	```bash
-	dot sh
+	dot sh <cmd>
 	```
 
 - Nix garbage-collection
