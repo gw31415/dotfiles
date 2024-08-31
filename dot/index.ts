@@ -21,9 +21,6 @@ const argv = parseArgs({
 		aggressive: {
 			type: "boolean",
 		},
-		usage: {
-			type: "boolean",
-		},
 	},
 	allowPositionals: true, // Subcommands
 	tokens: true,
@@ -53,15 +50,6 @@ try {
 	);
 	const homeManagerPath = configHome.join("home-manager");
 	const envnix = homeManagerPath.join("env.nix");
-
-	////////////////////////////////////////
-	// Usage spec
-	////////////////////////////////////////
-	if (argv.values.usage) {
-		console.log(Deno.readTextFileSync(new URL("./dot.usage.kdl", import.meta.url)));
-		Deno.exit(0);
-	}
-
 
 	////////////////////////////////////////
 	// SHELL with Changed Directory
