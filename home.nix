@@ -130,6 +130,7 @@
     enable = true;
     shellAbbrs = {
       tree = "eza -T";
+      gll = "lazygit";
     };
     plugins = [
       { name = "z"; src = pkgs.fishPlugins.z.src; }
