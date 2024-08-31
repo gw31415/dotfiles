@@ -13,7 +13,7 @@ nix run github:gw31415/dotfiles
 
 ### Switching (update/upgrade) Environments
 
-- Shortcut for `dot --home`, or install `gw31415/dotfiles`.
+- Shortcut for `dot --home`, or install `github:gw31415/dotfiles`.
 	```bash
 	dot
 	```
@@ -62,7 +62,7 @@ nix run github:gw31415/dotfiles
 	dot -ua
 	```
 
-- Show `git status` of the current `dotfiles
+- Show `git status` of the current `dotfiles`
 	```bash
 	dot sh git status
 	```
