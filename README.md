@@ -5,10 +5,13 @@
 ```bash
 nix run github:gw31415/dotfiles
 ```
+
 > [!note]
 > This is just running the `dot` package. The `dot` package is a helper command to manage `gw31415/dotfiles`.
 
 ## `dot` Usage
+
+### Switching (update/upgrade) Environments
 
 - Shortcut for `dot --home`, or install `gw31415/dotfiles`.
 	```bash
@@ -35,6 +38,8 @@ nix run github:gw31415/dotfiles
 	dot --all # or `dot -a`
 	```
 
+### Utilities
+
 - Open the dir-changed devShell of the dotfiles and run `<cmd>`. Without `<cmd>`, it will open `$SHELL`.
 	```bash
 	dot sh <cmd>
@@ -48,4 +53,16 @@ nix run github:gw31415/dotfiles
 - Nix garbage-collection (aggressive)
 	```bash
 	dot gc --aggressive
+	```
+
+## Example
+
+- Update all environments after updating the `flake.lock`
+	```bash
+	dot -ua
+	```
+
+- Show `git status` of the current `dotfiles
+	```bash
+	dot sh git status
 	```
