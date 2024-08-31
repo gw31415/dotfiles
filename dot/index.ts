@@ -231,9 +231,12 @@ try {
 		}
 		if (darwin && argv.values.darwin) {
 			consola.info("Switching darwin-rebuild...");
-			await $`nix run .#nix-darwin -- switch --flake .`
+			const res = await $`nix run .#nix-darwin -- switch --flake .`
 				.cwd(homeManagerPath)
 				.noThrow();
+			if (res.code !== 0) {
+				throw "Failed to switch darwin-rebuild.";
+			}
 		}
 		consola.success("Success.");
 		Deno.exit(0);
