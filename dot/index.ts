@@ -59,7 +59,14 @@ try {
 		////////////////////////////////////////
 		// SHELL with Changed Directory
 		////////////////////////////////////////
-		await $`${Deno.env.get("SHELL") ?? "/bin/bash"}`.cwd(homeManagerPath);
+		if (Deno.env.get("DOT_CHILD_PS")) {
+			consola.warn("You are already in a dot-child-shell.");
+			Deno.exit(1);
+		}
+		consola.info("Entering the dot-child-shell...");
+		await $`${Deno.env.get("SHELL") ?? "/bin/bash"}`
+			.cwd(homeManagerPath)
+			.env("DOT_CHILD_PS", "1");
 	} else if (eq(argv.positionals, ["gc"])) {
 		////////////////////////////////////////
 		// Clean up
