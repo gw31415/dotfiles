@@ -54,7 +54,7 @@ try {
 			throw "Not installed. To install, please run without the subcommand first.";
 		}
 		if (Deno.env.get("DOT_CHILD_PS")) {
-			consola.warn("You are already in the devShell.");
+			consola.warn("You are already in the devShell. Cancelled.");
 			Deno.exit(1);
 		}
 		consola.info("Entering the devShell...");
