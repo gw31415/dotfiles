@@ -1,6 +1,7 @@
 { config, pkgs, env, dot-cli, ... }:
 {
   home.packages = with pkgs; [
+    # CLI tools
     aria2
     asciinema
     bat
@@ -43,7 +44,13 @@
     wget
     yt-dlp
     zig
-  ] ++ [ dot-cli ];
+  ] ++ [
+    # Fonts
+    hackgen-nf-font
+    noto-fonts-cjk-sans
+    noto-fonts-cjk-serif
+  ]
+  ++ [ dot-cli ];
 
   home.file =
     let
