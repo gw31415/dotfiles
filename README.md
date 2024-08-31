@@ -55,7 +55,7 @@ nix run github:gw31415/dotfiles
 	dot gc --aggressive
 	```
 
-## Example
+## Examples
 
 - Update all environments after updating the `flake.lock`
 	```bash
