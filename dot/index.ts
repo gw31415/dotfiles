@@ -9,30 +9,81 @@ function eq(arr1: string[], arr2: string[]) {
 
 const darwin = Deno.build.os === "darwin";
 
-const argv = parseArgs({
-	options: {
-		update: {
-			type: "boolean",
-			short: "u",
-		},
-		darwin: {
-			type: "boolean",
-		},
-		aggressive: {
-			type: "boolean",
-		},
-	},
-	allowPositionals: true, // Subcommands
-	tokens: true,
-});
-
-if (!darwin && argv.values.darwin) {
-	consola.warn(
-		"nix-darwin is not supported on this system. Ignoring the flag.",
-	);
+function getArgs() {
+	// parseArgs throws TypeError if unknown flags are detected
+	// This function is required to properly handle Typescript types and also determine errors
+	try {
+		const argv = parseArgs({
+			options: {
+				update: {
+					type: "boolean",
+					short: "u",
+				},
+				darwin: {
+					type: "boolean",
+				},
+				aggressive: {
+					type: "boolean",
+				},
+			},
+			allowPositionals: true, // Subcommands
+			tokens: true,
+		});
+		return argv;
+	} catch (e) {
+		const err: Error = (e instanceof Error ? e : new Error(e)) as Error;
+		return err;
+	}
 }
 
 try {
+	const configHome = $.path(
+		Deno.env.get("XDG_CONFIG_HOME") || `${Deno.env.get("HOME")}/.config`,
+	);
+	const homeManagerPath = configHome.join("home-manager");
+	const envnix = homeManagerPath.join("env.nix");
+	const installed = homeManagerPath.join("flake.nix").existsSync();
+
+	////////////////////////////////////////
+	// Subcommand: SHELL with Changed Directory
+	// Special case: No need to parse the arguments
+	////////////////////////////////////////
+
+	if (Deno.args[0] === "sh") {
+		if (!installed) {
+			throw "Not installed. To install, please run without the subcommand first.";
+		}
+		if (Deno.env.get("DOT_CHILD_PS")) {
+			consola.warn("You are already in a dot-child-shell.");
+			Deno.exit(1);
+		}
+		consola.info("Entering the dot-child-shell...");
+		const cmd =
+			Deno.args.length > 1
+				? $`${Deno.args.slice(1)}`
+				: $`${Deno.env.get("SHELL") ?? "/bin/bash"}`;
+		const res = await cmd.cwd(homeManagerPath).env("DOT_CHILD_PS", "1").noThrow();
+		consola.info("Exiting the dot-child-shell...");
+		Deno.exit(res.code);
+	}
+
+	////////////////////////////////////////
+	// Parsing Arguments
+	////////////////////////////////////////
+	const argv = getArgs();
+	// If sh is used, Subcommand does not need to be thrown
+	// because of the different parsing method
+	if (argv instanceof Error) {
+		if (argv instanceof TypeError) {
+			throw "Unknown flags detected.";
+		}
+		throw argv;
+	}
+	if (!darwin && argv.values.darwin) {
+		consola.warn(
+			"nix-darwin is not supported on this system. Ignoring the flag.",
+		);
+	}
 	{
 		// Check if the positional arguments are correctly positioned
 		const pos_index = argv.tokens
@@ -45,41 +96,10 @@ try {
 		}
 	}
 
-	const configHome = $.path(
-		Deno.env.get("XDG_CONFIG_HOME") || `${Deno.env.get("HOME")}/.config`,
-	);
-	const homeManagerPath = configHome.join("home-manager");
-	const envnix = homeManagerPath.join("env.nix");
-	const installed = homeManagerPath.join("flake.nix").existsSync();
-
 	////////////////////////////////////////
 	// Subcommands & Default
 	////////////////////////////////////////
-	if (eq(argv.positionals, ["sh"])) {
-		////////////////////////////////////////
-		// SHELL with Changed Directory
-		////////////////////////////////////////
-		if (Deno.env.get("DOT_CHILD_PS")) {
-			consola.warn("You are already in a dot-child-shell.");
-			Deno.exit(1);
-		}
-		consola.info("Entering the dot-child-shell...");
-		await $`${Deno.env.get("SHELL") ?? "/bin/bash"}`
-			.cwd(homeManagerPath)
-			.env("DOT_CHILD_PS", "1");
-	} else if (eq(argv.positionals, ["gc"])) {
-		////////////////////////////////////////
-		// Clean up
-		////////////////////////////////////////
-		consola.info("Cleaning up...");
-		if (argv.values.aggressive) {
-			await $`nix-collect-garbage -d`;
-			consola.success("Cleaned up aggressively.");
-		} else {
-			await $`nix store gc -v`;
-			consola.success("Cleaned up.");
-		}
-	} else if (eq(argv.positionals, [])) {
+	if (eq(argv.positionals, [])) {
 		////////////////////////////////////////
 		// Installation & Switching
 		////////////////////////////////////////
@@ -193,6 +213,26 @@ try {
 			consola.info("Switching darwin-rebuild...");
 			await $`nix run github:LnL7/nix-darwin -- switch --flake ${homeManagerPath}`;
 			consola.success("Success.");
+		}
+		Deno.exit(0);
+	}
+
+	// Subcommands below is needed to be installed
+	if (!installed) {
+		throw "Not installed. To install, please run without the subcommand first.";
+	}
+
+	if (eq(argv.positionals, ["gc"])) {
+		////////////////////////////////////////
+		// Clean up
+		////////////////////////////////////////
+		consola.info("Cleaning up...");
+		if (argv.values.aggressive) {
+			await $`nix-collect-garbage -d`;
+			consola.success("Cleaned up aggressively.");
+		} else {
+			await $`nix store gc -v`;
+			consola.success("Cleaned up.");
 		}
 	} else {
 		throw "Unknown subcommand.";
