@@ -214,7 +214,10 @@ try {
 		}
 		if (darwin && argv.values.darwin) {
 			consola.info("Switching darwin-rebuild...");
-			await $`nix run github:LnL7/nix-darwin -- switch --flake ${homeManagerPath}`;
+			const darwinRebuild = $.commandExistsSync("darwin-rebuild")
+				? ["darwin-rebuild"]
+				: ["nix", "run", "github:LnL7/nix-darwin", "--"];
+			await $`${darwinRebuild} switch --flake ${homeManagerPath}`;
 			consola.success("Success.");
 		}
 		Deno.exit(0);
