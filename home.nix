@@ -92,6 +92,7 @@
     EDITOR = "nvim";
     RUSTC_WRAPPER = "${pkgs.sccache}/bin/sccache";
     SHELL = "${pkgs.fish}/bin/fish";
+    XDG_CONFIG_HOME = "${env.homeDirectory}/.config";
   };
 
   programs.home-manager.enable = true;
