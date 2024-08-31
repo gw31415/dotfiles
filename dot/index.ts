@@ -55,7 +55,7 @@ try {
 		if (!installed) {
 			throw "Not installed. To install, please run without the subcommand first.";
 		}
-		if (Deno.env.get("DOT_CHILD_PS")) {
+		if ((Deno.env.get("DOT_DEVSHELL") ?? "").length > 0) {
 			consola.warn("You are already in the devShell. Cancelled.");
 			Deno.exit(1);
 		}
@@ -66,7 +66,7 @@ try {
 				: $`nix develop --impure -c ${Deno.env.get("SHELL") ?? "/bin/bash"}`;
 		const res = await cmd
 			.cwd(homeManagerPath)
-			.env("DOT_CHILD_PS", "1")
+			.env("DOT_DEVSHELL", "1")
 			.noThrow();
 		consola.info("Exiting the devShell...");
 		Deno.exit(res.code);
