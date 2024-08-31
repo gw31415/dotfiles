@@ -46,7 +46,7 @@
         # https://github.com/NixOS/nixpkgs/blob/808125fff694e4eb4c73952d501e975778ffdacd/pkgs/build-support/trivial-builders.nix#L238-L250
         default = dot-cli;
 
-        # Note: These are used by ./install.sh.
+        # Note: These are used by dot-cli
         home-manager = home-manager.defaultPackage.${env.system};
         nix-darwin = nix-darwin.packages.${env.system}.default;
       };
