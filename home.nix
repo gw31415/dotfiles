@@ -23,6 +23,7 @@
     jdupes
     jnv
     jq
+    lazygit
     litecli
     mise
     mmv-go
