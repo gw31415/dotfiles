@@ -135,6 +135,7 @@
       { name = "autopair"; src = pkgs.fishPlugins.autopair.src; }
     ];
     shellInit = ''
+      set fish_greeting
       if status is-interactive
         mise activate fish | source
       else
