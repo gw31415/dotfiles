@@ -11,9 +11,10 @@
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-darwin, ... }:
+  outputs = { self, nixpkgs, home-manager, nix-darwin, nix-homebrew, ... }:
     let
       env = import ./env.nix;
       pkgs = import nixpkgs { system = env.system; };
@@ -31,11 +32,20 @@
       };
 
       ########################################
-      # Darwin configuration
+      # Darwin configuration with nix-homebrew
       ########################################
       darwinConfigurations."${env.hostname}" = nix-darwin.lib.darwinSystem {
         modules = [
           ({ pkgs, ... }: import ./darwin.nix { inherit pkgs env; flake = self; })
+          (nix-homebrew.darwinModules.nix-homebrew {
+            lib = nix-darwin.lib;
+            nix-homebrew = {
+              enable = true;
+              enableRosetta = true;
+              user = env.username;
+              autoMigrate = true;
+            };
+          })
         ];
       };
 
