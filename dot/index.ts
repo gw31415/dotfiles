@@ -17,12 +17,21 @@ function getArgs() {
 	try {
 		const argv = parseArgs({
 			options: {
+				all: {
+					type: "boolean",
+					short: "a",
+				},
 				update: {
 					type: "boolean",
 					short: "u",
 				},
 				darwin: {
 					type: "boolean",
+					short: "d",
+				},
+				home: {
+					type: "boolean",
+					short: "h",
 				},
 				aggressive: {
 					type: "boolean",
@@ -221,15 +230,17 @@ try {
 		}
 
 		// Installing/Upgrading home-manager and initial sync
-		consola.info("Switching home-manager...");
-		const res = await $`nix run nixpkgs#home-manager -- switch`.noThrow();
-		if (res.code !== 0) {
-			// TODO: @david/dax throws an error if the command fails, so it should be handled each $-usage
-			// because we need to determine if the error is a handled error or not to throw a proper error message.
-			// This is a temporary solution.
-			throw `Failed to ${installed ? "update" : "install"} home-manager.`;
+		if (Deno.args.length === 0 || argv.values.home || argv.values.all) {
+			consola.info("Switching home-manager...");
+			const res = await $`nix run nixpkgs#home-manager -- switch`.noThrow();
+			if (res.code !== 0) {
+				// TODO: @david/dax throws an error if the command fails, so it should be handled each $-usage
+				// because we need to determine if the error is a handled error or not to throw a proper error message.
+				// This is a temporary solution.
+				throw `Failed to ${installed ? "update" : "install"} home-manager.`;
+			}
 		}
-		if (darwin && argv.values.darwin) {
+		if (darwin && (argv.values.darwin || argv.values.all)) {
 			consola.info("Switching darwin-rebuild...");
 			const res = await $`nix run .#nix-darwin -- switch --flake .`
 				.cwd(homeManagerPath)

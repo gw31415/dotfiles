@@ -10,9 +10,19 @@ nix run github:gw31415/dotfiles
 
 ## `dot` Usage
 
-- Switch environment (or install if not exists)
+- Shortcut for `dot --home`, or install `gw31415/dotfiles`.
 	```bash
 	dot
+	```
+
+- Switch env of home-manager
+	```bash
+	dot --home # or `dot -h`
+	```
+
+- Switch env `nix-darwin` (not only `home-manager`)
+	```bash
+	dot --darwin # or `dot -d`
 	```
 
 - Switch with updating the `flake.lock`
@@ -20,9 +30,9 @@ nix run github:gw31415/dotfiles
 	dot --update # or `dot -u`
 	```
 
-- Switch also with `nix-darwin` (not only `home-manager`)
+- Switch all envs
 	```bash
-	dot --darwin
+	dot --all # or `dot -a`
 	```
 
 - Open the dir-changed devShell of the dotfiles and run `<cmd>`. Without `<cmd>`, it will open `$SHELL`.
