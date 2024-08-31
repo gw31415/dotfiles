@@ -45,7 +45,7 @@ try {
 	const installed = homeManagerPath.join("flake.nix").existsSync();
 
 	////////////////////////////////////////
-	// Subcommand: devShell
+	// Subcommand: sh ... devShell
 	// Special case: No need to parse the arguments
 	////////////////////////////////////////
 
@@ -104,7 +104,7 @@ try {
 	////////////////////////////////////////
 	if (eq(argv.positionals, [])) {
 		////////////////////////////////////////
-		// Installation & Switching
+		// Subcommand: (default) ... Installation & Switching
 		////////////////////////////////////////
 		if (!installed) {
 			consola.box("dot by @gw31415");
@@ -227,7 +227,7 @@ try {
 
 	if (eq(argv.positionals, ["gc"])) {
 		////////////////////////////////////////
-		// Clean up
+		// Subcommand: gc ... Garbage Collection
 		////////////////////////////////////////
 		consola.info("Cleaning up...");
 		if (argv.values.aggressive) {
