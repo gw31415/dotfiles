@@ -25,7 +25,7 @@ nix run github:gw31415/dotfiles
 	dot --darwin
 	```
 
-- Open shell in the dotfiles directory and run a command. Without `<cmd>`, it will open `$SHELL`.
+- Open the dir-changed devShell of the dotfiles and run `<cmd>`. Without `<cmd>`, it will open `$SHELL`.
 	```bash
 	dot sh <cmd>
 	```

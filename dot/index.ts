@@ -45,7 +45,7 @@ try {
 	const installed = homeManagerPath.join("flake.nix").existsSync();
 
 	////////////////////////////////////////
-	// Subcommand: SHELL with Changed Directory
+	// Subcommand: devShell
 	// Special case: No need to parse the arguments
 	////////////////////////////////////////
 
@@ -54,16 +54,19 @@ try {
 			throw "Not installed. To install, please run without the subcommand first.";
 		}
 		if (Deno.env.get("DOT_CHILD_PS")) {
-			consola.warn("You are already in a dot-child-shell.");
+			consola.warn("You are already in the devShell.");
 			Deno.exit(1);
 		}
-		consola.info("Entering the dot-child-shell...");
+		consola.info("Entering the devShell...");
 		const cmd =
 			Deno.args.length > 1
-				? $`${Deno.args.slice(1)}`
-				: $`${Deno.env.get("SHELL") ?? "/bin/bash"}`;
-		const res = await cmd.cwd(homeManagerPath).env("DOT_CHILD_PS", "1").noThrow();
-		consola.info("Exiting the dot-child-shell...");
+				? $`nix develop --impure -c ${Deno.args.slice(1)}`
+				: $`nix develop --impure -c ${Deno.env.get("SHELL") ?? "/bin/bash"}`;
+		const res = await cmd
+			.cwd(homeManagerPath)
+			.env("DOT_CHILD_PS", "1")
+			.noThrow();
+		consola.info("Exiting the devShell...");
 		Deno.exit(res.code);
 	}
 
