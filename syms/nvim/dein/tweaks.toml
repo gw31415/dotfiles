@@ -317,6 +317,18 @@ command KeycastrDisable lua require 'keycastr'.disable()
 # lua_source = "require 'smart-tab'.setup()"
 
 [[plugins]]
+repo = "kdheepak/lazygit.nvim"
+on_cmd = [
+	"LazyGit",
+	"LazyGitConfig",
+	"LazyGitCurrentFile",
+	"LazyGitFilter",
+	"LazyGitFilterCurrentFile",
+]
+hook_add = "nnoremap gll <cmd>LazyGit<cr>"
+depends = "plenary.nvim"
+
+[[plugins]]
 repo = "Wansmer/symbol-usage.nvim"
 on_event = "BufReadPre"
 lua_source = '''
