@@ -206,10 +206,11 @@ try {
 
 		// Installing/Upgrading home-manager and initial sync
 		consola.info("Switching home-manager...");
-		const res = await $`nix run nixpkgs#home-manager -- switch`;
-		if (res.code === 0) {
-			consola.success("Success.");
-		} else {
+		const res = await $`nix run nixpkgs#home-manager -- switch`.noThrow();
+		if (res.code !== 0) {
+			// TODO: @david/dax throws an error if the command fails, so it should be handled each $-usage
+			// because we need to determine if the error is a handled error or not to throw a proper error message.
+			// This is a temporary solution.
 			throw `Failed to ${installed ? "update" : "install"} home-manager.`;
 		}
 		if (darwin && argv.values.darwin) {
@@ -219,8 +220,8 @@ try {
 					? ["darwin-rebuild"]
 					: ["nix", "run", "github:LnL7/nix-darwin", "--"];
 			await $`${darwinRebuild} switch --flake ${homeManagerPath}`;
-			consola.success("Success.");
 		}
+		consola.success("Success.");
 		Deno.exit(0);
 	}
 
