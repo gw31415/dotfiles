@@ -18,7 +18,7 @@
     let
       env = import ./env.nix;
       pkgs = import nixpkgs { system = env.system; };
-      dot-cli = pkgs.writeShellScriptBin "dot" ''exec ${pkgs.deno}/bin/deno run -A --no-config ${(./dot/index.ts)} "$@"'';
+      dot-cli = pkgs.writeShellScriptBin "dot" ''exec ${pkgs.deno}/bin/deno run -qA --no-config ${(./dot/index.ts)} "$@"'';
     in
     {
       ########################################
