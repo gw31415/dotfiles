@@ -116,6 +116,7 @@
       credential.helper =
         "/usr/local/share/gcm-core/git-credential-manager";
       init.defaultBranch = "main";
+      commit.gpgSign = true;
     };
   };
   programs.starship = {
