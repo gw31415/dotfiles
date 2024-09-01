@@ -113,26 +113,6 @@ lua << EOF
 			pcall(wrapped, bufnr, lang)
 		end
 	end)(vim.treesitter.start)
-
-	function SetupAuthkey(path, opts)
-		opts = opts or {}
-		path = vim.fn.expand(path, nil, nil)
-		local key
-		if vim.fn.filereadable(path) == 1 then
-			key = vim.fn.trim(vim.fn.readfile(path, nil, 1)[1])
-		else
-			key = vim.fn.input(opts.prompt or 'Input api key: ')
-			if key == '' then return nil end
-			vim.fn.writefile({ key }, path)
-			vim.fn.system({ 'chmod', '600', path })
-			vim.notify(string.format(
-					'Successfully saved the API key at `%s`.', path),
-				vim.log.levels.INFO, {
-					title = 'gpt.nvim'
-				})
-		end
-		return key
-	end
 EOF
 se stl=%f%r%m%h%w%=%{&et?'(et)':''}sw=%{&sw}\ E%{v:lua.get_error_count()}W%{v:lua.get_warn_count()}\ %l/%L
 

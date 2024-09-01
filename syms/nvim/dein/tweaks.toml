@@ -178,7 +178,7 @@ end)
 [[plugins]]
 repo = "gw31415/deepl.vim"
 lua_source = '''
-vim.api.nvim_set_var('deepl_authkey', SetupAuthkey('~/.ssh/deepl_authkey.txt', { prompt = 'DEEPL_API_KEY = ' }))
+vim.api.nvim_set_var('deepl_authkey', os.getenv('DEEPL_API_KEY'))
 '''
 [[plugins]]
 repo = "gw31415/deepl-commands.nvim"

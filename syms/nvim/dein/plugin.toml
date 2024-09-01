@@ -130,7 +130,7 @@ repo = "gw31415/denops-aioperator.nvim"
 lua_add = '''
 vim.api.nvim_set_var('aioperator_opts', {
 	openai = {
-		apiKey = SetupAuthkey('~/.ssh/openai_api_key.txt', { prompt = 'OPENAI_API_KEY = ' })
+		apiKey = os.getenv 'OPENAI_API_KEY',
 	},
 })
 
