@@ -17,7 +17,6 @@
     ffmpeg
     flyctl
     gh
-    git-credential-manager
     gopls
     hugo
     imagemagick
@@ -114,7 +113,8 @@
       "kls_database.db"
     ];
     extraConfig = {
-      credential.helper = "${pkgs.git-credential-manager}/bin/git-credential-manager";
+      credential.helper =
+        "/usr/local/share/gcm-core/git-credential-manager";
       init.defaultBranch = "main";
     };
   };
