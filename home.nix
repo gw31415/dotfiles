@@ -12,6 +12,7 @@
     deno
     dotnet-sdk_7
     emacs
+    envchain
     eza
     ffmpeg
     flyctl
