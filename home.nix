@@ -117,6 +117,7 @@
         "/usr/local/share/gcm-core/git-credential-manager";
       init.defaultBranch = "main";
       commit.gpgSign = true;
+      user.signingKey = "B7E2A136"; # Expiration: 2025-09-01
     };
   };
   programs.starship = {
