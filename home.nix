@@ -10,7 +10,6 @@
     cocoapods
     delta
     deno
-    direnv
     dotnet-sdk_7
     emacs
     eza
@@ -174,6 +173,10 @@
         end
       '' else ""
     );
+  };
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
   };
   programs.go = {
     enable = true;
