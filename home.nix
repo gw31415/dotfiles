@@ -100,6 +100,7 @@
     RUSTC_WRAPPER = "${pkgs.sccache}/bin/sccache";
     SHELL = "${pkgs.fish}/bin/fish";
     XDG_CONFIG_HOME = "${env.homeDirectory}/.config";
+    DIRENV_LOG_FORMAT = "";
   };
 
   programs.home-manager.enable = true;
