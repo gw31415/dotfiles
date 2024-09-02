@@ -166,6 +166,10 @@
       if test -f $HOME/.cargo/env.fish
           source "$HOME/.cargo/env.fish"
       end
+
+      if type -q gpgconf
+          set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
+      end
     '' + (
       # macOS specific settings
       if pkgs.stdenv.isDarwin then ''
