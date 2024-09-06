@@ -38,6 +38,7 @@
     sccache
     silicon
     slack
+    slack-term
     tectonic
     tmux
     typst
