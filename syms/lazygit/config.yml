@@ -6,7 +6,7 @@ git:
     pager: delta -s --dark --paging=never --24-bit-color=never
 
 customCommands:
-  - key: "<c-c>"
+  - key: "C"
     context: "files"
     command: "git czg ai || true"
     description: "commit with cz-git with ai"
