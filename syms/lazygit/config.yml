@@ -4,3 +4,11 @@ git:
   paging:
     colorArg: always
     pager: delta -s --dark --paging=never --24-bit-color=never
+
+customCommands:
+  - key: "<c-c>"
+    context: "files"
+    command: "git czg ai || exit 0"
+    description: "commit with cz-git with ai"
+    loadingText: "opening czg commit tool"
+    subprocess: true
