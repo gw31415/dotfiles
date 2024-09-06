@@ -11,7 +11,7 @@
     delta
     deno
     dotnet-sdk_7
-    emacs
+    emacs-nox
     envchain
     eza
     ffmpeg
