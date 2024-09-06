@@ -18,7 +18,6 @@ brew "openssl@3"
 brew "unbound"
 brew "gnutls"
 brew "libgpg-error"
-brew "gnupg"
 brew "mas"
 brew "pinentry-mac"
 brew "jorgelbg/tap/pinentry-touchid"
@@ -57,7 +56,6 @@ mas "Numbers", id: 409203825
 mas "OmniFocus", id: 1542143627
 mas "Pages", id: 409201541
 mas "Sequel Ace", id: 1518036000
-mas "Slack", id: 803453959
 mas "Vuzix View", id: 1567955906
 mas "Xcode", id: 497799835
 mas "タイピスト", id: 415166115

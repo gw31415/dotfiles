@@ -17,6 +17,7 @@
     ffmpeg
     flyctl
     gh
+    gnupg
     gopls
     hugo
     imagemagick
@@ -36,6 +37,7 @@
     rustup
     sccache
     silicon
+    slack
     tectonic
     tmux
     typst
