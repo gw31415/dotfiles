@@ -21,7 +21,7 @@
         system = env.system;
         config.allowUnfree = true;
       };
-      dot-cli = pkgs.writeShellScriptBin "dot" ''exec ${pkgs.deno}/bin/deno run -qA --no-config ${(./dot/index.ts)} "$@"'';
+      dot-cli = pkgs.writeShellScriptBin "dot" ''exec ${pkgs.deno}/bin/deno run -qA --no-config ${./dot/index.ts} "$@"'';
     in
     {
       ########################################
