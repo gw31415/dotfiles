@@ -19,7 +19,7 @@
       env = import ./env.nix;
       pkgs = import nixpkgs {
         system = env.system;
-        config. allowUnfree = true; # For Slack
+        config.allowUnfree = true;
       };
       dot-cli = pkgs.writeShellScriptBin "dot" ''exec ${pkgs.deno}/bin/deno run -qA --no-config ${(./dot/index.ts)} "$@"'';
     in
