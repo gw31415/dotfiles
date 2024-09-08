@@ -153,31 +153,26 @@
     ];
     shellInit = ''
       set fish_greeting
-      if test -d "/opt/homebrew/share/fish/completions"
-          set -p fish_complete_path /opt/homebrew/share/fish/completions
-      end
-      if test -d "/opt/homebrew/share/fish/vendor_completions.d"
-          set -p fish_complete_path /opt/homebrew/share/fish/vendor_completions.d
-      end
-
       if status is-interactive
-          mise activate fish | source
+        mise activate fish | source
       else
-          mise activate fish --shims | source
+        mise activate fish --shims | source
       end
-
       if test -f $HOME/.cargo/env.fish
-          source "$HOME/.cargo/env.fish"
+        source "$HOME/.cargo/env.fish"
       end
-
-      if type -q gpgconf
-          set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
-      end
+      set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
     '' + (
       # macOS specific settings
       if pkgs.stdenv.isDarwin then ''
         if test -f /opt/homebrew/bin/brew
           eval (/opt/homebrew/bin/brew shellenv)
+        end
+        if test -d "/opt/homebrew/share/fish/completions"
+          set -p fish_complete_path /opt/homebrew/share/fish/completions
+        end
+        if test -d "/opt/homebrew/share/fish/vendor_completions.d"
+          set -p fish_complete_path /opt/homebrew/share/fish/vendor_completions.d
         end
         if test -d /Applications/Android\ Studio.app/Contents/jbr/Contents/Home
           export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jbr/Contents/Home
