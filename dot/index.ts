@@ -232,7 +232,9 @@ try {
 		// Installing/Upgrading home-manager and initial sync
 		if (Deno.args.length === 0 || argv.values.home || argv.values.all) {
 			consola.info("Switching home-manager...");
-			const res = await $`nix run nixpkgs#home-manager -- switch`.noThrow();
+			const res = await $`nix run .#home-manager -- switch`
+				.cwd(homeManagerPath)
+				.noThrow();
 			if (res.code !== 0) {
 				// TODO: @david/dax throws an error if the command fails, so it should be handled each $-usage
 				// because we need to determine if the error is a handled error or not to throw a proper error message.
