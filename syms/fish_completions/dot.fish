@@ -14,7 +14,7 @@ complete -c dot -n "__fish_dot_is_root_cmd" -l all    -s a -d "Switch all envs"
 complete -c dot -n "__fish_dot_is_root_cmd" -l update -s u -d "fetch & update the flake.lock"
 
 function __fish_complete_dot-sh_argcmd
-    set subcmd (string sub -s 4 (string match -r 'sh \\S.+ ' (commandline -c))) >/dev/null 2>&1
+    set subcmd (string sub -s 4 (string match -r 'sh \\S.+[ /]' (commandline -c))) >/dev/null 2>&1
 	if test $status -ne 0
 		set subcmd ""
 	end
