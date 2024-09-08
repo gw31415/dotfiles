@@ -18,6 +18,7 @@
     ffmpeg
     flyctl
     gh
+    gnupg
     gopls
     hugo
     imagemagick
