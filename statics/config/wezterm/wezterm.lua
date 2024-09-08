@@ -10,110 +10,110 @@ local function toggle_blur(window)
 	window:set_config_overrides(overrides)
 end
 
-wezterm.on("toggle-blur", toggle_blur)
-wezterm.on("gui-attached", function()
-	if wezterm.target_triple:find("apple") then
+wezterm.on('toggle-blur', toggle_blur)
+wezterm.on('gui-attached', function()
+	if wezterm.target_triple:find 'apple' then
 		os.execute [[osascript -e "tell application \"System Events\" to key code 102"]]
 	end
 end)
 
 return {
-	color_scheme = "Tomorrow Night",
-	default_prog = { "bash", "-c", "$HOME/.nix-profile/bin/fish" },
+	color_scheme = 'Tomorrow Night',
+	default_prog = { 'bash', '-c', '$HOME/.nix-profile/bin/fish' },
 	hide_tab_bar_if_only_one_tab = true,
-	font = wezterm.font "HackGen Console NF",
+	font = wezterm.font 'HackGen Console NF',
 	font_size = 14,
 	initial_cols = 180,
 	initial_rows = 52,
-	front_end = "WebGpu",
-	macos_forward_to_ime_modifier_mask = "SHIFT|CTRL",
+	front_end = 'WebGpu',
+	macos_forward_to_ime_modifier_mask = 'SHIFT|CTRL',
 	window_background_opacity = 0.8,
 	macos_window_background_blur = 20,
 	keys = {
 		{
-			key = "]",
-			mods = "SUPER",
+			key = ']',
+			mods = 'SUPER',
 			action = wezterm.action {
 				ActivateTabRelative = 1,
 			},
 		},
 		{
-			key = "[",
-			mods = "SUPER",
+			key = '[',
+			mods = 'SUPER',
 			action = wezterm.action {
 				ActivateTabRelative = -1,
 			},
 		},
 		{
-			key = "]",
-			mods = "SUPER|SHIFT",
+			key = ']',
+			mods = 'SUPER|SHIFT',
 			action = wezterm.action {
 				MoveTabRelative = 1,
 			},
 		},
 		{
-			key = "[",
-			mods = "SUPER|SHIFT",
+			key = '[',
+			mods = 'SUPER|SHIFT',
 			action = wezterm.action {
 				MoveTabRelative = -1,
 			},
 		},
 		{
-			key = "s",
-			mods = "SUPER",
+			key = 's',
+			mods = 'SUPER',
 			action = wezterm.action {
 				SplitHorizontal = {
-					domain = "CurrentPaneDomain",
+					domain = 'CurrentPaneDomain',
 				},
 			},
 		},
 		{
-			key = "s",
-			mods = "SUPER|SHIFT",
+			key = 's',
+			mods = 'SUPER|SHIFT',
 			action = wezterm.action {
 				SplitVertical = {
-					domain = "CurrentPaneDomain",
+					domain = 'CurrentPaneDomain',
 				},
 			},
 		},
 		{
-			key = "s",
-			mods = "CTRL|SHIFT",
+			key = 's',
+			mods = 'CTRL|SHIFT',
 			action = wezterm.action.PaneSelect {
-				alphabet = "aoeuhtns"
+				alphabet = 'aoeuhtns'
 			},
 		},
 		{
-			key = "h",
-			mods = "CTRL|SHIFT",
+			key = 'h',
+			mods = 'CTRL|SHIFT',
 			action = wezterm.action.AdjustPaneSize {
 				'Left', 3,
 			},
 		},
 		{
-			key = "j",
-			mods = "CTRL|SHIFT",
+			key = 'j',
+			mods = 'CTRL|SHIFT',
 			action = wezterm.action.AdjustPaneSize {
 				'Down', 3,
 			},
 		},
 		{
-			key = "k",
-			mods = "CTRL|SHIFT",
+			key = 'k',
+			mods = 'CTRL|SHIFT',
 			action = wezterm.action.AdjustPaneSize {
 				'Up', 3,
 			},
 		},
 		{
-			key = "l",
-			mods = "CTRL|SHIFT",
+			key = 'l',
+			mods = 'CTRL|SHIFT',
 			action = wezterm.action.AdjustPaneSize {
 				'Right', 3,
 			},
 		},
 		{
-			key = "w",
-			mods = "SUPER",
+			key = 'w',
+			mods = 'SUPER',
 			action = wezterm.action {
 				CloseCurrentPane = {
 					confirm = true,
@@ -121,13 +121,13 @@ return {
 			},
 		},
 		{
-			key = "b",
-			mods = "SUPER",
-			action = wezterm.action { EmitEvent = "toggle-blur" },
+			key = 'b',
+			mods = 'SUPER',
+			action = wezterm.action { EmitEvent = 'toggle-blur' },
 		},
 		{
-			key = " ",
-			mods = "ALT",
+			key = ' ',
+			mods = 'ALT',
 			action = wezterm.action.ToggleFullScreen,
 		},
 	},
