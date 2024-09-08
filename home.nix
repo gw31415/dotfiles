@@ -5,6 +5,7 @@
     aria2
     asciinema
     bat
+    bun
     carbon-now-cli
     chezmoi
     cocoapods
@@ -42,11 +43,13 @@
     tectonic
     tmux
     typst
+    vim-startuptime
     wezterm
     wget
     yt-dlp
     zig
     (pkgs.writeShellScriptBin "czg" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:czg "$@"'')
+    (pkgs.writeShellScriptBin "trash" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:trash-cli "$@"'')
   ] ++ [
     # Fonts
     hackgen-nf-font

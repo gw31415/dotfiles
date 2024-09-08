@@ -1,19 +1,7 @@
 [tools]
-"cargo:math2img" = "latest"
-"cargo:openapi-tui" = "latest"
-"cargo:sea-orm-cli" = "latest"
-"go:github.com/rhysd/vim-startuptime" = "latest"
-"go:golang.org/x/tools/cmd/godoc" = "latest"
-"npm:aicommits" = "latest"
-"npm:iconsur" = "latest"
-"npm:trash-cli" = "latest"
-act = "latest"
-flutter = "latest"
-pipx = "latest"
-pnpm = "latest"
-sqlite = "latest"
 usage = "latest"
-bun = "latest"
+
+flutter = "latest"
 
 [settings]
 experimental = true
