@@ -11,7 +11,6 @@
     cocoapods
     delta
     deno
-    dotnet-sdk_7
     emacs-nox
     envchain
     eza
