@@ -13,7 +13,6 @@ pipx = "latest"
 pnpm = "latest"
 sqlite = "latest"
 usage = "latest"
-"npm:czg" = "latest"
 bun = "latest"
 
 [settings]

@@ -46,6 +46,7 @@
     wget
     yt-dlp
     zig
+    (pkgs.writeShellScriptBin "czg" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:czg "$@"'')
   ] ++ [
     # Fonts
     hackgen-nf-font
