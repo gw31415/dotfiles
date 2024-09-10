@@ -154,12 +154,6 @@ if executable 'sourcekit-lsp' then
 	lspconfig.sourcekit.setup(lsp_opts)
 end
 
-if executable 'markdown-oxide' then
-	lspconfig.markdown_oxide.setup(vim.tbl_deep_extend('keep', lsp_opts, {
-		root_dir = lspconfig.util.root_pattern('.git', vim.fn.getcwd()), -- this is a temp fix for an error in the lspconfig for this LS
-	}))
-end
-
 ------------------------------------
 -- 特別な分岐が必要なLSPの設定
 ------------------------------------
