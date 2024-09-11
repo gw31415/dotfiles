@@ -17,6 +17,9 @@ repo = "lambdalisue/gin.vim"
 repo = "lambdalisue/kensaku.vim"
 
 [[plugins]]
+repo = "lambdalisue/vim-guise"
+
+[[plugins]]
 repo = "gw31415/denops-sixel-view.vim"
 
 [[plugins]]
