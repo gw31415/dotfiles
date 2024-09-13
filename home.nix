@@ -25,6 +25,7 @@
     jnv
     jq
     lazygit
+    librsvg # rsvg-convert
     litecli
     mise
     mmv-go
