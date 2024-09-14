@@ -128,18 +128,7 @@ end
 
 -- https://github.com/ndonfris/fish-lsp/
 if executable 'fish-lsp' then
-	if not configs.fish_lsp then
-		configs.fish_lsp = {
-			default_config = {
-				single_file_support = true,
-				cmd = { 'fish-lsp', 'start' },
-				filetypes = { 'fish' },
-				root_dir = nil,
-			},
-		}
-	end
-	-- NOTE: configs を追加した際は、lspconfig 変数ではなくもう一度 require して設定する
-	require 'lspconfig'.fish_lsp.setup {}
+	require 'lspconfig'.fish_lsp.setup(lsp_opts)
 end
 
 if executable 'protols' then
