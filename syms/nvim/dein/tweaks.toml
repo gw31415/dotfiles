@@ -11,11 +11,6 @@ repo = "Shougo/dein.vim"
 on_event = "CmdlineEnter"
 
 [[plugins]]
-repo = "folke/ts-comments.nvim"
-on_event = "CursorHold"
-lua_source = "require 'ts-comments'.setup()"
-
-[[plugins]]
 repo = "hrsh7th/nvim-insx"
 on_event = "InsertEnter"
 lua_source = "require 'insx.preset.standard'.setup()"

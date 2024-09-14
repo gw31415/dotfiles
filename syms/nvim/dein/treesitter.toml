@@ -104,11 +104,3 @@ require 'aerial'.setup {
 }
 vim.keymap.set('n', '<leader>A', '<cmd>AerialToggle!<CR>')
 '''
-
-[[plugins]]
-repo = "MeanderingProgrammer/markdown.nvim"
-depends = "nvim-treesitter"
-on_ft = "markdown"
-lua_source = '''
-	 require 'render-markdown'.setup {}
-'''

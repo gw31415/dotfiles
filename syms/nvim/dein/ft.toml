@@ -104,6 +104,17 @@ on_ft = ["markdown", "pandoc.markdown", "rmd"]
 build = 'sh -c "cd app && npm install"'
 
 [[plugins]]
+repo = "MeanderingProgrammer/markdown.nvim"
+depends = "nvim-treesitter"
+on_ft = "markdown"
+lua_source = "require 'render-markdown'.setup {}"
+
+[[plugins]]
+repo = "folke/ts-comments.nvim"
+on_event = "CursorHold"
+lua_source = "require 'ts-comments'.setup()"
+
+[[plugins]]
 repo = "akinsho/flutter-tools.nvim"
 on_ft = "dart"
 depends = ["plenary.nvim"]
