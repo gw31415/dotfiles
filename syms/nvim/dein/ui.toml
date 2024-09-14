@@ -59,11 +59,6 @@ require 'ufo'.setup {
 }
 '''
 
-# [[plugins]]
-# repo = "nvim-zh/colorful-winsep.nvim"
-# on_event = "WinNew"
-# lua_source = "require 'colorful-winsep'.setup()"
-
 [[plugins]]
 repo = "b0o/incline.nvim"
 on_event = "CursorHold"
