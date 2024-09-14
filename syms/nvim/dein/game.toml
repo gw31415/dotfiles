@@ -20,14 +20,3 @@ lua_source = "require 'hardtime'.setup()"
 repo = "jim-fx/sudoku.nvim"
 on_cmd = "Sudoku"
 lua_source = "require 'sudoku'.setup{}"
-
-[[plugins]]
-repo = "seandewar/killersheep.nvim"
-on_cmd = "KillKillKill"
-
-# [[plugins]]
-# repo = "gw31415/pets.nvim"
-# depends = ["nui.nvim", "hologram.nvim"]
-# on_event = "CmdlineEnter"
-# if = 'environ()["TERM"] == "xterm-kitty"'
-# lua_source = "require 'pets'.setup { row = 6 }"
