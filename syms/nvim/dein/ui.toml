@@ -73,6 +73,9 @@ local helpers = require 'incline.helpers'
 local navic = require 'nvim-navic'
 local devicons = require 'nvim-web-devicons'
 require 'incline'.setup {
+	hide = {
+		cursorline = true,
+	},
 	window = {
 		padding = 0,
 		margin = { horizontal = 0, vertical = 0 },
