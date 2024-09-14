@@ -16,14 +16,6 @@ lua_source = "require 'cmp_git'.setup()"
 repo = "lukas-reineke/cmp-under-comparator"
 
 [[plugins]]
-repo = "github/copilot.vim"
-hook_add = '''
-let g:copilot_no_tab_map = v:true
-let g:copilot_assume_mapped = v:true
-let g:copilot_tab_fallback = ""
-'''
-
-[[plugins]]
 repo = "hrsh7th/nvim-cmp"
 depends = [
 	"cmp-nvim-lsp",

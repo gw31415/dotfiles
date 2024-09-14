@@ -1,4 +1,12 @@
 [[plugins]]
+repo = "github/copilot.vim"
+hook_add = '''
+let g:copilot_no_tab_map = v:true
+let g:copilot_assume_mapped = v:true
+let g:copilot_tab_fallback = ""
+'''
+
+[[plugins]]
 repo = "Shougo/dein.vim"
 on_event = "CmdlineEnter"
 
