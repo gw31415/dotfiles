@@ -10,9 +10,6 @@ lua_add = '''
 repo = "vim-denops/denops.vim"
 # hook_add = "let g:denops#debug = 1"
 
-# [[plugins]]
-# repo = "ogaken-1/nvim-gin-preview"
-
 [[plugins]]
 repo = "lambdalisue/gin.vim"
 

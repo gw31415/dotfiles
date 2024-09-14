@@ -1,4 +1,8 @@
 [[plugins]]
+repo = "ogaken-1/nvim-gin-preview"
+on_ft = "gin-status"
+
+[[plugins]]
 repo = "akinsho/org-bullets.nvim"
 lua_source = '''
 	require 'org-bullets'.setup {
