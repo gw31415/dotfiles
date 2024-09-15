@@ -7,10 +7,6 @@ let g:copilot_tab_fallback = ""
 '''
 
 [[plugins]]
-repo = "Shougo/dein.vim"
-on_event = "CmdlineEnter"
-
-[[plugins]]
 repo = "hrsh7th/nvim-insx"
 on_event = "InsertEnter"
 lua_source = "require 'insx.preset.standard'.setup()"
@@ -269,10 +265,6 @@ require 'dial.config'.augends:register_group {
 	},
 }
 '''
-
-[[plugins]]
-repo = "gw31415/dein-ui.vim"
-on_cmd = "DeinUpdate"
 
 [[plugins]]
 repo = "lewis6991/gitsigns.nvim"
