@@ -1,4 +1,3 @@
-se fdc=1
 se vop=folds
 se cul
 se cuc

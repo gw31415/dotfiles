@@ -42,6 +42,7 @@ vim.go.guifont = 'HackGen_Console_NF:h14'
 vim.go.tabstop = 4
 vim.go.shiftwidth = 4
 vim.go.cmdheight = 0
+vim.wo.foldcolumn = '1'
 
 vim.cmd [[
 se ut=1
