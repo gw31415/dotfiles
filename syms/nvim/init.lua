@@ -35,10 +35,13 @@ vim.g.loaded_remote_plugins = true
 vim.g.skip_loading_mswin = true
 vim.g.loaded_tutor_mode_plugin = true
 vim.g.loaded_2html_plugin = true
-vim.o.winblend = 20
-vim.o.pumblend = 20
+vim.go.winblend = 20
+vim.go.pumblend = 20
 vim.wo.number = true
 vim.go.guifont = 'HackGen_Console_NF:h14'
+vim.go.tabstop = 4
+vim.go.shiftwidth = 4
+vim.go.cmdheight = 0
 
 vim.cmd [[
 se ut=1

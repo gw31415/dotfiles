@@ -1,7 +1,5 @@
 se fdc=1
 se vop=folds
-se ts=4
-se sw=4
 se cul
 se cuc
 se sb
@@ -9,7 +7,6 @@ se hid
 se ls=3
 se sms
 se so=3
-se ch=0
 se diffopt+=algorithm:histogram
 se stl=%f%r%m%h%w%=%{&et?'(et)':''}sw=%{&sw}\ E%{v:lua.get_error_count()}W%{v:lua.get_warn_count()}\ %l/%L
 
