@@ -14,19 +14,11 @@ if dpp.load_state(dpp_base) then
     vim.api.nvim_create_autocmd('User', {
         pattern = 'DenopsReady',
         callback = function()
-            vim.notify 'vim load_state is failed'
+            vim.notify 'Recreating state'
             dpp.make_state(dpp_base, '~/.config/nvim/dpp.ts')
         end
     })
 end
-
-vim.api.nvim_create_autocmd('User', {
-    pattern = 'Dpp:makeStatePost',
-    callback = function()
-        vim.notify 'dpp make_state() is done'
-    end
-})
-
 
 ------------------------
 -- Personal settings
@@ -53,7 +45,7 @@ se ut=1
 au CursorHold * ++once se ut=4000
 autocmd BufRead *.typ setfiletype typst
 autocmd BufRead *.tf setfiletype terraform
-colorscheme onedark
+try | colorscheme onedark | catch | endtry
 ]]
 
 function _G.get_warn_count()

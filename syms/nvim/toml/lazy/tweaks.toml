@@ -200,7 +200,7 @@ vim.keymap.set('n', 'cll', '<Plug>(deepl-replace)_')
 [[plugins]]
 repo = "numToStr/Comment.nvim"
 on_if = "!has('nvim-0.10')"
-on_map = { nx = "gc" }
+on_event = "CursorHold"
 lua_source = '''
 require 'Comment'.setup {
 	toggler = {

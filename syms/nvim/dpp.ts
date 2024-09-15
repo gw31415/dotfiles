@@ -1,4 +1,5 @@
 import type { Denops } from "jsr:@denops/core";
+import * as path from "jsr:@std/path";
 import * as fn from "jsr:@denops/std/function";
 import { BaseConfig } from "jsr:@shougo/dpp-vim/config";
 import type { Dpp } from "jsr:@shougo/dpp-vim/dpp";
@@ -28,7 +29,10 @@ export class Config extends BaseConfig {
 		};
 
 		const [context, options] = await args.contextBuilder.get(args.denops);
-		const tomlsDir = "~/.config/nvim/toml/";
+
+		const dirname = path.resolve(path.dirname(path.fromFileUrl(import.meta.url)));
+
+		const tomlsDir = `${dirname}/toml/`;
 
 		const tomls: Toml[] = [];
 		tomls.push(
@@ -40,7 +44,7 @@ export class Config extends BaseConfig {
 			})) as Toml,
 		);
 
-		for (const tomlFile of Deno.readDirSync(tomlsDir)) {
+		for (const tomlFile of Deno.readDirSync(`${tomlsDir}/lazy/`)) {
 			if (!tomlFile.name.endsWith(".toml")) {
 				continue;
 			}
@@ -52,7 +56,10 @@ export class Config extends BaseConfig {
 					"toml",
 					"load",
 					{
-						path: await fn.expand(args.denops, `${tomlsDir}${tomlFile.name}`),
+						path: await fn.expand(
+							args.denops,
+							`${tomlsDir}/lazy/${tomlFile.name}`,
+						),
 						options: {
 							lazy: true,
 						},
