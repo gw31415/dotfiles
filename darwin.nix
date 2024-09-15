@@ -22,7 +22,10 @@
   system.defaults = {
     finder = {
       AppleShowAllExtensions = true;
+      CreateDesktop = true;
+      FXDefaultSearchScope = "SCcf";
       FXEnableExtensionChangeWarning = false;
+      FXPreferredViewStyle = "Nlsv";
       ShowPathbar = true;
       ShowStatusBar = false;
     };
