@@ -122,9 +122,24 @@ end, { expr = true })
 repo = "gw31415/fzyselect.vim"
 on_event = "CursorHold"
 lua_source = '''
+vim.g.fzyselect_opener = [[call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, #{style: "minimal", relative: "editor", row: 1, col: 1, width: 1, height: 1})]]
 vim.api.nvim_create_autocmd('FileType', {
 	pattern = 'fzyselect',
 	callback = function()
+		vim.wo.winblend = 0
+		vim.api.nvim_create_autocmd('TextChanged', {
+		 	buffer = 0,
+		 	once = true,
+			callback = function()
+				local lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
+		 		local width = 0
+		 		for _, line in ipairs(lines) do
+		 			width = math.max(width, vim.fn.strdisplaywidth(line))
+		 		end
+				local col = math.max(math.floor((vim.api.nvim_get_option('columns') - width) / 2), 1)
+				vim.api.nvim_win_set_config(0, { width = width + 2, row = 3, col = col, relative = 'editor' })
+			end,
+		})
 		vim.keymap.set('n', 'i', '<Plug>(fzyselect-fzy)', { buffer = true })
 		vim.keymap.set('n', '<cr>', '<Plug>(fzyselect-retu)', { buffer = true })
 		vim.keymap.set('n', '<esc>', '<cmd>clo<cr>', { buffer = true })
@@ -156,7 +171,10 @@ vim.keymap.set('n', '<c-p>', function()
 	end
 end)
 '''
-lua_post_source = "vim.ui.select = require 'fzyselect'.start"
+lua_post_source = '''
+vim.ui.select = require 'fzyselect'.start
+'''
+
 [[plugins]]
 repo = "gw31415/bufmanager.nvim"
 depends = "fzyselect.vim"
