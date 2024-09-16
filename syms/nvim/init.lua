@@ -94,12 +94,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
         vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
         vim.keymap.set('n', 'K', function()
             local winid = require 'ufo'.peekFoldedLinesUnderCursor()
-            if not winid then
-                vim.lsp.buf.hover()
-            end
+            if not winid then vim.lsp.buf.hover() end
         end, bufopts)
-        -- vim.keymap.set("n", "<C-j>", vim.diagnostic.goto_next, bufopts) -- Now default mapping is `]d`
-        -- vim.keymap.set("n", "<C-k>", vim.diagnostic.goto_prev, bufopts) -- Now default mapping is `[d`
         vim.keymap.set('n', 'glr', vim.lsp.buf.code_action, bufopts)
         vim.keymap.set('n', 'gln', vim.lsp.buf.rename, bufopts)
         vim.keymap.set('n', 'z*', vim.lsp.buf.references, bufopts)
@@ -111,18 +107,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
             end,
             { buffer = true }
         )
-        -- refresh codelens on TextChanged and InsertLeave as well
-        -- vim.api.nvim_create_autocmd({ 'TextChanged', 'InsertLeave', 'CursorHold', 'LspAttach' }, {
-        -- 	buffer = 0,
-        -- 	callback = vim.lsp.codelens.refresh,
-        -- })
-
-        -- trigger codelens refresh
-        -- vim.api.nvim_exec_autocmds('User', { pattern = 'LspAttached' })
-        -- vim.api.nvim_create_autocmd('BufWritePre', {
-        -- 	callback = function() vim.lsp.buf.format { async = false } end,
-        -- 	buffer = bufnr,
-        -- })
     end,
 })
 
