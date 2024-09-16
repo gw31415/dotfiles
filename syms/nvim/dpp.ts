@@ -1,6 +1,5 @@
 import type { Denops } from "jsr:@denops/core";
 import * as path from "jsr:@std/path";
-import * as fn from "jsr:@denops/std/function";
 import { BaseConfig } from "jsr:@shougo/dpp-vim/config";
 import type { Dpp } from "jsr:@shougo/dpp-vim/dpp";
 import type { ContextBuilder, Plugin } from "jsr:@shougo/dpp-vim/types";
@@ -30,14 +29,16 @@ export class Config extends BaseConfig {
 
 		const [context, options] = await args.contextBuilder.get(args.denops);
 
-		const dirname = path.resolve(path.dirname(path.fromFileUrl(import.meta.url)));
+		const dirname = path.resolve(
+			path.dirname(path.fromFileUrl(import.meta.url)),
+		);
 
 		const tomlsDir = `${dirname}/toml/`;
 
 		const tomls: Toml[] = [];
 		tomls.push(
 			(await args.dpp.extAction(args.denops, context, options, "toml", "load", {
-				path: await fn.expand(args.denops, `${tomlsDir}plugin.toml`),
+				path: `${tomlsDir}plugin.toml`,
 				options: {
 					lazy: false,
 				},
@@ -56,10 +57,7 @@ export class Config extends BaseConfig {
 					"toml",
 					"load",
 					{
-						path: await fn.expand(
-							args.denops,
-							`${tomlsDir}/lazy/${tomlFile.name}`,
-						),
+						path: `${tomlsDir}/lazy/${tomlFile.name}`,
 						options: {
 							lazy: true,
 						},
