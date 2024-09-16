@@ -1,11 +1,26 @@
 [[plugins]]
+repo = "vim-denops/denops.vim"
+
+[[plugins]]
+repo = "Shougo/dpp.vim"
+
+[[plugins]]
+repo = "Shougo/dpp-ext-toml"
+
+[[plugins]]
+repo = "Shougo/dpp-protocol-git"
+
+[[plugins]]
+repo = "Shougo/dpp-ext-lazy"
+
+[[plugins]]
+repo = "Shougo/dpp-ext-installer"
+
+[[plugins]]
 repo = "navarasu/onedark.nvim"
 lua_add = '''
 require 'onedark'.setup { transparent = true }
 '''
-
-[[plugins]]
-repo = "vim-denops/denops.vim"
 
 [[plugins]]
 repo = "lambdalisue/gin.vim"
