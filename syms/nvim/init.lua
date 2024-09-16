@@ -47,9 +47,9 @@ vim.wo.foldcolumn = '1'
 vim.cmd [[
 se ut=1
 au CursorHold * ++once se ut=4000
-autocmd BufRead *.typ setfiletype typst
-autocmd BufRead *.tf setfiletype terraform
-try | colorscheme onedark | catch | endtry
+au BufRead *.typ setl ft=typst
+au BufRead *.tf setl ft=terraform
+try | colo onedark | catch | endtry
 ]]
 
 function _G.get_warn_count()
