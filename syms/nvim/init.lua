@@ -20,21 +20,37 @@ if dpp.load_state(dpp_base) then
     })
 end
 
-------------------------
--- Personal settings
-------------------------
-vim.api.nvim_create_autocmd('CursorHold', {
-    once = true,
-    command = 'source $HOME/.config/nvim/lazy.vim'
-})
+----------------------------
+-- Disable built-in plugins
+----------------------------
 
-vim.opt_global.encoding = 'utf-8'
-vim.opt_global.fencs = { 'utf-8', 'iso-2022-jp', 'euc-jp', 'sjis' }
 vim.g.loaded_netrwPlugin = true
 vim.g.loaded_remote_plugins = true
 vim.g.skip_loading_mswin = true
 vim.g.loaded_tutor_mode_plugin = true
 vim.g.loaded_2html_plugin = true
+
+----------------------------
+-- Lazy loading
+----------------------------
+
+vim.api.nvim_create_autocmd('CursorHold', {
+    once = true,
+    command = 'source $HOME/.config/nvim/lazy.vim'
+})
+vim.go.updatetime = 1
+vim.api.nvim_create_autocmd('CursorHold', {
+    once = true,
+    callback = function() vim.go.updatetime = 4000 end,
+})
+
+----------------------------
+-- Personal settings
+----------------------------
+
+
+vim.go.encoding = 'utf-8'
+vim.opt_global.fencs = { 'utf-8', 'iso-2022-jp', 'euc-jp', 'sjis' }
 vim.go.winblend = 20
 vim.go.pumblend = 20
 vim.wo.number = true
@@ -43,14 +59,14 @@ vim.go.tabstop = 4
 vim.go.shiftwidth = 4
 vim.go.cmdheight = 0
 vim.wo.foldcolumn = '1'
+vim.cmd [[try | colo onedark | catch | endtry]]
 
-vim.cmd [[
-se ut=1
-au CursorHold * ++once se ut=4000
-au BufRead *.typ setl ft=typst
-au BufRead *.tf setl ft=terraform
-try | colo onedark | catch | endtry
-]]
+vim.filetype.add {
+    extension = {
+        tf = 'terraform',
+        typ = 'typst',
+    }
+}
 
 function _G.get_warn_count()
     local warns = vim.diagnostic.get(nil, { severity = vim.diagnostic.severity.WARN })
