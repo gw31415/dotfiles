@@ -213,7 +213,7 @@ require 'Comment'.setup {
 
 [[plugins]]
 repo = "stevearc/overseer.nvim"
-on_event = "VimEnter"
+on_event = "CursorHold"
 lua_source = "require 'overseer'.setup()"
 
 [[plugins]]
