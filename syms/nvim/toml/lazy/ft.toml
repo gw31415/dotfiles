@@ -5,23 +5,22 @@ on_ft = "gin-status"
 [[plugins]]
 repo = "akinsho/org-bullets.nvim"
 lua_source = '''
-	require 'org-bullets'.setup {
-		symbols = {
-			headlines = {
-				'◉', '◊', '▹',
-				'◉', '◊', '▹',
-				'◉', '◊', '▹',
-				'◉', '◊', '▹',
-			}
-		},
-	}
+require 'org-bullets'.setup {
+	symbols = {
+		headlines = {
+			'◉', '◊', '▹',
+			'◉', '◊', '▹',
+			'◉', '◊', '▹',
+			'◉', '◊', '▹',
+		}
+	},
+}
 '''
 [[plugins]]
 repo = "danilshvalov/org-modern.nvim"
 [[plugins]]
 repo = "nvim-orgmode/orgmode"
 on_ft = "org"
-# on_event = "CursorHold"
 depends = [
 	"org-bullets.nvim",
 	"vim-repeat",
@@ -29,77 +28,77 @@ depends = [
 	"nvim-treesitter",
 ]
 lua_add = '''
-	vim.api.nvim_create_autocmd('BufEnter', {
-		pattern = '*.org',
-		callback = function()
-			vim.opt_local.formatoptions:append 'mM'
-			vim.opt_local.foldlevel = 0
-			vim.opt_local.expandtab = true
-			vim.opt_local.tabstop = 2
-			vim.opt_local.shiftwidth = 2
-			vim.keymap.set({ 'n', 'i' }, '<M-v>', function()
-				local filename = vim.fn.strftime '%Y%m%d%H%M%S' .. '.png'
-				local res = vim.system({ 'pngpaste', filename }, {
-					text = true,
-					cwd = vim.fn.expand '%:p:h',
-				}):wait()
-				if res.signal ~= 0 then
-					vim.notify(res.stderr, vim.log.levels.ERROR)
-				else
-					vim.notify('pngpaste: ' .. filename, vim.log.levels.INFO)
-					vim.api.nvim_feedkeys(
-						vim.api.nvim_replace_termcodes(
-							'<Esc>a[[file:' .. filename .. ']]<Esc>%O#+CAPTION:<Space>',
-							true,
-							true,
-							true
-						) or '',
-						'',
+vim.api.nvim_create_autocmd('BufEnter', {
+	pattern = '*.org',
+	callback = function()
+		vim.opt_local.formatoptions:append 'mM'
+		vim.opt_local.foldlevel = 0
+		vim.opt_local.expandtab = true
+		vim.opt_local.tabstop = 2
+		vim.opt_local.shiftwidth = 2
+		vim.keymap.set({ 'n', 'i' }, '<M-v>', function()
+			local filename = vim.fn.strftime '%Y%m%d%H%M%S' .. '.png'
+			local res = vim.system({ 'pngpaste', filename }, {
+				text = true,
+				cwd = vim.fn.expand '%:p:h',
+			}):wait()
+			if res.signal ~= 0 then
+				vim.notify(res.stderr, vim.log.levels.ERROR)
+			else
+				vim.notify('pngpaste: ' .. filename, vim.log.levels.INFO)
+				vim.api.nvim_feedkeys(
+					vim.api.nvim_replace_termcodes(
+						'<Esc>a[[file:' .. filename .. ']]<Esc>%O#+CAPTION:<Space>',
+						true,
+						true,
 						true
-					)
-				end
-			end, { buffer = true })
-		end
-	})
+					) or '',
+					'',
+					true
+				)
+			end
+		end, { buffer = true })
+	end
+})
 '''
 lua_source = '''
-	local Menu = require 'org-modern.menu'
-	vim.keymap.set('n', '<Leader>o', '<Nop>', {})
-	require 'orgmode'.setup_ts_grammar()
-	require 'orgmode'.setup {
-		ui = {
-			menu = {
-				handler = function(data)
-					Menu:new {
-						window = {
-							margin = { 1, 0, 1, 0 },
-							padding = { 0, 1, 0, 1 },
-							title_pos = 'center',
-							border = 'single',
-							zindex = 1000,
-						},
-						icons = {
-							separator = '➜',
-						},
-					}:open(data)
-				end,
-			},
+local Menu = require 'org-modern.menu'
+vim.keymap.set('n', '<Leader>o', '<Nop>', {})
+require 'orgmode'.setup_ts_grammar()
+require 'orgmode'.setup {
+	ui = {
+		menu = {
+			handler = function(data)
+				Menu:new {
+					window = {
+						margin = { 1, 0, 1, 0 },
+						padding = { 0, 1, 0, 1 },
+						title_pos = 'center',
+						border = 'single',
+						zindex = 1000,
+					},
+					icons = {
+						separator = '➜',
+					},
+				}:open(data)
+			end,
 		},
-		org_agenda_files = { '~/iCloud_Drive/org/*' },
-		org_agenda_skip_deadline_if_done = true,
-		org_default_notes_file = '~/iCloud_Drive/org/refile.org',
-		org_capture_templates = {
-			n = {
-				description = 'Default Note',
-				template = '* %?\n %U',
-			},
-			t = {
-				description = 'Task',
-				template = '* TODO %?\n  %u',
-				target = '~/iCloud_Drive/org/tasks.org',
-			},
+	},
+	org_agenda_files = { '~/iCloud_Drive/org/*' },
+	org_agenda_skip_deadline_if_done = true,
+	org_default_notes_file = '~/iCloud_Drive/org/refile.org',
+	org_capture_templates = {
+		n = {
+			description = 'Default Note',
+			template = '* %?\n %U',
 		},
-	}
+		t = {
+			description = 'Task',
+			template = '* TODO %?\n  %u',
+			target = '~/iCloud_Drive/org/tasks.org',
+		},
+	},
+}
 '''
 
 [[plugins]]
@@ -116,7 +115,9 @@ lua_source = "require 'render-markdown'.setup {}"
 [[plugins]]
 repo = "folke/ts-comments.nvim"
 on_event = "CursorHold"
-lua_source = "require 'ts-comments'.setup()"
+lua_source = '''
+require 'ts-comments'.setup()
+'''
 
 [[plugins]]
 repo = "akinsho/flutter-tools.nvim"

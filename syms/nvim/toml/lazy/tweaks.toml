@@ -89,9 +89,9 @@ hook_add = "map <expr> gq operator#stay_cursor#wrapper('gq')"
 repo = "gbprod/substitute.nvim"
 on_lua = "substitute"
 lua_add = '''
-	vim.keymap.set('n', '_', function() require 'substitute'.operator() end)
-	vim.keymap.set('x', '_', function() require 'substitute'.visual() end)
-	vim.keymap.set('n', '__', function() require 'substitute'.line() end)
+vim.keymap.set('n', '_', function() require 'substitute'.operator() end)
+vim.keymap.set('x', '_', function() require 'substitute'.visual() end)
+vim.keymap.set('n', '__', function() require 'substitute'.line() end)
 '''
 lua_source = "require 'substitute'.setup()"
 
@@ -100,8 +100,8 @@ repo = "jiaoshijie/undotree"
 depends = "plenary.nvim"
 on_map = { n = '<Leader>u' }
 lua_source = '''
-	require 'undotree'.setup { keymaps = { ['<Esc>'] = 'quit' } }
-	vim.keymap.set('n', '<Leader>u', require 'undotree'.toggle)
+require 'undotree'.setup { keymaps = { ['<Esc>'] = 'quit' } }
+vim.keymap.set('n', '<Leader>u', require 'undotree'.toggle)
 '''
 
 [[plugins]]
@@ -122,39 +122,39 @@ end, { expr = true })
 repo = "gw31415/fzyselect.vim"
 on_event = "CursorHold"
 lua_source = '''
-	vim.api.nvim_create_autocmd('FileType', {
-		pattern = 'fzyselect',
-		callback = function()
-			vim.keymap.set('n', 'i', '<Plug>(fzyselect-fzy)', { buffer = true })
-			vim.keymap.set('n', '<cr>', '<Plug>(fzyselect-retu)', { buffer = true })
-			vim.keymap.set('n', '<esc>', '<cmd>clo<cr>', { buffer = true })
-			vim.opt_local.number = false
-		end,
-	})
-	-- fuzzy search
-	vim.keymap.set('n', 'g/', function()
-		local winid = vim.api.nvim_get_current_win()
-		require 'fzyselect'.start(vim.api.nvim_buf_get_lines(0, 0, -1, true),
-			{ prompt = 'fuzzy search: <Enter> to jump' },
-			function(_, i)
-				if i then
-					vim.api.nvim_win_set_cursor(winid, { i, 0 })
-				end
+vim.api.nvim_create_autocmd('FileType', {
+	pattern = 'fzyselect',
+	callback = function()
+		vim.keymap.set('n', 'i', '<Plug>(fzyselect-fzy)', { buffer = true })
+		vim.keymap.set('n', '<cr>', '<Plug>(fzyselect-retu)', { buffer = true })
+		vim.keymap.set('n', '<esc>', '<cmd>clo<cr>', { buffer = true })
+		vim.opt_local.number = false
+	end,
+})
+-- fuzzy search
+vim.keymap.set('n', 'g/', function()
+	local winid = vim.api.nvim_get_current_win()
+	require 'fzyselect'.start(vim.api.nvim_buf_get_lines(0, 0, -1, true),
+		{ prompt = 'fuzzy search: <Enter> to jump' },
+		function(_, i)
+			if i then
+				vim.api.nvim_win_set_cursor(winid, { i, 0 })
+			end
+		end)
+end)
+-- git ls-files
+vim.keymap.set('n', '<c-p>', function()
+	local res = vim.system({ 'git', 'ls-files' }, { text = true }):wait()
+	if res.code ~= 0 then
+		vim.notify(vim.fn.trim(res.stderr), vim.log.levels.ERROR, { title = 'fzyselect: git ls-files' })
+	else
+		require 'fzyselect'.start(vim.fn.split(res.stdout, '\n'),
+			{ prompt = 'git ls-files: <Enter> to edit' },
+			function(path)
+				if path then vim.cmd.edit(path) end
 			end)
-	end)
-	-- git ls-files
-	vim.keymap.set('n', '<c-p>', function()
-		local res = vim.system({ 'git', 'ls-files' }, { text = true }):wait()
-		if res.code ~= 0 then
-			vim.notify(vim.fn.trim(res.stderr), vim.log.levels.ERROR, { title = 'fzyselect: git ls-files' })
-		else
-			require 'fzyselect'.start(vim.fn.split(res.stdout, '\n'),
-				{ prompt = 'git ls-files: <Enter> to edit' },
-				function(path)
-					if path then vim.cmd.edit(path) end
-				end)
-		end
-	end)
+	end
+end)
 '''
 lua_post_source = "vim.ui.select = require 'fzyselect'.start"
 [[plugins]]
@@ -184,9 +184,9 @@ repo = "gw31415/deepl-commands.nvim"
 on_event = "CmdlineEnter"
 depends = ["deepl.vim", "fzyselect.vim"]
 lua_source = '''
-	require 'deepl-commands'.setup {
-		selector_func = require 'fzyselect'.start,
-	}
+require 'deepl-commands'.setup {
+	selector_func = require 'fzyselect'.start,
+}
 '''
 [[plugins]]
 repo = "gw31415/deepl-operator.vim"
@@ -199,7 +199,6 @@ vim.keymap.set('n', 'cll', '<Plug>(deepl-replace)_')
 
 [[plugins]]
 repo = "numToStr/Comment.nvim"
-on_if = "!has('nvim-0.10')"
 on_event = "CursorHold"
 lua_source = '''
 require 'Comment'.setup {
@@ -222,24 +221,24 @@ repo = "CRAG666/code_runner.nvim"
 on_event = "CmdlineEnter"
 depends = "plenary.nvim"
 lua_source = '''
-	require 'code_runner'.setup {
-		mode = 'term',
-		focus = true,
-		startinsert = false,
-		filetype = {
-			java = 'cd $dir && javac $fileName && java $fileNameWithoutExt',
-			python = 'python3 -u',
-			typescript = 'deno run',
-			rust = 'cd $dir && rustc $fileName && $dir/$fileNameWithoutExt',
-			go = 'go run',
-		},
-		term = {
-			position = 'rightb vert',
-			size = 70,
-		},
-		-- filetype_path = vim.fn.expand('~/.config/nvim/code_runner.json'),
-		-- project_path = vim.fn.expand('~/.config/nvim/project_manager.json')
-	}
+require 'code_runner'.setup {
+	mode = 'term',
+	focus = true,
+	startinsert = false,
+	filetype = {
+		java = 'cd $dir && javac $fileName && java $fileNameWithoutExt',
+		python = 'python3 -u',
+		typescript = 'deno run',
+		rust = 'cd $dir && rustc $fileName && $dir/$fileNameWithoutExt',
+		go = 'go run',
+	},
+	term = {
+		position = 'rightb vert',
+		size = 70,
+	},
+	-- filetype_path = vim.fn.expand('~/.config/nvim/code_runner.json'),
+	-- project_path = vim.fn.expand('~/.config/nvim/project_manager.json')
+}
 '''
 
 [[plugins]]
@@ -299,17 +298,6 @@ hook_add = '''
 command KeycastrEnable lua require 'keycastr'.enable()
 command KeycastrDisable lua require 'keycastr'.disable()
 '''
-
-# [[plugins]]
-# repo = "tversteeg/registers.nvim"
-# on_map = { nv = '"', i = "<C-R>" }
-# on_cmd = "Registers"
-# lua_source = "require 'registers'.setup()"
-
-# [[plugins]]
-# repo = "boltlessengineer/smart-tab.nvim"
-# on_event = "InsertEnter"
-# lua_source = "require 'smart-tab'.setup()"
 
 [[plugins]]
 repo = "kdheepak/lazygit.nvim"

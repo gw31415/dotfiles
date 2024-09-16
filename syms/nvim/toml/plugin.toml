@@ -94,9 +94,6 @@ autocmd BufReadCmd mstdn://* call timer_start(1500, {-> mstdn#timeline#reconnect
 [[plugins]]
 repo = "gw31415/mstdn-editor.vim"
 
-# [[plugins]]
-# repo = "skanehira/denops-gh.vim"
-
 [[plugins]]
 repo = "skanehira/denops-silicon.vim"
 on_cmd = "Silicon"
