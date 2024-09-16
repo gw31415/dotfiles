@@ -48,7 +48,6 @@ vim.api.nvim_create_autocmd('CursorHold', {
 -- Personal settings
 ----------------------------
 
-
 vim.go.encoding = 'utf-8'
 vim.opt_global.fencs = { 'utf-8', 'iso-2022-jp', 'euc-jp', 'sjis' }
 vim.go.winblend = 20
