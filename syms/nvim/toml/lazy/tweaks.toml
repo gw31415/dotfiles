@@ -136,6 +136,7 @@ vim.api.nvim_create_autocmd('FileType', {
 		 		for _, line in ipairs(lines) do
 		 			width = math.max(width, vim.fn.strdisplaywidth(line))
 		 		end
+				width = vim.fn.float2nr(math.max(width, vim.api.nvim_get_option('columns') * 0.6))
 				local row = math.max(math.floor(vim.api.nvim_get_option('lines') / 2), 1)
 				local col = math.max(math.floor((vim.api.nvim_get_option('columns') - width) / 2), 1)
 				vim.api.nvim_win_set_config(0, { width = width + 2, row = row, col = col, relative = 'editor' })
