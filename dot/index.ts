@@ -200,7 +200,9 @@ try {
 						initial: "leave",
 					})) as unknown) === "remove";
 				if (remove) {
-					homeManagerPath.removeSync({ recursive: true });
+					homeManagerPath.removeSync({
+						recursive: true,
+					});
 					consola.info("Removed the downloaded dotfiles.");
 				} else {
 					consola.info(
