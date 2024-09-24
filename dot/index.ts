@@ -226,6 +226,9 @@ try {
 				consola.info("No changes. Update skipped.");
 			} else {
 				consola.success(`Updated ${homeManagerPath.join("flake.lock")}.`);
+				await $`git commit flake.lock -m "Update flake.lock"`.cwd(
+					homeManagerPath,
+				);
 			}
 		}
 
