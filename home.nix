@@ -13,6 +13,7 @@
     deno
     emacs-nox
     envchain
+    era
     eza
     ffmpeg
     flyctl
@@ -25,7 +26,7 @@
     jnv
     jq
     lazygit
-    librsvg # rsvg-convert
+    librsvg # rsvg-convert CLI
     litecli
     mise
     mmv-go
