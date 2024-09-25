@@ -329,6 +329,7 @@ on_cmd = [
 	"LazyGitFilterCurrentFile",
 ]
 hook_add = "nnoremap gll <cmd>LazyGit<cr>"
+hook_source = "let $GIT_EDITOR = 'nvim -R -n --headless'"
 depends = "plenary.nvim"
 
 [[plugins]]
