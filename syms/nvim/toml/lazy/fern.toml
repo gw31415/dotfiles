@@ -20,9 +20,8 @@ depends = [
 	"fern-highlight.vim",
 ]
 on_cmd = "Fern"
-on_map = { n = "<C-n>" }
+lua_add = "vim.keymap.set('n', '<C-n>', '<cmd>Fern . -drawer -toggle -reveal=% <cr>')"
 lua_source = '''
-vim.keymap.set('n', '<C-n>', '<cmd>Fern . -drawer -toggle -reveal=% <cr>')
 vim.api.nvim_set_var('fern#renderer', 'nerdfont')
 vim.api.nvim_set_var('fern#renderer#nerdfont#indent_markers', 1)
 vim.api.nvim_create_autocmd('FileType', {
