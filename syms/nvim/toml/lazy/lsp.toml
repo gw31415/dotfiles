@@ -154,6 +154,10 @@ if executable 'sourcekit-lsp' then
 	lspconfig.sourcekit.setup(lsp_opts)
 end
 
+if executable 'nu' then
+	lspconfig.nushell.setup {}
+end
+
 ------------------------------------
 -- 特別な分岐が必要なLSPの設定
 ------------------------------------

@@ -171,6 +171,17 @@ require 'rest-nvim'.setup {
 }
 '''
 
+# For nushell Treesitter
+[[plugins]]
+repo = "LhKipp/nvim-nu"
+on_ft = "nu"
+depends = "nvim-treesitter"
+lua_source = '''
+require'nu'.setup{
+	use_lsp_features = false,
+}
+'''
+
 [[plugins]]
 repo = "ixru/nvim-markdown"
 on_ft = "markdown"
