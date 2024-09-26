@@ -32,6 +32,7 @@
     mmv-go
     neovim
     nodejs
+    nushell # Trying
     pandoc
     poppler_utils
     python3
