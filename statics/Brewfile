@@ -4,8 +4,11 @@ tap "homebrew/cask-versions"
 tap "homebrew/core"
 tap "homebrew/services"
 tap "jorgelbg/tap"
+tap "monochromegane/tap"
 brew "mas"
 brew "jorgelbg/tap/pinentry-touchid"
+brew "monochromegane/tap/afa"
+brew "monochromegane/tap/afa-tui"
 cask "alt-tab"
 cask "android-studio"
 cask "chatgpt"
@@ -38,7 +41,7 @@ mas "Motion", id: 434290957
 mas "Numbers", id: 409203825
 mas "OmniFocus", id: 1542143627
 mas "Pages", id: 409201541
-mas "Sequel Ace", id: 1518036000
+mas "RunCat", id: 1429033973
 mas "Vuzix View", id: 1567955906
 mas "Xcode", id: 497799835
 mas "タイピスト", id: 415166115
