@@ -69,9 +69,7 @@
       # Common files
       ########################################
 
-      ".skk/SKK-JISYO.L" = {
-        source = "${pkgs.skkDictionaries.l}/share/SKK-JISYO.L";
-      };
+      ".skk/SKK-JISYO.L".source = "${pkgs.skkDictionaries.l}/share/SKK-JISYO.L";
       ".emacs.d" = {
         source = ./statics/emacs.d;
         recursive = true;
