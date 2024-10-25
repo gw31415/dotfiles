@@ -132,7 +132,6 @@ local lsp_opts = {
 -- Masonで追加されないLSPの設定
 ------------------------------------
 
-local configs = require 'lspconfig/configs'
 local function executable(cmd)
 	return vim.fn.executable(cmd) == 1
 end
