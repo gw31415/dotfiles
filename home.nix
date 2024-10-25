@@ -30,7 +30,6 @@
     litecli
     mise
     mmv-go
-    neovim
     nodejs
     pandoc
     poppler_utils
@@ -57,7 +56,32 @@
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
   ]
-  ++ [ dot-cli ];
+  ++ [ dot-cli ]
+  ++ [
+    pkgs.neovim.overrideDerivation
+    (
+      drv: {
+        name = "neovim-dpp";
+        postInstall = ''
+          ${drv.postInstall or ""}
+
+          # Install dpp-vim
+          mkdir -p ~/.cache/dpp/repos/github.com/Shougo
+          mkdir -p ~/.cache/dpp/repos/github.com/vim-denops
+
+          git clone https://github.com/Shougo/dpp.vim           ~/.cache/dpp/repos/github.com/Shougo/dpp.vim
+          git clone https://github.com/Shougo/dpp-ext-installer ~/.cache/dpp/repos/github.com/Shougo/dpp-ext-installer
+          git clone https://github.com/Shougo/dpp-protocol-git  ~/.cache/dpp/repos/github.com/Shougo/dpp-protocol-git
+          git clone https://github.com/Shougo/dpp-ext-lazy      ~/.cache/dpp/repos/github.com/Shougo/dpp-ext-lazy
+          git clone https://github.com/Shougo/dpp-ext-toml      ~/.cache/dpp/repos/github.com/Shougo/dpp-ext-toml
+
+          git clone https://github.com/vim-denops/denops.vim    ~/.cache/dpp/repos/github.com/vim-denops/denops.vim
+
+          nvim --headless -c "autocmd User DenopsReady call dpp#sync_ext_action('installer', 'update') | quit"
+        '';
+      }
+    )
+  ];
 
   home.file =
     let
