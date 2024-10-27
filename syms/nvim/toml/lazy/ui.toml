@@ -1,8 +1,16 @@
 [[plugins]]
 repo = "kevinhwang91/nvim-bqf"
-on_event = "QuickFixCmdPre"
-on_cmd = "copen"
-on_source = "diaglist.nvim"
+on_ft = "qf"
+lua_add = '''
+-- Workaround for enabling BQF in qf buffer
+vim.api.nvim_create_autocmd('FileType', {
+	once = true,
+	pattern = 'qf',
+	callback = function()
+		require 'bqf.main'.enable()
+	end,
+})
+'''
 
 [[plugins]]
 repo = "j-hui/fidget.nvim"
