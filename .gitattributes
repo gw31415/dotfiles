@@ -1,4 +1,3 @@
 /statics/Brewfile linguist-vendored
 /statics/kana-rule.conf linguist-vendored
 /syms/fish_*/** linguist-vendored
-/syms/nvim/after/queries/satysfi/*.scm linguist-vendored
