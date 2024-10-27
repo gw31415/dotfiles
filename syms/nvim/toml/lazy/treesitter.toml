@@ -19,7 +19,7 @@ lua_source = '''
 vim.fn.setenv('EXTENSION_WIKI_LINK', 1)
 
 local parser_install_dir = vim.fn.stdpath 'data' .. '/treesitter'
-vim.opt.runtimepath:append(vim.fn.stdpath 'data' .. '/treesitter')
+vim.opt.runtimepath:append(parser_install_dir)
 require 'nvim-treesitter.configs'.setup {
 	sync_install = false,
 	ignore_install = {},
