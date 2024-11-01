@@ -222,7 +222,7 @@ try {
 					),
 				);
 			const hashBefore = flakeLock.existsSync() ? await hash() : "";
-			await $`nix flake update ${homeManagerPath}`;
+			await $`nix flake update --flake ${homeManagerPath}`;
 			const hashAfter = await hash();
 			if (hashBefore === hashAfter) {
 				consola.info("No changes. Update skipped.");
