@@ -148,34 +148,7 @@ require'nu'.setup{
 [[plugins]]
 repo = "ixru/nvim-markdown"
 on_ft = "markdown"
-hook_source = '''
-function! s:MapNotHasMapTo(lhs, rhs, modes)
-	for mode in split(a:modes, '\zs')
-		if !hasmapto('<Plug>' . a:rhs, mode)
-			execute mode . 'map <buffer> ' . a:lhs . ' <Plug>' . a:rhs
-		endif
-	endfor
-endfunction
-let g:vim_markdown_no_default_key_mappings = 1
-
-function! s:SetKeyMaps()
-	call <sid>MapNotHasMapTo(']]', 'Markdown_MoveToNextHeader', 'nv')
-	call <sid>MapNotHasMapTo('[[', 'Markdown_MoveToPreviousHeader', 'nv')
-	call <sid>MapNotHasMapTo('][', 'Markdown_MoveToNextSiblingHeader', 'nv')
-	call <sid>MapNotHasMapTo('[]', 'Markdown_MoveToPreviousSiblingHeader', 'nv')
-	call <sid>MapNotHasMapTo(']u', 'Markdown_MoveToParentHeader', 'nv')
-	call <sid>MapNotHasMapTo(']c', 'Markdown_MoveToCurHeader', 'nv')
-	call <sid>MapNotHasMapTo('<C-c>', 'Markdown_Checkbox', 'n')
-	call <sid>MapNotHasMapTo('<TAB>', 'Markdown_Fold', 'n')
-	call <sid>MapNotHasMapTo('<TAB>', 'Markdown_Jump', 'i')
-	call <sid>MapNotHasMapTo('<C-k>', 'Markdown_CreateLink', 'vi')
-	call <sid>MapNotHasMapTo('gx', 'Markdown_FollowLink', 'n')
-	call <sid>MapNotHasMapTo('o', 'Markdown_NewLineBelow', 'n')
-	call <sid>MapNotHasMapTo('O', 'Markdown_NewLineAbove', 'n')
-	call <sid>MapNotHasMapTo('<CR>', 'Markdown_NewLineBelow', 'i')
-endfunction
-autocmd FileType markdown call <sid>SetKeyMaps()
-'''
+hook_source = "let g:vim_markdown_no_default_key_mappings = 1"
 
 [ftplugin]
 erg = "setl et"
