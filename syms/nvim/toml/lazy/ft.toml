@@ -21,51 +21,15 @@ repo = "danilshvalov/org-modern.nvim"
 [[plugins]]
 repo = "nvim-orgmode/orgmode"
 on_ft = "org"
-depends = [
-	"org-bullets.nvim",
-	"vim-repeat",
-	"org-modern.nvim",
-	"nvim-treesitter",
-]
-lua_add = '''
-vim.api.nvim_create_autocmd('BufEnter', {
-	pattern = '*.org',
-	callback = function()
-		vim.opt_local.formatoptions:append 'mM'
-		vim.opt_local.foldlevel = 0
-		vim.opt_local.expandtab = true
-		vim.opt_local.tabstop = 2
-		vim.opt_local.shiftwidth = 2
-		vim.keymap.set({ 'n', 'i' }, '<M-v>', function()
-			local filename = vim.fn.strftime '%Y%m%d%H%M%S' .. '.png'
-			local res = vim.system({ 'pngpaste', filename }, {
-				text = true,
-				cwd = vim.fn.expand '%:p:h',
-			}):wait()
-			if res.signal ~= 0 then
-				vim.notify(res.stderr, vim.log.levels.ERROR)
-			else
-				vim.notify('pngpaste: ' .. filename, vim.log.levels.INFO)
-				vim.api.nvim_feedkeys(
-					vim.api.nvim_replace_termcodes(
-						'<Esc>a[[file:' .. filename .. ']]<Esc>%O#+CAPTION:<Space>',
-						true,
-						true,
-						true
-					) or '',
-					'',
-					true
-				)
-			end
-		end, { buffer = true })
-	end
-})
-'''
+on_event = "CursorHold"
+depends = ["org-bullets.nvim", "vim-repeat", "org-modern.nvim"]
 lua_source = '''
 local Menu = require 'org-modern.menu'
 vim.keymap.set('n', '<Leader>o', '<Nop>', {})
-require 'orgmode'.setup_ts_grammar()
 require 'orgmode'.setup {
+	mappings = {
+		disable_all = false,
+	},
 	ui = {
 		menu = {
 			handler = function(data)
@@ -85,7 +49,6 @@ require 'orgmode'.setup {
 		},
 	},
 	org_agenda_files = { '~/iCloud_Drive/org/*' },
-	org_agenda_skip_deadline_if_done = true,
 	org_default_notes_file = '~/iCloud_Drive/org/refile.org',
 	org_capture_templates = {
 		n = {
