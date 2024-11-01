@@ -45,7 +45,7 @@ export class Config extends BaseConfig {
 			})) as Toml,
 		);
 
-		for (const tomlFile of Deno.readDirSync(`${tomlsDir}/lazy/`)) {
+		for (const tomlFile of Deno.readDirSync(`${tomlsDir}lazy/`)) {
 			if (!tomlFile.name.endsWith(".toml")) {
 				continue;
 			}
@@ -57,7 +57,7 @@ export class Config extends BaseConfig {
 					"toml",
 					"load",
 					{
-						path: `${tomlsDir}/lazy/${tomlFile.name}`,
+						path: `${tomlsDir}lazy/${tomlFile.name}`,
 						options: {
 							lazy: true,
 						},
