@@ -1,6 +1,5 @@
 [tools]
 usage = "latest"
-
 flutter = "latest"
 
 [settings]
