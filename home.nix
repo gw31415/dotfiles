@@ -20,6 +20,7 @@
     gh
     gnupg
     gopls
+    himalaya
     hugo
     imagemagick
     jdupes
