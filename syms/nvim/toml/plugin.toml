@@ -32,23 +32,6 @@ repo = "lambdalisue/kensaku.vim"
 repo = "lambdalisue/vim-guise"
 
 [[plugins]]
-repo = "gw31415/denops-mdast.vim"
-lua_add = '''
-vim.api.nvim_create_autocmd('FileType', {
-	pattern = 'markdown',
-	callback = function()
-		vim.keymap.set('n', '<Tab>', function()
-			vim.fn['mdast#edit#increment_heading']()
-		end, { buffer = true })
-
-		vim.keymap.set('n', '<S-Tab>', function()
-			vim.fn['mdast#edit#decrement_heading']()
-		end, { buffer = true })
-	end
-})
-'''
-
-[[plugins]]
 repo = "gw31415/denops-sixel-view.vim"
 
 [[plugins]]
