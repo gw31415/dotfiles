@@ -53,6 +53,7 @@
   ] ++ [
     # Fonts
     hackgen-nf-font
+    noto-fonts
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
   ]
