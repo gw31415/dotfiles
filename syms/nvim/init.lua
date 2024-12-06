@@ -77,6 +77,12 @@ function _G.get_error_count()
     return #errors
 end
 
+function _G.get_macro_state()
+    local key = vim.fn.reg_recording()
+    if key == '' then return ' ' end
+    return '[MACRO:' .. key .. ']'
+end
+
 vim.api.nvim_create_autocmd('LspAttach', {
     callback = function()
         vim.opt_local.formatexpr = 'v:lua.vim.lsp.formatexpr(#{timeout_ms:250})'
