@@ -111,6 +111,10 @@
   programs.home-manager.enable = true;
   programs.git = {
     enable = true;
+    attributes = [
+      "*.lockb binary diff=lockb"
+      "*.ipynb binary diff=ipynb"
+    ];
     userName = "gw31415";
     userEmail = "gw31415@amas.dev";
     delta.enable = true;
@@ -124,6 +128,9 @@
       init.defaultBranch = "main";
       commit.gpgSign = true;
       user.signingKey = "B7E2A136"; # Expiration: 2025-09-01
+      diff.lockb.binary = true;
+      diff.lockb.textconv = "${pkgs.bun}/bin/bun";
+      diff.ipynb.binary = true;
     };
   };
   programs.starship = {
