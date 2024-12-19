@@ -164,6 +164,15 @@
     plugins = [
       { name = "z"; src = pkgs.fishPlugins.z.src; }
       { name = "autopair"; src = pkgs.fishPlugins.autopair.src; }
+      {
+        name = "fish-na";
+        src = (
+          fetchTarball {
+            url = "https://github.com/ryoppippi/fish-na/archive/refs/tags/v0.1.1.tar.gz";
+            sha256 = "0dzchdawcpw307jszr5wiv5gj8mw9ai875g3n17kd7y4a8m0bgcy";
+          }
+        );
+      }
     ];
     shellInit = ''
       set fish_greeting
@@ -176,6 +185,7 @@
         source "$HOME/.cargo/env.fish"
       end
       set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
+      abbr -a n -f _na
     '' + (
       # macOS specific settings
       if pkgs.stdenv.isDarwin then ''
