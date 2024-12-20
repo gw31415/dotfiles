@@ -1,4 +1,13 @@
 [[plugins]]
+repo = "github/copilot.vim"
+hook_add = '''
+" let g:copilot_enabled = v:false " もしGitHub Copilotを一時的に無効にしたい場合はこの設定をする
+let g:copilot_no_tab_map = v:true
+let g:copilot_assume_mapped = v:true
+let g:copilot_tab_fallback = ""
+'''
+
+[[plugins]]
 repo = "hrsh7th/cmp-nvim-lsp"
 [[plugins]]
 repo = "hrsh7th/vim-vsnip"
@@ -57,19 +66,16 @@ cmp.setup {
 		cmp.config.compare.length,
 		cmp.config.compare.order,
 	},
-	mapping = cmp.mapping.preset.insert {
-		['<C-p>'] = cmp.mapping.select_prev_item(),
-		['<C-n>'] = cmp.mapping.select_next_item(),
+	mapping = {
+		['<C-p>'] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Select },
+		['<C-n>'] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Select },
 		['<C-b>'] = cmp.mapping.scroll_docs(-4),
 		['<C-f>'] = cmp.mapping.scroll_docs(4),
-		['<tab>'] = cmp.mapping(function(fallback)
-			if cmp.visible() then
-				local entry = cmp.get_selected_entry()
-				if not entry then
-					cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
-				else
-					cmp.confirm()
-				end
+		['<C-y>'] = cmp.mapping.confirm(),
+		['<C-e>'] = cmp.mapping.close(),
+		['<Tab>'] = cmp.mapping(function(fallback)
+			if cmp.visible() and cmp.get_selected_entry() then
+				cmp.confirm()
 			elseif vim.fn['vsnip#jumpable'](1) == 1 then
 				feedkeys '<Plug>(vsnip-jump-next)'
 			else
@@ -79,10 +85,9 @@ cmp.setup {
 				else
 					fallback()
 				end
-				-- fallback()
 			end
 		end),
-		['<s-tab>'] = cmp.mapping(function(fallback)
+		['<S-Tab>'] = cmp.mapping(function(fallback)
 			if vim.fn['vsnip#jumpable'](-1) == 1 then
 				feedkeys '<Plug>(vsnip-jump-prev)'
 			else
@@ -109,3 +114,30 @@ cmp.setup.filetype('gitcommit', {
 	}
 })
 '''
+
+# [[plugins]]
+# repo = "rafamadriz/friendly-snippets"
+#
+# [[plugins]]
+# repo = "saghen/blink.compat"
+# rev = "*"
+# lua_source = "require 'blink.compat.setup()'"
+#
+# [[plugins]]
+# repo = "saghen/blink.cmp"
+# rev = "v0.*"
+# depends = ["friendly-snippets", "blink.compat"]
+# on_event = ["InsertEnter", "CmdlineEnter"]
+# lua_source = '''
+# require 'blink.cmp'.setup {
+# 	signature = { enabled = true },
+# 	sources = {
+# 		default = { 'lsp', 'path', 'snippets', 'buffer' },
+# 	},
+# 	windows = {
+# 		documentation = {
+# 			auto_show = true,
+# 		}
+# 	}
+# }
+# '''

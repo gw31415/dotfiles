@@ -1,13 +1,4 @@
 [[plugins]]
-repo = "github/copilot.vim"
-hook_add = '''
-" let g:copilot_enabled = v:false " もしGitHub Copilotを一時的に無効にしたい場合はこの設定をする
-let g:copilot_no_tab_map = v:true
-let g:copilot_assume_mapped = v:true
-let g:copilot_tab_fallback = ""
-'''
-
-[[plugins]]
 repo = "hrsh7th/nvim-insx"
 on_event = "InsertEnter"
 lua_source = "require 'insx.preset.standard'.setup()"
@@ -16,8 +7,8 @@ lua_source = "require 'insx.preset.standard'.setup()"
 repo = "tani/dmacro.nvim"
 on_event = "CursorHold"
 hook_source = '''
-inoremap <C-y> <Plug>(dmacro-play-macro)
-nnoremap <C-y> <Plug>(dmacro-play-macro)
+inoremap <S-Right> <Plug>(dmacro-play-macro)
+nnoremap <S-Right> <Plug>(dmacro-play-macro)
 '''
 
 [[plugins]]
