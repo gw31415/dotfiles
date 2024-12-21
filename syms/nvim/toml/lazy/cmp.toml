@@ -16,6 +16,8 @@ repo = "hrsh7th/cmp-buffer"
 [[plugins]]
 repo = "hrsh7th/cmp-cmdline"
 [[plugins]]
+repo = "teramako/cmp-cmdline-prompt.nvim"
+[[plugins]]
 repo = "hrsh7th/cmp-nvim-lsp-signature-help"
 [[plugins]]
 repo = "petertriho/cmp-git"
@@ -31,6 +33,7 @@ depends = [
 	"vim-vsnip",
 	"cmp-buffer",
 	"cmp-cmdline",
+	"cmp-cmdline-prompt.nvim",
 	"cmp-nvim-lsp-signature-help",
 	"cmp-git",
 	"cmp-under-comparator",
@@ -107,6 +110,12 @@ cmp.setup.cmdline(':', {
 	sources = cmp.config.sources {
 		{ name = 'cmdline' }
 	}
+})
+cmp.setup.cmdline('@', {
+	mapping = cmp.mapping.preset.cmdline(),
+	sources = cmp.config.sources {
+		{ name = 'cmdline-prompt' },
+	},
 })
 cmp.setup.filetype('gitcommit', {
 	sources = cmp.config.sources {

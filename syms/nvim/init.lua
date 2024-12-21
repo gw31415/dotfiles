@@ -1,7 +1,7 @@
 vim.opt.runtimepath:prepend '$HOME/.cache/dpp/repos/github.com/Shougo/dpp.vim'
 local dpp = require 'dpp'
 
-local dpp_base = '~/.cache/dpp/'
+local dpp_base = '~/.cache/dpp'
 
 vim.opt.runtimepath:append '$HOME/.cache/dpp/repos/github.com/Shougo/dpp-ext-toml'
 vim.opt.runtimepath:append '$HOME/.cache/dpp/repos/github.com/Shougo/dpp-protocol-git'
@@ -19,6 +19,13 @@ if dpp.load_state(dpp_base) then
         end
     })
 end
+
+vim.api.nvim_create_autocmd('User', {
+    pattern = 'Dpp:makeStatePost',
+    callback = function()
+        vim.notify 'dpp make_state() is done'
+    end,
+})
 
 ----------------------------
 -- Disable built-in plugins
@@ -123,3 +130,17 @@ vim.treesitter.start = (function(wrapped)
         pcall(wrapped, bufnr, lang)
     end
 end)(vim.treesitter.start)
+
+-- install
+vim.api.nvim_create_user_command('DppInstall', "call dpp#async_ext_action('installer', 'install')", {})
+-- update
+vim.api.nvim_create_user_command(
+    'DppUpdate',
+    function(opts)
+        local args = opts.fargs
+        vim.fn['dpp#async_ext_action']('installer', 'update', { names = args })
+    end,
+    { nargs = '*' }
+)
+
+vim.cmd "filetype plugin indent on"

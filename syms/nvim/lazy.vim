@@ -29,10 +29,6 @@ cno <c-d> <del>
 cno <c-a> <home>
 cno <c-e> <end>
 
-" Visual <, >で連続してインデントを操作
-xno < <gv
-xno > >gv
-
 " 空行での編集開始時に自動でインデント
 nno <expr> i empty(getline('.')) ? '"_cc' : 'i'
 
