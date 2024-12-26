@@ -143,4 +143,4 @@ vim.api.nvim_create_user_command(
     { nargs = '*' }
 )
 
-vim.cmd "filetype plugin indent on"
+vim.cmd 'filetype plugin indent on'
