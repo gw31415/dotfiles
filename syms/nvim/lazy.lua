@@ -31,8 +31,6 @@ vim.api.nvim_create_autocmd('BufWritePost', {
 				end
 			})
 
-			require 'dpp'.make_state('~/.cache/dpp/', '~/.config/nvim/dpp.ts')
-
 			vim.api.nvim_create_autocmd('User', {
 				pattern = 'Dpp:makeStatePost',
 				once = true,
@@ -41,6 +39,8 @@ vim.api.nvim_create_autocmd('BufWritePost', {
 					vim.api.nvim_del_autocmd(leave_lock) -- Remove the lock
 				end,
 			})
+
+			require 'dpp'.make_state('~/.cache/dpp/', '~/.config/nvim/dpp.ts')
 		end
 	end
 })
