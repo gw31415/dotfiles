@@ -41,6 +41,7 @@
     silicon
     slack
     slack-term
+    tdf
     tectonic
     tmux
     typst
