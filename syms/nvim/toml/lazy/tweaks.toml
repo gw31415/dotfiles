@@ -1,4 +1,12 @@
 [[plugins]]
+repo = "gw31415/dpp-automkstate.nvim"
+on_event = "BufWritePre"
+lua_source = '''
+require 'dpp-automkstate'.setup('~/.cache/dpp/', '~/.config/nvim/dpp.ts')
+require 'dpp-automkstate'.watch(vim.fn.stdpath 'config')
+'''
+
+[[plugins]]
 repo = "gw31415/extend_word_motion.nvim"
 depends = "tinysegmenter.nvim"
 on_map = ["w", "b", "e", "ge"]
@@ -40,7 +48,6 @@ lua_source = "require 'cellwidths'.setup { name = 'cica' }"
 
 [[plugins]]
 repo = "kylechui/nvim-surround"
-# rev = "v2.1.5"
 on_map = { n = [
 	"ys",
 	"yss",
