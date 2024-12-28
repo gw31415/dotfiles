@@ -37,7 +37,7 @@ vim.api.nvim_create_autocmd('BufWritePost', {
 				pattern = 'Dpp:makeStatePost',
 				once = true,
 				callback = function()
-					waiting = false -- Release the lock
+					waiting = false       -- Release the lock
 					vim.api.nvim_del_autocmd(leave_lock) -- Remove the lock
 				end,
 			})

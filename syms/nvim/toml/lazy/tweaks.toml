@@ -1,7 +1,7 @@
 [[plugins]]
 repo = "gw31415/extend_word_motion.nvim"
 depends = "tinysegmenter.nvim"
-on_map = [ "w", "b", "e", "ge" ]
+on_map = ["w", "b", "e", "ge"]
 lua_source = "require 'extend_word_motion'.setup{}"
 
 [[plugins]]
@@ -408,6 +408,7 @@ vim.keymap.set('n', 'gx', lsplinks.gx)
 # 命名規則を相互変換
 [[plugins]]
 repo = "gregorias/coerce.nvim"
+depends = "coop.nvim"
 on_event = "CursorHold"
 lua_source = '''
 require 'coerce'.setup {
