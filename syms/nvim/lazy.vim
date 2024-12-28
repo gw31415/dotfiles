@@ -1,3 +1,5 @@
+luafile ./lazy.lua
+
 se vop=folds
 se cul
 se cuc
