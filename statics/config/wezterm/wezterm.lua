@@ -17,6 +17,9 @@ wezterm.on('gui-attached', function()
 	end
 end)
 
+local SOLID_LEFT_ARROW = wezterm.nerdfonts.pl_right_hard_divider
+local SOLID_RIGHT_ARROW = wezterm.nerdfonts.pl_left_hard_divider
+
 return {
 	color_scheme = 'Tomorrow Night',
 	default_prog = { 'bash', '-c', '$HOME/.nix-profile/bin/fish' },
@@ -29,6 +32,36 @@ return {
 	macos_forward_to_ime_modifier_mask = 'SHIFT|CTRL',
 	window_background_opacity = 0.8,
 	macos_window_background_blur = 20,
+
+	-- show_close_tab_button_in_tabs = false,
+	tab_bar_at_bottom = true,
+	show_new_tab_button_in_tab_bar = false,
+	window_background_gradient = {
+		colors = { '#000000' },
+	},
+	tab_bar_style = {
+		active_tab_left = wezterm.format {
+			{ Background = { Color = '#0b0022' } },
+			{ Foreground = { Color = '#2b2042' } },
+			{ Text = SOLID_LEFT_ARROW },
+		},
+		active_tab_right = wezterm.format {
+			{ Background = { Color = '#0b0022' } },
+			{ Foreground = { Color = '#2b2042' } },
+			{ Text = SOLID_RIGHT_ARROW },
+		},
+		inactive_tab_left = wezterm.format {
+			{ Background = { Color = '#000000' } },
+			{ Foreground = { Color = '#1b1032' } },
+			{ Text = SOLID_LEFT_ARROW },
+		},
+		inactive_tab_right = wezterm.format {
+			{ Background = { Color = '#000000' } },
+			{ Foreground = { Color = '#1b1032' } },
+			{ Text = SOLID_RIGHT_ARROW },
+		},
+	},
+
 	keys = {
 		{
 			key = ']',
