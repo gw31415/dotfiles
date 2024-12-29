@@ -1,4 +1,4 @@
----@diagnostic disable: missing-fields, return-type-mismatch
+---@diagnostic disable: missing-fields, return-type-mismatch, undefined-field, unused-local
 local wezterm = require 'wezterm';
 
 local config = wezterm.config_builder()
