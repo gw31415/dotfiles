@@ -85,15 +85,43 @@ vim.api.nvim_create_user_command(
     { nargs = '*' }
 )
 -- Clean
+local dpp_cache_cwd = vim.uv.fs_realpath(vim.fn.expand '~/.cache/dpp/repos/github.com/') .. '/'
+local function check_clean()
+    local res = {}
+    for _, dir in ipairs(dpp.check_clean()) do
+        local realdir = vim.uv.fs_realpath(dir)
+        if vim.startswith(realdir, dpp_cache_cwd) then
+            table.insert(res, realdir:sub(#dpp_cache_cwd + 1))
+        else
+            table.insert(res, dir)
+        end
+    end
+    return res
+end
 vim.api.nvim_create_user_command('DppClean', function(opts)
-    local dirs = dpp.check_clean()
+    local all_dirs = check_clean()
+    local dirs = #opts.fargs > 0 and opts.fargs or all_dirs
+
+    for i = #dirs, 1, -1 do
+        if not vim.tbl_contains(all_dirs, dirs[i]) then
+            vim.cmd('echoerr "Unknown-Item found: ' .. dirs[i] .. '"')
+            return
+        end
+    end
+    ---@type string[]
+    ---@diagnostic disable-next-line: assign-type-mismatch
+    dirs = vim.fn.uniq(vim.fn.sort(dirs))
+
     if #dirs == 0 then
         vim.notify 'Nothing to clean'
         return
     end
-    local choice = opts.bang and 1 or vim.fn.confirm('Remove ' .. #dirs .. ' directories?', '&Yes\n&No\n&List', 2)
+    local choice = opts.bang and 1 or
+        vim.fn.confirm('Remove ' .. #dirs .. ' directories?', #opts.fargs > 0 and '&Yes\n&No' or '&Yes\n&No\n&List', 2)
     if choice == 1 then
-        vim.system({ 'trash', unpack(dirs) }, nil, function()
+        vim.system({ 'trash', unpack(dirs) }, {
+            cwd = dpp_cache_cwd,
+        }, function()
             vim.schedule(function()
                 for _, dir in ipairs(dirs) do
                     vim.notify('Removed ' .. dir)
@@ -103,4 +131,19 @@ vim.api.nvim_create_user_command('DppClean', function(opts)
     elseif choice == 3 then
         print(table.concat(dirs, '\n'))
     end
-end, { bang = true })
+end, {
+    bang = true,
+    nargs = '*',
+    complete = function(_, CmdLine, CursorPos)
+        local prior_char = CmdLine:sub(CursorPos, CursorPos)
+        if prior_char:match '%s' then
+            return vim.tbl_map(vim.fn.fnameescape, check_clean())
+        else
+            return {}
+        end
+    end,
+})
+
+vim.api.nvim_create_user_command('DppMkstate', function()
+    dpp.make_state('~/.cache/dpp', '~/.config/nvim/dpp.ts')
+end, {})
