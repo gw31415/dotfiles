@@ -35,7 +35,8 @@ config.front_end = 'WebGpu'
 config.macos_forward_to_ime_modifier_mask = 'SHIFT|CTRL'
 config.window_background_opacity = 0.8
 config.macos_window_background_blur = 20
--- config.show_close_tab_button_in_tabs = false
+---@diagnostic disable-next-line: inject-field
+config.show_close_tab_button_in_tabs = false
 config.tab_bar_at_bottom = true
 config.show_new_tab_button_in_tab_bar = false
 config.window_frame = {
