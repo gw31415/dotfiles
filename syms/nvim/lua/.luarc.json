@@ -1,8 +1,0 @@
-{
-    "workspace.library": [
-        "/Users/ama/.local/share/nvim/lazy/neodev.nvim/types/nightly",
-        "/usr/local/Cellar/neovim/HEAD-f0884f2/share/nvim/runtime/lua",
-        "/Users/ama/.local/share/chezmoi/dot_config/nvim/lua",
-        "${3rd}/luv/library"
-    ]
-}

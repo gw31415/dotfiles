@@ -5,7 +5,8 @@ depends = ["nvim-lspconfig", "mason.nvim"]
 lua_source = '''
 require 'lazydev'.setup {
 	library = {
-		{ path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+		{ path = '${3rd}/luv/library',                words = { 'vim%.uv' } },
+		{ path = '~/.nix-deliverables/wezterm-types', mods = { 'wezterm' } },
 	},
 }
 '''

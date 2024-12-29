@@ -18,9 +18,15 @@
       inputs.nix-darwin.follows = "nix-darwin";
       inputs.flake-utils.follows = "flake-utils";
     };
+    wezterm-types = {
+      url = "path:./wezterm-types";
+      flake = true;
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-darwin, nix-homebrew, ... }:
+  outputs = { self, nixpkgs, home-manager, nix-darwin, nix-homebrew, wezterm-types, ... }:
     let
       env = import ./env.nix;
       pkgs = import nixpkgs {
@@ -36,7 +42,10 @@
       homeConfigurations.${env.username} = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [
-          ({ config, ... }: import ./home.nix { inherit config pkgs env dot-cli; })
+          ({ config, ... }: import ./home.nix {
+            inherit config pkgs env dot-cli;
+            wezterm-types = wezterm-types.packages.${env.system}.default;
+          })
         ];
       };
 

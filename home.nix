@@ -1,4 +1,4 @@
-{ config, pkgs, env, dot-cli, ... }:
+{ config, pkgs, env, dot-cli, wezterm-types, ... }:
 let
   configHome = "${config.xdg.configHome}";
   homeManagerDirectory = "${configHome}/home-manager";
@@ -75,6 +75,8 @@ in
       recursive = true;
     };
     ".latexmkrc".source = ./statics/latexmkrc;
+
+    ".nix-deliverables/wezterm-types".source = "${wezterm-types}";
 
     "${configHome}" = {
       source = ./statics/config;

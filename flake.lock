@@ -124,7 +124,8 @@
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "wezterm-types": "wezterm-types"
       }
     },
     "systems": {
@@ -140,6 +141,43 @@
         "owner": "nix-systems",
         "repo": "default",
         "type": "github"
+      }
+    },
+    "westerm-types-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1706845895,
+        "narHash": "sha256-dSxsrgrapUezQIGhNp/Ikc0kISfIdrlUZxUBdsLVe3A=",
+        "owner": "justinsgithub",
+        "repo": "wezterm-types",
+        "rev": "1518752906ba3fac0060d9efab6e4d3ec15d4b5a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "justinsgithub",
+        "repo": "wezterm-types",
+        "type": "github"
+      }
+    },
+    "wezterm-types": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "westerm-types-src": "westerm-types-src"
+      },
+      "locked": {
+        "lastModified": 1,
+        "narHash": "sha256-k9ROozVD3sZlaheaB3Qd2RG4SSfnW6GU0elxY/g7rvA=",
+        "path": "./wezterm-types",
+        "type": "path"
+      },
+      "original": {
+        "path": "./wezterm-types",
+        "type": "path"
       }
     }
   },
