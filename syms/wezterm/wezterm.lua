@@ -19,10 +19,6 @@ wezterm.on('gui-attached', function()
 	end
 end)
 
-local SOLID_LEFT_ARROW = wezterm.nerdfonts.pl_right_hard_divider
-local SOLID_RIGHT_ARROW = wezterm.nerdfonts.pl_left_hard_divider
-
-
 config.color_scheme = 'Tomorrow Night'
 config.default_prog = { 'bash', '-c', '$HOME/.nix-profile/bin/fish' }
 config.hide_tab_bar_if_only_one_tab = true
@@ -42,10 +38,9 @@ config.show_new_tab_button_in_tab_bar = false
 config.window_frame = {
 	font = wezterm.font {
 		family = 'HackGen Console NF',
-		weight = 'Bold',
 		style = 'Italic',
 	},
-	font_size = 11,
+	font_size = 14,
 	inactive_titlebar_fg = 'transparent',
 	inactive_titlebar_bg = 'transparent',
 	active_titlebar_fg = 'transparent',
@@ -64,12 +59,20 @@ config.colors = {
 	},
 }
 wezterm.on('format-tab-title', function(tab, _tabs, _panes, _config, _hover, max_width)
-	local bg = 'black'
+	local bg = 'none'
 	local fg = 'white'
 	if tab.is_active then
 		bg = '#5f5575'
 	end
-	local title = ' ' .. wezterm.truncate_right(tab.active_pane.title, max_width - 1) .. ' '
+	local title = ' ' .. wezterm.truncate_right(
+		wezterm.nerdfonts
+		[tab.tab_index < 9 and ('md_numeric_' .. tab.tab_index + 1 .. '_box') or 'md_pound_box'] ..
+		' ' .. tab.active_pane.title,
+		max_width - 1
+	) .. ' '
+
+	local SOLID_LEFT_ARROW = wezterm.nerdfonts.pl_right_hard_divider
+	local SOLID_RIGHT_ARROW = wezterm.nerdfonts.pl_left_hard_divider
 	return {
 		{ Background = { Color = 'none' } },
 		{ Foreground = { Color = bg } },
