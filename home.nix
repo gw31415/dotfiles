@@ -50,7 +50,7 @@ in
     tmux
     typst
     vim-startuptime
-    wezterm
+    # wezterm
     wget
     yt-dlp
     (pkgs.writeShellScriptBin "czg" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:czg "$@"'')
