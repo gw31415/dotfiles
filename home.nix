@@ -1,4 +1,8 @@
 { config, pkgs, env, dot-cli, ... }:
+let
+  configHome = "${config.xdg.configHome}";
+  homeManagerDirectory = "${configHome}/home-manager";
+in
 {
   home.packages = with pkgs; [
     # CLI tools
@@ -60,46 +64,41 @@
   ]
   ++ [ dot-cli ];
 
-  home.file =
-    let
-      configHome = "${config.xdg.configHome}";
-      homeManagerDirectory = "${configHome}/home-manager";
-    in
-    {
-      ########################################
-      # Common files
-      ########################################
+  home.file = {
+    ########################################
+    # Common files
+    ########################################
 
-      ".skk/SKK-JISYO.L".source = "${pkgs.skkDictionaries.l}/share/skk/SKK-JISYO.L";
-      ".emacs.d" = {
-        source = ./statics/emacs.d;
-        recursive = true;
-      };
-      ".latexmkrc".source = ./statics/latexmkrc;
+    ".skk/SKK-JISYO.L".source = "${pkgs.skkDictionaries.l}/share/skk/SKK-JISYO.L";
+    ".emacs.d" = {
+      source = ./statics/emacs.d;
+      recursive = true;
+    };
+    ".latexmkrc".source = ./statics/latexmkrc;
 
-      "${configHome}" = {
-        source = ./statics/config;
-        recursive = true;
-      };
+    "${configHome}" = {
+      source = ./statics/config;
+      recursive = true;
+    };
 
-      "${configHome}/lazygit".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/lazygit";
-      "${configHome}/mise".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/mise";
-      "${configHome}/nvim".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/nvim";
-      "${configHome}/fish/completions".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/fish_completions";
-      "${configHome}/fish/functions".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/fish_functions";
+    "${configHome}/lazygit".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/lazygit";
+    "${configHome}/mise".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/mise";
+    "${configHome}/nvim".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/nvim";
+    "${configHome}/fish/completions".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/fish_completions";
+    "${configHome}/fish/functions".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/fish_functions";
 
-    } // (if pkgs.stdenv.isDarwin then {
-      ########################################
-      # macOS specific files
-      ########################################
+  } // (if pkgs.stdenv.isDarwin then {
+    ########################################
+    # macOS specific files
+    ########################################
 
-      # TODO: .Brewfile cannot be symlinked because it is not a directory
-      ".Brewfile".source = ./statics/Brewfile;
+    # TODO: .Brewfile cannot be symlinked because it is not a directory
+    ".Brewfile".source = ./statics/Brewfile;
 
-      # TODO: Files in the Containers directory cannot be symlinked.
-      # "Library/Containers/net.mtgto.inputmethod.macSKK/Data/Documents/Settings/kana-rule.conf".source = ./statics/kana-rule.conf;
+    # TODO: Files in the Containers directory cannot be symlinked.
+    # "Library/Containers/net.mtgto.inputmethod.macSKK/Data/Documents/Settings/kana-rule.conf".source = ./statics/kana-rule.conf;
 
-    } else { });
+  } else { });
 
   home.sessionVariables = {
     EDITOR = "nvim";
@@ -157,6 +156,7 @@
     shellAbbrs = {
       tree = "eza -T";
       gll = "lazygit";
+      dcd = "cd ${homeManagerDirectory}";
     };
     shellAliases = {
       vi = "nvim";
