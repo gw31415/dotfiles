@@ -90,11 +90,15 @@ local function check_clean()
     local res = {}
     for _, dir in ipairs(dpp.check_clean()) do
         local realdir = vim.uv.fs_realpath(dir)
+        if not realdir then
+            goto continue
+        end
         if vim.startswith(realdir, dpp_cache_cwd) then
             table.insert(res, realdir:sub(#dpp_cache_cwd + 1))
         else
             table.insert(res, dir)
         end
+        ::continue::
     end
     return res
 end

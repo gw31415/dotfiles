@@ -2,7 +2,13 @@
 repo = "folke/lazydev.nvim"
 on_ft = "lua"
 depends = ["nvim-lspconfig", "mason.nvim"]
-lua_source = "require 'lazydev'.setup()"
+lua_source = '''
+require 'lazydev'.setup {
+	library = {
+		{ path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+	},
+}
+'''
 
 [[plugins]]
 repo = "SmiteshP/nvim-navic"
