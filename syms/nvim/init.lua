@@ -59,12 +59,6 @@ vim.go.cmdheight = 0
 vim.wo.foldcolumn = '1'
 vim.cmd [[try | colo onedark | catch | endtry]]
 
-vim.filetype.add {
-    extension = {
-        tf = 'terraform',
-        typ = 'typst',
-    }
-}
 
 -- Ignore startup treesitter errors
 vim.treesitter.start = (function(wrapped)
