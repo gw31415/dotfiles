@@ -1,21 +1,6 @@
-vim.api.nvim_create_autocmd('User', {
-    pattern = 'Dpp:makeStatePost',
-    callback = function()
-        vim.notify 'dpp make_state() is done'
-    end,
-})
-
--- install
-vim.api.nvim_create_user_command('DppInstall', "call dpp#async_ext_action('installer', 'install')", {})
--- update
-vim.api.nvim_create_user_command(
-    'DppUpdate',
-    function(opts)
-        local args = opts.fargs
-        vim.fn['dpp#async_ext_action']('installer', 'update', { names = args })
-    end,
-    { nargs = '*' }
-)
+--------------------------------------------------------------------------------
+-- Global Functions used in Statusline
+--------------------------------------------------------------------------------
 
 function _G.get_warn_count()
     local warns = vim.diagnostic.get(nil, { severity = vim.diagnostic.severity.WARN })
@@ -29,9 +14,13 @@ end
 
 function _G.get_macro_state()
     local key = vim.fn.reg_recording()
-    if key == '' then return ' ' end
+    if key == '' then return '' end
     return '[MACRO:' .. key .. ']'
 end
+
+--------------------------------------------------------------------------------
+-- Global Mappings/Configs used in LSP
+--------------------------------------------------------------------------------
 
 vim.api.nvim_create_autocmd('LspAttach', {
     callback = function()
@@ -65,3 +54,53 @@ vim.api.nvim_create_autocmd('LspAttach', {
         )
     end,
 })
+
+--------------------------------------------------------------------------------
+-- dpp.vim - Message when make_state is done
+--------------------------------------------------------------------------------
+
+vim.api.nvim_create_autocmd('User', {
+    pattern = 'Dpp:makeStatePost',
+    callback = function()
+        vim.notify 'dpp make_state() is done'
+    end,
+})
+
+--------------------------------------------------------------------------------
+-- dpp.vim - Custom Commands
+--------------------------------------------------------------------------------
+
+local dpp = require 'dpp'
+
+-- Install
+vim.api.nvim_create_user_command('DppInstall', function()
+    dpp.async_ext_action('installer', 'install')
+end, {})
+-- Update
+vim.api.nvim_create_user_command(
+    'DppUpdate',
+    function(opts)
+        dpp.async_ext_action('installer', 'update', { names = opts.fargs })
+    end,
+    { nargs = '*' }
+)
+-- Clean
+vim.api.nvim_create_user_command('DppClean', function(opts)
+    local dirs = dpp.check_clean()
+    if #dirs == 0 then
+        vim.notify 'Nothing to clean'
+        return
+    end
+    local choice = opts.bang and 1 or vim.fn.confirm('Remove ' .. #dirs .. ' directories?', '&Yes\n&No\n&List', 2)
+    if choice == 1 then
+        vim.system({ 'trash', unpack(dirs) }, nil, function()
+            vim.schedule(function()
+                for _, dir in ipairs(dirs) do
+                    vim.notify('Removed ' .. dir)
+                end
+            end)
+        end)
+    elseif choice == 3 then
+        print(table.concat(dirs, '\n'))
+    end
+end, { bang = true })
