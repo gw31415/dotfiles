@@ -134,6 +134,13 @@ require 'rest-nvim'.setup {
 }
 '''
 
+[[plugins]]
+repo = "kaarmu/typst.vim"
+on_ft = "typst"
+hook_source = '''
+
+'''
+
 # For nushell Treesitter
 [[plugins]]
 repo = "LhKipp/nvim-nu"
@@ -158,10 +165,4 @@ if s:venv != ''
 	let s:venv = s:venv . '/.venv/bin/python'
 	" exe $"autocmd InsertEnter <buffer> ++once PyrightSetPythonPath {s:venv}/.venv/bin/python"
 endif
-'''
-typst = '''
-setl commentstring=//\ %s
-setl shiftwidth=2
-setl tabstop=2
-setl expandtab
 '''
