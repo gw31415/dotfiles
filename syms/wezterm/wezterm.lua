@@ -51,7 +51,7 @@ config.window_frame = {
 	border_top_height = 0,
 }
 config.window_background_gradient = {
-	colors = { 'black' },
+	colors = { '#000000c5' },
 }
 config.colors = {
 	tab_bar = {
