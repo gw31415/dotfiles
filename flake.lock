@@ -171,7 +171,7 @@
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-rd/fy1Ns6M4WB4PcWomWtqSE8hIKa5oBDeq6Y+9j3I8=",
+        "narHash": "sha256-Te5L4t3+M9ajkHyRtIgfnDXfoLLHOOUIgTY5sSY+QDE=",
         "path": "wezterm-types",
         "type": "path"
       },
