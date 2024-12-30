@@ -162,16 +162,34 @@ vim.api.nvim_create_autocmd('FileType', {
 				if not handle then
 					return
 				end
-				local stopper = function()
+
+				-- Stoppers of the event watcher
+				local event_stopper = function()
 					vim.uv.fs_event_stop(handle)
 					handle:close()
 				end
-				local autocmd_ID = vim.api.nvim_create_autocmd('BufWipeout', {
+				local autocmd_ID, timeout_ID
+				autocmd_ID = vim.api.nvim_create_autocmd('BufWipeout', {
 					buffer = 0,
-					callback = stopper,
+					callback = function()
+						vim.fn.timer_stop(timeout_ID)
+						event_stopper()
+					end,
 					once = true,
 				})
+				timeout_ID = vim.fn.timer_start(3000, function()
+					vim.notify 'PDF not found in 3 seconds.'
+					vim.api.nvim_del_autocmd(autocmd_ID)
+					event_stopper()
+				end)
+				local function stop_all()
+					vim.api.nvim_del_autocmd(autocmd_ID)
+					vim.fn.timer_stop(timeout_ID)
+					event_stopper()
+				end
+
 				local cwd = vim.fn.getcwd()
+				vim.notify 'Searching the new PDF....'
 				vim.uv.fs_event_start(handle, cwd, {
 					recursive = false,
 					pattern = '*.pdf',
@@ -202,8 +220,7 @@ vim.api.nvim_create_autocmd('FileType', {
 								end)
 							end
 
-							stopper()
-							vim.api.nvim_del_autocmd(autocmd_ID)
+							stop_all()
 						end)
 					end
 				end)
