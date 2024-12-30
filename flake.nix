@@ -2,8 +2,9 @@
   description = "dotfiles and configurations for ama";
 
   inputs = {
-    nixpkgs.url = "https://flakehub.com/f/DeterminateSystems/nixpkgs-weekly/0.*.tar.gz";
-    flake-utils.url = "https://flakehub.com/f/numtide/flake-utils/0.*.tar.gz";
+    # nixpkgs.url = "https://flakehub.com/f/DeterminateSystems/nixpkgs-weekly/0.*.tar.gz";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -44,7 +45,7 @@
           # Package sets
           ########################################
           packages = {
-            home-manager = home-manager.defaultPackage.${system};
+            home-manager = pkgs.home-manager;
             nix-darwin = nix-darwin.packages.${system}.default;
             dot-cli = dot-cli;
 
