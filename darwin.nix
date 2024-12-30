@@ -44,6 +44,6 @@
   # Auto install software updates
   ########################################
   system.activationScripts.extraActivation.text = ''
-    softwareupdate --all --install
+    softwareupdate --all --download --background
   '';
 }
