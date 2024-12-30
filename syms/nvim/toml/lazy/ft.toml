@@ -138,7 +138,7 @@ require 'rest-nvim'.setup {
 repo = "kaarmu/typst.vim"
 on_ft = "typst"
 lua_source = '''
--- Wrap Opener because Rust's `open::with` not works properly (on my MacOS at least)
+-- Wrapped TypstWatch Command with custom opener (because Rust's `open::with` not works properly now, on my MacOS at least)
 vim.api.nvim_create_autocmd('FileType', {
 	pattern = 'typst',
 	callback = function()
@@ -151,13 +151,17 @@ vim.api.nvim_create_autocmd('FileType', {
 					_G[funcname] = nil
 				end
 
+				-- If the terminal-app is not WezTerm ↓
 				if vim.fn.getenv 'WEZTERM_EXECUTABLE' == vim.NIL then
 					vim.cmd('silent lua _G.' .. funcname .. '()')
 					return
 				end
+				-- If the terminal-app is WezTerm ↓↓
 
 				vim.g.typst_pdf_viewer = ':' -- Unix Dummy command
 				vim.cmd('silent lua _G.' .. funcname .. '()')
+
+				-- Setup the event watcher
 				local handle = vim.uv.new_fs_event()
 				if not handle then
 					return
@@ -212,7 +216,7 @@ vim.api.nvim_create_autocmd('FileType', {
 									if out.stdout then
 										local num = tonumber(out.stdout)
 										if not num then
-											vim.notify('Error: ' .. out.stdout)
+											vim.notify('Error parsing pane-id: ' .. out.stdout)
 											return
 										end
 										vim.b.typst_pdf_pane = num
