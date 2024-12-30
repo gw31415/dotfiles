@@ -55,14 +55,6 @@ in
     yt-dlp
     (pkgs.writeShellScriptBin "czg" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:czg "$@"'')
     (pkgs.writeShellScriptBin "trash" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:trash-cli "$@"'')
-    (pkgs.writeShellScriptBin "_wezterm_pane_tdf" ''
-      if [[ -n $WEZTERM_EXECUTABLE ]]; then
-        wezterm cli split-pane --right -- tdf $1
-      else
-        echo "Not running in WezTerm"
-        exit 1
-      fi
-    '')
   ] ++ [
     # Fonts
     hackgen-nf-font

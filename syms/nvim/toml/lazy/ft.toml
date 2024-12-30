@@ -137,8 +137,83 @@ require 'rest-nvim'.setup {
 [[plugins]]
 repo = "kaarmu/typst.vim"
 on_ft = "typst"
-hook_source = '''
+lua_source = '''
+-- Wrap Opener because Rust's `open::with` not works properly (on my MacOS at least)
+vim.api.nvim_create_autocmd('FileType', {
+	pattern = 'typst',
+	callback = function()
+		vim.fn.timer_start(100, function()
+			vim.api.nvim_buf_create_user_command(0, 'TypstWatch', function(opts)
+				-- Create temporary functions for silent execution
+				local funcname = 'typst_cache_zcGJN0nypnqo'
+				_G[funcname] = function()
+					vim.fn['typst#TypstWatch'](unpack(opts.fargs))
+					_G[funcname] = nil
+				end
 
+				if vim.fn.getenv 'WEZTERM_EXECUTABLE' == vim.NIL then
+					vim.cmd('silent lua _G.' .. funcname .. '()')
+					return
+				end
+
+				vim.g.typst_pdf_viewer = ':' -- Unix Dummy command
+				vim.cmd('silent lua _G.' .. funcname .. '()')
+				local handle = vim.uv.new_fs_event()
+				if not handle then
+					return
+				end
+				local stopper = function()
+					vim.uv.fs_event_stop(handle)
+					handle:close()
+				end
+				local autocmd_ID = vim.api.nvim_create_autocmd('BufWipeout', {
+					buffer = 0,
+					callback = stopper,
+					once = true,
+				})
+				local cwd = vim.fn.getcwd()
+				vim.uv.fs_event_start(handle, cwd, {
+					recursive = false,
+					pattern = '*.pdf',
+				}, function(err, filename, events)
+					if err then
+						return
+					end
+					if events.change then
+						vim.schedule(function()
+							local prior_process_code = nil
+							if vim.b.typst_pdf_pane then
+								prior_process_code = vim.system { 'wezterm', 'cli', 'activate-pane', '--pane-id', vim.b
+									.typst_pdf_pane }:wait().code
+							end
+
+							if prior_process_code ~= 0 then
+								vim.system({ 'wezterm', 'cli', 'split-pane', '--right', '--', 'tdf', filename }, {
+									cwd = cwd,
+								}, function(out)
+									if out.stdout then
+										local num = tonumber(out.stdout)
+										if not num then
+											vim.notify('Error: ' .. out.stdout)
+											return
+										end
+										vim.b.typst_pdf_pane = num
+									end
+								end)
+							end
+
+							stopper()
+							vim.api.nvim_del_autocmd(autocmd_ID)
+						end)
+					end
+				end)
+			end, {
+				nargs = '*',
+				force = true,
+			})
+		end)
+	end
+})
 '''
 
 # For nushell Treesitter
