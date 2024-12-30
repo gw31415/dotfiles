@@ -2,8 +2,13 @@
   description = "dotfiles and configurations for ama";
 
   inputs = {
-    # nixpkgs.url = "https://flakehub.com/f/DeterminateSystems/nixpkgs-weekly/0.*.tar.gz";
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "https://flakehub.com/f/DeterminateSystems/nixpkgs-weekly/0.*.tar.gz";
+    neovim-nightly-overlay = {
+      url = "github:nix-community/neovim-nightly-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     flake-utils.url = "github:numtide/flake-utils";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -34,11 +39,17 @@
       (
         system:
         let
-          pkgs = import inputs.nixpkgs {
-            inherit system;
-            config.allowUnfree = true;
-          };
-          dot-cli = pkgs.writeShellScriptBin "dot" ''exec ${pkgs.deno}/bin/deno run -qA --no-config ${./dot/index.ts} "$@"'';
+          pkgs = import inputs.nixpkgs
+            {
+              inherit system;
+              config.allowUnfree = true;
+              overlays = [
+                inputs.neovim-nightly-overlay.overlays.default
+              ];
+            };
+          dot-cli = pkgs.writeShellScriptBin
+            "dot"
+            ''exec ${pkgs.deno}/bin/deno run -qA --no-config ${./dot/index.ts} "$@"'';
         in
         {
           ########################################
