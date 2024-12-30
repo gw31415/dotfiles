@@ -6,7 +6,8 @@
     # nixpkgs.url = "https://flakehub.com/f/DeterminateSystems/nixpkgs-weekly/0.*.tar.gz";
     flake-utils.url = "https://flakehub.com/f/numtide/flake-utils/0.*.tar.gz";
     home-manager = {
-      url = "https://flakehub.com/f/nix-community/home-manager/0.*.tar.gz";
+      url = "github:nix-community/home-manager";
+      # url = "https://flakehub.com/f/nix-community/home-manager/0.*.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-darwin = {
