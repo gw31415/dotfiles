@@ -2,12 +2,10 @@
   description = "dotfiles and configurations for ama";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    # nixpkgs.url = "https://flakehub.com/f/DeterminateSystems/nixpkgs-weekly/0.*.tar.gz";
+    nixpkgs.url = "https://flakehub.com/f/DeterminateSystems/nixpkgs-weekly/0.*.tar.gz";
     flake-utils.url = "https://flakehub.com/f/numtide/flake-utils/0.*.tar.gz";
     home-manager = {
       url = "github:nix-community/home-manager";
-      # url = "https://flakehub.com/f/nix-community/home-manager/0.*.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-darwin = {
@@ -27,7 +25,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils, home-manager, nix-darwin, nix-homebrew, wezterm-types, ... }:
+  outputs = { self, nixpkgs, flake-utils, nix-darwin, nix-homebrew, wezterm-types, home-manager, ... }:
     let
       env = import ./env.nix;
     in
