@@ -12,7 +12,6 @@ in
     bun
     carbon-now-cli
     chezmoi
-    cocoapods
     delta
     deno
     emacs-nox
@@ -62,7 +61,10 @@ in
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
   ]
-  ++ [ dot-cli ];
+  ++ [ dot-cli ] ++ (if pkgs.stdenv.isDarwin then [
+    # macOS specific packages
+    cocoapods
+  ] else [ ]);
 
   home.file = {
     ########################################
