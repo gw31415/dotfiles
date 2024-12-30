@@ -42,7 +42,6 @@ in
     rustup
     sccache
     silicon
-    slack
     slack-term
     tdf
     tectonic
