@@ -1,9 +1,9 @@
-{ pkgs, env, ... }: {
+{ system, pkgs, ... }: {
   ########################################
   # Requires for nix-darwin to work
   ########################################
   system.stateVersion = 4;
-  nixpkgs.hostPlatform = env.system;
+  nixpkgs.hostPlatform = system;
 
   # REQUIRED: To keep-enabled experimental features after installation, since nix is managed by nix-darwin.
   nix.settings.experimental-features = "nix-command flakes";

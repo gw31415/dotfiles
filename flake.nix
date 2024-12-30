@@ -54,7 +54,7 @@
             darwinConfigurations.${env.hostname} = nix-darwin.lib.darwinSystem
               {
                 modules = [
-                  ({ pkgs, ... }: import ./darwin.nix { inherit pkgs env; flake = self; })
+                  ({ pkgs, ... }: import ./darwin.nix { inherit pkgs system; })
                   (nix-homebrew.darwinModules.nix-homebrew {
                     lib = nix-darwin.lib;
                     nix-homebrew = {
