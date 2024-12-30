@@ -35,6 +35,30 @@ repo = "neovim/nvim-lspconfig"
 depends = "nvim-navic"
 
 [[plugins]]
+repo = "stevearc/conform.nvim"
+on_event = ["BufWritePre", "LspAttach"]
+on_cmd = "ConformInfo"
+lua_source = '''
+local js_formatters = { { 'biome', 'prettierd', 'prettier', stop_after_first = true } }
+require 'conform'.setup {
+	toml = { 'taplo', },
+	python = { 'ruff', 'isort', 'black' },
+	formatters_by_ft = {
+		json = js_formatters,
+		javascript = js_formatters,
+		javascriptreact = js_formatters,
+		typescript = js_formatters,
+		typescriptreact = js_formatters,
+		astro = js_formatters,
+	},
+	format_on_save = {
+		timeout_ms = 500,
+		lsp_format = 'fallback',
+	},
+}
+'''
+
+[[plugins]]
 repo = "williamboman/mason.nvim"
 lua_source = "require 'mason'.setup()"
 [[plugins]]
@@ -150,7 +174,7 @@ if executable 'fish-lsp' then
 end
 
 if executable 'protols' then
-	lspconfig.protols.setup(vim.tbl_deep_extend('keep', lsp_opts, {
+	lspconfig.protocols.setup(vim.tbl_deep_extend('keep', lsp_opts, {
 		on_attach = function(client, _)
 			client.server_capabilities.documentFormattingProvider = false
 		end,
@@ -208,7 +232,7 @@ lspconfig.denols.setup(vim.tbl_deep_extend('keep', lsp_opts, {
 			return vim.uv.fs_stat(vim.fs.joinpath(project_root, file)) ~= nil
 		end)
 
-		-- when node files not found, lauch denols
+		-- when node files not found, launch denols
 		if not is_node_files_found then
 			local deps_path = vim.fs.joinpath(project_root, 'deps.ts')
 			if vim.uv.fs_stat(deps_path) ~= nil then
