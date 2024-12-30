@@ -39,9 +39,6 @@
             {
               inherit system;
               config.allowUnfree = true;
-              overlays = [
-                inputs.neovim-nightly-overlay.overlays.default
-              ];
             };
           dot-cli = pkgs.writeShellScriptBin
             "dot"
