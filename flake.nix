@@ -20,21 +20,21 @@
       inputs.flake-utils.follows = "flake-utils";
     };
     wezterm-types = {
-      url = "path:./wezterm-types";
+      url = "path:wezterm-types";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils, nix-darwin, nix-homebrew, wezterm-types, home-manager, ... }:
+  outputs = { self, ... }@inputs:
     let
       env = import ./env.nix;
     in
-    flake-utils.lib.eachDefaultSystem
+    inputs.flake-utils.lib.eachDefaultSystem
       (
         system:
         let
-          pkgs = import nixpkgs {
+          pkgs = import inputs.nixpkgs {
             inherit system;
             config.allowUnfree = true;
           };
@@ -46,18 +46,18 @@
           ########################################
           packages = {
             home-manager = pkgs.home-manager;
-            nix-darwin = nix-darwin.packages.${system}.default;
+            nix-darwin = inputs.nix-darwin.packages.${system}.default;
             dot-cli = dot-cli;
 
             ########################################
             # Darwin configuration with nix-homebrew
             ########################################
-            darwinConfigurations.${env.hostname} = nix-darwin.lib.darwinSystem
+            darwinConfigurations.${env.hostname} = inputs.nix-darwin.lib.darwinSystem
               {
                 modules = [
                   ({ pkgs, ... }: import ./darwin.nix { inherit pkgs system; })
-                  (nix-homebrew.darwinModules.nix-homebrew {
-                    lib = nix-darwin.lib;
+                  (inputs.nix-homebrew.darwinModules.nix-homebrew {
+                    lib = inputs.nix-darwin.lib;
                     nix-homebrew = {
                       enable = true;
                       enableRosetta = true;
@@ -70,20 +70,20 @@
             ########################################
             # Home manager configuration
             ########################################
-            homeConfigurations.${env.username} = home-manager.lib.homeManagerConfiguration {
+            homeConfigurations.${env.username} = inputs.home-manager.lib.homeManagerConfiguration {
               inherit pkgs;
               modules = [
                 ({ config, ... }: import ./home.nix {
                   inherit config pkgs env;
                   dot-cli = self.packages.${system}.dot-cli;
-                  wezterm-types = wezterm-types.packages.${system}.default;
+                  wezterm-types = inputs.wezterm-types.packages.${system}.default;
                 })
               ];
             };
             default = dot-cli;
           };
           apps = rec {
-            dot-app = flake-utils.lib.mkApp { drv = self.packages.${system}.dot-cli; };
+            dot-app = inputs.flake-utils.lib.mkApp { drv = self.packages.${system}.dot-cli; };
             default = dot-app;
           };
         }

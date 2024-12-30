@@ -171,12 +171,12 @@
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-uQpp2AoHmm6/OtQD6Q2ZgoD4EPWWRGxkjbAC0G9my3U=",
-        "path": "./wezterm-types",
+        "narHash": "sha256-rd/fy1Ns6M4WB4PcWomWtqSE8hIKa5oBDeq6Y+9j3I8=",
+        "path": "wezterm-types",
         "type": "path"
       },
       "original": {
-        "path": "./wezterm-types",
+        "path": "wezterm-types",
         "type": "path"
       }
     }

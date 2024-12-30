@@ -8,19 +8,19 @@
     flake = false;
   };
 
-  outputs = { self, nixpkgs, flake-utils, westerm-types-src }:
+  outputs = { self, ... }@inputs:
     let
       lastModifiedDate = self.lastModifiedDate or self.lastModified or "19700101";
       version = builtins.substring 0 8 lastModifiedDate;
     in
-    flake-utils.lib.eachDefaultSystem (system:
+    inputs.flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
-        wezterm-types-src = westerm-types-src;
+        pkgs = import inputs.nixpkgs { inherit system; };
+        wezterm-types-src = inputs.westerm-types-src;
       in
       {
-        packages = flake-utils.lib.flattenTree rec{
-          wezterm-types = pkgs.stdenv.mkDerivation {
+        packages = inputs.flake-utils.lib.flattenTree rec{
+          wezterm-types = pkgs.stdenvNoCC.mkDerivation {
             name = "wezterm-types-${version}";
             src = wezterm-types-src;
             installPhase = ''
