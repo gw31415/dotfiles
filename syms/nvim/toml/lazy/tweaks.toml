@@ -7,6 +7,11 @@ require 'dpp-automkstate'.watch(vim.fn.stdpath 'config')
 '''
 
 [[plugins]]
+repo = "nvzone/minty"
+on_cmd = [ "Shades", "Huefy" ]
+depends = "volt"
+
+[[plugins]]
 repo = "gw31415/extend_word_motion.nvim"
 depends = "tinysegmenter.nvim"
 on_map = ["w", "b", "e", "ge"]

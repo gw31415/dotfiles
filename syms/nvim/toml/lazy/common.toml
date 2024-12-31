@@ -2,6 +2,9 @@
 repo = "sirasagi62/tinysegmenter.nvim"
 
 [[plugins]]
+repo = "nvzone/volt"
+
+[[plugins]]
 repo = "vim-jp/vimdoc-ja"
 
 [[plugins]]
