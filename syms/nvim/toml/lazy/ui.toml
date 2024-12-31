@@ -13,6 +13,15 @@ vim.api.nvim_create_autocmd('FileType', {
 '''
 
 [[plugins]]
+repo = "gukz/ftFT.nvim"
+lua_source = '''
+require 'ftFT'.setup {
+	hl_group = 'SpellLocal',
+}
+'''
+on_map = { n = [ "f", "t", "F", "T" ] }
+
+[[plugins]]
 repo = "j-hui/fidget.nvim"
 on_event = "CursorHold"
 lua_source = '''
