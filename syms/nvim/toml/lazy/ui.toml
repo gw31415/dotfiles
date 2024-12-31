@@ -15,8 +15,14 @@ vim.api.nvim_create_autocmd('FileType', {
 [[plugins]]
 repo = "gukz/ftFT.nvim"
 lua_source = '''
+vim.api.nvim_set_hl(0, 'ftFT', {
+	ctermbg = 0,
+	ctermfg = 15,
+	bg = '#3b3f4c',
+	underline = true,
+})
 require 'ftFT'.setup {
-	hl_group = 'SpellLocal',
+	hl_group = 'ftFT',
 }
 '''
 on_map = { n = [ "f", "t", "F", "T" ] }
