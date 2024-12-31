@@ -31,7 +31,6 @@ in
     lazygit
     librsvg # rsvg-convert CLI
     litecli
-    mise
     mmv-go
     neovim
     nodejs
@@ -178,19 +177,7 @@ in
         );
       }
     ];
-    shellInit = ''
-      set fish_greeting
-      if status is-interactive
-        mise activate fish | source
-      else
-        mise activate fish --shims | source
-      end
-      if test -f $HOME/.cargo/env.fish
-        source "$HOME/.cargo/env.fish"
-      end
-      set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
-      abbr -a n -f _na
-    '' + (
+    shellInit = (
       # macOS specific settings
       if pkgs.stdenv.isDarwin then ''
         if test -f /opt/homebrew/bin/brew
@@ -206,7 +193,19 @@ in
           export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jbr/Contents/Home
         end
       '' else ""
-    );
+    ) + ''
+      set fish_greeting
+      if status is-interactive
+        mise activate fish | source
+      else
+        mise activate fish --shims | source
+      end
+      if test -f $HOME/.cargo/env.fish
+        source "$HOME/.cargo/env.fish"
+      end
+      set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
+      abbr -a n -f _na
+    '';
   };
   programs.direnv = {
     enable = true;

@@ -1,6 +1,6 @@
 [tools]
 usage = "latest"
-flutter = "3.24.5-stable"
+flutter = "latest"
 
 [settings]
 experimental = true
