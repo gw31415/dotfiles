@@ -31,6 +31,7 @@ in
     lazygit
     librsvg # rsvg-convert CLI
     litecli
+    mise
     mmv-go
     neovim
     nodejs
