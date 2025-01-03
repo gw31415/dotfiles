@@ -81,11 +81,6 @@ in
 
     ".nix-deliverables/wezterm-types".source = "${wezterm-types}";
 
-    # "${configHome}" = {
-    #   source = ./statics/config;
-    #   recursive = true;
-    # };
-
     "${configHome}/wezterm".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/wezterm";
     "${configHome}/lazygit".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/lazygit";
     "${configHome}/mise".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/mise";

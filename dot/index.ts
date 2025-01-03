@@ -233,16 +233,13 @@ function getArgs() {
 				const hashBefore = (await Bun.file(flakeLock).exists())
 					? await hash()
 					: "";
-				await $`nix flake update --flake ${homeManagerPath}`;
+				await $`nix flake update --flake ${homeManagerPath} --commit-lock-file`;
 				const hashAfter = await hash();
 				if (hashBefore === hashAfter) {
 					consola.info("No changes. Update skipped.");
 				} else {
 					consola.success(
 						`Updated ${path.join(homeManagerPath, "flake.lock")}.`,
-					);
-					await $`git commit flake.lock -m "build: Update flake.lock"`.cwd(
-						homeManagerPath,
 					);
 				}
 			}
