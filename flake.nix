@@ -35,6 +35,7 @@
               inherit system;
               config.allowUnfree = true;
             };
+          dot = import ./dot/default.nix { inherit pkgs; };
         in
         {
           ########################################
@@ -42,7 +43,6 @@
           ########################################
           packages = {
             nix-darwin = inputs.nix-darwin.packages.${system}.default;
-            dot = import ./dot/default.nix { inherit pkgs; };
 
             ########################################
             # Darwin configuration with nix-homebrew
@@ -74,10 +74,10 @@
                 })
               ];
             };
-            default = self.packages.${system}.dot;
+            default = dot;
           };
           apps = rec {
-            dot-app = inputs.flake-utils.lib.mkApp { drv = self.packages.${system}.dot; };
+            dot-app = inputs.flake-utils.lib.mkApp { drv = dot; };
             default = dot-app;
           };
         }

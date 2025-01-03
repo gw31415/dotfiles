@@ -10,6 +10,21 @@ function eq(arr1: string[], arr2: string[]) {
 	return arr1.length === arr2.length && arr1.every((v, i) => v === arr2[i]);
 }
 
+async function getCliPath(
+	cli: string,
+	fallbackNixpkg: string = cli,
+): Promise<string> {
+	const cliPath = Bun.which(cli);
+	if (cliPath) {
+		return cliPath;
+	}
+	const output = await $`nix path-info nixpkgs#${fallbackNixpkg}`;
+	if (output.exitCode !== 0) {
+		return cli;
+	}
+	return `${output.text()}/bin/${cli}`;
+}
+
 const darwin = platform() === "darwin";
 
 function getArgs() {
@@ -162,7 +177,7 @@ function getArgs() {
 
 				consola.info("Cloning the dotfiles...");
 				await mkdir(configHome, { recursive: true });
-				await $`nix run nixpkgs#git -- clone https://github.com/gw31415/dotfiles ${homeManagerPath}`;
+				await $`${await getCliPath("git")} clone https://github.com/gw31415/dotfiles ${homeManagerPath}`;
 				consola.success(`Downloaded dotfiles to ${homeManagerPath}.`);
 
 				console.log("");
@@ -239,7 +254,7 @@ function getArgs() {
 				parsedArgs.values.all
 			) {
 				consola.info("Switching home-manager...");
-				const res = await $`nix run nixpkgs#home-manager -- switch`
+				const res = await $`${await getCliPath("home-manager")} switch`
 					.cwd(homeManagerPath)
 					.nothrow();
 				if (res.exitCode !== 0) {

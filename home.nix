@@ -23,6 +23,7 @@ in
     gh
     gnupg
     gopls
+    home-manager
     hugo
     imagemagick
     jdupes
