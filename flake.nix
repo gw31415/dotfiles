@@ -69,8 +69,7 @@
               inherit pkgs;
               modules = [
                 ({ config, ... }: import ./home.nix {
-                  inherit config pkgs env;
-                  wezterm-types = import ./wezterm-types/default.nix { inherit pkgs; };
+                  inherit config pkgs;
                 })
               ];
             };

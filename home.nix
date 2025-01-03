@@ -1,9 +1,16 @@
-{ config, pkgs, env, wezterm-types }:
+{ config, pkgs }:
 let
   configHome = "${config.xdg.configHome}";
   homeManagerDirectory = "${configHome}/home-manager";
+  env = import ./env.nix;
 in
 {
+  home = {
+    username = env.username;
+    homeDirectory = env.homeDirectory;
+    stateVersion = "24.05";
+  };
+
   home.packages = with pkgs; [
     # CLI tools
     aria2
@@ -79,7 +86,7 @@ in
     };
     ".latexmkrc".source = ./statics/latexmkrc;
 
-    ".nix-deliverables/wezterm-types".source = "${wezterm-types}";
+    ".nix-deliverables/wezterm-types".source = "${import ./wezterm-types/default.nix { inherit pkgs;}}";
 
     "${configHome}/wezterm".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/wezterm";
     "${configHome}/lazygit".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/lazygit";
@@ -105,8 +112,9 @@ in
     EDITOR = "nvim";
     RUSTC_WRAPPER = "${pkgs.sccache}/bin/sccache";
     SHELL = "${pkgs.fish}/bin/fish";
-    XDG_CONFIG_HOME = "${env.homeDirectory}/.config";
+    XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
     DIRENV_LOG_FORMAT = "";
+    TEST_TEXT = "${config.home.homeDirectory}";
   };
 
   programs.git = {
@@ -229,11 +237,6 @@ in
       "Library"
       "OrbStack"
     ];
-  };
-  home = {
-    username = env.username;
-    homeDirectory = env.homeDirectory;
-    stateVersion = "24.05";
   };
   manual.manpages.enable = true;
 }
