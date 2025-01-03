@@ -29,6 +29,7 @@ in
     flyctl
     gh
     gnupg
+    gocryptfs
     gopls
     home-manager
     hugo
