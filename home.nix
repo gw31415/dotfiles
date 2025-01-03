@@ -1,4 +1,4 @@
-{ config, pkgs, env, dot-cli, wezterm-types, ... }:
+{ config, pkgs, env, wezterm-types }:
 let
   configHome = "${config.xdg.configHome}";
   homeManagerDirectory = "${configHome}/home-manager";
@@ -53,6 +53,7 @@ in
     yt-dlp
     (pkgs.writeShellScriptBin "czg" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:czg "$@"'')
     (pkgs.writeShellScriptBin "trash" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:trash-cli "$@"'')
+    (import ./dot/default.nix { inherit pkgs; })
   ] ++ [
     # Fonts
     hackgen-nf-font
@@ -60,7 +61,7 @@ in
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
   ]
-  ++ [ dot-cli ] ++ (if pkgs.stdenv.isDarwin then [
+  ++ (if pkgs.stdenv.isDarwin then [
     # macOS specific packages
     cocoapods
   ] else [ ]);

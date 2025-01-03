@@ -20,11 +20,6 @@
       inputs.nix-darwin.follows = "nix-darwin";
       inputs.flake-utils.follows = "flake-utils";
     };
-    wezterm-types = {
-      url = "path:wezterm-types";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
-    };
   };
 
   outputs = { self, ... }@inputs:
@@ -40,18 +35,14 @@
               inherit system;
               config.allowUnfree = true;
             };
-          dot-cli = pkgs.writeShellScriptBin
-            "dot"
-            ''exec ${pkgs.deno}/bin/deno run -qA --no-config ${./dot/index.ts} "$@"'';
         in
         {
           ########################################
           # Package sets
           ########################################
           packages = {
-            home-manager = pkgs.home-manager;
             nix-darwin = inputs.nix-darwin.packages.${system}.default;
-            dot-cli = dot-cli;
+            dot = import ./dot/default.nix { inherit pkgs; };
 
             ########################################
             # Darwin configuration with nix-homebrew
@@ -79,15 +70,14 @@
               modules = [
                 ({ config, ... }: import ./home.nix {
                   inherit config pkgs env;
-                  dot-cli = self.packages.${system}.dot-cli;
-                  wezterm-types = inputs.wezterm-types.packages.${system}.default;
+                  wezterm-types = import ./wezterm-types/default.nix { inherit pkgs; };
                 })
               ];
             };
-            default = dot-cli;
+            default = self.packages.${system}.dot;
           };
           apps = rec {
-            dot-app = inputs.flake-utils.lib.mkApp { drv = self.packages.${system}.dot-cli; };
+            dot-app = inputs.flake-utils.lib.mkApp { drv = self.packages.${system}.dot; };
             default = dot-app;
           };
         }
