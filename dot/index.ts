@@ -1,6 +1,6 @@
 import { platform } from "node:os";
 import { parseArgs } from "node:util";
-import { $ } from "bun";
+import { $ } from "dax-sh"; // INFO: Instead of Bun Shell because that does not streams stderr.
 import { highlight } from "cli-highlight";
 import { consola } from "consola";
 import path from "node:path";
@@ -19,10 +19,10 @@ async function getCliPath(
 		return cliPath;
 	}
 	const output = await $`nix path-info nixpkgs#${fallbackNixpkg}`;
-	if (output.exitCode !== 0) {
+	if (output.code !== 0) {
 		return cli;
 	}
-	return `${output.text()}/bin/${cli}`;
+	return `${output.stdout}/bin/${cli}`;
 }
 
 const darwin = platform() === "darwin";
@@ -95,9 +95,9 @@ function getArgs() {
 			const res = await cmd
 				.cwd(homeManagerPath)
 				.env({ ...process.env, DOT_DEVSHELL: "1" })
-				.nothrow();
+				.noThrow();
 			consola.info("Exiting the devShell...");
-			process.exit(res.exitCode);
+			process.exit(res.code);
 		}
 
 		////////////////////////////////////////
@@ -253,8 +253,8 @@ function getArgs() {
 				consola.info("Switching home-manager...");
 				const res = await $`${await getCliPath("home-manager")} switch`
 					.cwd(homeManagerPath)
-					.nothrow();
-				if (res.exitCode !== 0) {
+					.noThrow();
+				if (res.code !== 0) {
 					// TODO: @david/dax throws an error if the command fails, so it should be handled each $-usage
 					// because we need to determine if the error is a handled error or not to throw a proper error message.
 					// This is a temporary solution.
@@ -265,8 +265,8 @@ function getArgs() {
 				consola.info("Switching darwin-rebuild...");
 				const res = await $`nix run .#nix-darwin -- switch --flake .`
 					.cwd(homeManagerPath)
-					.nothrow();
-				if (res.exitCode !== 0) {
+					.noThrow();
+				if (res.code !== 0) {
 					throw "Failed to switch darwin-rebuild.";
 				}
 			}

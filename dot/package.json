@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "cli-highlight": "^2.1.11",
-    "consola": "^3.3.3"
+    "consola": "^3.3.3",
+    "dax-sh": "^0.42.0"
   }
 }
