@@ -1,6 +1,4 @@
-import { exists, mkdir, rm } from "node:fs/promises";
 import { platform } from "node:os";
-import path from "node:path";
 import { parseArgs } from "node:util";
 import { highlight } from "cli-highlight";
 import { consola } from "consola";
@@ -66,13 +64,12 @@ function getArgs() {
 (async () => {
 	try {
 		const args = process.argv.slice(2);
-		const configHome =
-			process.env.XDG_CONFIG_HOME ?? `${process.env.HOME}/.config`;
-		const homeManagerPath = path.join(configHome, "home-manager"); // configHome.join("home-manager");
-		const envnix = path.join(homeManagerPath, "env.nix");
-		const installed = await Bun.file(
-			path.join(homeManagerPath, "flake.nix"),
-		).exists();
+		const configHome = $.path(
+			process.env.XDG_CONFIG_HOME ?? `${process.env.HOME}/.config`,
+		);
+		const homeManagerPath = configHome.join("home-manager");
+		const envnix = homeManagerPath.join("env.nix");
+		const installed = homeManagerPath.join("flake.nix").existsSync();
 
 		////////////////////////////////////////
 		// Subcommand: sh ... devShell
@@ -94,7 +91,7 @@ function getArgs() {
 					: $`nix develop --impure -c ${process.env.SHELL ?? "/bin/bash"}`;
 			const res = await cmd
 				.cwd(homeManagerPath)
-				.env({ ...process.env, DOT_DEVSHELL: "1" })
+				.env("DOT_DEVSHELL", "1")
 				.noThrow();
 			consola.info("Exiting the devShell...");
 			process.exit(res.code);
@@ -171,19 +168,19 @@ function getArgs() {
 				consola.info(`Installing path: ${homeManagerPath}`);
 
 				// Cloning the dotfiles
-				if (await exists(homeManagerPath)) {
+				if (homeManagerPath.existsSync()) {
 					throw `The target path ${homeManagerPath} already exists. Please remove it first.`;
 				}
 
 				consola.info("Cloning the dotfiles...");
-				await mkdir(configHome, { recursive: true });
-				await $`${await getCliPath("git")} clone https://github.com/gw31415/dotfiles ${homeManagerPath}`;
+				configHome.mkdirSync();
+				await $`${getCliPath("git")} clone https://github.com/gw31415/dotfiles ${homeManagerPath}`;
 				consola.success(`Downloaded dotfiles to ${homeManagerPath}.`);
 
 				console.log("");
 				console.log(`> ${envnix}`);
 				console.log(
-					highlight(await Bun.file(envnix).text(), {
+					highlight(await envnix.readText(), {
 						language: "nix",
 						ignoreIllegals: false,
 					}),
@@ -216,7 +213,9 @@ function getArgs() {
 							initial: "leave",
 						})) as unknown) === "remove";
 					if (remove) {
-						await rm(homeManagerPath, { recursive: true, force: true });
+						homeManagerPath.removeSync({
+							recursive: true,
+						});
 						consola.info("Removed the downloaded dotfiles.");
 					} else {
 						consola.info(
@@ -227,20 +226,15 @@ function getArgs() {
 			}
 			if (parsedArgs.values.update) {
 				consola.info("Updating flake.lock...");
-				const flakeLock = path.join(homeManagerPath, "flake.lock");
-				const hash = async () =>
-					Bun.hash(await Bun.file(flakeLock).arrayBuffer());
-				const hashBefore = (await Bun.file(flakeLock).exists())
-					? await hash()
-					: "";
+				const flakeLock = homeManagerPath.join("flake.lock");
+				const hash = async () => Bun.hash(await flakeLock.readBytes());
+				const hashBefore = (await flakeLock.exists()) ? await hash() : "";
 				await $`nix flake update --flake ${homeManagerPath} --commit-lock-file`;
 				const hashAfter = await hash();
 				if (hashBefore === hashAfter) {
 					consola.info("No changes. Update skipped.");
 				} else {
-					consola.success(
-						`Updated ${path.join(homeManagerPath, "flake.lock")}.`,
-					);
+					consola.success(`Updated ${homeManagerPath.join("flake.lock")}.`);
 				}
 			}
 
