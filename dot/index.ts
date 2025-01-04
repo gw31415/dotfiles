@@ -1,10 +1,10 @@
+import { exists, mkdir, rm } from "node:fs/promises";
 import { platform } from "node:os";
+import path from "node:path";
 import { parseArgs } from "node:util";
-import { $ } from "dax-sh"; // INFO: Instead of Bun Shell because that does not streams stderr.
 import { highlight } from "cli-highlight";
 import { consola } from "consola";
-import path from "node:path";
-import { exists, mkdir, rm } from "node:fs/promises";
+import { $ } from "dax-sh"; // INFO: Instead of Bun Shell because that does not streams stderr.
 
 function eq(arr1: string[], arr2: string[]) {
 	return arr1.length === arr2.length && arr1.every((v, i) => v === arr2[i]);
