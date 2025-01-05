@@ -33,25 +33,29 @@ let
 
       mv node_modules $out
     '';
-  bunBuild = pkgs.runCommand "dot"
-    {
-      nativeBuildInputs = [ pkgs.bun pkgs.rsync ];
-    }
-    ''
-      rsync -av --exclude="node_modules" --exclude="out" ${./.}/* .
-      cp -r ${ nodeModules } node_modules
-      bun build index.ts --minify --compile --outfile=./out
-      cp out $out
-    '';
 in
 pkgs.stdenvNoCC.mkDerivation {
   name = "dot";
   src = ./.;
 
+  nativeBuildInputs = [
+    pkgs.bun
+    pkgs.rsync
+  ];
+
+  unpackPhase = ''
+    runHook preUnpack
+
+    rsync -av --exclude="node_modules" --exclude="out" ${./.}/* .
+    cp -r ${ nodeModules } node_modules
+
+    runHook postUnpack
+  '';
+
   buildPhase = ''
     runHook preBuild
 
-    cp ${bunBuild} dot
+    bun build index.ts --minify --compile --outfile=./out
 
     runHook postBuild
   '';
@@ -60,8 +64,7 @@ pkgs.stdenvNoCC.mkDerivation {
     runHook preInstall
 
     mkdir -p $out/bin
-    cp dot $out/dot
-    cp dot $out/bin/dot
+    cp ./out $out/bin/dot
 
     runHook postInstall
   '';
