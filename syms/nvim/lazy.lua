@@ -26,7 +26,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 	callback = function()
 		vim.opt_local.formatexpr = 'v:lua.require"conform".formatexpr()'
 
-		vim.diagnostic.config { signs = false }
+		vim.diagnostic.config { signs = false, virtual_text = false }
 		vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
 			vim.lsp.handlers.hover,
 			{ border = 'single', title = 'hover' }

@@ -350,3 +350,19 @@ require 'mason-null-ls'.setup {
 	},
 }
 '''
+
+[[plugins]]
+repo = "rachartier/tiny-inline-diagnostic.nvim"
+on_event = "LspAttach"
+lua_source = '''
+require 'tiny-inline-diagnostic'.setup {
+	options = {
+		multiple_diag_under_cursor = true,
+		show_all_diags_on_cursorline = false,
+		multilines = {
+			enabled = true,
+			always_show = false,
+		},
+	},
+}
+'''
