@@ -39,7 +39,7 @@ repo = "stevearc/conform.nvim"
 on_event = ["BufWritePre", "LspAttach"]
 on_cmd = "ConformInfo"
 lua_source = '''
-local js_formatters = { { 'biome', 'prettierd', 'prettier', stop_after_first = true } }
+local js_formatters = { 'biome', 'prettierd', 'prettier', stop_after_first = true }
 require 'conform'.setup {
 	toml = { 'taplo', },
 	python = { 'ruff', 'isort', 'black' },
