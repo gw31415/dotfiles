@@ -442,3 +442,10 @@ on_event = "CmdlineEnter"
 hook_add = '''
 command! Emoji call emjpick#insert()
 '''
+
+[[plugins]]
+repo = "ysmb-wtsg/in-and-out.nvim"
+on_map = { i = "<C-CR>" }
+lua_source = '''
+vim.keymap.set('i', '<C-CR>', function () require 'in-and-out'.in_and_out() end)
+'''
