@@ -449,3 +449,13 @@ on_map = { i = "<C-CR>" }
 lua_source = '''
 vim.keymap.set('i', '<C-CR>', function () require 'in-and-out'.in_and_out() end)
 '''
+
+[[plugins]]
+repo = "folke/snacks.nvim"
+on_cmd = "Snacks"
+lua_source = '''
+require 'snacks'.setup {
+	picker = { enabled = true }
+}
+vim.api.nvim_create_user_command('Snacks', 'lua require("snacks").picker()', {})
+'''
