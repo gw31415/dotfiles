@@ -61,9 +61,6 @@ in
     wget
     yt-dlp
 
-    # LSP servers
-    omnisharp-roslyn
-
     (pkgs.writeShellScriptBin "czg" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:czg "$@"'')
     (pkgs.writeShellScriptBin "trash" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:trash-cli "$@"'')
     (import ./dot/default.nix { inherit pkgs; })
