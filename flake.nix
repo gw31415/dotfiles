@@ -4,6 +4,7 @@
   inputs = {
     # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs.url = "https://flakehub.com/f/DeterminateSystems/nixpkgs-weekly/0.*.tar.gz";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-24.11";
 
     flake-utils.url = "github:numtide/flake-utils";
     home-manager = {
@@ -30,6 +31,11 @@
         system:
         let
           pkgs = import inputs.nixpkgs
+            {
+              inherit system;
+              config.allowUnfree = true;
+            };
+          pkgs-stable = import inputs.nixpkgs-stable
             {
               inherit system;
               config.allowUnfree = true;
@@ -68,7 +74,7 @@
               inherit pkgs;
               modules = [
                 ({ config, ... }: import ./home.nix {
-                  inherit config pkgs;
+                  inherit config pkgs pkgs-stable;
                 })
               ];
             };

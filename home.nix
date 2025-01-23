@@ -1,4 +1,4 @@
-{ config, pkgs }:
+{ config, pkgs, pkgs-stable }:
 let
   configHome = "${config.xdg.configHome}";
   homeManagerDirectory = "${configHome}/home-manager";
@@ -20,7 +20,7 @@ in
     carbon-now-cli
     chezmoi
     delta
-    deno
+    pkgs-stable.deno
     emacs-nox
     envchain
     era
