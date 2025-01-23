@@ -11,16 +11,17 @@ in
     stateVersion = "24.05";
   };
 
-  home.packages = with pkgs; [
+  home.packages = (with pkgs-stable; [
+    pkgs.neovim
+    pkgs.tdf
+
     # CLI tools
     aria2
     asciinema
     bat
     bun
     carbon-now-cli
-    chezmoi
-    delta
-    pkgs-stable.deno
+    deno
     emacs-nox
     envchain
     era
@@ -42,7 +43,6 @@ in
     litecli
     mise
     mmv-go
-    neovim
     nodejs
     pandoc
     poppler_utils
@@ -52,26 +52,23 @@ in
     sccache
     silicon
     slack-term
-    tdf
     tectonic
     tmux
     typst
     vim-startuptime
-    # wezterm
     wget
     yt-dlp
 
-    (pkgs.writeShellScriptBin "czg" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:czg "$@"'')
-    (pkgs.writeShellScriptBin "trash" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:trash-cli "$@"'')
-    (import ./dot/default.nix { inherit pkgs; })
-  ] ++ [
     # Fonts
     hackgen-nf-font
     noto-fonts
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
-  ]
-  ++ (if pkgs.stdenv.isDarwin then [
+
+    (pkgs.writeShellScriptBin "czg" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:czg "$@"'')
+    (pkgs.writeShellScriptBin "trash" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:trash-cli "$@"'')
+    (import ./dot/default.nix { inherit pkgs; })
+  ]) ++ (if pkgs-stable.stdenv.isDarwin then with pkgs-stable; [
     # macOS specific packages
     cocoapods
   ] else [ ]);
