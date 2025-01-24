@@ -14,6 +14,7 @@ in
   home.packages = (with pkgs-stable; [
     pkgs.neovim
     pkgs.tdf
+    pkgs.vhs
 
     # CLI tools
     aria2
