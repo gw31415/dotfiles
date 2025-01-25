@@ -1,12 +1,18 @@
 [[plugins]]
-repo = "github/copilot.vim"
-hook_add = '''
-" let g:copilot_enabled = v:false " もしGitHub Copilotを一時的に無効にしたい場合はこの設定をする
-let g:copilot_no_tab_map = v:true
-let g:copilot_assume_mapped = v:true
-let g:copilot_tab_fallback = ""
+repo = "zbirenbaum/copilot.lua"
+on_cmd = "Copilot"
+lua_source = '''
+require 'copilot'.setup {
+	suggestion = { enabled = false },
+	panel = { enabled = false },
+	copilot_node_command = 'node'
+}
 '''
 
+[[plugins]]
+repo = "zbirenbaum/copilot-cmp"
+depends = "copilot.lua"
+lua_source = "require 'copilot_cmp'.setup()"
 [[plugins]]
 repo = "hrsh7th/cmp-nvim-lsp"
 [[plugins]]
@@ -37,7 +43,7 @@ depends = [
 	"cmp-nvim-lsp-signature-help",
 	"cmp-git",
 	"cmp-under-comparator",
-	"copilot.vim",
+	"copilot-cmp",
 ]
 on_event = ["InsertEnter", "CmdlineEnter"]
 lua_source = '''
@@ -57,6 +63,7 @@ cmp.setup {
 	sources = cmp.config.sources {
 		{ name = 'lazydev',                group_index = 0 },
 		{ name = 'nvim_lsp' },
+		{ name = 'copilot' },
 		{ name = 'vsnip' },
 		{ name = 'nvim_lsp_signature_help' },
 	},
@@ -83,12 +90,7 @@ cmp.setup {
 			elseif vim.fn['vsnip#jumpable'](1) == 1 then
 				feedkeys '<Plug>(vsnip-jump-next)'
 			else
-				local copilot_keys = vim.fn['copilot#Accept']()
-				if copilot_keys ~= '' then
-					vim.api.nvim_feedkeys(copilot_keys, 'i', true)
-				else
-					fallback()
-				end
+				fallback()
 			end
 		end),
 		['<S-Tab>'] = cmp.mapping(function(fallback)
@@ -124,30 +126,3 @@ cmp.setup.filetype('gitcommit', {
 	}
 })
 '''
-
-# [[plugins]]
-# repo = "rafamadriz/friendly-snippets"
-#
-# [[plugins]]
-# repo = "saghen/blink.compat"
-# rev = "*"
-# lua_source = "require 'blink.compat.setup()'"
-#
-# [[plugins]]
-# repo = "saghen/blink.cmp"
-# rev = "v0.*"
-# depends = ["friendly-snippets", "blink.compat"]
-# on_event = ["InsertEnter", "CmdlineEnter"]
-# lua_source = '''
-# require 'blink.cmp'.setup {
-# 	signature = { enabled = true },
-# 	sources = {
-# 		default = { 'lsp', 'path', 'snippets', 'buffer' },
-# 	},
-# 	windows = {
-# 		documentation = {
-# 			auto_show = true,
-# 		}
-# 	}
-# }
-# '''
