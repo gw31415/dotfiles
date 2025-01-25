@@ -8,7 +8,7 @@ require 'dpp-automkstate'.watch(vim.fn.stdpath 'config')
 
 [[plugins]]
 repo = "nvzone/minty"
-on_cmd = [ "Shades", "Huefy" ]
+on_cmd = ["Shades", "Huefy"]
 depends = "volt"
 
 [[plugins]]
