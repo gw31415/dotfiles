@@ -198,6 +198,9 @@ in
         if test -d /Applications/Android\ Studio.app/Contents/jbr/Contents/Home
           export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jbr/Contents/Home
         end
+        if test -d "$HOME/Library/Android/sdk/platform-tools/"
+          set -x PATH $HOME/Library/Android/sdk/platform-tools/ $PATH
+        end
       '' else ""
     ) + ''
       set fish_greeting
