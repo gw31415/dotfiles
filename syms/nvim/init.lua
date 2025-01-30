@@ -9,14 +9,14 @@ vim.opt.runtimepath:append '$HOME/.cache/dpp/repos/github.com/Shougo/dpp-ext-laz
 vim.opt.runtimepath:append '$HOME/.cache/dpp/repos/github.com/Shougo/dpp-ext-installer'
 
 if dpp.load_state(dpp_base) then
-    vim.opt.runtimepath:prepend '$HOME/.cache/dpp/repos/github.com/vim-denops/denops.vim'
+	vim.opt.runtimepath:prepend '$HOME/.cache/dpp/repos/github.com/vim-denops/denops.vim'
 
-    vim.api.nvim_create_autocmd('User', {
-        pattern = 'DenopsReady',
-        callback = function()
-            dpp.make_state(dpp_base, '~/.config/nvim/dpp.ts')
-        end
-    })
+	vim.api.nvim_create_autocmd('User', {
+		pattern = 'DenopsReady',
+		callback = function()
+			dpp.make_state(dpp_base, '~/.config/nvim/dpp.ts')
+		end
+	})
 end
 
 ----------------------------
@@ -34,13 +34,13 @@ vim.g.loaded_2html_plugin = true
 ----------------------------
 
 vim.api.nvim_create_autocmd('CursorHold', {
-    once = true,
-    command = 'source $HOME/.config/nvim/lazy.vim'
+	once = true,
+	command = 'source $HOME/.config/nvim/lazy.vim'
 })
 vim.go.updatetime = 1
 vim.api.nvim_create_autocmd('CursorHold', {
-    once = true,
-    callback = function() vim.go.updatetime = 4000 end,
+	once = true,
+	callback = function() vim.go.updatetime = 4000 end,
 })
 
 ----------------------------
@@ -62,10 +62,10 @@ vim.cmd [[try | colo onedark | catch | endtry]]
 
 -- Ignore startup treesitter errors
 vim.treesitter.start = (function(wrapped)
-    return function(bufnr, lang)
-        lang = lang or vim.fn.getbufvar(bufnr or '', '&filetype')
-        pcall(wrapped, bufnr, lang)
-    end
+	return function(bufnr, lang)
+		lang = lang or vim.fn.getbufvar(bufnr or '', '&filetype')
+		pcall(wrapped, bufnr, lang)
+	end
 end)(vim.treesitter.start)
 
 vim.cmd 'filetype plugin indent on'
