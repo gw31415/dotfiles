@@ -1,15 +1,48 @@
 [[plugins]]
 repo = "kevinhwang91/nvim-bqf"
 on_ft = "qf"
-lua_add = '''
--- Workaround for enabling BQF in qf buffer
-vim.api.nvim_create_autocmd('FileType', {
-	once = true,
-	pattern = 'qf',
-	callback = function()
-		require 'bqf.main'.enable()
-	end,
-})
+lua_source = '''
+require 'bqf'.setup {
+	auto_enable = true,
+	auto_resize_height = true,
+	func_map = {
+		open = '<cr>',
+		openc = '',
+		drop = '',
+		tabdrop = '',
+		tab = '',
+		tabb = '',
+		tabc = '',
+		split = '',
+		vsplit = '',
+		prevfile = '',
+		nextfile = '',
+		prevhist = '',
+		nexthist = '',
+		lastleave = '',
+		stoggleup = '',
+		stoggledown = '',
+		stogglevm = '',
+		stogglebuf = '',
+		sclear = '',
+		pscrollup = '',
+		pscrolldown = '',
+		pscrollorig = '',
+		ptogglemode = '',
+		ptoggleitem = '',
+		ptoggleauto = '',
+		filter = '',
+		filterr = '',
+		fzffilter = '',
+	}
+}
+'''
+
+[[plugins]]
+repo = "stevearc/quicker.nvim"
+on_ft = "qf"
+lua_source = '''
+require 'quicker'.setup {}
 '''
 
 [[plugins]]
@@ -25,7 +58,7 @@ require 'ftFT'.setup {
 	hl_group = 'ftFT',
 }
 '''
-on_map = { n = [ "f", "t", "F", "T" ] }
+on_map = { n = ["f", "t", "F", "T"] }
 
 [[plugins]]
 repo = "j-hui/fidget.nvim"
