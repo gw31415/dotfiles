@@ -8,7 +8,7 @@ require 'bqf'.setup {
 	func_map = {
 		open = '<cr>',
 		openc = '',
-		drop = '',
+		drop = '<s-cr>',
 		tabdrop = '',
 		tab = '',
 		tabb = '',
