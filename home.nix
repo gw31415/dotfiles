@@ -165,6 +165,7 @@ in
       tree = "eza -T";
       gll = "lazygit";
       dcd = "cd ${homeManagerDirectory}";
+      unitydroidlog = "adb logcat -s Unity ActivityManager PackageManager dalvikvm DEBUG";
     };
     shellAliases = {
       vi = "nvim";
