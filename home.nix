@@ -20,6 +20,7 @@ in
     aria2
     asciinema
     bat
+    bindfs
     bun
     carbon-now-cli
     deno
