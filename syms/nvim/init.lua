@@ -57,6 +57,7 @@ vim.go.tabstop = 4
 vim.go.shiftwidth = 4
 vim.go.cmdheight = 0
 vim.wo.foldcolumn = '1'
+vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
 vim.cmd [[try | colo onedark | catch | endtry]]
 
 
