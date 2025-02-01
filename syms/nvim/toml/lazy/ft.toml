@@ -103,10 +103,6 @@ repo = "mrcjkb/rustaceanvim"
 on_ft = "rust"
 
 [[plugins]]
-repo = "tranvansang/octave.vim"
-on_ft = ["matlab", "octave"]
-
-[[plugins]]
 repo = "mattn/emmet-vim"
 on_ft = ["html", "jsx", "tsx", "astro"]
 
