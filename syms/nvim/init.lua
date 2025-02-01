@@ -60,7 +60,6 @@ vim.wo.foldcolumn = '1'
 vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
 vim.cmd [[try | colo onedark | catch | endtry]]
 
-
 -- Ignore startup treesitter errors
 vim.treesitter.start = (function(wrapped)
 	return function(bufnr, lang)

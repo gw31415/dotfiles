@@ -459,3 +459,20 @@ require 'snacks'.setup {
 }
 vim.api.nvim_create_user_command('Snacks', 'lua require("snacks").picker()', {})
 '''
+
+[[plugins]]
+repo = "gw31415/root.nvim"
+on_cmd = "Root"
+lua_source = '''
+local quiet = true
+-- Timer for startup 20ms to avoid noisy-messages on startup
+vim.defer_fn(function()
+	quiet = false
+end, 20)
+vim.api.nvim_create_user_command('Root', function(opts)
+	require 'root'.cd(opts.args, quiet)
+end, {
+	nargs = '?',
+	complete = 'file',
+})
+'''
