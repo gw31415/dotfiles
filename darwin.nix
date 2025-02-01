@@ -54,8 +54,8 @@
       "homebrew/core"
       "homebrew/services"
       "jorgelbg/tap"
-      "monochromegane/tap"
       "mtgto/macskk"
+      "macos-fuse-t/homebrew-cask"
     ];
     brews = [
       "openssl@3"
@@ -68,8 +68,6 @@
       "pinentry-mac"
       "pkgconf"
       "jorgelbg/tap/pinentry-touchid"
-      "monochromegane/tap/afa"
-      "monochromegane/tap/afa-tui"
     ];
     casks = [
       "alt-tab"
