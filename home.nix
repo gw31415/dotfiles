@@ -95,19 +95,7 @@ in
     "${configHome}/nvim".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/nvim";
     "${configHome}/fish/completions".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/fish_completions";
     "${configHome}/fish/functions".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/fish_functions";
-
-  } // (if pkgs.stdenv.isDarwin then {
-    ########################################
-    # macOS specific files
-    ########################################
-
-    # TODO: .Brewfile cannot be symlinked because it is not a directory
-    ".Brewfile".source = ./statics/Brewfile;
-
-    # TODO: Files in the Containers directory cannot be symlinked.
-    # "Library/Containers/net.mtgto.inputmethod.macSKK/Data/Documents/Settings/kana-rule.conf".source = ./statics/kana-rule.conf;
-
-  } else { });
+  };
 
   home.sessionVariables = {
     EDITOR = "nvim";
