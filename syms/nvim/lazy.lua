@@ -41,7 +41,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
 			local winid = require 'ufo'.peekFoldedLinesUnderCursor()
 			if not winid then vim.lsp.buf.hover() end
 		end, bufopts)
-		vim.keymap.set('n', 'glr', vim.lsp.buf.code_action, bufopts)
+		vim.keymap.set('n', 'glr', function()
+			require 'actions-preview'.code_actions()
+		end, bufopts)
 		vim.keymap.set('n', 'gln', vim.lsp.buf.rename, bufopts)
 		vim.keymap.set('n', 'z*', vim.lsp.buf.references, bufopts)
 		vim.keymap.set('i', '<C-S>', vim.lsp.buf.signature_help, bufopts)
