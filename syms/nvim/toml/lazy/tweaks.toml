@@ -134,9 +134,33 @@ end, { expr = true })
 
 [[plugins]]
 repo = "gw31415/fzyselect.vim"
+# depends = "nui.nvim" # Auto source by lua_source script
 on_event = "CursorHold"
 lua_source = '''
-vim.g.fzyselect_opener = [[call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, #{style: "minimal", relative: "editor", row: 1, col: 1, width: 1, height: 1})]]
+function _G.fzyselect_opener()
+	require 'dpp'.source 'nui.nvim'
+
+	local Popup = require 'nui.popup'
+	local event = require 'nui.utils.autocmd'.event
+	local popup = Popup {
+		enter = true,
+		focusable = true,
+		border = {
+			style = 'rounded',
+		},
+		size = {
+			width = 1,
+			height = 1,
+		},
+		position = '50%',
+	}
+	popup:mount()
+	popup:on(event.BufLeave, function()
+		popup:unmount()
+	end)
+end
+vim.g.fzyselect_opener = [[ lua _G.fzyselect_opener() ]]
+
 vim.api.nvim_create_autocmd('FileType', {
 	pattern = 'fzyselect',
 	callback = function()
