@@ -189,6 +189,16 @@ vim.api.nvim_create_autocmd('FileType', {
 -- fuzzy search
 vim.keymap.set('n', 'g/', function()
 	local winid = vim.api.nvim_get_current_win()
+	local tabstop = vim.api.nvim_get_option_value('tabstop', {})
+	local shiftwidth = vim.api.nvim_get_option_value('shiftwidth', {})
+	vim.api.nvim_create_autocmd('FileType', {
+		callback = function()
+			vim.api.nvim_set_option_value('tabstop', tabstop, {})
+			vim.api.nvim_set_option_value('shiftwidth', shiftwidth, {})
+		end,
+		pattern = 'fzyselect',
+		once = true,
+	})
 	require 'fzyselect'.start(vim.api.nvim_buf_get_lines(0, 0, -1, true),
 		{ prompt = 'fuzzy search: <Enter> to jump' },
 		function(_, i)
