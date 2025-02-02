@@ -405,6 +405,7 @@ vim.keymap.set({ 'n', 'x' }, '<C-g>r', create_opfunc('_gitsigns_reset_hunk', {
 	end
 }), { expr = true })
 
+vim.keymap.set('n', '<C-g>k', function() require 'gitsigns'.preview_hunk_inline() end)
 vim.keymap.set('n', ']<C-g>', function() require 'gitsigns'.nav_hunk 'next' end)
 vim.keymap.set('n', '[<C-g>', function() require 'gitsigns'.nav_hunk 'prev' end)
 '''
