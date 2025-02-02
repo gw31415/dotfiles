@@ -231,8 +231,9 @@ depends = "fzyselect.vim"
 on_event = "BufAdd"
 lua_source = '''
 vim.keymap.set('n', 'gb', function()
-	vim.api.nvim_create_autocmd('BufEnter', {
+	vim.api.nvim_create_autocmd('FileType', {
 		once = true,
+		pattern = 'fzyselect',
 		callback = function()
 			vim.keymap.set({ 'n', 'x' }, 'd', '<Plug>(bufmanager-bdelete)', { buffer = true })
 			vim.keymap.set('n', 'dd', '<Plug>(bufmanager-bdelete)_', { buffer = true })
