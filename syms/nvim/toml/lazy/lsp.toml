@@ -372,10 +372,10 @@ lua_source = '''
 require 'tiny-inline-diagnostic'.setup {
 	options = {
 		multiple_diag_under_cursor = true,
-		show_all_diags_on_cursorline = false,
+		show_all_diags_on_cursorline = true,
 		multilines = {
 			enabled = true,
-			always_show = false,
+			always_show = true,
 		},
 	},
 }
