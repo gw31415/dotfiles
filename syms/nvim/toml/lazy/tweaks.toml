@@ -396,7 +396,7 @@ vim.keymap.set({ 'n', 'x' }, '<C-g>a', create_opfunc('_gitsigns_stage_hunk', {
 	end
 }), { expr = true })
 
-vim.keymap.set('n', '<C-g>aae', function()
+vim.keymap.set('n', '<C-g>aae', function() require 'gitsigns'.stage_buffer() end)
 	require 'gitsigns'.stage_buffer()
 end)
 
