@@ -397,7 +397,7 @@ vim.keymap.set({ 'n', 'x' }, '<C-g>a', create_opfunc('_gitsigns_stage_hunk', {
 }), { expr = true })
 vim.keymap.set('n', '<C-g>aae', function() require 'gitsigns'.stage_buffer() end)
 
-vim.keymap.set({ 'n', 'x' }, '<C-g><C-r>', create_opfunc('_gitsigns_reset_hunk', {
+vim.keymap.set({ 'n', 'x' }, '<C-g>r', create_opfunc('_gitsigns_reset_hunk', {
 	on_select = function(_)
 		local startline = vim.fn.line "'["
 		local endline = vim.fn.line "']"
