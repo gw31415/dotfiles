@@ -51,11 +51,6 @@ function s:clear() abort
 endfunction
 
 function s:preview_cur_img(next) abort
-	let ww = winwidth('.')
-	let wh = winheight('.')
-	let maxWidth = ww * s:FONTWIDTH * s:RETINA_SCALE
-	let maxHeight = wh * s:FONTHEIGHT / 2 * s:RETINA_SCALE
-
 	let imgs = mstdn#timeline#status()['mediaAttachments']
 				\ ->filter({_, v -> v['type'] == 'image'})
 	if len(imgs) == 0
@@ -76,7 +71,18 @@ function s:preview_cur_img(next) abort
 	let key = 'preview_url' " or 'url'
 	let url = imgs[index][key]
 	
-	call sixel_view#view(url, #{maxWidth: maxWidth, maxHeight: maxHeight}, 0, 0)
+	let ww = winwidth('.')
+	let wh = winheight('.')
+	let wwpx = ww * s:FONTWIDTH * s:RETINA_SCALE
+	let whpx = wh * s:FONTHEIGHT * s:RETINA_SCALE
+	let maxWidth = wwpx - ( s:FONTWIDTH * 10 )
+	let maxHeight = whpx - ( s:FONTHEIGHT * 10 )
+	let sixel = sixel_view#img2sixel(url, #{maxWidth: maxWidth, maxHeight: maxHeight})
+
+	let cnum = float2nr(( wwpx - sixel['width'] ) / 2 / s:FONTWIDTH / s:RETINA_SCALE)
+	let lnum = float2nr(( whpx - sixel['height'] ) / 2 / s:FONTHEIGHT / s:RETINA_SCALE)
+	
+	call sixel_view#view_sixel(sixel['data'], lnum, cnum)
 	au CursorMoved,CursorMovedI,BufLeave <buffer> ++once call s:clear()
 endfunction
 
