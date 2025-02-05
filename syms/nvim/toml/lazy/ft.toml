@@ -143,7 +143,9 @@ vim.api.nvim_create_autocmd('FileType', {
 				-- Create temporary functions for silent execution
 				local funcname = 'typst_cache_zcGJN0nypnqo'
 				_G[funcname] = function()
-					vim.fn['typst#TypstWatch'](unpack(opts.fargs))
+					local root = vim.fs.dirname(vim.fs.find('.git', { path = vim.fn.expand '%', upward = true })[1])
+					local args = root and { '--root', root, unpack(opts.fargs) } or opts.fargs
+					vim.fn['typst#TypstWatch'](unpack(args))
 					_G[funcname] = nil
 				end
 
@@ -191,7 +193,7 @@ vim.api.nvim_create_autocmd('FileType', {
 				local cwd = vim.fn.getcwd()
 				vim.notify 'Searching the new PDF....'
 				vim.uv.fs_event_start(handle, cwd, {
-					recursive = false,
+					recursive = true,
 					pattern = '*.pdf',
 				}, function(err, filename, events)
 					if err then
