@@ -37,54 +37,7 @@ repo = "gw31415/denops-sixel-view.vim"
 [[plugins]]
 repo = "gw31415/mstdn.vim"
 hook_add = '''
-const s:FONTHEIGHT = 14
-const s:FONTWIDTH = s:FONTHEIGHT / 2
-const s:RETINA_SCALE = 2
-
 autocmd BufReadCmd mstdn://* call s:mstdn_config()
-
-function s:clear() abort
-	if exists('b:img_index')
-		unlet b:img_index
-	endif
-	call sixel_view#clear()
-endfunction
-
-function s:preview_cur_img(next) abort
-	let imgs = mstdn#timeline#status()['mediaAttachments']
-				\ ->filter({_, v -> v['type'] == 'image'})
-	if len(imgs) == 0
-		lua vim.notify("No image found", vim.log.levels.ERROR)
-		return
-	endif
-
-	if !exists('b:img_index')
-		let b:img_index = 0
-	else
-		let b:img_index = b:img_index + a:next
-	endif
-	let index = b:img_index % len(imgs)
-	if index < 0
-		let index = len(imgs) + index
-	endif
-
-	let key = 'preview_url' " or 'url'
-	let url = imgs[index][key]
-	
-	let ww = winwidth('.')
-	let wh = winheight('.')
-	let wwpx = ww * s:FONTWIDTH * s:RETINA_SCALE
-	let whpx = wh * s:FONTHEIGHT * s:RETINA_SCALE
-	let maxWidth = wwpx - ( s:FONTWIDTH * 10 )
-	let maxHeight = whpx - ( s:FONTHEIGHT * 10 )
-	let sixel = sixel_view#img2sixel(url, #{maxWidth: maxWidth, maxHeight: maxHeight})
-
-	let cnum = float2nr(( wwpx - sixel['width'] ) / 2 / s:FONTWIDTH / s:RETINA_SCALE)
-	let lnum = float2nr(( whpx - sixel['height'] ) / 2 / s:FONTHEIGHT / s:RETINA_SCALE)
-	
-	call sixel_view#view_sixel(sixel['data'], lnum, cnum)
-	au CursorMoved,CursorMovedI,BufLeave <buffer> ++once call s:clear()
-endfunction
 
 function s:mstdn_config() abort
 	autocmd! LspAttach
@@ -99,10 +52,9 @@ function s:mstdn_config() abort
 	nn <buffer><nowait> < <cmd>call mstdn#timeline#unfavourite()<cr>
 	nn <buffer> <C-r> <cmd>call mstdn#timeline#reconnect()<cr>
 
-	nn <buffer> <ESC> <ESC><cmd>call <SID>clear()<cr>
-
-	nn <buffer> <C-k> <cmd>call <SID>preview_cur_img(-1)<cr>
-	nn <buffer> <C-j> <cmd>call <SID>preview_cur_img(+1)<cr>
+	nn <buffer> <ESC> <ESC><cmd>call mstdn#imgview#clear()<cr>
+	nn <buffer> <C-k> <cmd>call mstdn#imgview#view(-1)<cr>
+	nn <buffer> <C-j> <cmd>call mstdn#imgview#view(+1)<cr>
 
     " Configuration for mstdn-editor.vim
     nn <buffer> i <Plug>(mstdn-editor-open)
@@ -114,6 +66,9 @@ autocmd BufReadCmd mstdn://* call timer_start(1500, {-> mstdn#timeline#reconnect
 
 [[plugins]]
 repo = "gw31415/mstdn-editor.vim"
+
+[[plugins]]
+repo = "gw31415/mstdn-imgview.vim"
 
 [[plugins]]
 repo = "skanehira/denops-silicon.vim"
