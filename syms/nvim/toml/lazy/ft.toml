@@ -70,10 +70,24 @@ on_ft = ["markdown", "pandoc.markdown", "rmd"]
 build = 'sh -c "cd app && npm install"'
 
 [[plugins]]
-repo = "MeanderingProgrammer/markdown.nvim"
+repo = "MeanderingProgrammer/render-markdown.nvim"
 depends = "nvim-treesitter"
-on_ft = "markdown"
-lua_source = "require 'render-markdown'.setup {}"
+on_ft = ["markdown", "mdx", "mstdn"]
+lua_source = '''
+require 'render-markdown'.setup {
+	heading = {
+		width = 'block',
+		left_pad = 0,
+		right_pad = 4,
+		icons = {},
+	},
+	render_modes = true,
+	code = {
+		width = 'block',
+	},
+	file_types = { 'markdown', 'mdx', 'mstdn' },
+}
+'''
 
 [[plugins]]
 repo = "folke/ts-comments.nvim"
