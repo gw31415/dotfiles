@@ -37,7 +37,8 @@ repo = "gw31415/denops-sixel-view.vim"
 [[plugins]]
 repo = "gw31415/mstdn.vim"
 hook_add = '''
-autocmd BufReadCmd mstdn://* call s:mstdn_config()
+autocmd FileType mstdn call s:mstdn_config()
+autocmd FileType mstdn-editor call s:mstdn_editor_config()
 
 function s:mstdn_config() abort
 	autocmd! LspAttach
@@ -53,16 +54,46 @@ function s:mstdn_config() abort
 	nn <buffer> <C-r> <cmd>call mstdn#timeline#reconnect()<cr>
 
     " Configuration for mstdn-imgview.vim
-	nn <buffer> <ESC> <ESC><cmd>call mstdn#imgview#clear()<cr>
 	nn <buffer> <C-k> <cmd>call mstdn#imgview#view(-1)<cr>
 	nn <buffer> <C-j> <cmd>call mstdn#imgview#view(+1)<cr>
+	nn <buffer> <esc> <esc><cmd>call mstdn#imgview#clear()<cr>
 
     " Configuration for mstdn-editor.vim
     nn <buffer> i <Plug>(mstdn-editor-open)
 	nn <buffer> r <Plug>(mstdn-editor-open-reply)
+
+	call timer_start(1500, {-> mstdn#timeline#reconnect_all()}, #{repeat: -1})
 endfunction
-" auto reconnect
-autocmd BufReadCmd mstdn://* call timer_start(1500, {-> mstdn#timeline#reconnect_all()}, #{repeat: -1})
+
+function s:mstdn_editor_config() abort
+	com -nargs=* -buffer -bang -complete=file Attachment call s:add_attachment('!' == <q-bang>, <f-args>)
+
+	nn <buffer> <C-k> <cmd>call mstdn#imgview#view(-1)<cr>
+	nn <buffer> <C-j> <cmd>call mstdn#imgview#view(+1)<cr>
+endfunction
+
+function s:add_attachment(clipboard, ...) abort
+	let media_ids = get(mstdn#editor#get_statusparams(), "media_ids", [])
+	if a:clipboard
+		let id = mstdn#request#upload_attachment(mstdn#editor#get_user(bufnr()), "clipboard")
+		if id < 0
+			echo "Failed to upload attachment"
+			return
+		endif
+		setl modified
+		let media_ids += [id]
+	endif
+	for file in a:000
+		let id = mstdn#request#upload_attachment(mstdn#editor#get_user(bufnr()), file)
+		if id < 0
+			echo "Failed to upload attachment"
+			return
+		endif
+		setl modified
+		let media_ids += [id]
+	endfor
+	call mstdn#editor#update_statusparams(#{ media_ids: media_ids })
+endfunction
 '''
 
 [[plugins]]
