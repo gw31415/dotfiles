@@ -52,6 +52,7 @@ function s:mstdn_config() abort
 	nn <buffer><nowait> < <cmd>call mstdn#timeline#unfavourite()<cr>
 	nn <buffer> <C-r> <cmd>call mstdn#timeline#reconnect()<cr>
 
+    " Configuration for mstdn-imgview.vim
 	nn <buffer> <ESC> <ESC><cmd>call mstdn#imgview#clear()<cr>
 	nn <buffer> <C-k> <cmd>call mstdn#imgview#view(-1)<cr>
 	nn <buffer> <C-j> <cmd>call mstdn#imgview#view(+1)<cr>
