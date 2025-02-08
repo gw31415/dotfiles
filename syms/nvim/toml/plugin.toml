@@ -27,6 +27,9 @@ repo = "lambdalisue/vim-gin"
 
 [[plugins]]
 repo = "lambdalisue/vim-kensaku"
+lua_add = '''
+vim.call('kensaku#set_roman_table', require 'dvorakjp'.kensaku)
+'''
 
 [[plugins]]
 repo = "lambdalisue/vim-guise"
@@ -121,7 +124,7 @@ let g:silicon_options = {
 
 [[plugins]]
 repo = "yuki-yano/fuzzy-motion.vim"
-depends = "kensaku.vim"
+depends = "vim-kensaku"
 lua_add = '''
 vim.keymap.set('n', '<Space>', '<cmd>FuzzyMotion<cr>')
 vim.g.fuzzy_motion_labels = {
@@ -170,7 +173,7 @@ for _, map in pairs {
 	vim.fn['skkeleton#register_keymap'](unpack(map))
 end
 
-vim.fn['skkeleton#register_kanatable']('rom', require 'dvorakjp')
+vim.call('skkeleton#register_kanatable', 'rom', require 'dvorakjp'.skkeleton)
 '''
 
 [[plugins]]

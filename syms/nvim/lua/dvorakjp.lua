@@ -1,4 +1,4 @@
-return {
+local skkeleton = {
 	bna = { 'びゃ', '' },
 	bno = { 'びょ', '' },
 	bnu = { 'びゅ', '' },
@@ -39,3 +39,17 @@ return {
 	zho = { 'じょ', '' },
 	zhu = { 'じゅ', '' }
 }
+
+return setmetatable(skkeleton, {
+	__index = function(_, key)
+		if key == 'skkeleton' then
+			return skkeleton
+		elseif key == 'kensaku' then
+			local result = {}
+			for k, arr in pairs(skkeleton) do
+				table.insert(result, { k, arr[1], #arr[2] })
+			end
+			return result
+		end
+	end
+})
