@@ -145,19 +145,16 @@ end, { expr = true })
 '''
 
 [[plugins]]
-repo = "gw31415/skkeletal.vim"
-
-[[plugins]]
 repo = "vim-skk/skkeleton"
-depends = "skkeletal.vim"
 lua_add = '''
 vim.keymap.set({ 'i', 'c', 't' }, '<C-j>', '<Plug>(skkeleton-enable)')
-vim.fn['skkeletal#config'] {
-	eggLikeNewline = true,
-	globalJisyo = '~/.skk/SKK-JISYO.L',
+
+vim.fn['skkeleton#config'] {
 	markerHenkan = '▹',
+	eggLikeNewline = true,
 	markerHenkanSelect = '▸',
-	dvorak = true,
+	globalDictionaries = { '~/.skk/SKK-JISYO.L' },
+	selectCandidateKeys = 'aoeuhtn',
 }
 
 for _, map in pairs {
@@ -170,8 +167,10 @@ for _, map in pairs {
 	{ 'henkan', '<c-h>', '' },
 	{ 'henkan', '<c-h>', 'henkanBackward' },
 } do
-	vim.fn['skkeleton#register_keymap'](map[1], map[2], map[3])
+	vim.fn['skkeleton#register_keymap'](unpack(map))
 end
+
+vim.fn['skkeleton#register_kanatable']('rom', require 'dvorakjp')
 '''
 
 [[plugins]]
