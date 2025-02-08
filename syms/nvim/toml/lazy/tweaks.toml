@@ -122,9 +122,11 @@ lua_source = 'vim.api.nvim_set_var("winresizer_start_key", "<C-W>e")'
 repo = "thinca/vim-ambicmd"
 on_event = "CmdlineEnter"
 lua_source = '''
-vim.keymap.set('c', '<Space>', function()
-	return vim.fn['ambicmd#expand'] '<Space>'
-end, { expr = true })
+for _, value in pairs { '<space>', '!' } do
+	vim.keymap.set('c', value, function()
+		return vim.fn['ambicmd#expand'](value)
+	end, { expr = true })
+end
 '''
 
 [[plugins]]
