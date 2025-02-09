@@ -60,6 +60,46 @@ vim.keymap.set('n', '<F11>', function() require 'dap'.step_into() end, {})
 vim.keymap.set('n', '<F12>', function() require 'dap'.step_out() end, {})
 vim.keymap.set('n', 'bb', function() require 'dap'.toggle_breakpoint() end, {})
 
+
+--------------------------------------------------------------------------------
+-- fzyselect.vim - Custom tweaks
+--------------------------------------------------------------------------------
+
+-- fuzzy search
+vim.keymap.set('n', 'g/', function()
+	local winid = vim.api.nvim_get_current_win()
+	local tabstop = vim.api.nvim_get_option_value('tabstop', {})
+	local shiftwidth = vim.api.nvim_get_option_value('shiftwidth', {})
+	vim.api.nvim_create_autocmd('FileType', {
+		callback = function()
+			vim.api.nvim_set_option_value('tabstop', tabstop, {})
+			vim.api.nvim_set_option_value('shiftwidth', shiftwidth, {})
+		end,
+		pattern = 'fzyselect',
+		once = true,
+	})
+	require 'fzyselect'.start(vim.api.nvim_buf_get_lines(0, 0, -1, true),
+		{ prompt = 'fuzzy search: <Enter> to jump' },
+		function(_, i)
+			if i then
+				vim.api.nvim_win_set_cursor(winid, { i, 0 })
+			end
+		end)
+end)
+-- git ls-files
+vim.keymap.set('n', '<c-p>', function()
+	local res = vim.system({ 'git', 'ls-files' }, { text = true }):wait()
+	if res.code ~= 0 then
+		vim.notify(vim.fn.trim(res.stderr), vim.log.levels.ERROR, { title = 'fzyselect: git ls-files' })
+	else
+		require 'fzyselect'.start(vim.fn.split(res.stdout, '\n'),
+			{ prompt = 'git ls-files: <Enter> to edit' },
+			function(path)
+				if path then vim.cmd.edit(path) end
+			end)
+	end
+end)
+
 --------------------------------------------------------------------------------
 -- dpp.vim - Message when make_state is done
 --------------------------------------------------------------------------------
