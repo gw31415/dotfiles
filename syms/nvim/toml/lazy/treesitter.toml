@@ -74,12 +74,18 @@ lua_source = '''
 '''
 
 [[plugins]]
-repo = "David-Kunz/treesitter-unit"
+repo = "RRethy/nvim-treesitter-textsubjects"
 on_source = "nvim-treesitter"
 depends = "nvim-treesitter"
 lua_source = '''
-vim.keymap.set({ 'x', 'o' }, 'iu', '<cmd>lua require"treesitter-unit".select()<cr>')
-vim.keymap.set({ 'x', 'o' }, 'au', '<cmd>lua require"treesitter-unit".select(true)<cr>')
+require 'nvim-treesitter-textsubjects'.configure {
+	prev_selection = ',',
+	keymaps = {
+		['.'] = 'textsubjects-smart',
+		['a.'] = 'textsubjects-container-outer',
+		['i.'] = 'textsubjects-container-inner',
+	},
+}
 '''
 
 [[plugins]]
