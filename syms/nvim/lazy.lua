@@ -70,10 +70,17 @@ vim.keymap.set('n', 'g/', function()
 	local winid = vim.api.nvim_get_current_win()
 	local tabstop = vim.api.nvim_get_option_value('tabstop', {})
 	local shiftwidth = vim.api.nvim_get_option_value('shiftwidth', {})
+	local col = 0
 	vim.api.nvim_create_autocmd('FileType', {
 		callback = function()
 			vim.api.nvim_set_option_value('tabstop', tabstop, {})
 			vim.api.nvim_set_option_value('shiftwidth', shiftwidth, {})
+			vim.api.nvim_create_autocmd('CursorMoved', {
+				buffer = 0,
+				callback = function()
+					_, col = unpack(vim.api.nvim_win_get_cursor(0))
+				end,
+			})
 		end,
 		pattern = 'fzyselect',
 		once = true,
@@ -82,7 +89,7 @@ vim.keymap.set('n', 'g/', function()
 		{ prompt = 'fuzzy search: <Enter> to jump' },
 		function(_, i)
 			if i then
-				vim.api.nvim_win_set_cursor(winid, { i, 0 })
+				vim.api.nvim_win_set_cursor(winid, { i, col })
 			end
 		end)
 end)
