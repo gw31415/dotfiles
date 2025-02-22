@@ -66,33 +66,7 @@ vim.keymap.set('n', 'bb', function() require 'dap'.toggle_breakpoint() end, {})
 --------------------------------------------------------------------------------
 
 -- fuzzy search
-vim.keymap.set('n', 'g/', function()
-	local winid = vim.api.nvim_get_current_win()
-	local tabstop = vim.api.nvim_get_option_value('tabstop', {})
-	local shiftwidth = vim.api.nvim_get_option_value('shiftwidth', {})
-	local col = 0
-	vim.api.nvim_create_autocmd('FileType', {
-		callback = function()
-			vim.api.nvim_set_option_value('tabstop', tabstop, {})
-			vim.api.nvim_set_option_value('shiftwidth', shiftwidth, {})
-			vim.api.nvim_create_autocmd('CursorMoved', {
-				buffer = 0,
-				callback = function()
-					_, col = unpack(vim.api.nvim_win_get_cursor(0))
-				end,
-			})
-		end,
-		pattern = 'fzyselect',
-		once = true,
-	})
-	require 'fzyselect'.start(vim.api.nvim_buf_get_lines(0, 0, -1, true),
-		{ prompt = 'fuzzy search: <Enter> to jump' },
-		function(_, i)
-			if i then
-				vim.api.nvim_win_set_cursor(winid, { i, col })
-			end
-		end)
-end)
+vim.keymap.set('n', 'g/', function() require 'fzyselect-lines'.open() end)
 -- git ls-files
 vim.keymap.set('n', '<c-p>', function()
 	local res = vim.system({ 'git', 'ls-files' }, { text = true }):wait()

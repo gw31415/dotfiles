@@ -134,6 +134,11 @@ repo = "gw31415/fzyselect-nui-opener.vim"
 depends = "nui.nvim"
 
 [[plugins]]
+repo = "gw31415/fzyselect-lines.nvim"
+depends = "fzyselect.vim"
+on_lua = "fzyselect-lines"
+
+[[plugins]]
 repo = "gw31415/fzyselect.vim"
 depends = "fzyselect-nui-opener.vim"
 on_lua = "fzyselect"
