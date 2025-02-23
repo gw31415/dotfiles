@@ -130,7 +130,7 @@ end
 '''
 
 [[plugins]]
-repo = "gw31415/fzyselect-nui-opener.vim"
+repo = "gw31415/fzyselect-nui-opener.nvim"
 depends = "nui.nvim"
 
 [[plugins]]
@@ -140,7 +140,7 @@ on_lua = "fzyselect-lines"
 
 [[plugins]]
 repo = "gw31415/fzyselect.vim"
-depends = "fzyselect-nui-opener.vim"
+depends = "fzyselect-nui-opener.nvim"
 on_lua = "fzyselect"
 lua_add = "vim.ui.select = function(...) require 'fzyselect'.start(...) end"
 lua_source = '''
