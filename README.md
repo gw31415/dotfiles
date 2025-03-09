@@ -9,6 +9,10 @@ nix run github:gw31415/dotfiles
 > [!note]
 > This is just running the `dot` package. The `dot` package is a helper command to manage `gw31415/dotfiles`.
 
+### macFUSE
+
+[macFUSE](https://macfuse.github.io) needs to change the [`Security Policy`](https://github.com/macfuse/macfuse/wiki/Getting-Started).
+
 ## `dot` Usage
 
 ### Switching (update/upgrade) Environments
