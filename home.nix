@@ -46,6 +46,7 @@ in
     mise
     mmv-go
     nodejs
+    p7zip
     pandoc
     poppler_utils
     python3
