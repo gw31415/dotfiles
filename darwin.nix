@@ -9,8 +9,6 @@
   nix.settings.experimental-features = "nix-command flakes";
 
   # REQUIRED: Because this dotfiles is intended for a nix-darwin multi-user environment.
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
   nix.package = pkgs.nix;
 
   # REQUIRED: Create /etc/fish that loads the nix-darwin environment.
