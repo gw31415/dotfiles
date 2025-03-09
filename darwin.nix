@@ -59,7 +59,6 @@
       "homebrew/core"
       "homebrew/services"
       "jorgelbg/tap"
-      "mtgto/macskk"
       "macos-fuse-t/homebrew-cask"
     ];
     brews = [
