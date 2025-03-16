@@ -13,8 +13,6 @@ in
 
   home.packages = (with pkgs-stable; [
     pkgs.neovim
-    pkgs.tdf
-    pkgs.vhs
 
     # CLI tools
     aria2
@@ -55,9 +53,11 @@ in
     sccache
     silicon
     slack-term
+    tdf
     tectonic
     tmux
     typst
+    vhs
     vim-startuptime
     wget
     yt-dlp
