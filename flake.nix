@@ -39,29 +39,33 @@
               inherit system;
               config.allowUnfree = true;
             };
-          pkgs-stable = import inputs.nixpkgs-stable
-            {
-              inherit system;
-              config.allowUnfree = true;
-            };
-          dot = import ./dot/default.nix { inherit pkgs; };
+          ctx = inputs // {
+            pkgs = pkgs;
+            pkgs-stable = import ctx.nixpkgs-stable
+              {
+                inherit system;
+                config.allowUnfree = true;
+              };
+            dot = import ./dot/default.nix { inherit pkgs; };
+            system = system;
+          };
         in
         {
           ########################################
           # Package sets
           ########################################
           packages = {
-            nix-darwin = inputs.nix-darwin.packages.${system}.default;
+            nix-darwin = ctx.nix-darwin.packages.${system}.default;
 
             ########################################
             # Darwin configuration with nix-homebrew
             ########################################
-            darwinConfigurations.${env.hostname} = inputs.nix-darwin.lib.darwinSystem
+            darwinConfigurations.${env.hostname} = ctx.nix-darwin.lib.darwinSystem
               {
                 modules = [
-                  ({ pkgs, ... }: import ./darwin.nix { inherit pkgs system; })
-                  (inputs.nix-homebrew.darwinModules.nix-homebrew {
-                    lib = inputs.nix-darwin.lib;
+                  ({ pkgs, ... }: import ./darwin.nix { inherit ctx; })
+                  (ctx.nix-homebrew.darwinModules.nix-homebrew {
+                    lib = ctx.nix-darwin.lib;
                     nix-homebrew = {
                       enable = true;
                       enableRosetta = true;
@@ -74,19 +78,19 @@
             ########################################
             # Home manager configuration
             ########################################
-            homeConfigurations.${env.username} = inputs.home-manager.lib.homeManagerConfiguration {
+            homeConfigurations.${env.username} = ctx.home-manager.lib.homeManagerConfiguration {
               inherit pkgs;
               modules = [
                 ({ config, ... }: import ./home.nix {
-                  inherit config pkgs pkgs-stable;
+                  inherit config ctx;
                 })
-                inputs.nixvim.homeManagerModules.nixvim
+                ctx.nixvim.homeManagerModules.nixvim
               ];
             };
-            default = dot;
+            default = ctx.dot;
           };
           apps = rec {
-            dot-app = inputs.flake-utils.lib.mkApp { drv = dot; };
+            dot-app = ctx.flake-utils.lib.mkApp { drv = ctx.dot; };
             default = dot-app;
           };
         }

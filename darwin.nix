@@ -1,15 +1,15 @@
-{ system, pkgs, ... }: {
+{ ctx, ... }: {
   ########################################
   # Requires for nix-darwin to work
   ########################################
   system.stateVersion = 4;
-  nixpkgs.hostPlatform = system;
+  nixpkgs.hostPlatform = ctx.system;
 
   # REQUIRED: To keep-enabled experimental features after installation, since nix is managed by nix-darwin.
   nix.settings.experimental-features = "nix-command flakes";
 
   # REQUIRED: Because this dotfiles is intended for a nix-darwin multi-user environment.
-  nix.package = pkgs.nix;
+  nix.package = ctx.pkgs.nix;
 
   # REQUIRED: Create /etc/fish that loads the nix-darwin environment.
   programs.fish.enable = true;

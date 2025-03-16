@@ -1,5 +1,7 @@
-{ config, pkgs, pkgs-stable }:
+{ config, ctx }:
 let
+  pkgs = ctx.pkgs;
+  pkgs-stable = ctx.pkgs-stable;
   configHome = "${config.xdg.configHome}";
   homeManagerDirectory = "${configHome}/home-manager";
   env = import ./env.nix;
@@ -68,7 +70,7 @@ in
 
     (pkgs.writeShellScriptBin "czg" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:czg "$@"'')
     (pkgs.writeShellScriptBin "trash" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:trash-cli "$@"'')
-    (import ./dot/default.nix { inherit pkgs; })
+    ctx.dot
   ]) ++ (if pkgs-stable.stdenv.isDarwin then with pkgs-stable; [
     # macOS specific packages
     cocoapods
