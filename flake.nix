@@ -24,6 +24,26 @@
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    dpp-vim = {
+      url = "github:Shougo/dpp.vim";
+      flake = false;
+    };
+    dpp-ext-installer = {
+      url = "github:Shougo/dpp-ext-installer";
+      flake = false;
+    };
+    dpp-ext-lazy = {
+      url = "github:Shougo/dpp-ext-lazy";
+      flake = false;
+    };
+    dpp-ext-toml = {
+      url = "github:Shougo/dpp-ext-toml";
+      flake = false;
+    };
+    dpp-protocol-git = {
+      url = "github:Shougo/dpp-protocol-git";
+      flake = false;
+    };
   };
 
   outputs = { self, ... }@inputs:

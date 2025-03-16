@@ -17,6 +17,86 @@
         "type": "github"
       }
     },
+    "dpp-ext-installer": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1740792363,
+        "narHash": "sha256-8jY5k/zEIXcIfqsMVfQXUvApRnJWavV4UmD9TCwMGv8=",
+        "owner": "Shougo",
+        "repo": "dpp-ext-installer",
+        "rev": "af4c066a9d9c8ba6938810556184fdec413063f1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Shougo",
+        "repo": "dpp-ext-installer",
+        "type": "github"
+      }
+    },
+    "dpp-ext-lazy": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1737193109,
+        "narHash": "sha256-Izgv61SLT096WaPauWFdIKgXZWomGSC9NinciAQEIx4=",
+        "owner": "Shougo",
+        "repo": "dpp-ext-lazy",
+        "rev": "839e74094865bdb2a548f1f43ab2752243182d31",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Shougo",
+        "repo": "dpp-ext-lazy",
+        "type": "github"
+      }
+    },
+    "dpp-ext-toml": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1737250632,
+        "narHash": "sha256-0qtL8tY4v3Vk/7cJahhg0+tLF6EM+U8A9R8OjzWSUyY=",
+        "owner": "Shougo",
+        "repo": "dpp-ext-toml",
+        "rev": "b6e4b8dbe27fb8fab838c8898c8d329dceb7b759",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Shougo",
+        "repo": "dpp-ext-toml",
+        "type": "github"
+      }
+    },
+    "dpp-protocol-git": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1741838001,
+        "narHash": "sha256-BZeO5uedLeyCAPD1SvXk/nPIjTn1LuIAlGQAu4u65Qk=",
+        "owner": "Shougo",
+        "repo": "dpp-protocol-git",
+        "rev": "a5f8e67c1eefb009e7067f74d0615597e91a6c86",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Shougo",
+        "repo": "dpp-protocol-git",
+        "type": "github"
+      }
+    },
+    "dpp-vim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1740878249,
+        "narHash": "sha256-UsKiSu0wtC0vdb7DZfvfrbqeHVXx5OPS/L2f/iABIWw=",
+        "owner": "Shougo",
+        "repo": "dpp.vim",
+        "rev": "188f2852326d2e962f9afbf92d5bcb395ca2cb56",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Shougo",
+        "repo": "dpp.vim",
+        "type": "github"
+      }
+    },
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": [
@@ -243,6 +323,11 @@
     },
     "root": {
       "inputs": {
+        "dpp-ext-installer": "dpp-ext-installer",
+        "dpp-ext-lazy": "dpp-ext-lazy",
+        "dpp-ext-toml": "dpp-ext-toml",
+        "dpp-protocol-git": "dpp-protocol-git",
+        "dpp-vim": "dpp-vim",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",
