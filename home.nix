@@ -155,6 +155,12 @@ in
   in
   {
     enable = true;
+    colorschemes.onedark = {
+      enable = true;
+      settings = {
+        transparent = true;
+      };
+    };
     extraPlugins = [
       pkgs.vimPlugins.denops-vim
     ];

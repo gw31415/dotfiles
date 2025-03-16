@@ -1,10 +1,4 @@
 [[plugins]]
-repo = "navarasu/onedark.nvim"
-lua_add = '''
-require 'onedark'.setup { transparent = true }
-'''
-
-[[plugins]]
 repo = "lambdalisue/vim-gin"
 
 [[plugins]]
