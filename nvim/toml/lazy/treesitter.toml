@@ -27,7 +27,7 @@ require 'nvim-treesitter.configs'.setup {
 	parser_install_dir = parser_install_dir,
 	highlight = {
 		enable = true,
-		additional_vim_regex_highlighting = { 'org', 'markdown', 'edisch' },
+		additional_vim_regex_highlighting = { 'markdown', 'edisch' },
 		disable = { 'vimdoc' },
 	},
 	indent = {
@@ -35,7 +35,7 @@ require 'nvim-treesitter.configs'.setup {
 		disable = { 'dart', 'vimdoc' },
 	},
 	auto_install = true,
-	ensure_installed = { 'org', 'query', 'markdown', 'markdown_inline', 'lua', 'vim' },
+	ensure_installed = { 'query', 'markdown', 'markdown_inline', 'lua', 'vim' },
 }
 '''
 
