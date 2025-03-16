@@ -12,7 +12,7 @@ in
   };
 
   home.packages = (with pkgs-stable; [
-    pkgs.neovim
+    pkgs.tdf
 
     # CLI tools
     aria2
@@ -53,7 +53,6 @@ in
     sccache
     silicon
     slack-term
-    tdf
     tectonic
     tmux
     typst
@@ -92,7 +91,7 @@ in
     "${configHome}/wezterm".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/wezterm";
     "${configHome}/lazygit".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/lazygit";
     "${configHome}/mise".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/mise";
-    "${configHome}/nvim".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/nvim";
+    "${configHome}/nvim/lua".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/nvim/lua";
     "${configHome}/fish/completions".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/fish_completions";
     "${configHome}/fish/functions".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/fish_functions";
   };
@@ -104,6 +103,84 @@ in
     XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
     DIRENV_LOG_FORMAT = "";
     TEST_TEXT = "${config.home.homeDirectory}";
+  };
+
+  programs.nixvim =
+  let
+    dpp-vim = pkgs.vimUtils.buildVimPlugin {
+      name = "dpp.vim";
+      src = pkgs.fetchFromGitHub {
+        owner = "Shougo";
+        repo = "dpp.vim";
+        rev = "188f2852326d2e962f9afbf92d5bcb395ca2cb56";
+        hash = "sha256-UsKiSu0wtC0vdb7DZfvfrbqeHVXx5OPS/L2f/iABIWw=";
+      };
+    };
+    dpp-ext-installer = pkgs.vimUtils.buildVimPlugin {
+      name = "dpp-ext-installer";
+      src = pkgs.fetchFromGitHub {
+        owner = "Shougo";
+        repo = "dpp-ext-installer";
+        rev = "af4c066a9d9c8ba6938810556184fdec413063f1";
+        hash = "sha256-8jY5k/zEIXcIfqsMVfQXUvApRnJWavV4UmD9TCwMGv8=";
+      };
+    };
+    dpp-ext-lazy = pkgs.vimUtils.buildVimPlugin {
+      name = "dpp-ext-lazy";
+      src = pkgs.fetchFromGitHub {
+        owner = "Shougo";
+        repo = "dpp-ext-lazy";
+        rev = "839e74094865bdb2a548f1f43ab2752243182d31";
+        hash = "sha256-Izgv61SLT096WaPauWFdIKgXZWomGSC9NinciAQEIx4=";
+      };
+    };
+    dpp-ext-toml = pkgs.vimUtils.buildVimPlugin {
+      name = "dpp-ext-toml";
+      src = pkgs.fetchFromGitHub {
+        owner = "Shougo";
+        repo = "dpp-ext-toml";
+        rev = "b6e4b8dbe27fb8fab838c8898c8d329dceb7b759";
+        hash = "sha256-0qtL8tY4v3Vk/7cJahhg0+tLF6EM+U8A9R8OjzWSUyY=";
+      };
+    };
+    dpp-protocol-git = pkgs.vimUtils.buildVimPlugin {
+      name = "dpp-protocol-git";
+      src = pkgs.fetchFromGitHub {
+        owner = "Shougo";
+        repo = "dpp-protocol-git";
+        rev = "a5f8e67c1eefb009e7067f74d0615597e91a6c86";
+        hash = "sha256-BZeO5uedLeyCAPD1SvXk/nPIjTn1LuIAlGQAu4u65Qk=";
+      };
+    };
+  in
+  {
+    enable = true;
+    extraPlugins = [
+      pkgs.vimPlugins.denops-vim
+    ];
+    extraConfigLuaPost = ''
+      vim.opt.runtimepath:prepend '${dpp-vim}'
+
+      local dpp = require 'dpp'
+      local dpp_base = '~/.cache/dpp'
+
+      vim.opt.runtimepath:append '${dpp-ext-toml}'
+      vim.opt.runtimepath:append '${dpp-protocol-git}'
+      vim.opt.runtimepath:append '${dpp-ext-lazy}'
+      vim.opt.runtimepath:append '${dpp-ext-installer}'
+
+      if dpp.load_state(dpp_base) then
+        -- vim.opt.runtimepath:prepend '$HOME/.cache/dpp/repos/github.com/vim-denops/denops.vim'
+
+        vim.api.nvim_create_autocmd('User', {
+          pattern = 'DenopsReady',
+          callback = function()
+            dpp.make_state(dpp_base, '${homeManagerDirectory}/nvim/dpp.ts')
+          end
+        })
+      end
+      require 'init'
+    '';
   };
 
   programs.git = {

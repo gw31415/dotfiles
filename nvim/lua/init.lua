@@ -1,24 +1,3 @@
-vim.opt.runtimepath:prepend '$HOME/.cache/dpp/repos/github.com/Shougo/dpp.vim'
-local dpp = require 'dpp'
-
-local dpp_base = '~/.cache/dpp'
-
-vim.opt.runtimepath:append '$HOME/.cache/dpp/repos/github.com/Shougo/dpp-ext-toml'
-vim.opt.runtimepath:append '$HOME/.cache/dpp/repos/github.com/Shougo/dpp-protocol-git'
-vim.opt.runtimepath:append '$HOME/.cache/dpp/repos/github.com/Shougo/dpp-ext-lazy'
-vim.opt.runtimepath:append '$HOME/.cache/dpp/repos/github.com/Shougo/dpp-ext-installer'
-
-if dpp.load_state(dpp_base) then
-	vim.opt.runtimepath:prepend '$HOME/.cache/dpp/repos/github.com/vim-denops/denops.vim'
-
-	vim.api.nvim_create_autocmd('User', {
-		pattern = 'DenopsReady',
-		callback = function()
-			dpp.make_state(dpp_base, '~/.config/nvim/dpp.ts')
-		end
-	})
-end
-
 ----------------------------
 -- Disable built-in plugins
 ----------------------------
@@ -35,7 +14,7 @@ vim.g.loaded_2html_plugin = true
 
 vim.api.nvim_create_autocmd('CursorHold', {
 	once = true,
-	command = 'source $HOME/.config/nvim/lazy.vim'
+	command = 'source $HOME/.config/home-manager/nvim/lazy.vim'
 })
 vim.go.updatetime = 1
 vim.api.nvim_create_autocmd('CursorHold', {

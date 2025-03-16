@@ -175,5 +175,5 @@ end, {
 })
 
 vim.api.nvim_create_user_command('DppMkstate', function()
-	dpp.make_state('~/.cache/dpp', '~/.config/nvim/dpp.ts')
+	dpp.make_state('~/.cache/dpp', '~/.config/home-manager/nvim/dpp.ts')
 end, {})

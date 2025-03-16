@@ -1,5 +1,4 @@
-" open ./lazy.lua
-exec 'luafile ' . expand('<sfile>:p:h') . '/lazy.lua'
+exec 'luafile' expand('<sfile>:p:h') . '/lua/lazy.lua'
 
 se vop=folds
 se cul

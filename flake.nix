@@ -20,6 +20,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.nix-darwin.follows = "nix-darwin";
     };
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, ... }@inputs:
@@ -76,6 +80,7 @@
                 ({ config, ... }: import ./home.nix {
                   inherit config pkgs pkgs-stable;
                 })
+                inputs.nixvim.homeManagerModules.nixvim
               ];
             };
             default = dot;
