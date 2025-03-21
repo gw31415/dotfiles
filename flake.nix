@@ -30,6 +30,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.nuschtosSearch.follows = "nuschtosSearch";
     };
+    mac-app-util = {
+      url = "github:hraban/mac-app-util";
+      inputs.flake-utils.follows = "flake-utils";
+    };
     dpp-vim = {
       url = "github:Shougo/dpp.vim";
       flake = false;
@@ -106,7 +110,10 @@
             ########################################
             homeConfigurations.${env.username} = ctx.home-manager.lib.homeManagerConfiguration {
               inherit pkgs;
-              modules = [
+              modules = (if pkgs.stdenv.isDarwin then [
+                inputs.mac-app-util.homeManagerModules.default
+              ] else []) ++
+              [
                 ({ config, ... }: import ./home.nix {
                   inherit config ctx;
                 })
