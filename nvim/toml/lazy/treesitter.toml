@@ -39,6 +39,7 @@ require 'nvim-treesitter.configs'.setup {
 }
 '''
 
+# TODO: NixでColorSchemeを設定した際、こちらのプラグインが反映されない
 [[plugins]]
 repo = "https://gitlab.com/HiPhish/rainbow-delimiters.nvim"
 depends = "nvim-treesitter"
