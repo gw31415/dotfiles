@@ -136,10 +136,12 @@ in
   in
   {
     enable = true;
-    colorschemes.onedark = {
+    colorschemes.vscode = {
       enable = true;
       settings = {
         transparent = true;
+        italic_comments = true;
+        underline_links = true;
       };
     };
     extraPlugins = [
