@@ -68,6 +68,7 @@ in
     ipaexfont
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
+    twemoji-color-font
 
     (pkgs.writeShellScriptBin "czg" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:czg "$@"'')
     (pkgs.writeShellScriptBin "trash" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:trash-cli "$@"'')
