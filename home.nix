@@ -65,6 +65,7 @@ in
 
     # Fonts
     hackgen-nf-font
+    ipaexfont
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
 
