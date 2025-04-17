@@ -31,9 +31,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 			vim.lsp.handlers.hover,
 			{ border = 'single', title = 'hover' }
 		)
-		vim.api.nvim_create_user_command('Implementation', function()
-			vim.lsp.buf.implementation()
-		end, { force = true })
 		local bufopts = { silent = true, buffer = true }
 		vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
 		vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
@@ -41,12 +38,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
 			local winid = require 'ufo'.peekFoldedLinesUnderCursor()
 			if not winid then vim.lsp.buf.hover() end
 		end, bufopts)
-		vim.keymap.set('n', 'glr', function()
+		vim.keymap.set('n', 'gra', function()
 			require 'actions-preview'.code_actions()
 		end, bufopts)
-		vim.keymap.set('n', 'gln', vim.lsp.buf.rename, bufopts)
-		vim.keymap.set('n', 'z*', vim.lsp.buf.references, bufopts)
-		vim.keymap.set('i', '<C-S>', vim.lsp.buf.signature_help, bufopts)
 		vim.keymap.set('n', 'gqae', function()
 				require 'conform'.format { async = true, lsp_format = 'fallback' }
 			end,
