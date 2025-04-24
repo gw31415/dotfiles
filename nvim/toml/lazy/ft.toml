@@ -118,7 +118,10 @@ on_ft = "rust"
 
 [[plugins]]
 repo = "mattn/emmet-vim"
-on_ft = ["html", "jsx", "tsx", "astro"]
+on_ft = ["html", "jsx", "tsx", "astro", "typescriptreact", "javascriptreact"]
+hook_source = '''
+let g:user_emmet_leader_key='<C-Z>'
+'''
 
 [[plugins]]
 repo = "saecki/crates.nvim"
