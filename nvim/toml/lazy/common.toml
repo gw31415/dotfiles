@@ -39,3 +39,6 @@ repo = "kevinhwang91/promise-async"
 
 [[plugins]]
 repo = "gregorias/coop.nvim"
+
+[[plugins]]
+repo = "stevearc/dressing.nvim"

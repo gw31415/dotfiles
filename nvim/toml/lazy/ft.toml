@@ -72,7 +72,7 @@ build = 'sh -c "cd app && npm install"'
 [[plugins]]
 repo = "MeanderingProgrammer/render-markdown.nvim"
 depends = "nvim-treesitter"
-on_ft = ["markdown", "mdx", "mstdn"]
+on_ft = ["markdown", "mdx", "mstdn", "Avante"]
 lua_source = '''
 require 'render-markdown'.setup {
 	heading = {
@@ -85,7 +85,7 @@ require 'render-markdown'.setup {
 	code = {
 		width = 'block',
 	},
-	file_types = { 'markdown', 'mdx', 'mstdn' },
+	file_types = { 'markdown', 'mdx', 'mstdn', 'Avante' },
 }
 '''
 
