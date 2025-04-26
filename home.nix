@@ -58,6 +58,7 @@ in
     tectonic
     tmux
     typst
+    uv
     vhs
     vim-startuptime
     wget
