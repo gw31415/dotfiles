@@ -16,6 +16,7 @@ in
   # Audiverisは手動でインストールすること
   home.packages = (with pkgs-stable; [
     pkgs.tdf
+    pkgs.nodejs
 
     # CLI tools
     aria2
@@ -45,7 +46,6 @@ in
     litecli
     mise
     mmv-go
-    nodejs
     p7zip
     pandoc
     poppler_utils
