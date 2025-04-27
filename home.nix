@@ -13,6 +13,7 @@ in
     stateVersion = "24.05";
   };
 
+  # Audiverisは手動でインストールすること
   home.packages = (with pkgs-stable; [
     pkgs.tdf
 
@@ -22,7 +23,6 @@ in
     bat
     bindfs
     bun
-    carbon-now-cli
     deno
     emacs-nox
     envchain
