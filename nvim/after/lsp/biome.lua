@@ -2,5 +2,4 @@
 return {
 	root_markers = { 'biome.json' },
 	workspace_required = true,
-	single_file_support = false,
 }

@@ -20,7 +20,6 @@ local ft = {
 
 ---@type vim.lsp.Config
 return {
-	single_file_support = false,
 	workspace_required = true,
 	root_markers = { 'package.json' },
 	root_dir = function(path, cb)
