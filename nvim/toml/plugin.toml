@@ -1,7 +1,4 @@
 [[plugins]]
-repo = "neovim/nvim-lspconfig"
-
-[[plugins]]
 repo = "lambdalisue/vim-gin"
 lua_add = "vim.g.gin_proxy_apply_without_confirm = 1"
 

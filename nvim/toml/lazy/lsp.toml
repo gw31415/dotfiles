@@ -1,4 +1,9 @@
 [[plugins]]
+repo = "neovim/nvim-lspconfig"
+on_cmd = ["LspInfo", "LspStart", "LspRestart", "LspStop", "LspLog"]
+on_lua = "lspconfig"
+
+[[plugins]]
 repo = "folke/lazydev.nvim"
 on_ft = "lua"
 depends = ["nvim-lspconfig", "mason.nvim"]
