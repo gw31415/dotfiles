@@ -1,5 +1,13 @@
 ---@type vim.lsp.Config
 return {
+	workspace_required = true,
+	root_markers = {
+		'deno.json',
+		'deno.jsonc',
+		'deno.lock',
+		'deps.ts',
+		'denops',
+	},
 	root_dir = function(bufnr, cb)
 		local found_dirs = vim.fs.find({
 			'deno.json',
