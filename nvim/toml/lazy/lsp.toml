@@ -53,18 +53,18 @@ repo = "stevearc/conform.nvim"
 on_event = ["BufWritePre", "LspAttach"]
 on_cmd = "ConformInfo"
 lua_source = '''
-local js_formatters = { 'biome', 'prettierd', 'prettier', stop_after_first = true }
+-- local js_formatters = { 'biome', 'prettierd', 'prettier', stop_after_first = true }
 require 'conform'.setup {
 	toml = { 'taplo', },
 	python = { 'ruff', 'isort', 'black' },
-	formatters_by_ft = {
-		json = js_formatters,
-		javascript = js_formatters,
-		javascriptreact = js_formatters,
-		typescript = js_formatters,
-		typescriptreact = js_formatters,
-		astro = js_formatters,
-	},
+	-- formatters_by_ft = {
+	-- 	json = js_formatters,
+	-- 	javascript = js_formatters,
+	-- 	javascriptreact = js_formatters,
+	-- 	typescript = js_formatters,
+	-- 	typescriptreact = js_formatters,
+	-- 	astro = js_formatters,
+	-- },
 }
 '''
 
@@ -149,9 +149,6 @@ local lsp_opts = {
 				functionLikeReturnTypes = { enabled = false },
 				enumMemberValues = { enabled = true },
 			},
-			tsserver = {
-				pluginPaths = { '.' },
-			},
 		},
 		javascript = {
 			inlayHints = {
@@ -230,8 +227,20 @@ local ft = {
 	},
 }
 
--- https://zenn.dev/vim_jp/articles/10b408bc0cf077
+lspconfig.biome.setup(vim.tbl_deep_extend('keep', lsp_opts, {
+	root_markers = { 'biome.json' },
+	workspace_required = true,
+	single_file_support = false,
+}))
+
 lspconfig.denols.setup(vim.tbl_deep_extend('keep', lsp_opts, {
+	-- root_markers = {
+	-- 	'deno.json',
+	-- 	'deno.jsonc',
+	-- 	'deno.lock',
+	-- 	'deps.ts',
+	-- 	'denops',
+	-- },
 	root_dir = function(path)
 		---@type string|nil
 		local project_root =
@@ -281,36 +290,38 @@ lspconfig.denols.setup(vim.tbl_deep_extend('keep', lsp_opts, {
 			},
 		},
 	},
+	on_attach = function(client, bufnr)
+		local biomeRunning = #(vim.lsp.get_clients { name = 'biome', bufnr = bufnr }) > 0
+		client.server_capabilities.documentFormattingProvider = not biomeRunning
+		client.server_capabilities.documentRangeFormattingProvider = not biomeRunning
+	end,
 }))
 
-for _, server_name in ipairs { 'vtsls', 'biome' } do
-	lspconfig[server_name].setup(vim.tbl_deep_extend('keep', lsp_opts, {
-		single_file_support = server_name == 'biome',
-		root_dir = function(path)
-			local project_root = vim.fs.root(path, vim.iter { '.git', ft.node_files }:flatten(math.huge):totable())
+lspconfig.vtsls.setup(vim.tbl_deep_extend('keep', lsp_opts, {
+	single_file_support = false,
+	root_dir = function(path)
+		local project_root = vim.fs.root(path, vim.iter { '.git', ft.node_files }:flatten(math.huge):totable())
 
-			if project_root == nil then
-				return nil
-			end
-
-			local is_node_files_found = vim.iter(ft.node_specific_files):any(function(file)
-				return vim.uv.fs_stat(vim.fs.joinpath(project_root, file)) ~= nil
-			end)
-
-			if is_node_files_found then
-				return project_root
-			end
-
+		if project_root == nil then
 			return nil
-		end,
-		on_attach = function(client, _)
-			if server_name == 'vtsls' then
-				client.server_capabilities.documentFormattingProvider = false
-				client.server_capabilities.documentRangeFormattingProvider = false
-			end
-		end,
-	}))
-end
+		end
+
+		local is_node_files_found = vim.iter(ft.node_specific_files):any(function(file)
+			return vim.uv.fs_stat(vim.fs.joinpath(project_root, file)) ~= nil
+		end)
+
+		if is_node_files_found then
+			return project_root
+		end
+
+		return nil
+	end,
+	on_attach = function(client, bufnr)
+		local biomeRunning = #(vim.lsp.get_clients { name = 'biome', bufnr = bufnr }) > 0
+		client.server_capabilities.documentFormattingProvider = not biomeRunning
+		client.server_capabilities.documentRangeFormattingProvider = not biomeRunning
+	end,
+}))
 
 lspconfig.pylsp.setup(vim.tbl_deep_extend('keep', lsp_opts, {
 	on_attach = function(client, _)
