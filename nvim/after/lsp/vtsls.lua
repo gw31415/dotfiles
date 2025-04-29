@@ -42,4 +42,36 @@ return {
 		client.server_capabilities.documentFormattingProvider = not biomeRunning
 		client.server_capabilities.documentRangeFormattingProvider = not biomeRunning
 	end,
+	settings = {
+		typescript = {
+			suggest = {
+				completionFunctionCalls = true,
+			},
+			inlayHints = {
+				parameterNames = {
+					enabled = 'literals', -- 'none' | 'literals' | 'all'
+					suppressWhenArgumentMatchesName = true,
+				},
+				parameterTypes = { enabled = false },
+				variableTypes = { enabled = false },
+				propertyDeclarationTypes = { enabled = true },
+				functionLikeReturnTypes = { enabled = false },
+				enumMemberValues = { enabled = true },
+			},
+		},
+		javascript = {
+			inlayHints = {
+				parameterNames = {
+					enabled = 'literals', -- 'none' | 'literals' | 'all'
+					suppressWhenArgumentMatchesName = true,
+				},
+				parameterTypes = { enabled = false },
+				variableTypes = { enabled = false },
+				propertyDeclarationTypes = { enabled = true },
+				functionLikeReturnTypes = { enabled = false },
+				enumMemberValues = { enabled = true },
+			}
+
+		},
+	}
 }

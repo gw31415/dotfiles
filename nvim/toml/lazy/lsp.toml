@@ -97,38 +97,6 @@ vim.lsp.config('*', {
 		}
 	}, require 'cmp_nvim_lsp'.default_capabilities()),
 	-- }, require 'blink.cmp'.get_lsp_capabilities()),
-	settings = {
-		typescript = {
-			suggest = {
-				completionFunctionCalls = true,
-			},
-			inlayHints = {
-				parameterNames = {
-					enabled = 'literals', -- 'none' | 'literals' | 'all'
-					suppressWhenArgumentMatchesName = true,
-				},
-				parameterTypes = { enabled = false },
-				variableTypes = { enabled = false },
-				propertyDeclarationTypes = { enabled = true },
-				functionLikeReturnTypes = { enabled = false },
-				enumMemberValues = { enabled = true },
-			},
-		},
-		javascript = {
-			inlayHints = {
-				parameterNames = {
-					enabled = 'literals', -- 'none' | 'literals' | 'all'
-					suppressWhenArgumentMatchesName = true,
-				},
-				parameterTypes = { enabled = false },
-				variableTypes = { enabled = false },
-				propertyDeclarationTypes = { enabled = true },
-				functionLikeReturnTypes = { enabled = false },
-				enumMemberValues = { enabled = true },
-			}
-
-		},
-	}
 })
 
 ------------------------------------
