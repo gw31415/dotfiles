@@ -99,6 +99,7 @@ in
     "${configHome}/lazygit".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/lazygit";
     "${configHome}/mise".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/mise";
     "${configHome}/nvim/lua".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/nvim/lua";
+    "${configHome}/nvim/after".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/nvim/after";
     "${configHome}/fish/completions".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/fish_completions";
     "${configHome}/fish/functions".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/fish_functions";
   };

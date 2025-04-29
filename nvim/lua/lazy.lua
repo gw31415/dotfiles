@@ -27,10 +27,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.opt_local.formatexpr = 'v:lua.require"conform".formatexpr()'
 
 		vim.diagnostic.config { signs = false, virtual_text = false }
-		vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
-			vim.lsp.handlers.hover,
-			{ border = 'single', title = 'hover' }
-		)
 		local bufopts = { silent = true, buffer = true }
 		vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
 		vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
