@@ -167,3 +167,19 @@ end, {
 vim.api.nvim_create_user_command('DppMkstate', function()
 	dpp.make_state('~/.cache/dpp', '~/.config/home-manager/nvim/dpp.ts')
 end, {})
+
+-- Load avante.nvim if online
+
+vim.system({ 'curl', '-s', '--max-time', '1', '1.1.1.1' }, {}, function(res)
+	if res.code == 0 then
+		-- Online
+		vim.schedule(function()
+			dpp.source 'avante.nvim'
+		end)
+	else
+		-- Offline
+		vim.schedule(function()
+			vim.notify "Loading avante.nvim skipped; it's offline."
+		end)
+	end
+end)
