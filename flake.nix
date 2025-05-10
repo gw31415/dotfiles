@@ -50,6 +50,7 @@
       url = "github:Shougo/dpp-protocol-git";
       flake = false;
     };
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
   outputs = { self, ... }@inputs:
@@ -75,6 +76,9 @@
             dot = import ./dot/default.nix { inherit pkgs; };
             system = system;
           };
+          overlays = [
+            inputs.neovim-nightly-overlay.overlays.default
+          ];
         in
         {
           ########################################
@@ -110,6 +114,9 @@
                 ({ config, ... }: import ./home.nix {
                   inherit config ctx;
                 })
+                {
+                  nixpkgs.overlays = overlays;
+                }
                 ctx.nixvim.homeManagerModules.nixvim
               ];
             };

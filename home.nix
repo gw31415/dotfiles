@@ -137,6 +137,7 @@ in
     };
   in
   {
+    package = ctx.neovim-nightly-overlay.packages.${pkgs.system}.default;
     enable = true;
     colorschemes.vscode = {
       enable = true;
