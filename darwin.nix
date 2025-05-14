@@ -70,6 +70,7 @@
       "mise"
       "pinentry-mac"
       "pkgconf"
+      "pnpm"
       "xcode-build-server"
       "jorgelbg/tap/pinentry-touchid"
     ];

@@ -184,15 +184,15 @@ vim.system({ 'curl', '-s', '--max-time', '1', '1.1.1.1' }, {}, function(res)
 	end
 end)
 
-local ok, extui = pcall(require, 'vim._extui')
-if ok then
-	extui.enable({
-		enable = true,
-		msg = {
-			pos = 'cmd',
-			box = {
-				timeout = 5000,
-			},
-		},
-	})
-end
+-- local ok, extui = pcall(require, 'vim._extui')
+-- if ok then
+-- 	extui.enable({
+-- 		enable = true,
+-- 		msg = {
+-- 			pos = 'cmd',
+-- 			box = {
+-- 				timeout = 5000,
+-- 			},
+-- 		},
+-- 	})
+-- end
