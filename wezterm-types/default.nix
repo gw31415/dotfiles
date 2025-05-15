@@ -1,4 +1,5 @@
-{ pkgs ? import <nixpkgs> { system = builtins.currentSystem; }
+{
+  pkgs ? import <nixpkgs> { system = builtins.currentSystem; },
 }:
 pkgs.stdenvNoCC.mkDerivation {
   name = "wezterm-types";

@@ -14,73 +14,81 @@ in
   };
 
   # Audiverisは手動でインストールすること
-  home.packages = (with pkgs-stable; [
-    pkgs.tdf
-    pkgs.nodejs
+  home.packages =
+    (with pkgs-stable; [
+      pkgs.tdf
+      pkgs.nodejs
 
-    # CLI tools
-    aria2
-    asciinema
-    bat
-    bindfs
-    bun
-    deno
-    emacs-nox
-    envchain
-    era
-    eza
-    ffmpeg
-    flyctl
-    gh
-    gnupg
-    gocryptfs
-    gopls
-    home-manager
-    hugo
-    imagemagick
-    jdupes
-    jnv
-    jq
-    lazygit
-    librsvg # rsvg-convert CLI
-    litecli
-    mise
-    mmv-go
-    nixfmt-rfc-style
-    p7zip
-    pandoc
-    poppler_utils
-    python3
-    ripgrep
-    rustup
-    sccache
-    silicon
-    slack-term
-    tectonic
-    tmux
-    typst
-    uv
-    vhs
-    vim-startuptime
-    wget
-    yt-dlp
+      # CLI tools
+      aria2
+      asciinema
+      bat
+      bindfs
+      bun
+      deno
+      emacs-nox
+      envchain
+      era
+      eza
+      ffmpeg
+      flyctl
+      gh
+      gnupg
+      gocryptfs
+      gopls
+      home-manager
+      hugo
+      imagemagick
+      jdupes
+      jnv
+      jq
+      lazygit
+      librsvg # rsvg-convert CLI
+      litecli
+      mise
+      mmv-go
+      nixfmt-rfc-style
+      p7zip
+      pandoc
+      poppler_utils
+      python3
+      ripgrep
+      rustup
+      sccache
+      silicon
+      slack-term
+      tectonic
+      tmux
+      typst
+      uv
+      vhs
+      vim-startuptime
+      wget
+      yt-dlp
 
-    # Fonts
-    hackgen-nf-font
-    ipaexfont
-    noto-fonts-cjk-sans
-    noto-fonts-cjk-serif
-    source-han-sans
-    source-han-serif
-    twemoji-color-font
+      # Fonts
+      hackgen-nf-font
+      ipaexfont
+      noto-fonts-cjk-sans
+      noto-fonts-cjk-serif
+      source-han-sans
+      source-han-serif
+      twemoji-color-font
 
-    (pkgs.writeShellScriptBin "czg" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:czg "$@"'')
-    (pkgs.writeShellScriptBin "trash" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:trash-cli "$@"'')
-    ctx.dot
-  ]) ++ (if pkgs-stable.stdenv.isDarwin then with pkgs-stable; [
-    # macOS specific packages
-    cocoapods
-  ] else [ ]);
+      (pkgs.writeShellScriptBin "czg" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:czg "$@"'')
+      (pkgs.writeShellScriptBin "trash" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:trash-cli "$@"'')
+      ctx.dot
+    ])
+    ++ (
+      if pkgs-stable.stdenv.isDarwin then
+        with pkgs-stable;
+        [
+          # macOS specific packages
+          cocoapods
+        ]
+      else
+        [ ]
+    );
 
   home.file = {
     ########################################
@@ -94,15 +102,24 @@ in
     };
     ".latexmkrc".source = ./statics/latexmkrc;
 
-    ".nix-deliverables/wezterm-types".source = "${import ./wezterm-types/default.nix { inherit pkgs;}}";
+    ".nix-deliverables/wezterm-types".source = "${import ./wezterm-types/default.nix {
+      inherit pkgs;
+    }}";
 
-    "${configHome}/wezterm".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/wezterm";
-    "${configHome}/lazygit".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/lazygit";
-    "${configHome}/mise".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/mise";
-    "${configHome}/nvim/lua".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/nvim/lua";
-    "${configHome}/nvim/after".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/nvim/after";
-    "${configHome}/fish/completions".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/fish_completions";
-    "${configHome}/fish/functions".source = config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/fish_functions";
+    "${configHome}/wezterm".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/wezterm";
+    "${configHome}/lazygit".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/lazygit";
+    "${configHome}/mise".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/mise";
+    "${configHome}/nvim/lua".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/nvim/lua";
+    "${configHome}/nvim/after".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/nvim/after";
+    "${configHome}/fish/completions".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/fish_completions";
+    "${configHome}/fish/functions".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/fish_functions";
   };
 
   home.sessionVariables = {
@@ -115,66 +132,66 @@ in
   };
 
   programs.nixvim =
-  let
-    dpp-vim = pkgs.vimUtils.buildVimPlugin {
-      name = "dpp.vim";
-      src = ctx.dpp-vim;
-    };
-    dpp-ext-installer = pkgs.vimUtils.buildVimPlugin {
-      name = "dpp-ext-installer";
-      src = ctx.dpp-ext-installer;
-    };
-    dpp-ext-lazy = pkgs.vimUtils.buildVimPlugin {
-      name = "dpp-ext-lazy";
-      src = ctx.dpp-ext-lazy;
-    };
-    dpp-ext-toml = pkgs.vimUtils.buildVimPlugin {
-      name = "dpp-ext-toml";
-      src = ctx.dpp-ext-toml;
-    };
-    dpp-protocol-git = pkgs.vimUtils.buildVimPlugin {
-      name = "dpp-protocol-git";
-      src = ctx.dpp-protocol-git;
-    };
-  in
-  {
-    package = ctx.neovim-nightly-overlay.packages.${pkgs.system}.default;
-    enable = true;
-    colorschemes.vscode = {
-      enable = true;
-      settings = {
-        transparent = true;
-        italic_comments = true;
-        underline_links = true;
+    let
+      dpp-vim = pkgs.vimUtils.buildVimPlugin {
+        name = "dpp.vim";
+        src = ctx.dpp-vim;
       };
+      dpp-ext-installer = pkgs.vimUtils.buildVimPlugin {
+        name = "dpp-ext-installer";
+        src = ctx.dpp-ext-installer;
+      };
+      dpp-ext-lazy = pkgs.vimUtils.buildVimPlugin {
+        name = "dpp-ext-lazy";
+        src = ctx.dpp-ext-lazy;
+      };
+      dpp-ext-toml = pkgs.vimUtils.buildVimPlugin {
+        name = "dpp-ext-toml";
+        src = ctx.dpp-ext-toml;
+      };
+      dpp-protocol-git = pkgs.vimUtils.buildVimPlugin {
+        name = "dpp-protocol-git";
+        src = ctx.dpp-protocol-git;
+      };
+    in
+    {
+      package = ctx.neovim-nightly-overlay.packages.${pkgs.system}.default;
+      enable = true;
+      colorschemes.vscode = {
+        enable = true;
+        settings = {
+          transparent = true;
+          italic_comments = true;
+          underline_links = true;
+        };
+      };
+      extraPlugins = [
+        pkgs.vimPlugins.denops-vim
+      ];
+      extraConfigLuaPost = ''
+        vim.opt.runtimepath:prepend '${dpp-vim}'
+
+        local dpp = require 'dpp'
+        local dpp_base = '~/.cache/dpp'
+
+        vim.opt.runtimepath:append '${dpp-ext-toml}'
+        vim.opt.runtimepath:append '${dpp-protocol-git}'
+        vim.opt.runtimepath:append '${dpp-ext-lazy}'
+        vim.opt.runtimepath:append '${dpp-ext-installer}'
+
+        if dpp.load_state(dpp_base) then
+          -- vim.opt.runtimepath:prepend '$HOME/.cache/dpp/repos/github.com/vim-denops/denops.vim'
+
+          vim.api.nvim_create_autocmd('User', {
+            pattern = 'DenopsReady',
+            callback = function()
+              dpp.make_state(dpp_base, '${homeManagerDirectory}/nvim/dpp.ts')
+            end
+          })
+        end
+        require 'init'
+      '';
     };
-    extraPlugins = [
-      pkgs.vimPlugins.denops-vim
-    ];
-    extraConfigLuaPost = ''
-      vim.opt.runtimepath:prepend '${dpp-vim}'
-
-      local dpp = require 'dpp'
-      local dpp_base = '~/.cache/dpp'
-
-      vim.opt.runtimepath:append '${dpp-ext-toml}'
-      vim.opt.runtimepath:append '${dpp-protocol-git}'
-      vim.opt.runtimepath:append '${dpp-ext-lazy}'
-      vim.opt.runtimepath:append '${dpp-ext-installer}'
-
-      if dpp.load_state(dpp_base) then
-        -- vim.opt.runtimepath:prepend '$HOME/.cache/dpp/repos/github.com/vim-denops/denops.vim'
-
-        vim.api.nvim_create_autocmd('User', {
-          pattern = 'DenopsReady',
-          callback = function()
-            dpp.make_state(dpp_base, '${homeManagerDirectory}/nvim/dpp.ts')
-          end
-        })
-      end
-      require 'init'
-    '';
-  };
 
   programs.git = {
     enable = true;
@@ -190,8 +207,7 @@ in
       "kls_database.db"
     ];
     extraConfig = {
-      credential.helper =
-        "/usr/local/share/gcm-core/git-credential-manager";
+      credential.helper = "/usr/local/share/gcm-core/git-credential-manager";
       init.defaultBranch = "main";
       commit.gpgSign = true;
       user.signingKey = "B7E2A136"; # Expiration: 2025-09-01
@@ -231,8 +247,14 @@ in
       vim = "nvim";
     };
     plugins = [
-      { name = "z"; src = pkgs.fishPlugins.z.src; }
-      { name = "autopair"; src = pkgs.fishPlugins.autopair.src; }
+      {
+        name = "z";
+        src = pkgs.fishPlugins.z.src;
+      }
+      {
+        name = "autopair";
+        src = pkgs.fishPlugins.autopair.src;
+      }
       {
         name = "fish-na";
         src = (
@@ -243,38 +265,43 @@ in
         );
       }
     ];
-    shellInit = (
-      # macOS specific settings
-      if pkgs.stdenv.isDarwin then ''
-        if test -f /opt/homebrew/bin/brew
-          eval (/opt/homebrew/bin/brew shellenv)
+    shellInit =
+      (
+        # macOS specific settings
+        if pkgs.stdenv.isDarwin then
+          ''
+            if test -f /opt/homebrew/bin/brew
+              eval (/opt/homebrew/bin/brew shellenv)
+            end
+            if test -d "/opt/homebrew/share/fish/completions"
+              set -p fish_complete_path /opt/homebrew/share/fish/completions
+            end
+            if test -d "/opt/homebrew/share/fish/vendor_completions.d"
+              set -p fish_complete_path /opt/homebrew/share/fish/vendor_completions.d
+            end
+            if test -d /Applications/Android\ Studio.app/Contents/jbr/Contents/Home
+              export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jbr/Contents/Home
+            end
+            if test -d "$HOME/Library/Android/sdk/platform-tools/"
+              set -x PATH $HOME/Library/Android/sdk/platform-tools/ $PATH
+            end
+          ''
+        else
+          ""
+      )
+      + ''
+        set fish_greeting
+        if status is-interactive
+          mise activate fish | source
+        else
+          mise activate fish --shims | source
         end
-        if test -d "/opt/homebrew/share/fish/completions"
-          set -p fish_complete_path /opt/homebrew/share/fish/completions
+        if test -f $HOME/.cargo/env.fish
+          source "$HOME/.cargo/env.fish"
         end
-        if test -d "/opt/homebrew/share/fish/vendor_completions.d"
-          set -p fish_complete_path /opt/homebrew/share/fish/vendor_completions.d
-        end
-        if test -d /Applications/Android\ Studio.app/Contents/jbr/Contents/Home
-          export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jbr/Contents/Home
-        end
-        if test -d "$HOME/Library/Android/sdk/platform-tools/"
-          set -x PATH $HOME/Library/Android/sdk/platform-tools/ $PATH
-        end
-      '' else ""
-    ) + ''
-      set fish_greeting
-      if status is-interactive
-        mise activate fish | source
-      else
-        mise activate fish --shims | source
-      end
-      if test -f $HOME/.cargo/env.fish
-        source "$HOME/.cargo/env.fish"
-      end
-      set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
-      abbr -a n -f _na
-    '';
+        set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
+        abbr -a n -f _na
+      '';
   };
   programs.direnv = {
     enable = true;
