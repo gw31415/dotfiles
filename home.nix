@@ -30,7 +30,6 @@ in
     era
     eza
     ffmpeg
-    fish-lsp
     flyctl
     gh
     gnupg

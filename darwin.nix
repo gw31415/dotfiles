@@ -70,9 +70,12 @@
       "mise"
       "pinentry-mac"
       "pkgconf"
-      "pnpm"
       "xcode-build-server"
       "jorgelbg/tap/pinentry-touchid"
+
+      # because building Node.js in NixOS is slow
+      "pnpm"
+      "fish-lsp"
     ];
     casks = [
       "alt-tab"
