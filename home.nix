@@ -46,6 +46,7 @@ in
     litecli
     mise
     mmv-go
+    nixfmt-rfc-style
     p7zip
     pandoc
     poppler_utils
