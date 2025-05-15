@@ -267,6 +267,15 @@ vim.keymap.set('n', 'cll', '<Plug>(deepl-replace)_')
 '''
 
 [[plugins]]
+repo = "JoosepAlviste/nvim-ts-context-commentstring"
+on_event = "CursorHold"
+lua_source = '''
+require 'ts_context_commentstring'.setup {
+	enable_autocmd = false,
+}
+'''
+
+[[plugins]]
 repo = "numToStr/Comment.nvim"
 on_event = "CursorHold"
 lua_source = '''
@@ -277,6 +286,7 @@ require 'Comment'.setup {
 	opleader = {
 		block = 'gC',
 	},
+	pre_hook = require 'ts_context_commentstring.integrations.comment_nvim'.create_pre_hook(),
 }
 '''
 

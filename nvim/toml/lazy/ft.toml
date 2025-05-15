@@ -90,13 +90,6 @@ require 'render-markdown'.setup {
 '''
 
 [[plugins]]
-repo = "folke/ts-comments.nvim"
-on_event = "CursorHold"
-lua_source = '''
-require 'ts-comments'.setup()
-'''
-
-[[plugins]]
 repo = "akinsho/flutter-tools.nvim"
 on_ft = "dart"
 depends = ["plenary.nvim"]
