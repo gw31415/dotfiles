@@ -241,6 +241,7 @@ in
       gll = "lazygit";
       dcd = "cd ${homeManagerDirectory}";
       unitydroidlog = "adb logcat -s Unity ActivityManager PackageManager dalvikvm DEBUG";
+      sqlite3 = "litecli";
     };
     shellAliases = {
       vi = "nvim";
