@@ -638,8 +638,7 @@ depends = [
 	"copilot.lua",
 	"mcphub.nvim",
 ]
-# Load from lazy.lua
-# on_event = "CursorHold"
+on_event = "CursorHold"
 lua_source = '''
 require 'avante_lib'.load()
 require 'avante'.setup {
