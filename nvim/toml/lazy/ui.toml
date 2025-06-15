@@ -47,6 +47,13 @@ require 'quicker'.setup {
 		{ '>', "<cmd>lua require('quicker').expand()<CR>",   desc = 'Expand quickfix content' },
 		{ '<', "<cmd>lua require('quicker').collapse()<CR>", desc = 'Collapse quickfix content' },
 	},
+	type_icons = {
+		E = "󰅚 ",
+		W = "",
+		I = "",
+		N = "󰛿",
+		H = "",
+	},
 }
 '''
 
