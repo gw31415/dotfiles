@@ -257,7 +257,7 @@ function getArgs() {
 			}
 			if (darwin && (parsedArgs.values.darwin || parsedArgs.values.all)) {
 				consola.info("Switching darwin-rebuild...");
-				const res = await $`nix run .#nix-darwin -- switch --flake .`
+				const res = await $`sudo nix run .#nix-darwin -- switch --flake .`
 					.cwd(homeManagerPath)
 					.noThrow();
 				if (res.code !== 0) {
