@@ -1,9 +1,13 @@
 { ctx, ... }:
+let
+  env = import ./env.nix;
+in
 {
   ########################################
   # Requires for nix-darwin to work
   ########################################
   system.stateVersion = 4;
+  system.primaryUser = env.username;
   nixpkgs.hostPlatform = ctx.system;
 
   # REQUIRED: To keep-enabled experimental features after installation, since nix is managed by nix-darwin.
