@@ -75,7 +75,6 @@ in
       source-han-serif
       twemoji-color-font
 
-      (pkgs.writeShellScriptBin "czg" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:czg "$@"'')
       (pkgs.writeShellScriptBin "trash" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:trash-cli "$@"'')
       ctx.dot
     ])
