@@ -31,8 +31,6 @@ cno <c-d> <del>
 cno <c-a> <home>
 cno <c-e> <end>
 
-nn <c-g>p <Plug>(commitgen-paste)
-
 " 空行での編集開始時に自動でインデント
 nno <expr> a empty(getline('.')) ? '"_cc' : 'a'
 
