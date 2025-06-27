@@ -12,15 +12,12 @@ vim.g.loaded_2html_plugin = true
 -- Lazy loading
 ----------------------------
 
-vim.api.nvim_create_autocmd('CursorHold', {
-	once = true,
-	command = 'source $HOME/.config/home-manager/nvim/lazy.vim'
-})
-vim.go.updatetime = 1
-vim.api.nvim_create_autocmd('CursorHold', {
-	once = true,
-	callback = function() vim.go.updatetime = 4000 end,
-})
+vim.defer_fn(function()
+	vim.cmd [[
+		source $HOME/.config/home-manager/nvim/lazy.vim
+		doautocmd CursorHold
+	]]
+end, 1)
 
 ----------------------------
 -- Personal settings
