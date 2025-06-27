@@ -638,7 +638,21 @@ depends = [
 	"copilot.lua",
 	"mcphub.nvim",
 ]
-on_event = "CursorHold"
+on_cmd = [
+	"AvanteChat",
+	"AvanteChatNew",
+	"AvanteHistory",
+	"AvanteClear",
+	"AvanteEdit",
+	"AvanteFocus",
+	"AvanteRefresh",
+	"AvanteStop",
+	"AvanteSwitchProvider",
+	"AvanteShowRepoMap",
+	"AvanteToggle",
+	"AvanteModels",
+	"AvanteSwitchSelectorProvider",
+]
 lua_source = '''
 require 'avante_lib'.load()
 require 'avante'.setup {
