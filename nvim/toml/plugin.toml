@@ -15,6 +15,9 @@ repo = "lambdalisue/vim-guise"
 repo = "gw31415/denops-sixel-view.vim"
 
 [[plugins]]
+repo = "gw31415/denops-commitgen.vim"
+
+[[plugins]]
 repo = "gw31415/mstdn.vim"
 hook_add = '''
 autocmd FileType mstdn call s:mstdn_config()
