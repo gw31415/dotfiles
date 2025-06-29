@@ -16,7 +16,6 @@ in
   # Audiverisは手動でインストールすること
   home.packages =
     (with pkgs-stable; [
-      pkgs.tdf
       pkgs.nodejs
       pkgs.gemini-cli
 
@@ -59,6 +58,7 @@ in
       silicon
       slack-term
       tectonic
+      tdf
       tmux
       typst
       uv
