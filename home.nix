@@ -32,6 +32,7 @@ in
       eza
       ffmpeg
       flyctl
+      gemini-cli
       gh
       gnupg
       gocryptfs
