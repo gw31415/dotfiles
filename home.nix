@@ -18,6 +18,7 @@ in
     (with pkgs-stable; [
       pkgs.tdf
       pkgs.nodejs
+      pkgs.gemini-cli
 
       # CLI tools
       aria2
@@ -32,7 +33,6 @@ in
       eza
       ffmpeg
       flyctl
-      gemini-cli
       gh
       gnupg
       gocryptfs
