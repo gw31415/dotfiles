@@ -55,6 +55,10 @@ vim.keymap.set('n', 'bb', function() require 'dap'.toggle_breakpoint() end, {})
 -- fzyselect.vim - Custom tweaks
 --------------------------------------------------------------------------------
 
+vim.defer_fn(function()
+	vim.ui.select = require 'fzyselect'.start
+end, 500)
+
 -- fuzzy search
 vim.keymap.set('n', 'g/', function() require 'fzyselect-lines'.open() end)
 -- git ls-files

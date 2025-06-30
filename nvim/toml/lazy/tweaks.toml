@@ -193,7 +193,6 @@ on_lua = "fzyselect-lines"
 repo = "gw31415/fzyselect.vim"
 depends = "fzyselect-nui-opener.nvim"
 on_lua = "fzyselect"
-lua_add = "vim.ui.select = function(...) require 'fzyselect'.start(...) end"
 lua_source = '''
 vim.g.fzyselect_opener = require 'fzyselect-nui-opener'
 
