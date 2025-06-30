@@ -10,7 +10,7 @@ in
   home = {
     username = env.username;
     homeDirectory = env.homeDirectory;
-    stateVersion = "24.05";
+    stateVersion = "25.05";
   };
 
   # Audiverisは手動でインストールすること
