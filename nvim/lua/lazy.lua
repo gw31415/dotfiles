@@ -23,7 +23,9 @@ end
 --------------------------------------------------------------------------------
 
 vim.api.nvim_create_autocmd('LspAttach', {
-	callback = function()
+	callback = function(args)
+		vim.lsp.document_color.enable(true, args.buf, { style = "virtual" })
+
 		vim.opt_local.formatexpr = 'v:lua.require"conform".formatexpr()'
 
 		vim.diagnostic.config { signs = false, virtual_text = false }
