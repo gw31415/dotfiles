@@ -40,7 +40,7 @@ require 'nvim-navic'.setup {
 '''
 
 [[plugins]]
-repo = "onsails/diaglist.nvim"
+repo = "gw31415/diaglist.nvim"
 on_event = "LspAttach"
 lua_source = '''
 vim.api.nvim_create_user_command('Diaglist', function()
