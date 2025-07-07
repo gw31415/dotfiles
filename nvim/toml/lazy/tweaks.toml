@@ -658,6 +658,9 @@ require 'avante_lib'.load()
 require 'avante'.setup {
 	provider = 'copilot',
 	providers = {
+		copilot = {
+			model = 'claude-3.7-sonnet',
+		},
 		openai = {
 			endpoint = 'https://api.openai.com/v1',
 			model = 'gpt-4o',
@@ -665,6 +668,15 @@ require 'avante'.setup {
 			extra_request_body = {
 				max_completion_tokens = 8192,
 				temperature = 0,
+			},
+		},
+		claude = {
+			endpoint = "https://api.anthropic.com",
+			model = "claude-sonnet-4-20250514",
+			timeout = 30000,
+			extra_request_body = {
+				temperature = 0.75,
+				max_tokens = 20480,
 			},
 		},
 	},
