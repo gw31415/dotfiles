@@ -176,6 +176,7 @@ end, {})
 
 vim.keymap.set('n', '<c-g>p', function() require 'commitgen'.paste {} end)
 vim.keymap.set('n', '<c-g>P', function() require 'commitgen'.paste { after = false } end)
+vim.keymap.set('n', '<c-g>c', '<cmd>Gin commit<cr>', { silent = true })
 
 -- Load avante.nvim if online
 
