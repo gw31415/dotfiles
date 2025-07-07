@@ -86,7 +86,6 @@ in
       "alt-tab"
       "android-studio"
       "anki"
-      "battery"
       "brave-browser"
       "chatgpt"
       "cursor"
