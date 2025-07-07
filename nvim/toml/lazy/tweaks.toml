@@ -691,3 +691,11 @@ require 'avante'.setup {
 	end,
 }
 '''
+
+[[plugins]]
+repo = "pwntester/octo.nvim"
+depends = ["plenary.nvim", "telescope.nvim", "nvim-web-devicons"]
+on_cmd = ["Octo"]
+lua_source = '''
+require 'octo'.setup {}
+'''
