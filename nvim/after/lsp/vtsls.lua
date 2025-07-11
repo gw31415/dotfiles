@@ -39,6 +39,16 @@ return {
 	end,
 	on_attach = function(client, bufnr)
 		local biomeRunning = #(vim.lsp.get_clients { name = 'biome', bufnr = bufnr }) > 0
+		if not biomeRunning then
+			local found_dirs = vim.fs.find('biome.json',
+				{
+					upward = true,
+					path = vim.fs.dirname(vim.fs.normalize(vim.api.nvim_buf_get_name(bufnr))),
+				})
+			if #found_dirs > 0 then
+				biomeRunning = true
+			end
+		end
 		client.server_capabilities.documentFormattingProvider = not biomeRunning
 		client.server_capabilities.documentRangeFormattingProvider = not biomeRunning
 	end,
