@@ -44,3 +44,9 @@ vim.treesitter.start = (function(wrapped)
 end)(vim.treesitter.start)
 
 vim.cmd 'filetype plugin indent on'
+
+vim.filetype.add {
+	filename = {
+		Appfile = 'ruby',
+	}
+}

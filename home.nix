@@ -53,6 +53,7 @@ in
       poppler_utils
       python3
       ripgrep
+      ruby
       rustup
       sccache
       silicon
