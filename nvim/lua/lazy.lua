@@ -96,13 +96,13 @@ local dpp = require 'dpp'
 
 -- Install
 vim.api.nvim_create_user_command('DppInstall', function()
-	dpp.async_ext_action('installer', 'install')
+	dpp.sync_ext_action('installer', 'install')
 end, {})
 -- Update
 vim.api.nvim_create_user_command(
 	'DppUpdate',
 	function(opts)
-		dpp.async_ext_action('installer', 'update', { names = opts.fargs })
+		dpp.sync_ext_action('installer', 'update', { names = opts.fargs })
 	end,
 	{ nargs = '*' }
 )
