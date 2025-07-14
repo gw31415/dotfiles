@@ -58,7 +58,6 @@ require 'blink.cmp'.setup {
 	cmdline = {
 		keymap = {
 			preset = 'inherit',
-			['<cr>'] = { 'accept_and_enter', 'fallback' },
 			['<space>'] = {
 				function(cmp)
 					local function fallback()
