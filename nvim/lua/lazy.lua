@@ -2,6 +2,8 @@ local function executable(cmd)
 	return vim.fn.executable(cmd) == 1
 end
 
+vim.opt_global.helplang = 'ja,en'
+
 --------------------------------------------------------------------------------
 -- Global Functions used in Statusline
 --------------------------------------------------------------------------------
