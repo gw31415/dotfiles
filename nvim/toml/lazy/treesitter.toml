@@ -1,4 +1,8 @@
 [[plugins]]
+repo = "nvim-treesitter/playground"
+on_cmd = ["TSPlaygroundToggle", "TSHighlightCapturesUnderCursor"]
+
+[[plugins]]
 repo = "nvim-treesitter/nvim-treesitter"
 hook_post_update = "TSUpdate"
 on_event = "CursorHold"
