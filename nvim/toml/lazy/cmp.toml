@@ -58,8 +58,21 @@ require 'blink.cmp'.setup {
 	cmdline = {
 		keymap = {
 			preset = 'inherit',
-			['<cr>'] = { 'select_accept_and_enter', 'fallback' },
-			['<space>'] = { 'select_and_accept', 'fallback' },
+			['<cr>'] = { 'accept_and_enter', 'fallback' },
+			['<space>'] = {
+				function(cmp)
+					local function fallback()
+						vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<space>', true, false, true), 'n', true)
+						vim.defer_fn(cmp.hide, 50)
+					end
+					if cmp.is_visible() then
+						cmp.select_and_accept { callback = fallback }
+					else
+						fallback()
+					end
+				end,
+				'fallback',
+			},
 		},
 		completion = { menu = { auto_show = true } },
 	},
