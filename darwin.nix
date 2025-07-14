@@ -91,6 +91,7 @@ in
       "cursor"
       "devtoys"
       "discord"
+      "fastlane"
       "figma"
       "gather"
       "gnucash"
