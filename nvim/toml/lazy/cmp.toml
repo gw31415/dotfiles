@@ -51,21 +51,24 @@ require 'blink.cmp'.setup {
 			},
 		},
 	},
-	keymap = {
-		preset = "super-tab",
-	},
+	keymap = { preset = 'super-tab' },
 	completion = {
-		documentation = {
-			auto_show = true,
-			auto_show_delay_ms = 100,
-		},
+		documentation = { auto_show = true, auto_show_delay_ms = 100 },
 	},
 	cmdline = {
-		keymap = { preset = 'inherit' },
+		keymap = {
+			preset = 'inherit',
+			['<cr>'] = { 'select_accept_and_enter', 'fallback' },
+			['<space>'] = { 'select_and_accept', 'fallback' },
+		},
 		completion = { menu = { auto_show = true } },
 	},
-	signature = {
-		enabled = true,
-	},
+	signature = { enabled = true },
 }
+
+if not vim.fn.has('nvim-0.11') then
+	vim.lsp.config('*', {
+		capabilities = require 'blink.cmp'.get_lsp_capabilities()
+	})
+end
 '''

@@ -1,3 +1,7 @@
+local function executable(cmd)
+	return vim.fn.executable(cmd) == 1
+end
+
 --------------------------------------------------------------------------------
 -- Global Functions used in Statusline
 --------------------------------------------------------------------------------
@@ -21,6 +25,25 @@ end
 --------------------------------------------------------------------------------
 -- Global Mappings/Configs used in LSP
 --------------------------------------------------------------------------------
+
+vim.lsp.config('*', {
+	capabilities = {
+		workspace = {
+			didChangeWatchedFiles = {
+				dynamicRegistration = true,
+			},
+		},
+	},
+})
+
+if executable 'fish-lsp' then
+	vim.lsp.enable 'fish_lsp'
+end
+
+if executable 'sourcekit-lsp' then
+	vim.lsp.enable 'sourcekit'
+end
+
 
 vim.api.nvim_create_autocmd('LspAttach', {
 	callback = function(args)

@@ -1,9 +1,4 @@
 [[plugins]]
-repo = "neovim/nvim-lspconfig"
-on_cmd = ["LspInfo", "LspStart", "LspRestart", "LspStop", "LspLog"]
-on_lua = "lspconfig"
-
-[[plugins]]
 repo = "folke/lazydev.nvim"
 on_ft = "lua"
 depends = ["nvim-lspconfig", "mason.nvim"]
@@ -79,47 +74,9 @@ depends = "plenary.nvim"
 lua_source = "require 'null-ls'.setup()"
 [[plugins]]
 repo = "williamboman/mason-lspconfig.nvim"
-depends = ["mason.nvim", "nvim-lspconfig", "blink.cmp"]
+depends = "mason.nvim"
 on_event = "CursorHold"
 lua_source = '''
-vim.lsp.config('*', {
-	capabilities = vim.tbl_deep_extend('keep', {
-		workspace = {
-			didChangeWatchedFiles = {
-				dynamicRegistration = true,
-			},
-		},
-		textDocument = {
-			foldingRange = {
-				dynamicRegistration = false,
-				lineFoldingOnly = true
-			},
-		}
-	}, require 'blink.cmp'.get_lsp_capabilities()),
-	-- }, require 'cmp_nvim_lsp'.default_capabilities()),
-})
-
-------------------------------------
--- Masonで追加されないLSPの設定
-------------------------------------
-
-local function executable(cmd)
-	return vim.fn.executable(cmd) == 1
-end
-
--- https://github.com/ndonfris/fish-lsp/
-if executable 'fish-lsp' then
-	vim.lsp.enable 'fish_lsp'
-end
-
-if executable 'sourcekit-lsp' then
-	vim.lsp.enable 'sourcekit'
-end
-
-if executable 'nu' then
-	vim.lsp.enable 'nushell'
-end
-
 vim.lsp.enable(require 'mason-lspconfig'.get_installed_servers())
 '''
 

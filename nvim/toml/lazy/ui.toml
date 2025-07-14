@@ -125,6 +125,15 @@ require 'ufo'.setup {
 		return newVirtText
 	end
 }
+
+vim.lsp.config('*', {
+		textDocument = {
+			foldingRange = {
+				dynamicRegistration = false,
+				lineFoldingOnly = true,
+			},
+		}
+})
 '''
 
 [[plugins]]
