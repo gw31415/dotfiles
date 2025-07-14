@@ -604,6 +604,7 @@ require 'img-clip'.setup {
 [[plugins]]
 repo = "ravitemer/mcphub.nvim"
 depends = "plenary.nvim"
+extAttrs.installerBuild = "npm install -g mcp-hub@latest"
 lua_source = '''
 vim.system({ 'sh', '-c', [[
 	TARGET_PATH="$HOME/.config/mcphub/servers.json"
