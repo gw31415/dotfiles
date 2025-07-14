@@ -170,17 +170,6 @@ on_map = "<c-w>"
 lua_source = 'vim.api.nvim_set_var("winresizer_start_key", "<C-W>e")'
 
 [[plugins]]
-repo = "thinca/vim-ambicmd"
-on_event = "CmdlineEnter"
-lua_source = '''
-for _, value in pairs { '<space>', '!' } do
-	vim.keymap.set('c', value, function()
-		return vim.fn['ambicmd#expand'](value)
-	end, { expr = true })
-end
-'''
-
-[[plugins]]
 repo = "gw31415/fzyselect-nui-opener.nvim"
 depends = "nui.nvim"
 
