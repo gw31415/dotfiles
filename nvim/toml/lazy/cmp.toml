@@ -10,119 +10,62 @@ require 'copilot'.setup {
 '''
 
 [[plugins]]
-repo = "zbirenbaum/copilot-cmp"
+repo = "Kaiser-Yang/blink-cmp-git"
+[[plugins]]
+repo = "fang2hou/blink-copilot"
 depends = "copilot.lua"
-lua_source = "require 'copilot_cmp'.setup()"
-[[plugins]]
-repo = "hrsh7th/cmp-nvim-lsp"
-[[plugins]]
-repo = "hrsh7th/vim-vsnip"
-[[plugins]]
-repo = "hrsh7th/cmp-buffer"
-[[plugins]]
-repo = "hrsh7th/cmp-cmdline"
-[[plugins]]
-repo = "teramako/cmp-cmdline-prompt.nvim"
-[[plugins]]
-repo = "hrsh7th/cmp-nvim-lsp-signature-help"
-[[plugins]]
-repo = "petertriho/cmp-git"
-depends = "plenary.nvim"
-lua_source = "require 'cmp_git'.setup()"
-[[plugins]]
-repo = "lukas-reineke/cmp-under-comparator"
-
-[[plugins]]
-repo = "hrsh7th/nvim-cmp"
-depends = [
-	"cmp-nvim-lsp",
-	"vim-vsnip",
-	"cmp-buffer",
-	"cmp-cmdline",
-	"cmp-cmdline-prompt.nvim",
-	"cmp-nvim-lsp-signature-help",
-	"cmp-git",
-	"cmp-under-comparator",
-	"copilot-cmp",
-]
-on_event = ["InsertEnter", "CmdlineEnter"]
 lua_source = '''
-local cmp = require 'cmp'
-local function feedkeys(key)
-	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true) or '', '', true)
-end
-cmp.setup {
-	snippet = {
-		expand = function(args)
-			vim.fn['vsnip#anonymous'](args.body)
-		end
-	},
-	window = {
-		documentation = cmp.config.window.bordered()
-	},
-	sources = cmp.config.sources {
-		{ name = 'lazydev',                group_index = 0 },
-		{ name = 'nvim_lsp' },
-		{ name = 'copilot' },
-		{ name = 'vsnip' },
-		{ name = 'nvim_lsp_signature_help' },
-	},
-	comparators = {
-		cmp.config.compare.offset,
-		cmp.config.compare.exact,
-		cmp.config.compare.score,
-		require 'cmp-under-comparator'.under,
-		cmp.config.compare.kind,
-		cmp.config.compare.sort_text,
-		cmp.config.compare.length,
-		cmp.config.compare.order,
-	},
-	mapping = {
-		['<C-p>'] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Select },
-		['<C-n>'] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Select },
-		['<C-b>'] = cmp.mapping.scroll_docs(-4),
-		['<C-f>'] = cmp.mapping.scroll_docs(4),
-		['<C-y>'] = cmp.mapping.confirm(),
-		['<C-e>'] = cmp.mapping.close(),
-		['<Tab>'] = cmp.mapping(function(fallback)
-			if cmp.visible() and cmp.get_selected_entry() then
-				cmp.confirm()
-			elseif vim.fn['vsnip#jumpable'](1) == 1 then
-				feedkeys '<Plug>(vsnip-jump-next)'
-			else
-				fallback()
-			end
-		end),
-		['<S-Tab>'] = cmp.mapping(function(fallback)
-			if vim.fn['vsnip#jumpable'](-1) == 1 then
-				feedkeys '<Plug>(vsnip-jump-prev)'
-			else
-				fallback()
-			end
-		end),
-	}
+require 'blink-copilot'.setup {
+	max_completions = 3,
+	max_attempts = 5,
 }
-cmp.setup.cmdline({ '/', '?' }, {
-	mapping = cmp.mapping.preset.cmdline(),
+'''
+[[plugins]]
+repo = "saghen/blink.cmp"
+depends = ["blink-copilot", "blink-cmp-git"]
+on_event = ["InsertEnter", "CmdlineEnter", "LspAttach"]
+extAttrs.installerBuild = "nix run .#build-plugin"
+lua_source = '''
+require 'blink.cmp'.setup {
 	sources = {
-		{ name = 'buffer' }
-	}
-})
-cmp.setup.cmdline(':', {
-	mapping = cmp.mapping.preset.cmdline(),
-	sources = cmp.config.sources {
-		{ name = 'cmdline' }
-	}
-})
-cmp.setup.cmdline('@', {
-	mapping = cmp.mapping.preset.cmdline(),
-	sources = cmp.config.sources {
-		{ name = 'cmdline-prompt' },
+		default = {  'snippets', 'copilot', 'lsp', 'path', 'buffer' },
+		per_filetype = {
+			lua = { inherit_defaults = true, 'lazydev' },
+			gitcommit = { inherit_defaults = true, 'git' },
+		},
+		providers = {
+			copilot = {
+				name = 'copilot',
+				module = 'blink-copilot',
+				score_offset = 100,
+				async = true,
+			},
+			lazydev = {
+				name = 'LazyDev',
+				module = 'lazydev.integrations.blink',
+				score_offset = 100,
+			},
+			git = {
+				module = 'blink-cmp-git',
+				name = 'Git',
+			},
+		},
 	},
-})
-cmp.setup.filetype('gitcommit', {
-	sources = cmp.config.sources {
-		{ name = 'git' },
-	}
-})
+	keymap = {
+		preset = "super-tab",
+	},
+	completion = {
+		documentation = {
+			auto_show = true,
+			auto_show_delay_ms = 100,
+		},
+	},
+	cmdline = {
+		keymap = { preset = 'inherit' },
+		completion = { menu = { auto_show = true } },
+	},
+	signature = {
+		enabled = true,
+	},
+}
 '''
