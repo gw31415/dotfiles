@@ -85,13 +85,10 @@ require 'blink.cmp'.setup {
 						vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<space>', true, false, true), 'n', true)
 					end
 
-					if vim.fn.getcmdtype() == ':' and cmp.is_visible() then
-						return cmp.accept {
-							callback = fallback,
-						}
-					else
-						return fallback()
+					if vim.tbl_contains({ ':', '@' }, vim.fn.getcmdtype()) and cmp.is_visible() then
+						return cmp.accept { callback = fallback }
 					end
+					return fallback()
 				end,
 			},
 		},
