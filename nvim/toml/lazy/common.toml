@@ -44,11 +44,7 @@ repo = "gregorias/coop.nvim"
 repo = "stevearc/dressing.nvim"
 lua_source = '''
 	require 'dressing'.setup {
-		input = {
-			enabled = false,
-		},
-		select = {
-			enabled = false,
-		},
+		input = { enabled = false },
+		select = { enabled = false },
 	}
 '''
