@@ -24,6 +24,19 @@ function _G.get_macro_state()
 	return '[MACRO:' .. key .. ']'
 end
 
+function _G.search_count()
+	if vim.v.hlsearch == 0 then
+		return ''
+	end
+	local count = vim.fn.searchcount { recompute = 1, maxcount = 999 }
+	local current = count.current
+	local total = count.total
+	if current == 0 then
+		return ''
+	end
+	return string.format('[%d/%d]', current, total)
+end
+
 --------------------------------------------------------------------------------
 -- Global Mappings/Configs used in LSP
 --------------------------------------------------------------------------------
