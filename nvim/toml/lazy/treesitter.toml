@@ -61,7 +61,7 @@ require 'treesj'.setup {
 '''
 
 [[plugins]]
-repo = "thinca/vim-partedit"
+repo = "gw31415/vim-partedit"
 hook_source = '''
 	let g:partedit#prefix_pattern = '\v^\s*'
 '''
