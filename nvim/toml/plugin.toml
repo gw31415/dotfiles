@@ -3,9 +3,6 @@ repo = "lambdalisue/vim-gin"
 lua_add = "vim.g.gin_proxy_apply_without_confirm = 1"
 
 [[plugins]]
-repo = "neovim/nvim-lspconfig"
-
-[[plugins]]
 repo = "lambdalisue/vim-kensaku"
 lua_add = '''
 vim.call('kensaku#set_roman_table', require 'dvorakjp'.kensaku)
