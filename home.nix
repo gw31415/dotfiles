@@ -158,13 +158,9 @@ in
     {
       package = ctx.neovim-nightly-overlay.packages.${pkgs.system}.default;
       enable = true;
-      colorschemes.vscode = {
+      colorschemes.monokai-pro = {
         enable = true;
-        settings = {
-          transparent = true;
-          italic_comments = true;
-          underline_links = true;
-        };
+        settings = { transparent_background = true; };
       };
       extraPlugins = [
         pkgs.vimPlugins.denops-vim
