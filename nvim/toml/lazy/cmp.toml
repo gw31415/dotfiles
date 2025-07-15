@@ -60,14 +60,15 @@ require 'blink.cmp'.setup {
 			preset = 'inherit',
 			['<space>'] = {
 				function(cmp)
-					local function fallback()
-						vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<space>', true, false, true), 'n', true)
-						vim.defer_fn(cmp.hide, 50)
-					end
-					if cmp.is_visible() then
-						cmp.select_and_accept { callback = fallback }
+					if vim.fn.getcmdtype() == ':' and cmp.is_visible() then
+						cmp.accept {
+							callback = function ()
+								vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<space>', true, false, true), 'n', true)
+								vim.defer_fn(cmp.hide, 50)
+							end,
+						}
 					else
-						fallback()
+						vim.defer_fn(cmp.hide, 50)
 					end
 				end,
 				'fallback',
