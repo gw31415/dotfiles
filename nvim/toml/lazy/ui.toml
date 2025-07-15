@@ -1,15 +1,16 @@
-[[plugins]]
-repo = "rasulomaroff/reactive.nvim"
-on_event = ["ModeChanged", "WinEnter"]
-lua_source = '''
-require 'reactive'.setup {
-	builtin = {
-		cursorline = true,
-		cursor = true,
-		modemsg = true,
-	}
-}
-'''
+# TODO: これを有効化するとcmdlineの補完ウィンドウでチラつきが発生する
+# [[plugins]]
+# repo = "rasulomaroff/reactive.nvim"
+# on_event = ["ModeChanged", "WinEnter"]
+# lua_source = '''
+# require 'reactive'.setup {
+# 	builtin = {
+# 		cursorline = true,
+# 		cursor = false,
+# 		modemsg = false,
+# 	}
+# }
+# '''
 
 [[plugins]]
 repo = "kevinhwang91/nvim-bqf"
