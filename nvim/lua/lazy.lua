@@ -203,22 +203,6 @@ vim.keymap.set('n', '<c-g>p', function() require 'commitgen'.paste {} end)
 vim.keymap.set('n', '<c-g>P', function() require 'commitgen'.paste { after = false } end)
 vim.keymap.set('n', '<c-g>c', '<cmd>Gin commit<cr>', { silent = true })
 
--- Load avante.nvim if online
-
--- vim.system({ 'curl', '-s', '--max-time', '1', '1.1.1.1' }, {}, function(res)
--- 	if res.code == 0 then
--- 		-- Online
--- 		vim.schedule(function()
--- 			dpp.source 'avante.nvim'
--- 		end)
--- 	else
--- 		-- Offline
--- 		vim.schedule(function()
--- 			vim.notify "Loading avante.nvim skipped; it's offline."
--- 		end)
--- 	end
--- end)
-
 -- local ok, extui = pcall(require, 'vim._extui')
 -- if ok then
 -- 	extui.enable({
