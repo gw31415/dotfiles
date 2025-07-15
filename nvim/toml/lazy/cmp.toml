@@ -28,7 +28,7 @@ extAttrs.installerBuild = "nix run .#build-plugin"
 lua_source = '''
 require 'blink.cmp'.setup {
 	sources = {
-		default = {  'snippets', 'copilot', 'lsp', 'path', 'buffer' },
+		default = {  'snippets', 'lsp', 'copilot', 'path', 'buffer' },
 		per_filetype = {
 			lua = { inherit_defaults = true, 'lazydev' },
 			gitcommit = { inherit_defaults = true, 'git' },
@@ -37,7 +37,7 @@ require 'blink.cmp'.setup {
 			copilot = {
 				name = 'copilot',
 				module = 'blink-copilot',
-				score_offset = 100,
+				score_offset = -100,
 				async = true,
 			},
 			lazydev = {

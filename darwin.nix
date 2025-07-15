@@ -68,6 +68,7 @@ in
     ];
     brews = [
       "openssl@3"
+      "fastlane"
       "gettext"
       "iconsur"
       "libgpg-error"
@@ -91,7 +92,6 @@ in
       "cursor"
       "devtoys"
       "discord"
-      "fastlane"
       "figma"
       "gather"
       "gnucash"
