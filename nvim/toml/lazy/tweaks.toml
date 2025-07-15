@@ -618,7 +618,7 @@ require 'mcphub'.setup()
 
 [[plugins]]
 repo = "yetone/avante.nvim"
-build = "make"
+extAttrs.installerBuild = "make"
 depends = [
 	"nvim-treesitter",
 	"dressing.nvim",
