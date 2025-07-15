@@ -1,4 +1,17 @@
 [[plugins]]
+repo = "rasulomaroff/reactive.nvim"
+on_event = ["ModeChanged", "WinEnter"]
+lua_source = '''
+require 'reactive'.setup {
+	builtin = {
+		cursorline = true,
+		cursor = true,
+		modemsg = true,
+	}
+}
+'''
+
+[[plugins]]
 repo = "kevinhwang91/nvim-bqf"
 on_ft = "qf"
 lua_source = '''
