@@ -1,4 +1,11 @@
 [[plugins]]
+repo = "xzbdmw/colorful-menu.nvim"
+on_lua = "colorful-menu"
+lua_source = '''
+require 'colorful-menu'.setup {}
+'''
+
+[[plugins]]
 repo = "zbirenbaum/copilot.lua"
 on_cmd = "Copilot"
 lua_source = '''
@@ -54,6 +61,20 @@ require 'blink.cmp'.setup {
 	keymap = { preset = 'super-tab' },
 	completion = {
 		documentation = { auto_show = true, auto_show_delay_ms = 100 },
+		menu = {
+			draw = {
+				components = {
+					label = {
+						text = function(ctx)
+							return require 'colorful-menu'.blink_components_text(ctx)
+						end,
+						highlight = function(ctx)
+							return require 'colorful-menu'.blink_components_highlight(ctx)
+						end,
+					},
+				},
+			}
+		}
 	},
 	cmdline = {
 		keymap = {
@@ -75,7 +96,9 @@ require 'blink.cmp'.setup {
 				end,
 			},
 		},
-		completion = { menu = { auto_show = true } },
+		completion = {
+			menu = { auto_show = true },
+		},
 	},
 	signature = { enabled = true },
 }
