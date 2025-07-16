@@ -23,7 +23,7 @@ depends = "nui.nvim"
 lua_source = '''
  local hl = require 'actions-preview.highlight'
  require 'actions-preview'.setup {
- 	backend = { 'nui' },
+ 	backend = { 'snacks' },
  	highlight_command = {
  		hl.delta 'delta --no-gitconfig --side-by-side',
  	},
