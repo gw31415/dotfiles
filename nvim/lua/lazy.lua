@@ -212,6 +212,7 @@ vim.api.nvim_create_user_command('DppMkstate', function()
 	dpp.make_state('~/.cache/dpp', '~/.config/home-manager/nvim/dpp.ts')
 end, {})
 
+vim.g.gin_proxy_editor_opener = 'bo sp'
 vim.keymap.set('n', '<c-g>p', function() require 'commitgen'.paste {} end)
 vim.keymap.set('n', '<c-g>P', function() require 'commitgen'.paste { after = false } end)
 vim.keymap.set('n', '<c-g>c', '<cmd>Gin commit<cr>', { silent = true })
