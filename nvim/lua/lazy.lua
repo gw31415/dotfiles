@@ -215,6 +215,7 @@ end, {})
 vim.keymap.set('n', '<c-g>p', function() require 'commitgen'.paste {} end)
 vim.keymap.set('n', '<c-g>P', function() require 'commitgen'.paste { after = false } end)
 vim.keymap.set('n', '<c-g>c', '<cmd>Gin commit<cr>', { silent = true })
+vim.keymap.set('n', '<c-g>C', '<cmd>Gin commit --amend<cr>', { silent = true })
 
 -- local ok, extui = pcall(require, 'vim._extui')
 -- if ok then
