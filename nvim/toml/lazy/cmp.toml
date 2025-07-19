@@ -37,6 +37,10 @@ require 'blink.cmp'.setup {
 	sources = {
 		default = { 'snippets', 'lsp', 'copilot', 'path', 'buffer' },
 		per_filetype = {
+			markdown = { 'snippets', 'lsp', 'copilot', 'path' },
+			txt = { 'snippets', 'lsp', 'copilot', 'path' },
+			typst = { 'snippets', 'lsp', 'copilot', 'path' },
+			tex = { 'snippets', 'lsp', 'copilot', 'path' },
 			lua = { inherit_defaults = true, 'lazydev' },
 			gitcommit = { inherit_defaults = true, 'git' },
 		},
