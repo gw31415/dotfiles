@@ -67,7 +67,7 @@ require 'orgmode'.setup {
 [[plugins]]
 repo = "iamcco/markdown-preview.nvim"
 on_ft = ["markdown", "pandoc.markdown", "rmd"]
-build = 'sh -c "cd app && npm install"'
+extAttrs.installerBuild = 'sh -c "cd app && npx --yes yarn install"'
 
 [[plugins]]
 repo = "MeanderingProgrammer/render-markdown.nvim"
