@@ -24,8 +24,6 @@ autocmd FileType mstdn call s:mstdn_config()
 autocmd FileType mstdn-editor call s:mstdn_editor_config()
 
 function s:mstdn_config() abort
-	autocmd! LspAttach
-
 	" Some preferences
 	setl nonu so=0 scl=yes
 
