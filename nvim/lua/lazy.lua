@@ -145,7 +145,7 @@ vim.api.nvim_create_user_command(
 	{ nargs = '*' }
 )
 -- Clean
-local dpp_cache_cwd = vim.uv.fs_realpath(vim.fn.expand '~/.cache/dpp/repos/github.com/') .. '/'
+local dpp_cache_cwd = vim.fn.expand '~/.cache/dpp/repos/github.com/'
 local function check_clean()
 	local res = {}
 	for _, dir in ipairs(dpp.check_clean()) do
