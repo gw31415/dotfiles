@@ -21,7 +21,7 @@ import type {
   Plugin,
 } from "jsr:@shougo/dpp-vim/types";
 import { mergeFtplugins } from "jsr:@shougo/dpp-vim/utils";
-import { expandGlob } from "jsr:@std/fs/expand-glob";
+import { expandGlob } from "jsr:@std/fs@^1.0.19/expand-glob";
 import * as path from "jsr:@std/path";
 
 export class Config extends BaseConfig {
