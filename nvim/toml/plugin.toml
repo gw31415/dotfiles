@@ -9,15 +9,6 @@ vim.call('kensaku#set_roman_table', require 'dvorakjp'.kensaku)
 '''
 
 [[plugins]]
-repo = "lambdalisue/vim-guise"
-
-[[plugins]]
-repo = "gw31415/denops-sixel-view.vim"
-
-[[plugins]]
-repo = "gw31415/denops-commitgen.vim"
-
-[[plugins]]
 repo = "gw31415/mstdn.vim"
 hook_add = '''
 autocmd FileType mstdn call s:mstdn_config()
@@ -76,12 +67,6 @@ function s:add_attachment(clipboard, ...) abort
 	call mstdn#editor#update_statusparams(#{ media_ids: media_ids })
 endfunction
 '''
-
-[[plugins]]
-repo = "gw31415/mstdn-editor.vim"
-
-[[plugins]]
-repo = "gw31415/mstdn-imgview.vim"
 
 [[plugins]]
 repo = "skanehira/denops-silicon.vim"
@@ -154,8 +139,12 @@ end
 vim.call('skkeleton#register_kanatable', 'rom', require 'dvorakjp'.skkeleton)
 '''
 
+# Denops 系はrsplug非対応
 [[plugins]]
-repo = "lambdalisue/fern-hijack.vim"
-
+repo = "lambdalisue/vim-guise"
 [[plugins]]
-repo = "gw31415/edisch.vim"
+repo = "gw31415/denops-sixel-view.vim"
+[[plugins]]
+repo = "gw31415/denops-commitgen.vim"
+[[plugins]]
+repo = "gw31415/mstdn-imgview.vim"

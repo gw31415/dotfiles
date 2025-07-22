@@ -160,32 +160,17 @@ in
       enable = true;
       colorschemes.monokai-pro = {
         enable = true;
-        settings = { transparent_background = true; };
+        settings = {
+          transparent_background = true;
+        };
       };
-      extraPlugins = [
-        pkgs.vimPlugins.denops-vim
-      ];
       extraConfigLuaPost = ''
         vim.opt.runtimepath:prepend '${dpp-vim}'
-
-        local dpp = require 'dpp'
-        local dpp_base = '~/.cache/dpp'
-
         vim.opt.runtimepath:append '${dpp-ext-toml}'
         vim.opt.runtimepath:append '${dpp-protocol-git}'
         vim.opt.runtimepath:append '${dpp-ext-lazy}'
         vim.opt.runtimepath:append '${dpp-ext-installer}'
 
-        if dpp.load_state(dpp_base) then
-          -- vim.opt.runtimepath:prepend '$HOME/.cache/dpp/repos/github.com/vim-denops/denops.vim'
-
-          vim.api.nvim_create_autocmd('User', {
-            pattern = 'DenopsReady',
-            callback = function()
-              dpp.make_state(dpp_base, '${homeManagerDirectory}/nvim/dpp.ts')
-            end
-          })
-        end
         require 'init'
       '';
     };
