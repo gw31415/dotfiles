@@ -89,10 +89,6 @@ on_map = { niv = '<MouseUp>' }
 lua_source = "vim.keymap.set({'', 'i'}, '<S-MouseUp>', '<Nop>')"
 
 [[plugins]]
-repo = "gw31415/mkdir.vim"
-on_event = "BufWritePre"
-
-[[plugins]]
 repo = "delphinus/cellwidths.nvim"
 on_event = "UIEnter"
 lua_source = '''
@@ -279,11 +275,6 @@ require 'Comment'.setup {
 '''
 
 [[plugins]]
-repo = "stevearc/overseer.nvim"
-on_event = "CursorHold"
-lua_source = "require 'overseer'.setup()"
-
-[[plugins]]
 repo = "CRAG666/code_runner.nvim"
 on_event = "CmdlineEnter"
 depends = "plenary.nvim"
@@ -333,87 +324,6 @@ require 'dial.config'.augends:register_group {
 '''
 
 [[plugins]]
-repo = "lewis6991/gitsigns.nvim"
-on_event = "CursorHold"
-lua_source = '''
-require 'gitsigns'.setup {
-	numhl = true,
-	signcolumn = false,
-}
-
-local function create_opfunc(name, inner)
-	if type(inner) ~= 'table' then
-		inner = {}
-	end
-
-	local opfunc = function(typ)
-		if not typ or typ == '' then
-			vim.api.nvim_set_option_value('operatorfunc', 'v:lua.' .. name, {})
-			return 'g@'
-		end
-
-		-- Add highlights
-		local pos = {}
-		local _, line1, col1, _ = unpack(vim.fn.getpos "'[" or { 0, 0, 0, 0 })
-		local _, line2, col2, _ = unpack(vim.fn.getpos "']" or { 0, 0, 0, 0 })
-		if typ == 'line' then
-			col2 = #vim.fn.getline(line2)
-		end
-		for line = line1, math.min(line2, vim.fn.line 'w$') do
-			if line ~= line1 and line ~= line2 then
-				table.insert(pos, vim.fn.matchaddpos('Visual', { line }))
-			else
-				local str = vim.fn.getline(line)
-				local start_idx = line == line1 and col1 or 1
-				local end_idx = line == line2 and col2 or #str
-				for i = start_idx, end_idx do
-					table.insert(pos, vim.fn.matchaddpos('Visual', { { line, i } }))
-				end
-			end
-		end
-		vim.cmd.redraw()
-
-		if type(inner.on_select) == 'function' then
-			inner.on_select(typ)
-		end
-
-		-- Remove highlights
-		for _, id in pairs(pos) do
-			vim.fn.matchdelete(id)
-		end
-		vim.cmd.redraw()
-
-		if type(inner.callback) == 'function' then
-			inner.callback(typ)
-		end
-	end
-	_G[name] = opfunc
-	return _G[name]
-end
-
-vim.keymap.set({ 'n', 'x' }, '<C-g>a', create_opfunc('_gitsigns_stage_hunk', {
-	on_select = function(_)
-		local startline = vim.fn.line "'["
-		local endline = vim.fn.line "']"
-		require 'gitsigns'.stage_hunk { startline, endline }
-	end
-}), { expr = true })
-vim.keymap.set('n', '<C-g>aae', function() require 'gitsigns'.stage_buffer() end)
-
-vim.keymap.set({ 'n', 'x' }, '<C-g>r', create_opfunc('_gitsigns_reset_hunk', {
-	on_select = function(_)
-		local startline = vim.fn.line "'["
-		local endline = vim.fn.line "']"
-		require 'gitsigns'.reset_hunk { startline, endline }
-	end
-}), { expr = true })
-
-vim.keymap.set('n', '<C-g>k', function() require 'gitsigns'.preview_hunk_inline() end)
-vim.keymap.set('n', ']<C-g>', function() require 'gitsigns'.nav_hunk 'next' end)
-vim.keymap.set('n', '[<C-g>', function() require 'gitsigns'.nav_hunk 'prev' end)
-'''
-
-[[plugins]]
 repo = "Darazaki/indent-o-matic"
 on_event = "BufRead"
 lua_source = "require 'indent-o-matic'.setup{}"
@@ -455,75 +365,12 @@ let $GIT_EDITOR = $EDITOR
 depends = "plenary.nvim"
 
 [[plugins]]
-repo = "Wansmer/symbol-usage.nvim"
-on_event = "BufReadPre"
-lua_source = '''
-local function h(name) return vim.api.nvim_get_hl(0, { name = name }) end
-
--- hl-groups can have any name
-vim.api.nvim_set_hl(0, 'SymbolUsageRounding', { fg = h 'CursorLine'.bg, italic = true })
-vim.api.nvim_set_hl(0, 'SymbolUsageContent', { bg = h 'CursorLine'.bg, fg = h 'Comment'.fg, italic = true })
-vim.api.nvim_set_hl(0, 'SymbolUsageRef', { fg = h 'Function'.fg, bg = h 'CursorLine'.bg, italic = true })
-vim.api.nvim_set_hl(0, 'SymbolUsageDef', { fg = h 'Type'.fg, bg = h 'CursorLine'.bg, italic = true })
-vim.api.nvim_set_hl(0, 'SymbolUsageImpl', { fg = h '@keyword'.fg, bg = h 'CursorLine'.bg, italic = true })
-
-local function text_format(symbol)
-	local res = {}
-
-	if symbol.references then
-		local usage = symbol.references <= 1 and 'usage' or 'usages'
-		local num = symbol.references == 0 and 'no' or symbol.references
-		table.insert(res, { '󰌹 ', 'SymbolUsageRef' })
-		table.insert(res, { ('%s %s'):format(num, usage), 'SymbolUsageContent' })
-	end
-
-	-- if symbol.definition then
-	-- 	if #res > 0 then
-	-- 		table.insert(res, { ' ', 'NonText' })
-	-- 	end
-	-- 	table.insert(res, { '󰳽 ', 'SymbolUsageDef' })
-	-- 	table.insert(res, { symbol.definition .. ' defs', 'SymbolUsageContent' })
-	-- end
-
-	if symbol.implementation then
-		if #res > 0 then
-			table.insert(res, { ' ', 'NonText' })
-		end
-		table.insert(res, { '󰡱 ', 'SymbolUsageImpl' })
-		table.insert(res, { symbol.implementation .. ' impls', 'SymbolUsageContent' })
-	end
-
-	return res
-end
-
-require 'symbol-usage'.setup {
-	text_format = text_format,
-	vt_position = 'end_of_line',
-	implementation = { enabled = true },
-}
-'''
-
-[[plugins]]
 repo = "FabijanZulj/blame.nvim"
 on_cmd = "BlameToggle"
 hook_add = '''
 nno <leader>b <cmd>BlameToggle<cr>
 '''
 lua_source = "require 'blame'.setup()"
-
-[[plugins]]
-repo = "chomosuke/term-edit.nvim"
-lua_source = "require 'term-edit'.setup{ prompt_end = '%3 ' }"
-on_event = "TermOpen"
-
-[[plugins]]
-repo = "icholy/lsplinks.nvim"
-on_event = "CursorHold"
-lua_source = '''
-local lsplinks = require 'lsplinks'
-lsplinks.setup()
-vim.keymap.set('n', 'gx', lsplinks.gx)
-'''
 
 # 命名規則を相互変換
 [[plugins]]
@@ -542,7 +389,7 @@ require 'coerce'.setup {
 
 [[plugins]]
 repo = "gw31415/emjpick.vim"
-on_event = "CmdlineEnter"
+on_cmd = "Emoji"
 hook_add = '''
 command! Emoji call emjpick#insert()
 '''
@@ -581,24 +428,6 @@ end, {
 	nargs = '?',
 	complete = 'file',
 })
-'''
-
-[[plugins]]
-repo = "HakonHarnes/img-clip.nvim"
-on_event = "CursorHold"
-lua_source = '''
-require 'img-clip'.setup {
-	-- recommended settings
-	default = {
-		embed_image_as_base64 = false,
-		prompt_for_file_name = false,
-		drag_and_drop = {
-			insert_mode = true,
-		},
-		-- required for Windows users
-		use_absolute_path = true,
-	},
-}
 '''
 
 [[plugins]]
