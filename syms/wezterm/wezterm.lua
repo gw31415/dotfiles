@@ -23,9 +23,9 @@ config.color_scheme = 'Tomorrow Night'
 config.default_prog = { 'bash', '-c', '$HOME/.nix-profile/bin/fish' }
 config.hide_tab_bar_if_only_one_tab = true
 config.font = wezterm.font_with_fallback { 'HackGen Console NF' }
-config.font_size = 14
-config.initial_cols = 180
-config.initial_rows = 52
+config.font_size = 13
+config.initial_cols = 150
+config.initial_rows = 45
 config.front_end = 'WebGpu'
 ---@diagnostic disable-next-line: assign-type-mismatch
 config.macos_forward_to_ime_modifier_mask = 'SHIFT|CTRL'

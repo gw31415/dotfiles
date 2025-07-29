@@ -4,4 +4,4 @@ flutter = "latest"
 
 [settings]
 experimental = true
-idiomatic_version_file_enable_tools = ["python"]
+idiomatic_version_file_enable_tools = ["python", "node"]
