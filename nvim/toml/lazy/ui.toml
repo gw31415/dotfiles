@@ -89,6 +89,7 @@ on_map = { n = ["f", "t", "F", "T"] }
 [[plugins]]
 repo = "j-hui/fidget.nvim"
 on_event = "CursorHold"
+rev = "v*"
 lua_source = '''
 require 'fidget'.setup {
 	notification = {
