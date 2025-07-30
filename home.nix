@@ -25,6 +25,7 @@ in
       bat
       bindfs
       bun
+      comma
       deno
       emacs-nox
       envchain
