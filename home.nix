@@ -220,11 +220,12 @@ in
   programs.fish = {
     enable = true;
     shellAbbrs = {
-      tree = "eza -T";
-      gll = "lazygit";
       dcd = "cd ${homeManagerDirectory}";
-      unitydroidlog = "adb logcat -s Unity ActivityManager PackageManager dalvikvm DEBUG";
+      gll = "lazygit";
+      rp = "rsplug";
       sqlite3 = "litecli";
+      tree = "eza -T";
+      unitydroidlog = "adb logcat -s Unity ActivityManager PackageManager dalvikvm DEBUG";
     };
     shellAliases = {
       vi = "nvim";
