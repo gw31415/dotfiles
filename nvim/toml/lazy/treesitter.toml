@@ -1,10 +1,7 @@
 [[plugins]]
-repo = "nvim-treesitter/playground"
-on_cmd = ["TSPlaygroundToggle", "TSHighlightCapturesUnderCursor"]
-
-[[plugins]]
 repo = "nvim-treesitter/nvim-treesitter"
 hook_post_update = "TSUpdate"
+on_ft = "query"
 on_event = "CursorHold"
 lua_add = '''
 -- Vimdocの無効化
@@ -46,12 +43,11 @@ require 'nvim-treesitter.configs'.setup {
 # TODO: NixでColorSchemeを設定した際、こちらのプラグインが反映されない
 [[plugins]]
 repo = "https://gitlab.com/HiPhish/rainbow-delimiters.nvim"
-depends = "nvim-treesitter"
-on_source = "nvim-treesitter"
+on_event = "CursorHold"
 
 [[plugins]]
 repo = "Wansmer/treesj"
-depends = "nvim-treesitter"
+on_event = "CursorHold"
 on_cmd = "TSJToggle"
 lua_add = "vim.keymap.set('n', 'J', '<cmd>TSJToggle<cr>')"
 lua_source = '''
@@ -61,48 +57,6 @@ require 'treesj'.setup {
 '''
 
 [[plugins]]
-repo = "gw31415/vim-partedit"
-hook_source = '''
-	let g:partedit#prefix_pattern = '\v^\s*'
-	let g:partedit#opener = 'bo sp'
-'''
-[[plugins]]
 repo = "monaqa/nvim-treesitter-clipping"
 on_map = "<Plug>(ts-clipping-clip)"
 lua_add = "vim.keymap.set('n', 'cx', '<Plug>(ts-clipping-clip)')"
-depends = ["nvim-treesitter", "vim-partedit"]
-
-[[plugins]]
-repo = "lukas-reineke/indent-blankline.nvim"
-on_source = "nvim-treesitter"
-lua_source = '''
-	require 'ibl'.setup()
-'''
-
-[[plugins]]
-repo = "RRethy/nvim-treesitter-textsubjects"
-on_source = "nvim-treesitter"
-depends = "nvim-treesitter"
-lua_source = '''
-require 'nvim-treesitter-textsubjects'.configure {
-	prev_selection = ',',
-	keymaps = {
-		['.'] = 'textsubjects-smart',
-		['a.'] = 'textsubjects-container-outer',
-		['i.'] = 'textsubjects-container-inner',
-	},
-}
-'''
-
-[[plugins]]
-repo = "stevearc/aerial.nvim"
-on_source = "nvim-treesitter"
-lua_source = '''
-require 'aerial'.setup {
-	on_attach = function(bufnr)
-		vim.keymap.set('n', '{', '<cmd>AerialPrev<CR>', { buffer = bufnr })
-		vim.keymap.set('n', '}', '<cmd>AerialNext<CR>', { buffer = bufnr })
-	end,
-}
-vim.keymap.set('n', '<leader>A', '<cmd>AerialToggle!<CR>')
-'''

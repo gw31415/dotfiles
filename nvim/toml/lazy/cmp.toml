@@ -1,32 +1,15 @@
 [[plugins]]
-repo = "xzbdmw/colorful-menu.nvim"
-on_lua = "colorful-menu"
-lua_source = '''
-require 'colorful-menu'.setup {}
-'''
-
-[[plugins]]
-repo = "zbirenbaum/copilot.lua"
-on_cmd = "Copilot"
-lua_source = '''
-require 'copilot'.setup {
-	suggestion = { enabled = false },
-	panel = { enabled = false },
-	copilot_node_command = 'node'
-}
-'''
-
-[[plugins]]
 repo = "Kaiser-Yang/blink-cmp-git"
+
 [[plugins]]
 repo = "fang2hou/blink-copilot"
-depends = "copilot.lua"
 lua_source = '''
 require 'blink-copilot'.setup {
 	max_completions = 3,
-	max_attempts = 5,
+	max_attempts = 7,
 }
 '''
+
 [[plugins]]
 repo = "saghen/blink.cmp"
 depends = ["blink-copilot", "blink-cmp-git"]
@@ -83,21 +66,26 @@ require 'blink.cmp'.setup {
 	cmdline = {
 		keymap = {
 			preset = 'inherit',
-			['<space>'] = {
-				function(cmp)
-					local function fallback()
-						vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<space>', true, false, true), 'n', true)
-					end
-
-					if vim.tbl_contains({ ':', '@' }, vim.fn.getcmdtype()) and cmp.is_visible() then
-						return cmp.accept { callback = fallback }
-					end
-					return fallback()
-				end,
-			},
+			-- ['<space>'] = {
+			-- 	function(cmp)
+			-- 		local function fallback()
+			-- 			vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<space>', true, false, true), 'n', true)
+			-- 		end
+			--
+			-- 		if vim.tbl_contains({ ':', '@' }, vim.fn.getcmdtype()) and cmp.is_visible() then
+			-- 			return cmp.accept { callback = fallback }
+			-- 		end
+			-- 		return fallback()
+			-- 	end,
+			-- },
 		},
 		completion = {
 			menu = { auto_show = true },
+			list = {
+				selection = {
+					preselect = false,
+				},
+			},
 		},
 	},
 	signature = { enabled = true },

@@ -1,50 +1,5 @@
 [[plugins]]
-repo = "sirasagi62/tinysegmenter.nvim"
-
-[[plugins]]
-repo = "nvzone/volt"
-
-[[plugins]]
-repo = "vim-jp/vimdoc-ja"
-
-[[plugins]]
-repo = "MunifTanjim/nui.nvim"
-
-[[plugins]]
-repo = "nvim-lua/plenary.nvim"
-
-[[plugins]]
-repo = "giusgad/hologram.nvim"
-
-[[plugins]]
-repo = "nvim-tree/nvim-web-devicons"
-
-[[plugins]]
-repo = "nvim-telescope/telescope.nvim"
-
-[[plugins]]
-repo = "lambdalisue/nerdfont.vim"
-
-[[plugins]]
 repo = "kana/vim-operator-user"
 
 [[plugins]]
 repo = "kana/vim-textobj-user"
-
-[[plugins]]
-repo = "tpope/vim-repeat"
-
-[[plugins]]
-repo = "kevinhwang91/promise-async"
-
-[[plugins]]
-repo = "gregorias/coop.nvim"
-
-[[plugins]]
-repo = "stevearc/dressing.nvim"
-lua_source = '''
-	require 'dressing'.setup {
-		input = { enabled = false },
-		select = { enabled = false },
-	}
-'''

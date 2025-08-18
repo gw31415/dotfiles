@@ -9,93 +9,13 @@ require 'dpp-automkstate'.watch(vim.fn.expand '~/.config/home-manager/nvim')
 
 [[plugins]]
 repo = "gw31415/extend_word_motion.nvim"
-depends = "tinysegmenter.nvim"
 on_map = ["w", "b", "e", "ge"]
 lua_source = "require 'extend_word_motion'.setup{}"
-
-[[plugins]]
-repo = "hrsh7th/nvim-insx"
-on_event = "InsertEnter"
-lua_source = '''
-require 'insx.preset.standard'.setup()
-local insx = require 'insx'
-
-insx.add(
-	"'",
-	insx.with({
-		enabled = function(ctx)
-			local before_borrowing = ctx.match([=[&\%#]=])
-			local in_type_parameters = false
-
-			local node = vim.treesitter.get_node({ pos = { ctx.row(), ctx.col() } })
-
-			if not node then
-				return true
-			end
-
-			while node do
-				-- print(node:type())
-				if
-					vim.tbl_contains({
-						'trait_bounds',
-						'type_arguments',
-						'type_parameters',
-						-- あんまりこれは関係なくて、tree-sitterの仕様上?
-						-- A: |,
-						-- のように,がないとtrait_bounds判定にならない
-						-- TODO:
-						'where_clause',
-					}, node:type())
-				then
-					in_type_parameters = true
-					break
-				end
-				node = node:parent()
-			end
-
-			-- print(before_borrowing)
-			-- print(in_type_parameters)
-
-			return in_type_parameters or before_borrowing
-		end,
-		action = function(ctx)
-			ctx.send("'")
-		end,
-		priority = 1000,
-	}, {
-		insx.with.filetype({ 'rust' }),
-	})
-)
-'''
-
-[[plugins]]
-repo = "tani/dmacro.nvim"
-on_event = "CursorHold"
-hook_source = '''
-inoremap <S-Right> <Plug>(dmacro-play-macro)
-nnoremap <S-Right> <Plug>(dmacro-play-macro)
-'''
-
-[[plugins]]
-repo = "cshuaimin/ssr.nvim"
-on_lua = "ssr"
-lua_add = '''
-vim.keymap.set({ 'n', 'x' }, '<leader>/', function() require 'ssr'.open() end)
-'''
 
 [[plugins]]
 repo = "gw31415/scrollUptoLastLine.vim"
 on_map = { niv = '<MouseUp>' }
 lua_source = "vim.keymap.set({'', 'i'}, '<S-MouseUp>', '<Nop>')"
-
-[[plugins]]
-repo = "delphinus/cellwidths.nvim"
-on_event = "UIEnter"
-lua_source = '''
----@diagnostic disable: missing-return, missing-fields
-require 'cellwidths'.setup { name = 'cica' }
-vim.cmd [[ CellWidthsAdd 0xE0B6, 1 ]]
-'''
 
 [[plugins]]
 repo = "kylechui/nvim-surround"
@@ -142,162 +62,9 @@ depends = "vim-operator-user"
 hook_add = "map <expr> gq operator#stay_cursor#wrapper('gq')"
 
 [[plugins]]
-repo = "gbprod/substitute.nvim"
-on_lua = "substitute"
-lua_add = '''
-vim.keymap.set('n', '_', function() require 'substitute'.operator() end)
-vim.keymap.set('x', '_', function() require 'substitute'.visual() end)
-vim.keymap.set('n', '__', function() require 'substitute'.line() end)
-'''
-lua_source = "require 'substitute'.setup()"
-
-[[plugins]]
-repo = "jiaoshijie/undotree"
-depends = "plenary.nvim"
-on_map = { n = '<Leader>u' }
-lua_source = '''
-require 'undotree'.setup { keymaps = { ['<Esc>'] = 'quit' } }
-vim.keymap.set('n', '<Leader>u', require 'undotree'.toggle)
-'''
-
-[[plugins]]
 repo = "simeji/winresizer"
 on_map = "<c-w>"
 lua_source = 'vim.api.nvim_set_var("winresizer_start_key", "<C-W>e")'
-
-[[plugins]]
-repo = "gw31415/fzyselect-nui-opener.nvim"
-depends = "nui.nvim"
-
-[[plugins]]
-repo = "gw31415/fzyselect-lines.nvim"
-depends = "fzyselect.vim"
-on_lua = "fzyselect-lines"
-
-[[plugins]]
-repo = "gw31415/fzyselect.vim"
-depends = "fzyselect-nui-opener.nvim"
-on_lua = "fzyselect"
-lua_source = '''
-vim.g.fzyselect_opener = require 'fzyselect-nui-opener'
-
-vim.api.nvim_create_autocmd('FileType', {
-	pattern = 'fzyselect',
-	callback = function()
-		vim.wo.winblend = 0
-		vim.api.nvim_create_autocmd('TextChanged', {
-			buffer = 0,
-			once = true,
-			callback = function()
-				local lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
-				local width = 0
-				for _, line in ipairs(lines) do
-					width = math.max(width, vim.fn.strdisplaywidth(line))
-				end
-				width = vim.fn.float2nr(math.max(width, vim.api.nvim_get_option_value('columns', {}) * 0.6))
-				local row = math.max(math.floor(vim.api.nvim_get_option_value('lines', {}) / 2), 1)
-				local col = math.max(math.floor((vim.api.nvim_get_option_value('columns', {}) - width) / 2), 1)
-				vim.api.nvim_win_set_config(0, { width = width + 2, row = row, col = col, relative = 'editor' })
-			end,
-		})
-		vim.wo.wrap = false
-		vim.keymap.set('n', 'i', require 'fzyselect'.input, { buffer = true })
-		vim.keymap.set('n', '<cr>', "<cmd>cal fzyselect#cr(v:count??'.')<cr>", { buffer = true })
-		vim.keymap.set('n', '<esc>', '<cmd>clo<cr>', { buffer = true })
-		vim.opt_local.number = true
-	end,
-})
-'''
-
-[[plugins]]
-repo = "gw31415/bufmanager.nvim"
-depends = "fzyselect.vim"
-on_event = "BufAdd"
-lua_source = '''
-vim.keymap.set('n', 'gb', function()
-	vim.api.nvim_create_autocmd('FileType', {
-		once = true,
-		pattern = 'fzyselect',
-		callback = function()
-			vim.keymap.set({ 'n', 'x' }, 'd', '<Plug>(bufmanager-bdelete)', { buffer = true })
-			vim.keymap.set('n', 'dd', '<Plug>(bufmanager-bdelete)_', { buffer = true })
-		end,
-	})
-	vim.fn['bufmanager#open']()
-end)
-'''
-
-[[plugins]]
-repo = "gw31415/deepl.vim"
-lua_source = '''
-vim.api.nvim_set_var('deepl_authkey', os.getenv('DEEPL_API_KEY'))
-'''
-[[plugins]]
-repo = "gw31415/deepl-commands.nvim"
-on_event = "CmdlineEnter"
-depends = ["deepl.vim", "fzyselect.vim"]
-lua_source = '''
-require 'deepl-commands'.setup {
-	selector_func = require 'fzyselect'.start,
-}
-'''
-[[plugins]]
-repo = "gw31415/deepl-operator.vim"
-depends = "deepl.vim"
-on_map = { nx = "cl" }
-lua_source = '''
-vim.keymap.set({ 'n', 'x' }, 'cl', '<Plug>(deepl-replace)')
-vim.keymap.set('n', 'cll', '<Plug>(deepl-replace)_')
-'''
-
-[[plugins]]
-repo = "JoosepAlviste/nvim-ts-context-commentstring"
-on_event = "CursorHold"
-lua_source = '''
-require 'ts_context_commentstring'.setup {
-	enable_autocmd = false,
-}
-'''
-
-[[plugins]]
-repo = "numToStr/Comment.nvim"
-on_event = "CursorHold"
-lua_source = '''
-require 'Comment'.setup {
-	toggler = {
-		block = 'gCC',
-	},
-	opleader = {
-		block = 'gC',
-	},
-	pre_hook = require 'ts_context_commentstring.integrations.comment_nvim'.create_pre_hook(),
-}
-'''
-
-[[plugins]]
-repo = "CRAG666/code_runner.nvim"
-on_event = "CmdlineEnter"
-depends = "plenary.nvim"
-lua_source = '''
-require 'code_runner'.setup {
-	mode = 'term',
-	focus = true,
-	startinsert = false,
-	filetype = {
-		java = 'cd $dir && javac $fileName && java $fileNameWithoutExt',
-		python = 'python3 -u',
-		typescript = 'deno run -A',
-		rust = 'cd $dir && rustc $fileName && $dir/$fileNameWithoutExt',
-		go = 'go run',
-	},
-	term = {
-		position = 'rightb vert',
-		size = 70,
-	},
-	-- filetype_path = vim.fn.expand('~/.config/nvim/code_runner.json'),
-	-- project_path = vim.fn.expand('~/.config/nvim/project_manager.json')
-}
-'''
 
 [[plugins]]
 repo = "monaqa/dial.nvim"
@@ -324,31 +91,6 @@ require 'dial.config'.augends:register_group {
 '''
 
 [[plugins]]
-repo = "Darazaki/indent-o-matic"
-on_event = "BufRead"
-lua_source = "require 'indent-o-matic'.setup{}"
-
-# Discord Rich Presence
-[[plugins]]
-repo = "andweeb/presence.nvim"
-on_event = "CursorHold"
-lua_source = "require 'presence'.setup()"
-
-[[plugins]]
-repo = "9seconds/repolink.nvim"
-on_cmd = "RepoLink"
-lua_source = "require 'repolink'.setup()"
-
-[[plugins]]
-repo = "NvChad/showkeys"
-on_cmd = "ShowkeysToggle"
-lua_source = '''
-require 'showkeys'.setup {
-	maxkeys = 10,
-}
-'''
-
-[[plugins]]
 repo = "kdheepak/lazygit.nvim"
 on_cmd = [
 	"LazyGit",
@@ -362,7 +104,6 @@ hook_source = '''
 let $VISUAL = $EDITOR
 let $GIT_EDITOR = $EDITOR
 '''
-depends = "plenary.nvim"
 
 [[plugins]]
 repo = "FabijanZulj/blame.nvim"
@@ -371,21 +112,6 @@ hook_add = '''
 nno <leader>b <cmd>BlameToggle<cr>
 '''
 lua_source = "require 'blame'.setup()"
-
-# 命名規則を相互変換
-[[plugins]]
-repo = "gregorias/coerce.nvim"
-depends = "coop.nvim"
-on_event = "CursorHold"
-lua_source = '''
-require 'coerce'.setup {
-	default_mode_keymap_prefixes = {
-		normal_mode = 'cr',
-		motion_mode = "cr",
-		visual_mode = "cr",
-	}
-}
-'''
 
 [[plugins]]
 repo = "gw31415/emjpick.vim"
@@ -402,37 +128,7 @@ vim.keymap.set('i', '<C-CR>', function () require 'in-and-out'.in_and_out() end)
 '''
 
 [[plugins]]
-repo = "folke/snacks.nvim"
-on_cmd = "Snacks"
-on_lua = "snacks"
-lua_source = '''
-require 'snacks'.setup {
-	picker = { enabled = true }
-}
-vim.api.nvim_create_user_command('Snacks', 'lua require("snacks").picker()', {})
-'''
-
-[[plugins]]
-repo = "gw31415/root.nvim"
-on_cmd = "Root"
-on_lua = 'root'
-lua_source = '''
-local quiet = true
--- Timer for startup 20ms to avoid noisy-messages on startup
-vim.defer_fn(function()
-	quiet = false
-end, 20)
-vim.api.nvim_create_user_command('Root', function(opts)
-	require 'root'.cd(opts.args, quiet)
-end, {
-	nargs = '?',
-	complete = 'file',
-})
-'''
-
-[[plugins]]
 repo = "ravitemer/mcphub.nvim"
-depends = "plenary.nvim"
 extAttrs.installerBuild = "npm install -g mcp-hub@latest"
 lua_source = '''
 vim.system({ 'sh', '-c', [[
@@ -448,15 +144,7 @@ require 'mcphub'.setup()
 [[plugins]]
 repo = "yetone/avante.nvim"
 extAttrs.installerBuild = "make"
-depends = [
-	"nvim-treesitter",
-	"dressing.nvim",
-	"plenary.nvim",
-	"nui.nvim",
-	"nvim-web-devicons",
-	"copilot.lua",
-	"mcphub.nvim",
-]
+depends = "mcphub.nvim"
 on_cmd = [
 	"AvanteChat",
 	"AvanteChatNew",
@@ -509,12 +197,4 @@ require 'avante'.setup {
 		}
 	end,
 }
-'''
-
-[[plugins]]
-repo = "pwntester/octo.nvim"
-depends = ["plenary.nvim", "telescope.nvim", "nvim-web-devicons"]
-on_cmd = ["Octo"]
-lua_source = '''
-require 'octo'.setup {}
 '''

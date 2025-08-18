@@ -1,78 +1,6 @@
-# TODO: これを有効化するとcmdlineの補完ウィンドウでチラつきが発生する
-# [[plugins]]
-# repo = "rasulomaroff/reactive.nvim"
-# on_event = ["ModeChanged", "WinEnter"]
-# lua_source = '''
-# require 'reactive'.setup {
-# 	builtin = {
-# 		cursorline = true,
-# 		cursor = false,
-# 		modemsg = false,
-# 	}
-# }
-# '''
-
-[[plugins]]
-repo = "kevinhwang91/nvim-bqf"
-on_ft = "qf"
-lua_source = '''
-require 'bqf'.setup {
-	auto_enable = true,
-	auto_resize_height = true,
-	func_map = {
-		open = '<cr>',
-		openc = '',
-		drop = '<s-cr>',
-		tabdrop = '',
-		tab = '',
-		tabb = '',
-		tabc = '',
-		split = '',
-		vsplit = '',
-		prevfile = '',
-		nextfile = '',
-		prevhist = '',
-		nexthist = '',
-		lastleave = '',
-		stoggleup = '',
-		stoggledown = '',
-		stogglevm = '',
-		stogglebuf = '',
-		sclear = '',
-		pscrollup = '<C-b>',
-		pscrolldown = '<C-f>',
-		pscrollorig = '',
-		ptogglemode = '',
-		ptoggleitem = '',
-		ptoggleauto = '',
-		filter = '',
-		filterr = '',
-		fzffilter = '',
-	}
-}
-'''
-
-[[plugins]]
-repo = "stevearc/quicker.nvim"
-on_ft = "qf"
-lua_source = '''
-require 'quicker'.setup {
-	keys = {
-		{ '>', "<cmd>lua require('quicker').expand()<CR>",   desc = 'Expand quickfix content' },
-		{ '<', "<cmd>lua require('quicker').collapse()<CR>", desc = 'Collapse quickfix content' },
-	},
-	type_icons = {
-		E = "󰅚 ",
-		W = "",
-		I = "",
-		N = "󰛿",
-		H = "",
-	},
-}
-'''
-
 [[plugins]]
 repo = "gukz/ftFT.nvim"
+on_map = { n = ["f", "t", "F", "T"] }
 lua_source = '''
 vim.api.nvim_set_hl(0, 'ftFT', {
 	ctermbg = 0,
@@ -84,26 +12,13 @@ require 'ftFT'.setup {
 	hl_group = 'ftFT',
 }
 '''
-on_map = { n = ["f", "t", "F", "T"] }
-
-[[plugins]]
-repo = "j-hui/fidget.nvim"
-on_event = "CursorHold"
-rev = "v*"
-lua_source = '''
-require 'fidget'.setup {
-	notification = {
-		override_vim_notify = true,
-	}
-}
-'''
 
 [[plugins]]
 repo = "kevinhwang91/nvim-ufo"
 on_source = "nvim-treesitter"
 on_lua = "ufo"
 on_cmd = "loadview"
-depends = ["promise-async", "nvim-treesitter"]
+depends = "nvim-treesitter"
 lua_source = '''
 vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
@@ -149,72 +64,4 @@ vim.lsp.config('*', {
 			},
 		}
 })
-'''
-
-[[plugins]]
-repo = "b0o/incline.nvim"
-on_event = "CursorHold"
-depends = ["nvim-navic", "nvim-web-devicons"]
-lua_source = '''
-local helpers = require 'incline.helpers'
-local navic = require 'nvim-navic'
-local devicons = require 'nvim-web-devicons'
-require 'incline'.setup {
-	hide = {
-		cursorline = true,
-	},
-	window = {
-		padding = 0,
-		margin = { horizontal = 0, vertical = 0 },
-	},
-	render = function(props)
-		local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
-		if filename == '' then
-			filename = '[No Name]'
-		end
-		local ft_icon, ft_color = devicons.get_icon_color(filename)
-		local modified = vim.bo[props.buf].modified
-		local res = {
-			ft_icon and { ' ', ft_icon, ' ', guibg = ft_color, guifg = helpers.contrast_color(ft_color) } or '',
-			' ',
-			{ filename, gui = modified and 'bold,italic' or 'bold' },
-		}
-		if props.focused then
-			res.guibg = '#54507e'
-		else
-			res.guibg = '#000000'
-		end
-		if props.focused then
-			for _, item in ipairs(navic.get_data(props.buf) or {}) do
-				table.insert(res, {
-					{ ' > ',     group = 'NavicSeparator' },
-					{ item.icon, group = 'NavicIcons' .. item.type },
-					{ item.name, group = 'NavicText' },
-				})
-			end
-		end
-		table.insert(res, ' ')
-		return res
-	end,
-}
-'''
-
-[[plugins]]
-repo = "delphinus/skkeleton_indicator.nvim"
-on_event = "InsertEnter"
-lua_source = '''
-vim.api.nvim_set_hl(0, 'SkkeletonIndicatorEiji', { fg = '#88c0d0', bg = '#2e3440', bold = true })
-vim.api.nvim_set_hl(0, 'SkkeletonIndicatorHira', { fg = '#2e3440', bg = '#a3be8c', bold = true })
-vim.api.nvim_set_hl(0, 'SkkeletonIndicatorKata', { fg = '#2e3440', bg = '#ebcb8b', bold = true })
-vim.api.nvim_set_hl(0, 'SkkeletonIndicatorHankata', { fg = '#2e3440', bg = '#b48ead', bold = true })
-vim.api.nvim_set_hl(0, 'SkkeletonIndicatorZenkaku', { fg = '#2e3440', bg = '#88c0d0', bold = true })
-vim.api.nvim_set_hl(0, 'SkkeletonIndicatorAbbrev', { fg = '#e5e9f0', bg = '#bf616a', bold = true })
-require 'skkeleton_indicator'.setup {
-	-- eijiText = "󱌯",
-	-- hiraText = "󱌴",
-	-- kataText = "󱌵",
-	-- hankataText = "󱌶",
-	-- zenkakuText = "󱌭",
-	-- aboutText = "󰥤",
-}
 '''

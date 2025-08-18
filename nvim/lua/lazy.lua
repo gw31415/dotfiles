@@ -218,6 +218,16 @@ vim.keymap.set('n', '<c-g>P', function() require 'commitgen'.paste { after = fal
 vim.keymap.set('n', '<c-g>c', '<cmd>Gin commit<cr>', { silent = true })
 vim.keymap.set('n', '<c-g>C', '<cmd>Gin commit --amend<cr>', { silent = true })
 
+vim.keymap.set('n', '<C-n>', '<cmd>Fern . -drawer -toggle -reveal=% <cr>')
+
+vim.keymap.set('n', '_', function() require 'substitute'.operator() end)
+vim.keymap.set('x', '_', function() require 'substitute'.visual() end)
+vim.keymap.set('n', '__', function() require 'substitute'.line() end)
+
+vim.keymap.set('n', '<Leader>u', function() require 'undotree'.toggle() end)
+vim.keymap.set('n', '<leader>A', function() require 'aerial'.toggle() end)
+
+
 -- local ok, extui = pcall(require, 'vim._extui')
 -- if ok then
 -- 	extui.enable({
