@@ -155,11 +155,14 @@ in
             "dpp-protocol-git"
 
           ];
+      runtimepath = (
+        builtins.concatStringsSep "\n" (map (p: "vim.opt.runtimepath:append '${p}'") plugins)
+      );
     in
     {
-      inherit plugins;
       enable = true;
       extraLuaConfig = ''
+        ${runtimepath}
         local dpp = require 'dpp'
         local dpp_base = '~/.cache/dpp'
         if dpp.load_state(dpp_base) then
