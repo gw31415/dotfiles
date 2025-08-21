@@ -89,6 +89,7 @@ in
       "anki"
       "brave-browser"
       "chatgpt"
+      "container"
       "cursor"
       "devtoys"
       "discord"
