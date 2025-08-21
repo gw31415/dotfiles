@@ -176,6 +176,7 @@ in
         local dpp = require 'dpp'
         local dpp_base = '~/.cache/dpp'
         if dpp.load_state(dpp_base) then
+          vim.opt.runtimepath:prepend '${pkgs.vimPlugins.denops-vim}'
           vim.api.nvim_create_autocmd('User', {
             pattern = 'DenopsReady',
             callback = function()
