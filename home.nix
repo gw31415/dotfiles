@@ -166,11 +166,23 @@ in
         };
       };
       extraConfigLuaPost = ''
+        vim.opt.runtimepath:prepend '${pkgs.vimPlugins.denops-vim}'
         vim.opt.runtimepath:prepend '${dpp-vim}'
         vim.opt.runtimepath:append '${dpp-ext-toml}'
         vim.opt.runtimepath:append '${dpp-protocol-git}'
         vim.opt.runtimepath:append '${dpp-ext-lazy}'
         vim.opt.runtimepath:append '${dpp-ext-installer}'
+
+        local dpp = require 'dpp'
+        local dpp_base = '~/.cache/dpp'
+        if dpp.load_state(dpp_base) then
+          vim.api.nvim_create_autocmd('User', {
+            pattern = 'DenopsReady',
+            callback = function()
+              dpp.make_state(dpp_base, '~/.config/home-manager/nvim/dpp.ts')
+            end
+          })
+        end
 
         require 'init'
       '';

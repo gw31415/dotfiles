@@ -1,15 +1,4 @@
 vim.opt.packpath:prepend '~/.cache/rsplug'
-local dpp = require 'dpp'
-local dpp_base = '~/.cache/dpp'
-if dpp.load_state(dpp_base) then
-	vim.opt.runtimepath:prepend '~/.cache/rsplug/pack/merged/start/*'
-	vim.api.nvim_create_autocmd('User', {
-		pattern = 'DenopsReady',
-		callback = function()
-			dpp.make_state(dpp_base, '~/.config/home-manager/nvim/dpp.ts')
-		end
-	})
-end
 
 ----------------------------
 -- Disable built-in plugins

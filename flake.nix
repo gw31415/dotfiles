@@ -114,7 +114,7 @@
               {
                 nixpkgs.overlays = overlays;
               }
-              ctx.nixvim.homeManagerModules.nixvim
+              ctx.nixvim.homeModules.nixvim
             ];
           };
           default = ctx.dot;
