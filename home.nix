@@ -133,40 +133,33 @@ in
     TEST_TEXT = "${config.home.homeDirectory}";
   };
 
-  programs.nixvim =
+  programs.neovim =
     let
-      dpp-vim = pkgs.vimUtils.buildVimPlugin {
-        name = "dpp.vim";
-        src = ctx.dpp-vim;
-      };
-      dpp-ext-installer = pkgs.vimUtils.buildVimPlugin {
-        name = "dpp-ext-installer";
-        src = ctx.dpp-ext-installer;
-      };
-      dpp-ext-lazy = pkgs.vimUtils.buildVimPlugin {
-        name = "dpp-ext-lazy";
-        src = ctx.dpp-ext-lazy;
-      };
-      dpp-ext-toml = pkgs.vimUtils.buildVimPlugin {
-        name = "dpp-ext-toml";
-        src = ctx.dpp-ext-toml;
-      };
-      dpp-protocol-git = pkgs.vimUtils.buildVimPlugin {
-        name = "dpp-protocol-git";
-        src = ctx.dpp-protocol-git;
-      };
+      plugins = [
+        pkgs.vimPlugins.denops-vim
+      ]
+      ++
+        builtins.map
+          (
+            name:
+            pkgs.vimUtils.buildVimPlugin {
+              name = name;
+              src = ctx.${name};
+            }
+          )
+          [
+            "dpp-vim"
+            "dpp-ext-installer"
+            "dpp-ext-lazy"
+            "dpp-ext-toml"
+            "dpp-protocol-git"
+
+          ];
     in
     {
-      package = ctx.neovim-nightly-overlay.packages.${pkgs.system}.default;
+      inherit plugins;
       enable = true;
-      extraConfigLuaPost = ''
-        vim.opt.runtimepath:prepend '${pkgs.vimPlugins.denops-vim}'
-        vim.opt.runtimepath:prepend '${dpp-vim}'
-        vim.opt.runtimepath:append '${dpp-ext-toml}'
-        vim.opt.runtimepath:append '${dpp-protocol-git}'
-        vim.opt.runtimepath:append '${dpp-ext-lazy}'
-        vim.opt.runtimepath:append '${dpp-ext-installer}'
-
+      extraLuaConfig = ''
         local dpp = require 'dpp'
         local dpp_base = '~/.cache/dpp'
         if dpp.load_state(dpp_base) then

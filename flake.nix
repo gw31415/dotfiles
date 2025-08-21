@@ -17,16 +17,6 @@
     nix-homebrew = {
       url = "github:zhaofengli-wip/nix-homebrew";
     };
-    nuschtosSearch = {
-      url = "github:NuschtOS/search";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
-    };
-    nixvim = {
-      url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.nuschtosSearch.follows = "nuschtosSearch";
-    };
     dpp-vim = {
       url = "github:Shougo/dpp.vim";
       flake = false;
@@ -111,10 +101,7 @@
                   inherit config ctx;
                 }
               )
-              {
-                nixpkgs.overlays = overlays;
-              }
-              ctx.nixvim.homeModules.nixvim
+              { nixpkgs.overlays = overlays; }
             ];
           };
           default = ctx.dot;
