@@ -159,12 +159,6 @@ in
     {
       package = ctx.neovim-nightly-overlay.packages.${pkgs.system}.default;
       enable = true;
-      colorschemes.monokai-pro = {
-        enable = true;
-        settings = {
-          transparent_background = true;
-        };
-      };
       extraConfigLuaPost = ''
         vim.opt.runtimepath:prepend '${pkgs.vimPlugins.denops-vim}'
         vim.opt.runtimepath:prepend '${dpp-vim}'
