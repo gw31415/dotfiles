@@ -72,10 +72,8 @@ on_map = { nx = ["<C-a>", "<C-x>", "g<C-a>", "g<C-x>"] }
 lua_source = '''
 vim.keymap.set({ 'n', 'x' }, '<C-a>', '<Plug>(dial-increment)')
 vim.keymap.set({ 'n', 'x' }, '<C-x>', '<Plug>(dial-decrement)')
-vim.keymap.set('x', 'g<C-a>', function() require 'dial.map'.manipulate('increment', 'gvisual') end)
-vim.keymap.set('x', 'g<C-x>', function() require 'dial.map'.manipulate('decrement', 'gvisual') end)
-vim.keymap.set('n', 'g<C-a>', function() require 'dial.map'.manipulate('increment', 'gnormal') end)
-vim.keymap.set('n', 'g<C-x>', function() require 'dial.map'.manipulate('decrement', 'gnormal') end)
+vim.keymap.set({ 'n', 'x' }, 'g<C-a>', 'g<Plug>(dial-increment)')
+vim.keymap.set({ 'n', 'x' }, 'g<C-x>', 'g<Plug>(dial-decrement)')
 
 local augend = require 'dial.augend'
 require 'dial.config'.augends:register_group {
