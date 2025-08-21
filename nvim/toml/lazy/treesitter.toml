@@ -1,20 +1,7 @@
 [[plugins]]
 repo = "nvim-treesitter/nvim-treesitter"
 hook_post_update = "TSUpdate"
-on_ft = "query"
-on_event = "CursorHold"
-lua_add = '''
--- Vimdocの無効化
-vim.treesitter.start = (function(wrapped)
-	return function(bufnr, lang)
-		lang = lang or vim.fn.getbufvar(bufnr or '', '&filetype')
-		if lang == 'help' then
-			return
-		end
-		wrapped(bufnr, lang)
-	end
-end)(vim.treesitter.start)
-'''
+on_event = "VimEnter"
 lua_source = '''
 -- markdown treesitter のPluginの有効化
 vim.fn.setenv('EXTENSION_WIKI_LINK', 1)
@@ -40,23 +27,11 @@ require 'nvim-treesitter.configs'.setup {
 }
 '''
 
-# TODO: NixでColorSchemeを設定した際、こちらのプラグインが反映されない
 [[plugins]]
 repo = "https://gitlab.com/HiPhish/rainbow-delimiters.nvim"
 on_event = "CursorHold"
 
-[[plugins]]
-repo = "Wansmer/treesj"
-on_event = "CursorHold"
-on_cmd = "TSJToggle"
-lua_add = "vim.keymap.set('n', 'J', '<cmd>TSJToggle<cr>')"
-lua_source = '''
-require 'treesj'.setup {
-	use_default_keymaps = false, max_join_length = 150
-}
-'''
-
-[[plugins]]
-repo = "monaqa/nvim-treesitter-clipping"
-on_map = "<Plug>(ts-clipping-clip)"
-lua_add = "vim.keymap.set('n', 'cx', '<Plug>(ts-clipping-clip)')"
+# [[plugins]]
+# repo = "monaqa/nvim-treesitter-clipping"
+# on_map = "<Plug>(ts-clipping-clip)"
+# lua_add = "vim.keymap.set('n', 'cx', '<Plug>(ts-clipping-clip)')"

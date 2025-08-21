@@ -227,6 +227,8 @@ vim.keymap.set('n', '__', function() require 'substitute'.line() end)
 vim.keymap.set('n', '<Leader>u', function() require 'undotree'.toggle() end)
 vim.keymap.set('n', '<leader>A', function() require 'aerial'.toggle() end)
 
+vim.keymap.set('n', 'J', '<cmd>TSJToggle<cr>')
+
 
 -- local ok, extui = pcall(require, 'vim._extui')
 -- if ok then
