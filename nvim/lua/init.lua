@@ -1,7 +1,7 @@
 vim.opt.packpath:prepend '~/.cache/rsplug'
 
-require 'catppuccin'.setup { transparent_background = true, float = { transparent = true, solid = false } }
-vim.cmd.colorscheme 'catppuccin'
+require 'onedark'.setup { transparent = true, dark = true }
+vim.cmd.colorscheme 'onedark'
 
 ----------------------------
 -- Disable built-in plugins
