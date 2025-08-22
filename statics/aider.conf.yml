@@ -1,0 +1,6 @@
+# Aider configuration file
+# See: https://aider.chat/docs/config.html
+
+# Model settings
+model: gpt-4o
+encoding: utf-8

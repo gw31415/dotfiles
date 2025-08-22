@@ -106,6 +106,7 @@ in
       recursive = true;
     };
     ".latexmkrc".source = ./statics/latexmkrc;
+    ".aider.conf.yml".source = ./statics/aider.conf.yml;
 
     ".nix-deliverables/wezterm-types".source = "${import ./wezterm-types/default.nix {
       inherit pkgs;
