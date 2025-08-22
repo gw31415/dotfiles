@@ -20,6 +20,7 @@ in
       pkgs.gemini-cli
 
       # CLI tools
+      aider-chat-full
       aria2
       asciinema
       bat
