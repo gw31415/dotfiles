@@ -195,6 +195,7 @@ in
     ignores = [
       ".DS_Store"
       "kls_database.db"
+      ".aider*"
     ];
     extraConfig = {
       credential.helper = "/usr/local/share/gcm-core/git-credential-manager";
