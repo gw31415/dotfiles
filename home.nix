@@ -11,6 +11,9 @@ in
     username = env.username;
     homeDirectory = env.homeDirectory;
     stateVersion = "25.05";
+    sessionPath = [
+      "$HOME/.local/bin"
+    ];
   };
 
   # Audiverisは手動でインストールすること
