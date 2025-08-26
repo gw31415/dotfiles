@@ -28,6 +28,7 @@ in
       bat
       bindfs
       bun
+      codex
       comma
       deno
       emacs-nox
