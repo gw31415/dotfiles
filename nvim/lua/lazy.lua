@@ -1,7 +1,3 @@
-local function executable(cmd)
-	return vim.fn.executable(cmd) == 1
-end
-
 vim.opt_global.helplang = 'ja,en'
 
 --------------------------------------------------------------------------------
@@ -51,6 +47,10 @@ vim.lsp.config('*', {
 	},
 })
 
+local function executable(cmd)
+	return vim.fn.executable(cmd) == 1
+end
+
 if executable 'fish-lsp' then
 	vim.lsp.enable 'fish_lsp'
 end
@@ -58,7 +58,6 @@ end
 if executable 'sourcekit-lsp' then
 	vim.lsp.enable 'sourcekit'
 end
-
 
 vim.api.nvim_create_autocmd('LspAttach', {
 	callback = function(args)
@@ -84,12 +83,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		)
 	end,
 })
-vim.keymap.set('n', '<F5>', function() require 'dap'.continue() end, {})
-vim.keymap.set('n', '<F10>', function() require 'dap'.step_over() end, {})
-vim.keymap.set('n', '<F11>', function() require 'dap'.step_into() end, {})
-vim.keymap.set('n', '<F12>', function() require 'dap'.step_out() end, {})
-vim.keymap.set('n', 'bb', function() require 'dap'.toggle_breakpoint() end, {})
-
 
 --------------------------------------------------------------------------------
 -- fzyselect.vim - Custom tweaks
@@ -99,8 +92,6 @@ vim.defer_fn(function()
 	vim.ui.select = require 'fzyselect'.start
 end, 500)
 
--- fuzzy search
-vim.keymap.set('n', 'g/', function() require 'fzyselect-lines'.open() end)
 -- git ls-files
 vim.keymap.set('n', '<c-p>', function()
 	local res = vim.system({ 'git', 'ls-files' }, { text = true }):wait()
@@ -218,18 +209,13 @@ vim.keymap.set('n', '<c-g>P', function() require 'commitgen'.paste { after = fal
 vim.keymap.set('n', '<c-g>c', '<cmd>Gin commit<cr>', { silent = true })
 vim.keymap.set('n', '<c-g>C', '<cmd>Gin commit --amend<cr>', { silent = true })
 
-vim.keymap.set('n', '<C-n>', '<cmd>Fern . -drawer -toggle -reveal=% <cr>')
-
-vim.keymap.set('n', '_', function() require 'substitute'.operator() end)
-vim.keymap.set('x', '_', function() require 'substitute'.visual() end)
-vim.keymap.set('n', '__', function() require 'substitute'.line() end)
-
-vim.keymap.set('n', '<Leader>u', function() require 'undotree'.toggle() end)
-vim.keymap.set('n', '<leader>A', function() require 'aerial'.toggle() end)
-
-vim.keymap.set('n', 'J', '<cmd>TSJToggle<cr>')
-vim.api.nvim_set_var("winresizer_start_key", "<C-W>e")
-
+vim.api.nvim_create_user_command('Restart', function()
+	local cache = vim.fn.stdpath 'cache' .. '/nvim-restart-session.vim'
+	vim.cmd('mksession! ' .. vim.fn.fnameescape(cache))
+	vim.cmd('restart source ' .. vim.fn.fnameescape(cache))
+end, {})
+vim.keymap.set('n', '<C-n>',
+	'<cmd>Fern . -drawer -toggle -reveal=' .. vim.fn.fnameescape(require 'root'.find_project_root() or '%') .. ' <cr>')
 
 -- local ok, extui = pcall(require, 'vim._extui')
 -- if ok then
