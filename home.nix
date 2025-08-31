@@ -21,6 +21,7 @@ in
     (with pkgs-stable; [
       pkgs.nodejs
       pkgs.gemini-cli
+      pkgs.typescript-go
 
       # CLI tools
       aria2
