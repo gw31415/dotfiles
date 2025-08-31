@@ -8,85 +8,22 @@ require 'dpp-automkstate'.watch(vim.fn.expand '~/.config/home-manager/nvim')
 '''
 
 [[plugins]]
-repo = "gw31415/extend_word_motion.nvim"
-on_map = ["w", "b", "e", "ge"]
-lua_source = "require 'extend_word_motion'.setup{}"
-
+repo = "kana/vim-operator-user"
 [[plugins]]
-repo = "gw31415/scrollUptoLastLine.vim"
-on_map = { niv = '<MouseUp>' }
-lua_source = "vim.keymap.set({'', 'i'}, '<S-MouseUp>', '<Nop>')"
-
-[[plugins]]
-repo = "kylechui/nvim-surround"
-on_map = { n = [
-	"ys",
-	"yss",
-	"yS",
-	"ySS",
-	"ds",
-	"cs",
-	"cS",
-], i = [
-	"<C-g>s",
-	"<C-g>S",
-], x = [
-	"S",
-	"gS",
-] }
-lua_source = """
-local M = require 'nvim-surround'
-require 'nvim-surround'.setup {
-	surrounds = {
-		["3"] = {
-			add = { "'''", "'''" },
-		},
-	}
-}
-"""
-
+repo = "kana/vim-textobj-user"
 [[plugins]]
 repo = "glts/vim-textobj-comment"
 on_map = { ox = ["ic", "ac"] }
 depends = "vim-textobj-user"
-
 [[plugins]]
 repo = "kana/vim-textobj-entire"
 on_map = { ox = ["ae", "ie"] }
 depends = "vim-textobj-user"
-
 [[plugins]]
 repo = "osyo-manga/vim-operator-stay-cursor"
 on_func = "operator#stay_cursor#wrapper"
 depends = "vim-operator-user"
 hook_add = "map <expr> gq operator#stay_cursor#wrapper('gq')"
-
-[[plugins]]
-repo = "simeji/winresizer"
-on_map = "<c-w>"
-lua_source = 'vim.api.nvim_set_var("winresizer_start_key", "<C-W>e")'
-
-[[plugins]]
-repo = "monaqa/dial.nvim"
-on_map = { nx = ["<C-a>", "<C-x>", "g<C-a>", "g<C-x>"] }
-lua_source = '''
-vim.keymap.set({ 'n', 'x' }, '<C-a>', '<Plug>(dial-increment)')
-vim.keymap.set({ 'n', 'x' }, '<C-x>', '<Plug>(dial-decrement)')
-vim.keymap.set({ 'n', 'x' }, 'g<C-a>', 'g<Plug>(dial-increment)')
-vim.keymap.set({ 'n', 'x' }, 'g<C-x>', 'g<Plug>(dial-decrement)')
-
-local augend = require 'dial.augend'
-require 'dial.config'.augends:register_group {
-	default = {
-		augend.integer.alias.decimal,
-		augend.semver.alias.semver,
-		augend.integer.alias.hex,
-		augend.constant.alias.bool,
-		augend.date.alias['%Y/%m/%d'],
-		augend.date.alias['%Y-%m-%d'],
-	},
-}
-'''
 
 [[plugins]]
 repo = "kdheepak/lazygit.nvim"
@@ -116,13 +53,6 @@ repo = "gw31415/emjpick.vim"
 on_cmd = "Emoji"
 hook_add = '''
 command! Emoji call emjpick#insert()
-'''
-
-[[plugins]]
-repo = "ysmb-wtsg/in-and-out.nvim"
-on_map = { i = "<C-CR>" }
-lua_source = '''
-vim.keymap.set('i', '<C-CR>', function () require 'in-and-out'.in_and_out() end)
 '''
 
 [[plugins]]

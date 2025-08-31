@@ -1,19 +1,4 @@
 [[plugins]]
-repo = "gukz/ftFT.nvim"
-on_map = { n = ["f", "t", "F", "T"] }
-lua_source = '''
-vim.api.nvim_set_hl(0, 'ftFT', {
-	ctermbg = 0,
-	ctermfg = 15,
-	bg = '#3b3f4c',
-	underline = true,
-})
-require 'ftFT'.setup {
-	hl_group = 'ftFT',
-}
-'''
-
-[[plugins]]
 repo = "kevinhwang91/nvim-ufo"
 on_source = "nvim-treesitter"
 on_lua = "ufo"

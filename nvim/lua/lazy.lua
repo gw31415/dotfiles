@@ -228,6 +228,7 @@ vim.keymap.set('n', '<Leader>u', function() require 'undotree'.toggle() end)
 vim.keymap.set('n', '<leader>A', function() require 'aerial'.toggle() end)
 
 vim.keymap.set('n', 'J', '<cmd>TSJToggle<cr>')
+vim.api.nvim_set_var("winresizer_start_key", "<C-W>e")
 
 
 -- local ok, extui = pcall(require, 'vim._extui')

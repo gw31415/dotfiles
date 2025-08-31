@@ -3,10 +3,6 @@ repo = "iamcco/markdown-preview.nvim"
 on_ft = ["markdown", "pandoc.markdown", "rmd"]
 extAttrs.installerBuild = 'sh -c "cd app && npx --yes yarn install"'
 
-[[plugins]]
-repo = "mrcjkb/rustaceanvim"
-on_ft = "rust"
-
 [ftplugin]
 erg = "setl et"
 python = '''
