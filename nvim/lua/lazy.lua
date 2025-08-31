@@ -55,6 +55,10 @@ if executable 'fish-lsp' then
 	vim.lsp.enable 'fish_lsp'
 end
 
+if executable 'tsgo' then
+	vim.lsp.enable 'tsgo'
+end
+
 if executable 'sourcekit-lsp' then
 	vim.lsp.enable 'sourcekit'
 end
