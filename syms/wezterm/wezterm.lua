@@ -62,7 +62,8 @@ wezterm.on('format-tab-title', function(tab, _tabs, _panes, _config, _hover, max
 	local bg = 'none'
 	local fg = 'white'
 	if tab.is_active then
-		bg = '#5f5575'
+		bg = '#e5e5e5'
+		fg = 'black'
 	end
 	local title = ' ' .. wezterm.truncate_right(
 		wezterm.nerdfonts
