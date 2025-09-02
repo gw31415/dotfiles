@@ -47,21 +47,7 @@ vim.lsp.config('*', {
 	},
 })
 
-local function executable(cmd)
-	return vim.fn.executable(cmd) == 1
-end
-
-if executable 'fish-lsp' then
-	vim.lsp.enable 'fish_lsp'
-end
-
-if executable 'tsgo' then
-	vim.lsp.enable 'tsgo'
-end
-
-if executable 'sourcekit-lsp' then
-	vim.lsp.enable 'sourcekit'
-end
+vim.lsp.enable { 'fish_lsp', 'tsgo', 'sourcekit' }
 
 vim.api.nvim_create_autocmd('LspAttach', {
 	callback = function(args)
@@ -93,7 +79,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
 --------------------------------------------------------------------------------
 
 vim.defer_fn(function()
-	vim.ui.select = require 'fzyselect'.start
+	---@diagnostic disable-next-line: duplicate-set-field
+	vim.ui.select = function(...) require 'fzyselect'.start(...) end
 end, 500)
 
 -- git ls-files
