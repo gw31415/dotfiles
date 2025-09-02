@@ -67,6 +67,7 @@ in
       "macos-fuse-t/homebrew-cask"
     ];
     brews = [
+      "aider"
       "openssl@3"
       "fastlane"
       "gettext"
@@ -104,11 +105,13 @@ in
       "microsoft-auto-update"
       "microsoft-teams"
       "musicbrainz-picard"
+      "obs"
       "obsidian"
       "orbstack"
       "piphero"
       "postman"
       "slack"
+      "smoothcsv"
       "vlc"
       "wezterm@nightly"
       "zoom"
