@@ -192,7 +192,7 @@ in
       "*.ipynb binary diff=ipynb"
     ];
     userName = "gw31415";
-    userEmail = "gw31415@amas.dev";
+    userEmail = "24710985+gw31415@users.noreply.github.com";
     delta.enable = true;
     ignores = [
       ".DS_Store"

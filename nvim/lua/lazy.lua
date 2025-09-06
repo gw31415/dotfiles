@@ -47,7 +47,7 @@ vim.lsp.config('*', {
 	},
 })
 
-vim.lsp.enable { 'fish_lsp', 'tsgo', 'sourcekit' }
+vim.lsp.enable { 'fish_lsp', 'sourcekit' }
 
 vim.api.nvim_create_autocmd('LspAttach', {
 	callback = function(args)
