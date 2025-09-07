@@ -59,8 +59,6 @@ in
     onActivation.autoUpdate = true;
     taps = [
       "homebrew/bundle"
-      "homebrew/cask-fonts"
-      "homebrew/cask-versions"
       "homebrew/core"
       "homebrew/services"
       "jorgelbg/tap"
