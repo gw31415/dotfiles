@@ -304,7 +304,7 @@ in
   };
   programs.go = {
     enable = true;
-    goPath = ".go";
+    env.GOPATH = "${env.homeDirectory}/.go";
   };
   programs.fzf = {
     enable = true;
