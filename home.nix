@@ -218,8 +218,8 @@ in
     settings = {
       add_newline = true;
       character = {
-        error_symbol = "[\\(](yellow)[´o_o](bold red)[\\)](yellow)[ =3](cyan)";
-        success_symbol = "[\\(](yellow)[´‐_‐](bold green)[\\)](yellow)[ =3](cyan)";
+        error_symbol = "[\\(](yellow)[´-_-](bold red)[\\)](yellow)[ =3](cyan)";
+        success_symbol = "[\\(](yellow)[ 'u'](bold green)[\\)](yellow)[ =3](cyan)";
       };
       directory = {
         truncate_to_repo = true;
