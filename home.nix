@@ -39,7 +39,6 @@ in
       ffmpeg
       flyctl
       gh
-      gnupg
       gocryptfs
       gopls
       home-manager

@@ -70,6 +70,7 @@ in
       "fastlane"
       "gettext"
       "iconsur"
+      "gnupg"
       "libgpg-error"
       "mas"
       "mise"
