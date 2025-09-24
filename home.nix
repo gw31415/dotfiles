@@ -93,7 +93,11 @@ in
           cocoapods
         ]
       else
-        [ ]
+        with pkgs-stable;
+        [
+          # NOTE: For the following gnupg, install by homebrew because of compatibility with pinentry-mac on MacOS.
+          gnupg
+        ]
     );
 
   home.file = {
