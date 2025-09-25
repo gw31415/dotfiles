@@ -109,6 +109,7 @@ in
       "orbstack"
       "piphero"
       "postman"
+      "secretive"
       "slack"
       "smoothcsv"
       "vlc"
