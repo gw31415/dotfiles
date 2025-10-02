@@ -1,0 +1,1281 @@
+# [[plugins]]
+# start = true
+# repo = "vim-denops/denops.vim"
+
+[[plugins]]
+repo = "Wansmer/treesj"
+on_cmd = "TSJToggle"
+on_map = { n = 'J' }
+lua_after = '''
+require 'treesj'.setup { use_default_keymaps = false, max_join_length = 150 }
+vim.keymap.set('n', 'J', '<cmd>TSJToggle<cr>', { desc = 'Join multi-lines' })
+'''
+
+[[plugins]]
+start = true
+repo = "navarasu/onedark.nvim"
+
+[[plugins]]
+repo = "nvim-lua/plenary.nvim"
+
+[[plugins]]
+repo = "eandrju/cellular-automaton.nvim"
+on_cmd = "CellularAutomaton"
+
+[[plugins]]
+repo = "gw31415/nvim-tetris"
+on_cmd = "Tetris"
+
+[[plugins]]
+repo = "seandewar/nvimesweeper"
+on_cmd = "Nvimesweeper"
+
+[[plugins]]
+repo = "jim-fx/sudoku.nvim"
+on_cmd = "Sudoku"
+lua_after = "require 'sudoku'.setup{}"
+
+[[plugins]]
+repo = "stevearc/conform.nvim"
+on_event = ["BufWritePre", "LspAttach"]
+on_cmd = "ConformInfo"
+lua_after = '''
+-- local js_formatters = { 'biome', 'prettierd', 'prettier', stop_after_first = true }
+require 'conform'.setup {
+	toml = { 'taplo', },
+	python = { 'ruff', 'isort', 'black' },
+	-- formatters_by_ft = {
+	-- 	json = js_formatters,
+	-- 	javascript = js_formatters,
+	-- 	javascriptreact = js_formatters,
+	-- 	typescript = js_formatters,
+	-- 	typescriptreact = js_formatters,
+	-- 	astro = js_formatters,
+	-- },
+}
+'''
+
+[[plugins]]
+repo = "9seconds/repolink.nvim"
+on_cmd = "RepoLink"
+lua_after = "require 'repolink'.setup()"
+
+[[plugins]]
+repo = "NvChad/showkeys"
+on_cmd = "ShowkeysToggle"
+lua_after = "require 'showkeys'.setup { maxkeys = 10 }"
+
+[[plugins]]
+repo = "Shougo/context_filetype.vim"
+
+[[plugins]]
+repo = "gw31415/vim-partedit"
+depends = "context_filetype.vim"
+on_map = { nx = "cx" }
+on_cmd = "Partedit"
+lua_after = '''
+vim.g['partedit#suffix_pattern'] = '\\v\\s*$'
+vim.g['partedit#opener'] = 'bo sp'
+
+vim.keymap.set('n', 'cx', function()
+	local context = vim.fn['context_filetype#get']()
+	if vim.fn.max(vim.fn.flatten(context.range)) == 0 then
+		vim.cmd [[
+			echohl WarningMsg
+			echomsg 'Context is not found'
+			echohl NONE
+		]]
+	else
+		vim.fn['partedit#start'](context.range[1][1], context.range[2][1], { filetype = context.filetype })
+		vim.keymap.set('n', 'Q', 'ZZ', { buffer = true, nowait = true, desc = 'Quit the Partedit' })
+		vim.keymap.set('n', '<C-6>', 'ZZ', { buffer = true, nowait = true, desc = 'Quit the Partedit' })
+	end
+end, { desc = 'Edit the context part' })
+'''
+
+[[plugins]]
+repo = "lambdalisue/fern-hijack.vim"
+start = true
+
+[[plugins]]
+repo = "gw31415/mstdn-editor.vim"
+start = true
+
+[[plugins]]
+repo = "gw31415/edisch.vim"
+start = true
+
+[[plugins]]
+repo = "gw31415/mkdir.vim"
+on_event = "BufWritePre"
+
+[[plugins]]
+repo = "stevearc/overseer.nvim"
+on_event = "CursorHold"
+lua_after = "require 'overseer'.setup()"
+
+[[plugins]]
+repo = "HakonHarnes/img-clip.nvim"
+on_event = "CursorHold"
+lua_after = '''
+require 'img-clip'.setup {
+	-- recommended settings
+	default = {
+		embed_image_as_base64 = false,
+		prompt_for_file_name = false,
+		drag_and_drop = {
+			insert_mode = true,
+		},
+		-- required for Windows users
+		use_absolute_path = true,
+	},
+}
+'''
+
+[[plugins]]
+repo = "icholy/lsplinks.nvim"
+on_map = { n = "gx" }
+lua_after = '''
+local lsplinks = require 'lsplinks'
+lsplinks.setup()
+vim.keymap.set('n', 'gx', lsplinks.gx, { desc = 'Open the links' })
+'''
+
+[[plugins]]
+repo = "chomosuke/term-edit.nvim"
+lua_after = "require 'term-edit'.setup{ prompt_end = '%3 ' }"
+on_event = "TermOpen"
+
+[[plugins]]
+repo = "lewis6991/gitsigns.nvim"
+on_event = "CursorHold"
+lua_after = '''
+require 'gitsigns'.setup {
+	numhl = true,
+	signcolumn = false,
+}
+
+local function create_opfunc(name, inner)
+	if type(inner) ~= 'table' then
+		inner = {}
+	end
+
+	local opfunc = function(typ)
+		if not typ or typ == '' then
+			vim.api.nvim_set_option_value('operatorfunc', 'v:lua.' .. name, {})
+			return 'g@'
+		end
+
+		-- Add highlights
+		local pos = {}
+		local _, line1, col1, _ = unpack(vim.fn.getpos "'[" or { 0, 0, 0, 0 })
+		local _, line2, col2, _ = unpack(vim.fn.getpos "']" or { 0, 0, 0, 0 })
+		if typ == 'line' then
+			col2 = #vim.fn.getline(line2)
+		end
+		for line = line1, math.min(line2, vim.fn.line 'w$') do
+			if line ~= line1 and line ~= line2 then
+				table.insert(pos, vim.fn.matchaddpos('Visual', { line }))
+			else
+				local str = vim.fn.getline(line)
+				local start_idx = line == line1 and col1 or 1
+				local end_idx = line == line2 and col2 or #str
+				for i = start_idx, end_idx do
+					table.insert(pos, vim.fn.matchaddpos('Visual', { { line, i } }))
+				end
+			end
+		end
+		vim.cmd.redraw()
+
+		if type(inner.on_select) == 'function' then
+			inner.on_select(typ)
+		end
+
+		-- Remove highlights
+		for _, id in pairs(pos) do
+			vim.fn.matchdelete(id)
+		end
+		vim.cmd.redraw()
+
+		if type(inner.callback) == 'function' then
+			inner.callback(typ)
+		end
+	end
+	_G[name] = opfunc
+	return _G[name]
+end
+
+vim.keymap.set({ 'n', 'x' }, '<C-g>a', create_opfunc('_gitsigns_stage_hunk', {
+	on_select = function(_)
+		local startline = vim.fn.line "'["
+		local endline = vim.fn.line "']"
+		require 'gitsigns'.stage_hunk { startline, endline }
+	end
+}), { expr = true, desc = 'Stage the hunk' })
+vim.keymap.set('n', '<C-g>aae', function() require 'gitsigns'.stage_buffer() end, { desc = 'Stage the whole file' })
+
+vim.keymap.set({ 'n', 'x' }, '<C-g>r', create_opfunc('_gitsigns_reset_hunk', {
+	on_select = function(_)
+		local startline = vim.fn.line "'["
+		local endline = vim.fn.line "']"
+		require 'gitsigns'.reset_hunk { startline, endline }
+	end
+}), { expr = true, desc = 'Restore the hunk' }) 
+
+vim.keymap.set('n', '<C-g>k', function() require 'gitsigns'.preview_hunk_inline() end, { desc = 'View the diff of the Hunk' })
+vim.keymap.set('n', ']<C-g>', function() require 'gitsigns'.nav_hunk 'next' end, { desc = 'Go to the next Hunk' })
+vim.keymap.set('n', '[<C-g>', function() require 'gitsigns'.nav_hunk 'prev' end, { desc = 'Go to the previous Hunk' })
+'''
+
+[[plugins]]
+repo = "ogaken-1/nvim-gin-preview"
+on_ft = "gin-status"
+
+[[plugins]]
+repo = "kaarmu/typst.vim"
+on_ft = "typst"
+lua_after = '''
+-- Wrapped TypstWatch Command with custom opener (because Rust's `open::with` not works properly now, on my MacOS at least)
+vim.api.nvim_create_autocmd('FileType', {
+	pattern = 'typst',
+	callback = function()
+		vim.fn.timer_start(100, function()
+			vim.api.nvim_buf_create_user_command(0, 'TypstWatch', function(opts)
+				-- Create temporary functions for silent execution
+				local funcname = 'typst_cache_zcGJN0nypnqo'
+				_G[funcname] = function()
+					local root = vim.fs.dirname(vim.fs.find('.git', { path = vim.fn.expand '%', upward = true })[1])
+					local args = root and { '--root', root, unpack(opts.fargs) } or opts.fargs
+					vim.g.typst_cmd = vim.g.typst_cmd or 'typst'
+					vim.fn['typst#watcher#TypstWatch'](unpack(args))
+					_G[funcname] = nil
+				end
+
+				-- If the terminal-app is not WezTerm ↓
+				if vim.fn.getenv 'WEZTERM_EXECUTABLE' == vim.NIL then
+					vim.cmd('silent lua _G.' .. funcname .. '()')
+					return
+				end
+				-- If the terminal-app is WezTerm ↓↓
+
+				vim.g.typst_pdf_viewer = ':' -- Unix Dummy command
+				vim.cmd('silent lua _G.' .. funcname .. '()')
+
+				-- Setup the event watcher
+				local handle = vim.uv.new_fs_event()
+				if not handle then
+					return
+				end
+
+				-- Stoppers of the event watcher
+				local event_stopper = function()
+					vim.uv.fs_event_stop(handle)
+					handle:close()
+				end
+				local autocmd_ID, timeout_ID
+				autocmd_ID = vim.api.nvim_create_autocmd('BufWipeout', {
+					buffer = 0,
+					callback = function()
+						vim.fn.timer_stop(timeout_ID)
+						event_stopper()
+					end,
+					once = true,
+				})
+				timeout_ID = vim.fn.timer_start(3000, function()
+					vim.notify 'PDF not found in 3 seconds.'
+					vim.api.nvim_del_autocmd(autocmd_ID)
+					event_stopper()
+				end)
+				local function stop_all()
+					vim.api.nvim_del_autocmd(autocmd_ID)
+					vim.fn.timer_stop(timeout_ID)
+					event_stopper()
+				end
+
+				local cwd = vim.fn.getcwd()
+				vim.notify 'Searching the new PDF....'
+				vim.uv.fs_event_start(handle, cwd, {
+					recursive = true,
+					pattern = '*.pdf',
+				}, function(err, filename, events)
+					if err then
+						return
+					end
+					if events.change then
+						vim.schedule(function()
+							local prior_process_code = nil
+							if vim.b.typst_pdf_pane then
+								prior_process_code = vim.system { 'wezterm', 'cli', 'activate-pane', '--pane-id', vim.b
+									.typst_pdf_pane }:wait().code
+							end
+
+							if prior_process_code ~= 0 then
+								vim.system({ 'wezterm', 'cli', 'split-pane', '--right', '--', 'tdf', filename }, {
+									cwd = cwd,
+								}, function(out)
+									if out.stdout then
+										local num = tonumber(out.stdout)
+										if not num then
+											vim.notify('Error parsing pane-id: ' .. out.stdout)
+											return
+										end
+										vim.b.typst_pdf_pane = num
+									end
+								end)
+							end
+
+							stop_all()
+						end)
+					end
+				end)
+			end, {
+				nargs = '*',
+				force = true,
+			})
+		end)
+	end
+})
+'''
+
+[[plugins]]
+repo = "mattn/emmet-vim"
+on_ft = ["html", "jsx", "tsx", "astro", "typescriptreact", "javascriptreact"]
+
+[[plugins]]
+repo = "ixru/nvim-markdown"
+on_ft = "markdown"
+lua_before = "vim.g.vim_markdown_no_default_key_mappings = 1"
+
+[[plugins]]
+repo = "lambdalisue/nerdfont.vim"
+[[plugins]]
+repo = "lambdalisue/fern-renderer-nerdfont.vim"
+depends = "nerdfont.vim"
+[[plugins]]
+repo = "lambdalisue/fern-git-status.vim"
+[[plugins]]
+repo = "lambdalisue/fern-mapping-git.vim"
+[[plugins]]
+repo = "lambdalisue/fern-mapping-project-top.vim"
+[[plugins]]
+repo = "andykog/fern-highlight.vim"
+
+[[plugins]]
+repo = "lambdalisue/vim-fern"
+depends = [
+	"fern-renderer-nerdfont.vim",
+	"fern-git-status.vim",
+	"fern-mapping-git.vim",
+	"fern-highlight.vim",
+]
+on_cmd = "Fern"
+# TODO: なぜかエラーが出る
+# on_map = { n = '<c-n>' }
+lua_after = '''
+vim.api.nvim_set_var('fern#renderer', 'nerdfont')
+vim.api.nvim_set_var('fern#renderer#nerdfont#indent_markers', 1)
+vim.api.nvim_create_autocmd('FileType', {
+	pattern = 'fern',
+	callback = function()
+		local opts = { buffer = true }
+		vim.keymap.set('n', 'K', '<Plug>(fern-action-new-dir)', { buffer = true, desc = 'Fern: create new dir' })
+		vim.keymap.set('n', 'ZZ', '<cmd>close<cr>', { buffer = true, desc = 'Fern: close the buffer' })
+		vim.keymap.set('n', 'ZQ', '<cmd>quit<cr>', { buffer = true, desc = 'Fern: quit' })
+		vim.opt_local.number = false
+	end,
+})
+vim.fn['fern_git_status#init']()
+'''
+
+[[plugins]]
+repo = "onsails/diaglist.nvim"
+on_event = "LspAttach"
+lua_after = '''
+vim.api.nvim_create_user_command('Diaglist', function()
+	require 'diaglist.quickfix'.populate_qflist()
+end, { force = true })
+require 'diaglist'.init()
+require 'diaglist.quickfix'.populate_qflist()
+'''
+
+[[plugins]]
+repo = "mfussenegger/nvim-dap"
+on_map = { n = ["<F5>", "<F10>", "<F11>", "<F12>", "bb"] }
+lua_after = '''
+vim.fn.sign_define('DapBreakpoint', { text = '', texthl = 'Macro', linehl = '', numhl = '' })
+vim.fn.sign_define('DapBreakpointCondition', { text = '󰆗', texthl = 'Macro', linehl = '', numhl = '' })
+vim.fn.sign_define('DapLogPoint', { text = '󰵛', texthl = '', linehl = 'Macro', numhl = '' })
+vim.fn.sign_define('DapBreakpointRejected', { text = '', texthl = 'Macro', linehl = '', numhl = '' })
+require 'dapui'.setup()
+require 'dap'.listeners.before['event_initialized']['custom'] = function() require 'dapui'.open {} end
+require 'dap'.listeners.before['event_terminated']['custom'] = function() require 'dapui'.close {} end
+
+vim.keymap.set('n', '<F5>', function() require 'dap'.continue() end, { desc = 'DAP: continue' })
+vim.keymap.set('n', '<F10>', function() require 'dap'.step_over() end, { desc = 'DAP: step over' })
+vim.keymap.set('n', '<F11>', function() require 'dap'.step_into() end, { desc = 'DAP: step into' })
+vim.keymap.set('n', '<F12>', function() require 'dap'.step_out() end, { desc = 'DAP: step out' })
+vim.keymap.set('n', 'bb', function() require 'dap'.toggle_breakpoint() end, { desc = 'DAP: toggle breakpoint' })
+'''
+
+[[plugins]]
+repo = "nvim-neotest/nvim-nio"
+[[plugins]]
+repo = "rcarriga/nvim-dap-ui"
+depends = ["nvim-nio", "nvim-dap-virtual-text"]
+[[plugins]]
+repo = "theHamsta/nvim-dap-virtual-text"
+lua_after = '''
+require 'nvim-dap-virtual-text'.setup { enabled_commands = false }
+'''
+
+[[plugins]]
+repo = "rachartier/tiny-inline-diagnostic.nvim"
+on_event = "LspAttach"
+lua_after = '''
+require 'tiny-inline-diagnostic'.setup {
+	options = {
+		multiple_diag_under_cursor = true,
+		show_all_diags_on_cursorline = true,
+		multilines = {
+			enabled = true,
+			always_show = true,
+		},
+	},
+}
+'''
+
+[[plugins]]
+repo = "folke/lazydev.nvim"
+on_ft = "lua"
+lua_after = '''
+require 'lazydev'.setup {
+	library = {
+		{ path = '${3rd}/luv/library',                words = { 'vim%.uv' } },
+		{ path = '~/.nix-deliverables/wezterm-types', mods = { 'wezterm' } },
+	},
+}
+'''
+
+[[plugins]]
+repo = "xzbdmw/colorful-menu.nvim"
+lua_after = "require 'colorful-menu'.setup {}"
+[[plugins]]
+repo = "saecki/crates.nvim@stable"
+on_ft = "toml"
+lua_after = "require 'crates'.setup()"
+
+
+[[plugins]]
+repo = "aznhe21/actions-preview.nvim"
+depends = "nui.nvim"
+lua_after = '''
+local hl = require 'actions-preview.highlight'
+require 'actions-preview'.setup {
+	backend = { 'snacks' },
+	highlight_command = {
+		hl.delta 'delta --no-gitconfig --side-by-side',
+	},
+}
+'''
+
+[[plugins]]
+repo = "MunifTanjim/nui.nvim"
+[[plugins]]
+repo = "m4xshen/hardtime.nvim"
+depends = "nui.nvim"
+on_cmd = "Hardtime"
+lua_after = "require 'hardtime'.setup()"
+
+
+[[plugins]]
+repo = "gw31415/fzyselect-nui-opener.nvim"
+depends = "nui.nvim"
+
+[[plugins]]
+repo = "gw31415/fzyselect-lines.nvim"
+on_map = { n = "g/" }
+depends = "fzyselect.vim"
+lua_after = '''
+vim.keymap.set('n', 'g/', function() require 'fzyselect-lines'.open() end, { desc = 'Fuzzy-Find the line and jump' })
+'''
+
+[[plugins]]
+repo = "gw31415/fzyselect.vim"
+depends = "fzyselect-nui-opener.nvim"
+lua_after = '''
+vim.g.fzyselect_opener = require 'fzyselect-nui-opener'
+
+vim.api.nvim_create_autocmd('FileType', {
+	pattern = 'fzyselect',
+	callback = function()
+		vim.wo.winblend = 0
+		vim.api.nvim_create_autocmd('TextChanged', {
+			buffer = 0,
+			once = true,
+			callback = function()
+				local lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
+				local width = 0
+				for _, line in ipairs(lines) do
+					width = math.max(width, vim.fn.strdisplaywidth(line))
+				end
+				width = vim.fn.float2nr(math.max(width, vim.api.nvim_get_option_value('columns', {}) * 0.6))
+				local row = math.max(math.floor(vim.api.nvim_get_option_value('lines', {}) / 2), 1)
+				local col = math.max(math.floor((vim.api.nvim_get_option_value('columns', {}) - width) / 2), 1)
+				vim.api.nvim_win_set_config(0, { width = width + 2, row = row, col = col, relative = 'editor' })
+			end,
+		})
+		vim.wo.wrap = false
+		vim.keymap.set('n', 'i', require 'fzyselect'.input, { buffer = true, desc = 'Input for fuzzy query' })
+		vim.keymap.set('n', '<cr>', "<cmd>cal fzyselect#cr(v:count??'.')<cr>", { buffer = true, desc = 'Confirm selection' })
+		vim.keymap.set('n', '<esc>', '<cmd>clo<cr>', { buffer = true, desc = 'Close fuzzy selection' })
+		vim.opt_local.number = true
+	end,
+})
+'''
+
+
+[[plugins]]
+repo = "gw31415/bufmanager.nvim"
+depends = "fzyselect.vim"
+on_event = "BufAdd"
+lua_after = '''
+vim.keymap.set('n', 'gb', function()
+	vim.api.nvim_create_autocmd('FileType', {
+		once = true,
+		pattern = 'fzyselect',
+		callback = function()
+			vim.keymap.set({ 'n', 'x' }, 'd', '<Plug>(bufmanager-bdelete)', { buffer = true, desc = 'Delete the buffer' })
+			vim.keymap.set('n', 'dd', '<Plug>(bufmanager-bdelete)_', { buffer = true, desc = 'Delete the buffer in current-line' })
+		end,
+	})
+	vim.fn['bufmanager#open']()
+end)
+'''
+
+[[plugins]]
+repo = "gw31415/deepl.vim"
+lua_after = '''
+vim.api.nvim_set_var('deepl_authkey', os.getenv('DEEPL_API_KEY'))
+vim.api.nvim_set_var('deepl_target_lang', 'EN')
+'''
+[[plugins]]
+repo = "gw31415/deepl-commands.nvim"
+on_event = "CmdlineEnter"
+depends = ["deepl.vim", "fzyselect.vim"]
+lua_after = '''
+require 'deepl-commands'.setup {
+	selector_func = function(...) require 'fzyselect'.start(...) end,
+}
+'''
+
+[[plugins]]
+repo = "gw31415/deepl-operator.vim"
+depends = "deepl.vim"
+on_map = { nx = ["cl", "cL"] }
+lua_after = '''
+vim.keymap.set({ 'n', 'x' }, 'cl', '<Plug>(deepl-replace)', { desc = 'Replace with DeepL translation' })
+vim.keymap.set('n', 'cll', '<Plug>(deepl-replace)_', { desc = 'Replace with DeepL translation and keep cursor' })
+vim.keymap.set('n', 'cL', '<Plug>(deepl-replace)$', { desc = 'Replace with DeepL translation at end of line' })
+'''
+
+[[plugins]]
+repo = "numToStr/Comment.nvim"
+on_event = "CursorHold"
+lua_after = '''
+require 'Comment'.setup {
+	toggler = {
+		block = 'gCC',
+	},
+	opleader = {
+		block = 'gC',
+	},
+	pre_hook = require 'ts_context_commentstring.integrations.comment_nvim'.create_pre_hook(),
+}
+'''
+
+[[plugins]]
+repo = "CRAG666/code_runner.nvim"
+on_event = "CmdlineEnter"
+lua_after = '''
+require 'code_runner'.setup {
+	mode = 'term',
+	focus = true,
+	startinsert = false,
+	filetype = {
+		java = 'cd $dir && javac $fileName && java $fileNameWithoutExt',
+		python = 'python3 -u',
+		typescript = 'deno run -A',
+		rust = 'cd $dir && rustc $fileName && $dir/$fileNameWithoutExt',
+		go = 'go run',
+	},
+	term = {
+		position = 'rightb vert',
+		size = 70,
+	},
+	-- filetype_path = vim.fn.expand('~/.config/nvim/code_runner.json'),
+	-- project_path = vim.fn.expand('~/.config/nvim/project_manager.json')
+}
+'''
+
+
+[[plugins]]
+repo = "folke/snacks.nvim"
+on_cmd = "Snacks"
+lua_after = '''
+require 'snacks'.setup { picker = { enabled = true } }
+vim.api.nvim_create_user_command('Snacks', 'lua require("snacks").picker()', {})
+'''
+
+[[plugins]]
+repo = "gw31415/root.nvim"
+on_cmd = "Root"
+lua_after = '''
+local quiet = true
+-- Timer for startup 20ms to avoid noisy-messages on startup
+vim.defer_fn(function()
+	quiet = false
+end, 20)
+vim.api.nvim_create_user_command('Root', function(opts)
+	require 'root'.cd(opts.args, quiet)
+end, {
+	nargs = '?',
+	complete = 'file',
+})
+'''
+
+[[plugins]]
+repo = "Darazaki/indent-o-matic"
+on_event = ["BufReadPost", "BufNewFile", "BufAdd"]
+on_cmd = "IndentOMatic"
+lua_after = '''
+require 'indent-o-matic'.setup{ standard_width = { 2, 4 } }
+'''
+
+# Discord Rich Presence
+[[plugins]]
+repo = "andweeb/presence.nvim"
+on_event = "CursorHold"
+lua_after = "require 'presence'.setup()"
+
+[[plugins]]
+repo = "hrsh7th/nvim-insx"
+on_event = "InsertEnter"
+lua_after = '''
+require 'insx.preset.standard'.setup()
+local insx = require 'insx'
+
+insx.add(
+	"'",
+	insx.with({
+		enabled = function(ctx)
+			local before_borrowing = ctx.match([=[&\%#]=])
+			local in_type_parameters = false
+
+			local node = vim.treesitter.get_node({ pos = { ctx.row(), ctx.col() } })
+
+			if not node then
+				return true
+			end
+
+			while node do
+				-- print(node:type())
+				if
+					vim.tbl_contains({
+						'trait_bounds',
+						'type_arguments',
+						'type_parameters',
+						-- あんまりこれは関係なくて、tree-sitterの仕様上?
+						-- A: |,
+						-- のように,がないとtrait_bounds判定にならない
+						-- TODO:
+						'where_clause',
+					}, node:type())
+				then
+					in_type_parameters = true
+					break
+				end
+				node = node:parent()
+			end
+
+			-- print(before_borrowing)
+			-- print(in_type_parameters)
+
+			return in_type_parameters or before_borrowing
+		end,
+		action = function(ctx)
+			ctx.send("'")
+		end,
+		priority = 1000,
+	}, {
+		insx.with.filetype({ 'rust' }),
+	})
+)
+'''
+
+[[plugins]]
+repo = "delphinus/cellwidths.nvim"
+on_event = "UIEnter"
+lua_after = '''
+---@diagnostic disable: missing-return, missing-fields
+require 'cellwidths'.setup { name = 'cica' }
+vim.cmd [[ CellWidthsAdd 0xE0B6, 1 ]]
+'''
+
+
+[[plugins]]
+repo = "kevinhwang91/nvim-bqf"
+on_ft = "qf"
+lua_after = '''
+require 'bqf'.setup {
+	auto_enable = true,
+	auto_resize_height = true,
+	func_map = {
+		open = '<cr>',
+		openc = '',
+		drop = '<s-cr>',
+		tabdrop = '',
+		tab = '',
+		tabb = '',
+		tabc = '',
+		split = '',
+		vsplit = '',
+		prevfile = '',
+		nextfile = '',
+		prevhist = '',
+		nexthist = '',
+		lastleave = '',
+		stoggleup = '',
+		stoggledown = '',
+		stogglevm = '',
+		stogglebuf = '',
+		sclear = '',
+		pscrollup = '<C-b>',
+		pscrolldown = '<C-f>',
+		pscrollorig = '',
+		ptogglemode = '',
+		ptoggleitem = '',
+		ptoggleauto = '',
+		filter = '',
+		filterr = '',
+		fzffilter = '',
+	}
+}
+'''
+
+[[plugins]]
+repo = "stevearc/quicker.nvim"
+on_ft = "qf"
+lua_after = '''
+require 'quicker'.setup {
+	keys = {
+		{ '>', "<cmd>lua require('quicker').expand()<CR>",   desc = 'Expand quickfix content' },
+		{ '<', "<cmd>lua require('quicker').collapse()<CR>", desc = 'Collapse quickfix content' },
+	},
+	type_icons = {
+		E = "󰅚 ",
+		W = "",
+		I = "",
+		N = "󰛿",
+		H = "",
+	},
+}
+'''
+
+[[plugins]]
+repo = "j-hui/fidget.nvim@v*"
+on_event = "CursorHold"
+lua_after = '''
+require 'fidget'.setup {
+	notification = {
+		override_vim_notify = true,
+	}
+}
+'''
+
+[[plugins]]
+repo = "NI57721/skkeleton-henkan-highlight"
+on_event = "InsertEnter"
+lua_after = "vim.api.nvim_set_hl(0, 'SkkeletonHenkan', { reverse = true })"
+[[plugins]]
+repo = "delphinus/skkeleton_indicator.nvim"
+on_event = "InsertEnter"
+lua_after = '''
+vim.api.nvim_set_hl(0, 'SkkeletonIndicatorEiji', { fg = '#88c0d0', bg = '#2e3440', bold = true })
+vim.api.nvim_set_hl(0, 'SkkeletonIndicatorHira', { fg = '#2e3440', bg = '#a3be8c', bold = true })
+vim.api.nvim_set_hl(0, 'SkkeletonIndicatorKata', { fg = '#2e3440', bg = '#ebcb8b', bold = true })
+vim.api.nvim_set_hl(0, 'SkkeletonIndicatorHankata', { fg = '#2e3440', bg = '#b48ead', bold = true })
+vim.api.nvim_set_hl(0, 'SkkeletonIndicatorZenkaku', { fg = '#2e3440', bg = '#88c0d0', bold = true })
+vim.api.nvim_set_hl(0, 'SkkeletonIndicatorAbbrev', { fg = '#e5e9f0', bg = '#bf616a', bold = true })
+require 'skkeleton_indicator'.setup {
+	-- eijiText = "󱌯",
+	-- hiraText = "󱌴",
+	-- kataText = "󱌵",
+	-- hankataText = "󱌶",
+	-- zenkakuText = "󱌭",
+	-- aboutText = "󰥤",
+}
+'''
+
+[[plugins]]
+repo = "tani/dmacro.nvim"
+on_event = "CursorHold"
+lua_after = "vim.keymap.set({ 'n', 'i' }, '<S-Right>', '<Plug>(dmacro-play-macro)', { desc = 'Play macro' })"
+
+[[plugins]]
+repo = "gbprod/substitute.nvim"
+on_map = { nx = '_' }
+lua_after = '''
+require 'substitute'.setup()
+
+vim.keymap.set('n', '_', function() require 'substitute'.operator() end, { desc = 'Replace' })
+vim.keymap.set('x', '_', function() require 'substitute'.visual() end, { desc = 'Replace selection' })
+vim.keymap.set('n', '__', function() require 'substitute'.line() end, { desc = 'Replace line' })
+'''
+
+
+[[plugins]]
+repo = "jiaoshijie/undotree"
+on_map = { n = '<Leader>u' }
+lua_after = '''
+require 'undotree'.setup { keymaps = { ['<Esc>'] = 'quit' } }
+vim.keymap.set('n', '<Leader>u', function() require 'undotree'.toggle() end, { desc = 'Toggle undotree' })
+'''
+
+
+[[plugins]]
+repo = "JoosepAlviste/nvim-ts-context-commentstring"
+on_event = "CursorHold"
+lua_after = '''
+require 'ts_context_commentstring'.setup { enable_autocmd = false }
+'''
+
+[[plugins]]
+repo = "sirasagi62/tinysegmenter.nvim"
+
+[[plugins]]
+repo = "nvzone/volt"
+
+[[plugins]]
+repo = "vim-jp/vimdoc-ja"
+start = true
+
+[[plugins]]
+repo = "giusgad/hologram.nvim"
+
+[[plugins]]
+repo = "nvim-tree/nvim-web-devicons"
+
+[[plugins]]
+repo = "nvim-telescope/telescope.nvim"
+
+[[plugins]]
+repo = "kevinhwang91/promise-async"
+
+[[plugins]]
+repo = "gregorias/coop.nvim"
+
+[[plugins]]
+repo = "stevearc/dressing.nvim"
+lua_after = '''
+require 'dressing'.setup {
+	input = { enabled = false },
+	select = { enabled = false },
+}
+'''
+
+[[plugins]]
+repo = "SmiteshP/nvim-navic"
+on_event = "LspAttach"
+lua_after = "require 'nvim-navic'.setup { lsp = { auto_attach = true } }"
+
+[[plugins]]
+repo = "zbirenbaum/copilot.lua"
+on_cmd = "Copilot"
+on_event = "CursorHold"
+lua_after = "require 'copilot'.setup {}"
+
+[[plugins]]
+repo = "pwntester/octo.nvim"
+on_cmd = "Octo"
+lua_after = "require 'octo'.setup {}"
+
+[[plugins]]
+repo = "akinsho/flutter-tools.nvim"
+on_ft = "dart"
+lua_after = '''
+require 'flutter-tools'.setup {
+	flutter_lookup_cmd = 'mise where flutter',
+	lsp = {
+		color = {
+			enabled = true,
+			virtual_text = true
+		}
+	}
+}
+'''
+
+[[plugins]]
+repo = "rest-nvim/rest.nvim"
+on_ft = "http"
+lua_after = "require 'rest-nvim'.setup {}"
+
+[[plugins]]
+repo = "MeanderingProgrammer/render-markdown.nvim"
+on_ft = ["markdown", "mdx", "mstdn", "Avante"]
+lua_after = '''
+require 'render-markdown'.setup {
+	heading = {
+		width = 'block',
+		left_pad = 0,
+		right_pad = 4,
+		icons = {},
+	},
+	render_modes = true,
+	code = {
+		width = 'block',
+	},
+	file_types = { 'markdown', 'mdx', 'mstdn', 'Avante' },
+}
+'''
+
+[[plugins]]
+repo = "stevearc/aerial.nvim"
+on_map = { n = ["<leader>A", "{", "}"] }
+lua_after = '''
+require 'aerial'.setup {
+	on_attach = function(bufnr)
+		vim.keymap.set('n', '{', '<cmd>AerialPrev<CR>', { buffer = bufnr, desc = 'Jump to the aerial-prev' })
+		vim.keymap.set('n', '}', '<cmd>AerialNext<CR>', { buffer = bufnr, desc = 'Jump to the aerial-next' })
+	end,
+}
+vim.keymap.set('n', '<leader>A', function() require 'aerial'.toggle() end, { desc = 'Toggle the aerial' })
+'''
+
+[[plugins]]
+repo = "lukas-reineke/indent-blankline.nvim"
+on_event = "CursorHold"
+lua_after = "require 'ibl'.setup()"
+
+[[plugins]]
+repo = "nvim-treesitter/playground"
+on_cmd = ["TSPlaygroundToggle", "TSHighlightCapturesUnderCursor"]
+
+# NOTE: このプラグインが有効だとウィンドウのフリックが頻発する
+# [[plugins]]
+# repo = "rasulomaroff/reactive.nvim"
+# on_event = ["ModeChanged", "WinEnter"]
+# lua_after = '''
+# require 'reactive'.setup {
+# 	builtin = {
+# 		cursorline = true,
+# 		cursor = false,
+# 		modemsg = false,
+# 	}
+# }
+# '''
+
+[[plugins]]
+repo = "b0o/incline.nvim"
+on_event = "CursorHold"
+lua_after = '''
+local helpers = require 'incline.helpers'
+local navic = require 'nvim-navic'
+local devicons = require 'nvim-web-devicons'
+require 'incline'.setup {
+	hide = {
+		cursorline = true,
+	},
+	window = {
+		padding = 0,
+		margin = { horizontal = 0, vertical = 0 },
+	},
+	render = function(props)
+		local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
+		if filename == '' then
+			filename = '[No Name]'
+		end
+		local ft_icon, ft_color = devicons.get_icon_color(filename)
+		local modified = vim.bo[props.buf].modified
+		local res = {
+			ft_icon and { ' ', ft_icon, ' ', guibg = ft_color, guifg = helpers.contrast_color(ft_color) } or '',
+			' ',
+			{ filename, gui = modified and 'bold,italic' or 'bold' },
+		}
+		if props.focused then
+			res.guibg = '#54507e'
+		else
+			res.guibg = '#000000'
+		end
+		if props.focused then
+			for _, item in ipairs(navic.get_data(props.buf) or {}) do
+				table.insert(res, {
+					{ ' > ',     group = 'NavicSeparator' },
+					{ item.icon, group = 'NavicIcons' .. item.type },
+					{ item.name, group = 'NavicText' },
+				})
+			end
+		end
+		table.insert(res, ' ')
+		return res
+	end,
+}
+'''
+
+# 命名規則を相互変換
+[[plugins]]
+repo = "gregorias/coerce.nvim"
+on_event = "CursorHold"
+lua_after = '''
+require 'coerce'.setup {
+	default_mode_keymap_prefixes = {
+		normal_mode = 'cr',
+		motion_mode = "cr",
+		visual_mode = "cr",
+	}
+}
+'''
+
+[[plugins]]
+repo = "kylechui/nvim-surround"
+on_map = { n = [
+	"ys",
+	"yss",
+	"yS",
+	"ySS",
+	"ds",
+	"cs",
+	"cS",
+], i = [
+	"<C-g>s",
+	"<C-g>S",
+], x = [
+	"S",
+	"gS",
+] }
+lua_after = """
+require 'nvim-surround'.setup {
+	surrounds = {
+		["3"] = {
+			add = { "'''", "'''" },
+		},
+	}
+}
+"""
+
+[[plugins]]
+repo = "gw31415/extend_word_motion.nvim"
+on_map = ["w", "b", "e", "ge"]
+lua_after = "require 'extend_word_motion'.setup{}"
+
+[[plugins]]
+repo = "gw31415/scrollUptoLastLine.vim"
+on_map = { nivxo = '<MouseUp>' }
+lua_after = "vim.keymap.set({'', 'i'}, '<S-MouseUp>', '<Nop>')"
+
+[[plugins]]
+repo = "simeji/winresizer"
+on_map = "<c-w>"
+lua_before = "vim.api.nvim_set_var('winresizer_start_key', '<C-W>e')"
+
+[[plugins]]
+repo = "monaqa/dial.nvim"
+on_map = { nx = ["<C-a>", "<C-x>", "g<C-a>", "g<C-x>"] }
+lua_after = '''
+vim.keymap.set({ 'n', 'x' }, '<C-a>', '<Plug>(dial-increment)', { desc = 'Increment using dial' })
+vim.keymap.set({ 'n', 'x' }, '<C-x>', '<Plug>(dial-decrement)', { desc = 'Decrement using dial' })
+vim.keymap.set({ 'n', 'x' }, 'g<C-a>', '<Plug>(dial-g-increment)', { desc = 'Increment using dial' })
+vim.keymap.set({ 'n', 'x' }, 'g<C-x>', '<Plug>(dial-g-decrement)', { desc = 'Decrement using dial' })
+
+local augend = require 'dial.augend'
+require 'dial.config'.augends:register_group {
+	default = {
+		augend.integer.alias.decimal,
+		augend.semver.alias.semver,
+		augend.integer.alias.hex,
+		augend.constant.alias.bool,
+		augend.date.alias['%Y/%m/%d'],
+		augend.date.alias['%Y-%m-%d'],
+	},
+}
+'''
+
+[[plugins]]
+repo = "ysmb-wtsg/in-and-out.nvim"
+on_map = { i = "<C-CR>" }
+lua_after = '''
+vim.keymap.set('i', '<C-CR>', function() require 'in-and-out'.in_and_out() end, { desc = 'Toggle in and out of bracket' })
+'''
+
+[[plugins]]
+repo = "williamboman/mason.nvim"
+lua_after = "require 'mason'.setup()"
+[[plugins]]
+repo = "nvimtools/none-ls.nvim"
+lua_after = "require 'null-ls'.setup()"
+[[plugins]]
+repo = "williamboman/mason-lspconfig.nvim"
+[[plugins]]
+repo = "jay-babu/mason-null-ls.nvim"
+depends = ["mason.nvim", "none-ls.nvim"]
+on_event = "CursorHold"
+lua_after = '''
+require 'mason-null-ls'.setup {
+	automatic_setup = true,
+	automatic_installation = true,
+	ensure_installed = {},
+	handlers = {
+		function(sourcename, methods)
+			-- Disable biome in null-ls because it works as a standalone LSP
+			if sourcename == 'biome' then
+				return
+			else
+				require 'mason-null-ls'.default_setup(sourcename, methods)
+			end
+		end,
+	},
+}
+'''
+[[plugins]]
+repo = "neovim/nvim-lspconfig"
+on_event = ["LspAttach", "CursorHold"]
+lua_after = '''
+local lsps = vim.tbl_filter(function(name)
+	return not vim.list_contains({ 'biome', 'denols', 'vtsls', 'tsgo' }, name)
+end, require 'mason-lspconfig'.get_installed_servers())
+vim.lsp.enable(lsps)
+
+vim.api.nvim_create_autocmd('FileType', {
+	pattern = { 'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx' },
+	callback = function(args)
+		---@param files string[]
+		local function has_root(files)
+			local found_dirs = vim.fs.find(files, {
+				upward = true,
+				path = vim.fs.dirname(vim.fs.normalize(vim.api.nvim_buf_get_name(args.buf))),
+			})
+			return #found_dirs > 0
+		end
+
+		-- TODO: ワークスペース毎に適切なLSPを選択する
+		---@param name string
+		local function enable_or_attach(name)
+			local client = vim.lsp.get_clients { name = name }[1]
+			if client then
+				vim.lsp.buf_attach_client(args.buf, client.id)
+			else
+				-- TODO: enableの場合、denolsとその他のJS/TS系LSを両方起動すると(恐らく)競合する
+				-- INFO: vim.lsp.start(vim.lsp.config(name)) だと :LspInfo でエラーになる。
+				vim.lsp.enable(name)
+			end
+		end
+		if has_root { 'deno.json', 'deno.jsonc', 'deno.lock', 'deps.ts', 'denops' } then
+			enable_or_attach 'denols'
+		else
+			-- INFO: 何故かvtslsよりtsgoが遅いのでvtslsを使っている
+			enable_or_attach 'vtsls'
+		end
+
+		if has_root { 'biome.json' } then
+			enable_or_attach 'biome'
+			for _, name in ipairs { 'denols', 'vtsls', 'tsgo' } do
+				vim.lsp.config(name, {
+					capabilities = {
+						documentFormattingProvider = false,
+						documentRangeFormattingProvider = false,
+					},
+				})
+			end
+		end
+	end,
+})
+vim.api.nvim_create_autocmd('FileType', {
+	pattern = 'json',
+	callback = function(args)
+		---@param files string[]
+		local function has_root(files)
+			local found_dirs = vim.fs.find(files, {
+				upward = true,
+				path = vim.fs.dirname(vim.fs.normalize(vim.api.nvim_buf_get_name(args.buf))),
+			})
+			return #found_dirs > 0
+		end
+
+		if has_root { 'biome.json' } then
+			vim.lsp.config('jsonls', {
+				capabilities = {
+					documentFormattingProvider = false,
+					documentRangeFormattingProvider = false,
+				},
+			})
+		end
+	end,
+})
+vim.api.nvim_exec_autocmds('FileType', { pattern = vim.api.nvim_get_option_value('filetype', {}) })
+'''
+
+[[plugins]]
+repo = "mrcjkb/rustaceanvim"
+on_ft = "rust"
+
+[[plugins]]
+repo = "gukz/ftFT.nvim"
+on_map = { n = ["f", "t", "F", "T"] }
+lua_after = '''
+vim.api.nvim_set_hl(0, 'ftFT', {
+	ctermbg = 0,
+	ctermfg = 15,
+	bg = '#3b3f4c',
+	underline = true,
+})
+require 'ftFT'.setup {
+	hl_group = 'ftFT',
+}
+'''
+
+[[plugins]]
+repo = "lambdalisue/vim-gf-improved"
+on_map = { nxo = ["gf", "gF", "<C-w>f", "<C-w>F", "<C-w>gf", "<C-w>gF"] }
+
+[[plugins]]
+repo = "lambdalisue/vim-file-protocol"
+on_cmd = ["BufReadCmd", "FileReadCmd"]
+
+[[plugins]]
+repo = "folke/sidekick.nvim"
+on_event = "CursorHold"
+on_cmd = "Sidekick"
+lua_after = '''
+require 'sidekick'.setup {
+	cli = {
+		mux = {
+			backend = 'tmux',
+			enabled = true,
+		},
+	},
+}
+vim.api.nvim_create_user_command('Sidekick', function(args)
+	local model = args.fargs[1]
+	require 'sidekick.cli'.toggle { focus = true, name = model }
+end, {
+	nargs = '?',
+	complete = function()
+		---@param a sidekick.cli.Tool
+		---@return string[]
+		return vim.tbl_map(function(a)
+			return a.name
+		end, require 'sidekick.cli'.get_tools {
+			installed = true,
+		});
+	end,
+})
+vim.keymap.set('n', '<Tab>', function()
+		if not require 'sidekick'.nes_jump_or_apply() then
+			return '<Tab>'
+		end
+	end,
+	{
+		expr = true,
+		desc = 'Goto/Apply Next Edit Suggestion',
+	}
+)
+'''
