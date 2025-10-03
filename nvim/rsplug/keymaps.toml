@@ -1,0 +1,96 @@
+[[plugins]]
+repo = "tani/dmacro.nvim"
+on_event = "CursorHold"
+lua_after = "vim.keymap.set({ 'n', 'i' }, '<S-Right>', '<Plug>(dmacro-play-macro)', { desc = 'Play macro' })"
+
+[[plugins]]
+repo = "gbprod/substitute.nvim"
+on_map = { nx = '_' }
+lua_after = '''
+require 'substitute'.setup()
+
+vim.keymap.set('n', '_', function() require 'substitute'.operator() end, { desc = 'Replace' })
+vim.keymap.set('x', '_', function() require 'substitute'.visual() end, { desc = 'Replace selection' })
+vim.keymap.set('n', '__', function() require 'substitute'.line() end, { desc = 'Replace line' })
+'''
+
+[[plugins]]
+repo = "jiaoshijie/undotree"
+on_map = { n = '<Leader>u' }
+lua_after = '''
+require 'undotree'.setup { keymaps = { ['<Esc>'] = 'quit' } }
+vim.keymap.set('n', '<Leader>u', function() require 'undotree'.toggle() end, { desc = 'Toggle undotree' })
+'''
+
+[[plugins]]
+repo = "kylechui/nvim-surround"
+on_map = { n = [
+	"ys",
+	"yss",
+	"yS",
+	"ySS",
+	"ds",
+	"cs",
+	"cS",
+], i = [
+	"<C-g>s",
+	"<C-g>S",
+], x = [
+	"S",
+	"gS",
+] }
+lua_after = """
+require 'nvim-surround'.setup {
+	surrounds = {
+		["3"] = {
+			add = { "'''", "'''" },
+		},
+	}
+}
+"""
+
+[[plugins]]
+repo = "simeji/winresizer"
+on_map = "<c-w>"
+lua_before = "vim.api.nvim_set_var('winresizer_start_key', '<C-W>e')"
+
+[[plugins]]
+repo = "ysmb-wtsg/in-and-out.nvim"
+on_map = { i = "<C-CR>" }
+lua_after = '''
+vim.keymap.set('i', '<C-CR>', function() require 'in-and-out'.in_and_out() end, { desc = 'Toggle in and out of bracket' })
+'''
+
+[[plugins]]
+repo = "Wansmer/treesj"
+on_cmd = "TSJToggle"
+on_map = { n = 'J' }
+lua_after = '''
+require 'treesj'.setup { use_default_keymaps = false, max_join_length = 150 }
+vim.keymap.set('n', 'J', '<cmd>TSJToggle<cr>', { desc = 'Join multi-lines' })
+'''
+
+[[plugins]]
+repo = "gw31415/vim-partedit"
+depends = "context_filetype.vim"
+on_map = { nx = "cx" }
+on_cmd = "Partedit"
+lua_after = '''
+vim.g['partedit#suffix_pattern'] = '\\v\\s*$'
+vim.g['partedit#opener'] = 'bo sp'
+
+vim.keymap.set('n', 'cx', function()
+	local context = vim.fn['context_filetype#get']()
+	if vim.fn.max(vim.fn.flatten(context.range)) == 0 then
+		vim.cmd [[
+			echohl WarningMsg
+			echomsg 'Context is not found'
+			echohl NONE
+		]]
+	else
+		vim.fn['partedit#start'](context.range[1][1], context.range[2][1], { filetype = context.filetype })
+		vim.keymap.set('n', 'Q', 'ZZ', { buffer = true, nowait = true, desc = 'Quit the Partedit' })
+		vim.keymap.set('n', '<C-6>', 'ZZ', { buffer = true, nowait = true, desc = 'Quit the Partedit' })
+	end
+end, { desc = 'Edit the context part' })
+'''

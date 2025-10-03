@@ -1,0 +1,40 @@
+[[plugins]]
+repo = "MunifTanjim/nui.nvim"
+
+[[plugins]]
+repo = "kevinhwang91/promise-async"
+
+[[plugins]]
+repo = "giusgad/hologram.nvim"
+
+[[plugins]]
+repo = "nvim-tree/nvim-web-devicons"
+
+[[plugins]]
+repo = "nvim-telescope/telescope.nvim"
+
+[[plugins]]
+repo = "vim-jp/vimdoc-ja"
+start = true
+
+[[plugins]]
+repo = "sirasagi62/tinysegmenter.nvim"
+
+[[plugins]]
+repo = "gw31415/deepl.vim"
+lua_after = '''
+vim.api.nvim_set_var('deepl_authkey', os.getenv('DEEPL_API_KEY'))
+vim.api.nvim_set_var('deepl_target_lang', 'EN')
+'''
+
+[[plugins]]
+repo = "Shougo/context_filetype.vim"
+
+[[plugins]]
+repo = "nvim-lua/plenary.nvim"
+
+[[plugins]]
+repo = "gregorias/coop.nvim"
+
+[[plugins]]
+repo = "nvzone/volt"

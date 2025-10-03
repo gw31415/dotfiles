@@ -1,0 +1,40 @@
+[[plugins]]
+repo = "lambdalisue/nerdfont.vim"
+[[plugins]]
+repo = "lambdalisue/fern-renderer-nerdfont.vim"
+depends = "nerdfont.vim"
+[[plugins]]
+repo = "lambdalisue/fern-git-status.vim"
+[[plugins]]
+repo = "lambdalisue/fern-mapping-git.vim"
+[[plugins]]
+repo = "lambdalisue/fern-mapping-project-top.vim"
+[[plugins]]
+repo = "andykog/fern-highlight.vim"
+
+[[plugins]]
+repo = "lambdalisue/vim-fern"
+depends = [
+	"fern-renderer-nerdfont.vim",
+	"fern-git-status.vim",
+	"fern-mapping-git.vim",
+	"fern-highlight.vim",
+]
+on_cmd = "Fern"
+# TODO: なぜかエラーが出る
+# on_map = { n = '<c-n>' }
+lua_after = '''
+vim.api.nvim_set_var('fern#renderer', 'nerdfont')
+vim.api.nvim_set_var('fern#renderer#nerdfont#indent_markers', 1)
+vim.api.nvim_create_autocmd('FileType', {
+	pattern = 'fern',
+	callback = function()
+		local opts = { buffer = true }
+		vim.keymap.set('n', 'K', '<Plug>(fern-action-new-dir)', { buffer = true, desc = 'Fern: create new dir' })
+		vim.keymap.set('n', 'ZZ', '<cmd>close<cr>', { buffer = true, desc = 'Fern: close the buffer' })
+		vim.keymap.set('n', 'ZQ', '<cmd>quit<cr>', { buffer = true, desc = 'Fern: quit' })
+		vim.opt_local.number = false
+	end,
+})
+vim.fn['fern_git_status#init']()
+'''
