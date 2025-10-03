@@ -1,0 +1,3 @@
+[[plugins]]
+repo = "https://gitlab.com/HiPhish/rainbow-delimiters.nvim"
+on_event = "CursorHold"

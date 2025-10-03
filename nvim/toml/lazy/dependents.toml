@@ -1,0 +1,24 @@
+[[plugins]]
+repo = "kana/vim-operator-user"
+[[plugins]]
+repo = "kana/vim-textobj-user"
+[[plugins]]
+repo = "glts/vim-textobj-comment"
+on_map = { ox = ["ic", "ac"] }
+depends = "vim-textobj-user"
+[[plugins]]
+repo = "kana/vim-textobj-entire"
+on_map = { ox = ["ae", "ie"] }
+depends = "vim-textobj-user"
+
+[[plugins]]
+repo = "Kaiser-Yang/blink-cmp-git"
+
+[[plugins]]
+repo = "fang2hou/blink-copilot"
+lua_source = '''
+require 'blink-copilot'.setup {
+	max_completions = 3,
+	max_attempts = 7,
+}
+'''

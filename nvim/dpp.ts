@@ -71,7 +71,7 @@ export class Config extends BaseConfig {
     const action = tomlExt.actions.load;
 
     const tomlPromises = [
-      { path: `${tomlsDir}plugin.toml`, lazy: false },
+      { path: `${tomlsDir}denops.toml`, lazy: false },
       ...Array.from(Deno.readDirSync(`${tomlsDir}lazy/`))
         .filter((tomlFile) => tomlFile.name.endsWith(".toml"))
         .map((tomlFile) => ({

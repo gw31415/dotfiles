@@ -70,6 +70,12 @@ require 'treesj'.setup { use_default_keymaps = false, max_join_length = 150 }
 vim.keymap.set('n', 'J', '<cmd>TSJToggle<cr>', { desc = 'Join multi-lines' })
 '''
 
+# context_filetypeの代替になる？
+# [[plugins]]
+# repo = "monaqa/nvim-treesitter-clipping"
+# on_map = "<Plug>(ts-clipping-clip)"
+# lua_add = "vim.keymap.set('n', 'cx', '<Plug>(ts-clipping-clip)')"
+
 [[plugins]]
 repo = "gw31415/vim-partedit"
 depends = "context_filetype.vim"

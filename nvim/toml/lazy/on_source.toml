@@ -2,7 +2,7 @@
 repo = "kevinhwang91/nvim-ufo"
 on_source = "nvim-treesitter"
 on_lua = "ufo"
-on_cmd = "loadview"
+on_cmd = "loadview" # 効いているのか謎
 depends = "nvim-treesitter"
 lua_source = '''
 vim.o.foldlevel = 99
