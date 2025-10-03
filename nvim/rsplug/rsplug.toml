@@ -561,11 +561,13 @@ vim.api.nvim_set_var('deepl_target_lang', 'EN')
 [[plugins]]
 repo = "gw31415/deepl-commands.nvim"
 on_event = "CmdlineEnter"
+on_map = { n = "c<c-l>" }
 depends = ["deepl.vim", "fzyselect.vim"]
 lua_after = '''
 require 'deepl-commands'.setup {
 	selector_func = function(...) require 'fzyselect'.start(...) end,
 }
+vim.keymap.set('n', 'c<c-l>', '<cmd>DeepLTarget<cr>', { desc = 'Select the DeepL translation target lang' })
 '''
 
 [[plugins]]
