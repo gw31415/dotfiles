@@ -119,6 +119,7 @@ lua_after = '''
 ---@diagnostic disable: missing-return, missing-fields
 require 'cellwidths'.setup { name = 'cica' }
 vim.cmd [[ CellWidthsAdd 0xE0B6, 1 ]]
+vim.cmd [[ CellWidthsAdd 0xE0B2, 1 ]]
 '''
 
 [[plugins]]
