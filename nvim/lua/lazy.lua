@@ -10,6 +10,13 @@ if vim.g.neovide then
 	vim.g.neovide_scroll_animation_length = 0.00
 end
 
+-- 空行での編集開始時に自動でインデント
+for _, key in ipairs { 'a', 'A' } do
+	vim.keymap.set('n', key, function()
+		return vim.fn.empty(vim.fn.getline('.')) == 1 and '"_cc' or key
+	end, { expr = true })
+end
+
 --------------------------------------------------------------------------------
 -- Global Functions used in Statusline
 --------------------------------------------------------------------------------
