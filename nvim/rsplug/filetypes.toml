@@ -150,11 +150,6 @@ require 'flutter-tools'.setup {
 '''
 
 [[plugins]]
-repo = "rest-nvim/rest.nvim"
-on_ft = "http"
-lua_after = "require 'rest-nvim'.setup {}"
-
-[[plugins]]
 repo = "MeanderingProgrammer/render-markdown.nvim"
 on_ft = ["markdown", "mdx", "mstdn", "Avante"]
 lua_after = '''
