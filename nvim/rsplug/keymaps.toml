@@ -51,8 +51,15 @@ require 'nvim-surround'.setup {
 
 [[plugins]]
 repo = "simeji/winresizer"
-on_map = "<c-w>"
-lua_before = "vim.api.nvim_set_var('winresizer_start_key', '<C-W>e')"
+on_cmd = [
+	"WinResizerStartResize",
+	"WinResizerStartFocus",
+	"WinResizerStartMove",
+]
+on_map = { n = "<c-w>e" }
+lua_before = "vim.api.nvim_set_var('winresizer_start_key', '<c-w>e')"
+# Override to make silent
+lua_after = "vim.keymap.set('n', '<c-w>e', '<cmd>WinResizerStartResize<cr>', { silent = true })"
 
 [[plugins]]
 repo = "ysmb-wtsg/in-and-out.nvim"
