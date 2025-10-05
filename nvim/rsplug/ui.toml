@@ -25,11 +25,7 @@ end
 
 ---@return string
 local function indent()
-	if vim.bo.expandtab then
-		return vim.bo.shiftwidth .. 's'
-	else
-		return vim.bo.tabstop .. 't'
-	end
+	return '' .. (vim.bo.expandtab and vim.bo.shiftwidth .. ' 󱁐' or vim.bo.tabstop .. ' ')
 end
 
 require 'lualine'.setup {
