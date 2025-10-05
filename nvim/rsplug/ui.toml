@@ -6,33 +6,56 @@ lua_after = '''
 -- Global Functions used in Statusline
 --------------------------------------------------------------------------------
 
----@return string
-local function macro_state()
-	local key = vim.fn.reg_recording()
-	return key ~= '' and ('MACRO:' .. key) or ''
-end
+local macro_state = {
+	---@return string
+	function()
+		local key = vim.fn.reg_recording()
+		return key ~= '' and ('MACRO:' .. key) or ''
+	end,
+	color = { bg = 'red', fg = 'black', gui = 'bold' }
+}
 
----@return string
-local function search_count()
-	if vim.v.hlsearch == 0 then
-		return ''
-	end
-	local count = vim.fn.searchcount { recompute = 1, maxcount = 999 }
-	local current = count.current
-	local total = count.total
-	return current ~= 0 and string.format('%d/%d', current, total) or ''
-end
+local search_count = {
+	---@return string
+	function()
+		if vim.v.hlsearch == 0 then
+			return ''
+		end
+		local count = vim.fn.searchcount { recompute = 1, maxcount = 999 }
+		local current = count.current
+		local total = count.total
+		return current ~= 0 and string.format('%d/%d', current, total) or ''
+	end,
+	color = { fg = 'orange' },
+}
 
 ---@return string
 local function indent()
 	return '' .. (vim.bo.expandtab and vim.bo.shiftwidth .. ' 󱁐' or vim.bo.tabstop .. ' ')
 end
 
+local sidekick = {
+	function()
+		return ''
+	end,
+	color = function()
+		local status = require 'sidekick.status'.get()
+		if status then
+			return status.kind == "Error" and "DiagnosticError" or status.busy and "DiagnosticWarn" or nil
+		end
+	end,
+	cond = function()
+		local status = require 'sidekick.status'
+		return status.get() ~= nil
+	end,
+}
+
 require 'lualine'.setup {
 	sections = {
-		lualine_b = { { macro_state, color = { bg = 'red', fg = 'black', gui = 'bold' } }, 'branch', 'diff', 'diagnostics' },
+		lualine_b = { macro_state, 'branch', 'diff', 'diagnostics' },
+		lualine_c = { 'filename', sidekick },
 		lualine_x = { 'encoding', 'fileformat', indent, 'filetype' },
-		lualine_y = { 'progress', { search_count, color = { fg = 'orange' } } },
+		lualine_y = { 'progress', search_count },
 	},
 	refresh = {
 		events = {
