@@ -103,7 +103,7 @@ require 'quicker'.setup {
 		{ '<', "<cmd>lua require('quicker').collapse()<CR>", desc = 'Collapse quickfix content' },
 	},
 	type_icons = {
-		E = "󰅚 ",
+		E = "󰅚",
 		W = "",
 		I = "",
 		N = "󰛿",

@@ -653,6 +653,10 @@ on_event = "CursorHold"
 on_cmd = "Sidekick"
 lua_after = '''
 require 'sidekick'.setup {
+	signs = {
+		enabled = true,
+		icon = "",
+	},
 	cli = {
 		mux = {
 			backend = 'tmux',
