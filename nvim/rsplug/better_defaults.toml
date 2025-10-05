@@ -116,10 +116,18 @@ require 'quicker'.setup {
 repo = "delphinus/cellwidths.nvim"
 on_event = "UIEnter"
 lua_after = '''
----@diagnostic disable: missing-return, missing-fields
-require 'cellwidths'.setup { name = 'cica' }
-vim.cmd [[ CellWidthsAdd 0xE0B6, 1 ]]
-vim.cmd [[ CellWidthsAdd 0xE0B2, 1 ]]
+---@diagnostic disable: missing-return, missing-fields, assign-type-mismatch
+
+require 'cellwidths'.setup {
+	name = 'sfmono_square',
+	-- fallback = function(cw)
+	-- 	cw.load 'cica'
+	-- 	cw.add(0xE0B6, 1)
+	-- 	cw.add(0xE0B2, 1)
+	-- 	cw.add(0xE0B3, 1)
+	-- 	return cw
+	-- end,
+}
 '''
 
 [[plugins]]
