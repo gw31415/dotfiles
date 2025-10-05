@@ -9,7 +9,6 @@ se ls=3
 se sms
 se so=3
 se diffopt+=algorithm:histogram
-se stl=%f%r%m%h%w\ %{v:lua.get_macro_state()}%=%{v:lua.search_count()}\ %{&et?'(et)':''}sw=%{&sw}\ E%{v:lua.get_error_count()}W%{v:lua.get_warn_count()}\ %l/%L
 
 ino <c-f> <c-g>U<right>
 ino <c-b> <c-g>U<left>

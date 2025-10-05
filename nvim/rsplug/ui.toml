@@ -1,0 +1,58 @@
+[[plugins]]
+repo = "nvim-lualine/lualine.nvim"
+on_event = "UIEnter"
+lua_after = '''
+--------------------------------------------------------------------------------
+-- Global Functions used in Statusline
+--------------------------------------------------------------------------------
+
+---@return string
+local function macro_state()
+	local key = vim.fn.reg_recording()
+	return key ~= '' and ('MACRO:' .. key) or ''
+end
+
+---@return string
+local function search_count()
+	if vim.v.hlsearch == 0 then
+		return ''
+	end
+	local count = vim.fn.searchcount { recompute = 1, maxcount = 999 }
+	local current = count.current
+	local total = count.total
+	return current ~= 0 and string.format('%d/%d', current, total) or ''
+end
+
+---@return string
+local function indent()
+	if vim.bo.expandtab then
+		return vim.bo.shiftwidth .. 's'
+	else
+		return vim.bo.tabstop .. 't'
+	end
+end
+
+require 'lualine'.setup {
+	sections = {
+		lualine_b = { { macro_state, color = { bg = 'red', fg = 'black', gui = 'bold' } }, 'branch', 'diff', 'diagnostics' },
+		lualine_x = { 'encoding', 'fileformat', indent, 'filetype' },
+		lualine_y = { 'progress', { search_count, color = { fg = 'orange' } } },
+	},
+	refresh = {
+		events = {
+			'WinEnter',
+			'BufEnter',
+			'BufWritePost',
+			'SessionLoadPost',
+			'FileChangedShellPost',
+			'VimResized',
+			'Filetype',
+			'CursorMoved',
+			'CursorMovedI',
+			'ModeChanged',
+			'RecordingEnter',
+			'RecordingLeave',
+		},
+	}
+}
+'''
