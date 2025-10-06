@@ -15,8 +15,16 @@ require 'blink-copilot'.setup {
 repo = "disrupted/blink-cmp-conventional-commits"
 
 [[plugins]]
+repo = "Kaiser-Yang/blink-cmp-avante"
+
+[[plugins]]
 repo = "saghen/blink.cmp@v1.*"
-depends = ["blink-copilot", "blink-cmp-git", "blink-cmp-conventional-commits"]
+depends = [
+	"blink-copilot",
+	"blink-cmp-git",
+	"blink-cmp-conventional-commits",
+	"blink-cmp-avante",
+]
 on_event = ["InsertEnter", "CmdlineEnter", "LspAttach"]
 build = ["cargo", "build", "--release"]
 lua_after = '''
@@ -30,6 +38,7 @@ require 'blink.cmp'.setup {
 			tex = { 'snippets', 'lsp', 'copilot', 'path' },
 			lua = { inherit_defaults = true, 'lazydev' },
 			gitcommit = { inherit_defaults = true, 'git', 'conventional_commits' },
+			AvanteInput = { inherit_defaults = true, 'avante' },
 		},
 		providers = {
 			copilot = {
@@ -50,6 +59,11 @@ require 'blink.cmp'.setup {
 			conventional_commits = {
 				name = 'Conventional Commits',
 				module = 'blink-cmp-conventional-commits',
+				opts = {},
+			},
+			avante = {
+				module = 'blink-cmp-avante',
+				name = 'Avante',
 				opts = {},
 			},
 		},
