@@ -1,4 +1,9 @@
 [[plugins]]
+repo = "iamcco/markdown-preview.nvim"
+on_ft = ["markdown", "pandoc.markdown", "rmd"]
+build = ["sh", "-c", "cd app && npx --yes yarn install"]
+
+[[plugins]]
 repo = "kaarmu/typst.vim"
 on_ft = "typst"
 lua_after = '''

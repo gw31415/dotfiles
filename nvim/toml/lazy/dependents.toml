@@ -10,15 +10,3 @@ depends = "vim-textobj-user"
 repo = "kana/vim-textobj-entire"
 on_map = { ox = ["ae", "ie"] }
 depends = "vim-textobj-user"
-
-[[plugins]]
-repo = "Kaiser-Yang/blink-cmp-git"
-
-[[plugins]]
-repo = "fang2hou/blink-copilot"
-lua_source = '''
-require 'blink-copilot'.setup {
-	max_completions = 3,
-	max_attempts = 7,
-}
-'''
