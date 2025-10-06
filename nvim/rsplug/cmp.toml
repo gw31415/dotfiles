@@ -12,8 +12,11 @@ require 'blink-copilot'.setup {
 '''
 
 [[plugins]]
+repo = "disrupted/blink-cmp-conventional-commits"
+
+[[plugins]]
 repo = "saghen/blink.cmp@v1.*"
-depends = ["blink-copilot", "blink-cmp-git"]
+depends = ["blink-copilot", "blink-cmp-git", "blink-cmp-conventional-commits"]
 on_event = ["InsertEnter", "CmdlineEnter", "LspAttach"]
 build = ["cargo", "build", "--release"]
 lua_after = '''
@@ -26,7 +29,7 @@ require 'blink.cmp'.setup {
 			typst = { 'snippets', 'lsp', 'copilot', 'path' },
 			tex = { 'snippets', 'lsp', 'copilot', 'path' },
 			lua = { inherit_defaults = true, 'lazydev' },
-			gitcommit = { inherit_defaults = true, 'git' },
+			gitcommit = { inherit_defaults = true, 'git', 'conventional_commits' },
 		},
 		providers = {
 			copilot = {
@@ -43,6 +46,11 @@ require 'blink.cmp'.setup {
 			git = {
 				module = 'blink-cmp-git',
 				name = 'Git',
+			},
+			conventional_commits = {
+				name = 'Conventional Commits',
+				module = 'blink-cmp-conventional-commits',
+				opts = {},
 			},
 		},
 	},
