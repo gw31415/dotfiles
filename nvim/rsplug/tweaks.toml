@@ -761,3 +761,35 @@ require 'avante'.setup {
 	end,
 }
 '''
+
+[[plugins]]
+repo = "FabijanZulj/blame.nvim"
+on_cmd = "BlameToggle"
+on_map = { n = "<leader>b" }
+lua_after = '''
+require 'blame'.setup()
+vim.keymap.set("n", "<leader>b", "<cmd>BlameToggle<cr>", { noremap = true, silent = true })
+'''
+
+[[plugins]]
+repo = "gw31415/emjpick.vim"
+on_cmd = "Emoji"
+lua_after = "vim.api.nvim_create_user_command('Emoji', 'call emjpick#insert()', {})"
+
+[[plugins]]
+repo = "kdheepak/lazygit.nvim"
+on_cmd = [
+	"LazyGit",
+	"LazyGitConfig",
+	"LazyGitCurrentFile",
+	"LazyGitFilter",
+	"LazyGitFilterCurrentFile",
+]
+on_map = { n = "gll" }
+lua_after = '''
+vim.cmd [[
+let $VISUAL = $EDITOR
+let $GIT_EDITOR = $EDITOR
+]]
+vim.keymap.set('n', 'gll', '<cmd>LazyGit<cr>', {})
+'''

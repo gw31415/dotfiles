@@ -107,3 +107,25 @@ vim.keymap.set('n', 'cx', function()
 	end
 end, { desc = 'Edit the context part' })
 '''
+
+[[plugins]]
+repo = "kana/vim-operator-user"
+[[plugins]]
+repo = "kana/vim-textobj-user"
+[[plugins]]
+repo = "glts/vim-textobj-comment"
+on_map = { ox = ["ic", "ac"] }
+depends = "vim-textobj-user"
+[[plugins]]
+repo = "kana/vim-textobj-entire"
+on_map = { ox = ["ae", "ie"] }
+depends = ["vim-textobj-user", "vim-operator-stay-cursor"]
+[[plugins]]
+repo = "osyo-manga/vim-operator-stay-cursor"
+on_func = "operator#stay_cursor#wrapper" # TODO: Imprement this attribute
+depends = "vim-operator-user"
+on_map = { nx = "gq" }
+lua_after = '''
+vim.keymap.set({ 'n', 'x' }, 'gq', function() return vim.fn['operator#stay_cursor#wrapper'] 'gq' end,
+	{ expr = true, noremap = false })
+'''
