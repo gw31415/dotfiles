@@ -19,8 +19,6 @@ in
   # Audiverisは手動でインストールすること
   home.packages =
     (with pkgs-stable; [
-      pkgs.nodejs
-      pkgs.gemini-cli
       pkgs.typescript-go
 
       # CLI tools
@@ -38,6 +36,7 @@ in
       eza
       ffmpeg
       flyctl
+      gemini-cli
       gh
       gocryptfs
       gopls
@@ -52,6 +51,7 @@ in
       litecli
       mise
       mmv-go
+      nodejs
       nixfmt-rfc-style
       p7zip
       pandoc
