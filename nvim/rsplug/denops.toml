@@ -1,0 +1,3 @@
+# [[plugins]]
+# repo = "gw31415/denops-commitgen.vim"
+# start = true
