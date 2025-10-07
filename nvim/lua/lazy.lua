@@ -31,8 +31,6 @@ vim.lsp.config('*', {
 	},
 })
 
-vim.lsp.enable { 'fish_lsp', 'sourcekit' }
-
 vim.api.nvim_create_autocmd('LspAttach', {
 	callback = function(args)
 		vim.lsp.document_color.enable(true, args.buf, { style = "virtual" })

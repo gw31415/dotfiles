@@ -573,10 +573,11 @@ require 'mason-null-ls'.setup {
 repo = "neovim/nvim-lspconfig"
 on_event = ["LspAttach", "CursorHold"]
 lua_after = '''
-local lsps = vim.tbl_filter(function(name)
-	return not vim.list_contains({ 'biome', 'denols', 'vtsls', 'tsgo' }, name)
-end, require 'mason-lspconfig'.get_installed_servers())
-vim.lsp.enable(lsps)
+local lsp_list = vim.list_extend({ 'fish_lsp', 'sourcekit', 'ty' }, require 'mason-lspconfig'.get_installed_servers())
+
+local lsp_unloads = { 'biome', 'denols', 'vtsls', 'tsgo' }
+
+vim.lsp.enable(vim.tbl_filter(function(name) return not vim.list_contains(lsp_unloads, name) end, lsp_list))
 
 vim.api.nvim_create_autocmd('FileType', {
 	pattern = { 'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx' },
