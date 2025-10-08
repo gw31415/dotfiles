@@ -134,11 +134,9 @@ vim.keymap.set({ 'n', 'x' }, 'gq', function() return vim.fn['operator#stay_curso
 repo = "gw31415/vim-ambicmdlesser"
 on_map = { c = ["<space>", "<cr>"] }
 lua_after = '''
-vim.cmd [[cnoremap <expr> <space> ambicmdlesser#expand("\<space>")]]
-vim.cmd [[cnoremap <expr> <cr> ambicmdlesser#expand("\<cr>")]]
--- for _, key in ipairs { '<space>', '<cr>' } do
--- 	vim.keymap.set('c', key, function()
--- 		return vim.keycode(vim.fn['ambicmdlesser#expand'](vim.keycode(key)))
--- 	end, { expr = true })
--- end
+for _, key in ipairs { '<space>', '<cr>' } do
+	vim.keymap.set('c', key, function()
+		return vim.fn['ambicmdlesser#expand'](vim.keycode(key))
+	end, { expr = true, replace_keycodes = false })
+end
 '''
