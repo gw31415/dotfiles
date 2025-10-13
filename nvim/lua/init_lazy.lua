@@ -1,5 +1,43 @@
 vim.opt_global.helplang = 'ja,en'
 
+vim.opt.cursorline = true
+vim.opt.cursorcolumn = true
+vim.opt.splitbelow = true
+vim.opt.laststatus = 3
+vim.opt.scrolloff = 3
+vim.opt.smoothscroll = true
+vim.opt.diffopt:append { 'algorithm:histogram' }
+
+-- Use ripgrep for :grep
+vim.opt.grepprg = 'rg --vimgrep --no-heading --smart-case'
+vim.opt.grepformat = '%f:%l:%c:%m,%f:%l:%m'
+
+-- Emacs-like keybindings in insert and command mode
+vim.cmd [[
+	ino <c-f> <c-g>U<right>
+	ino <c-b> <c-g>U<left>
+	ino <c-p> <c-g>U<up>
+	ino <c-n> <c-g>U<down>
+	ino <c-d> <c-g>U<del>
+	ino <expr> <c-a> col('.') == match(getline('.'), '\S') + 1 ?
+		\ repeat('<C-G>U<Left>', col('.') - 1) :
+		\ (col('.') < match(getline('.'), '\S') ?
+		\     repeat('<C-G>U<Right>', match(getline('.'), '\S') + 0) :
+		\     repeat('<C-G>U<Left>', col('.') - 1 - match(getline('.'), '\S')))
+	ino <expr> <c-e> repeat('<C-G>U<Right>', col('$') - col('.'))
+
+	cno <c-f> <right>
+	cno <c-b> <left>
+	cno <c-p> <up>
+	cno <c-n> <down>
+	cno <c-d> <del>
+	cno <c-a> <home>
+	cno <c-e> <end>
+]]
+
+-- Use mise cmds
+vim.env.PATH = vim.env.HOME .. "/.local/share/mise/shims:" .. vim.env.PATH
+
 if vim.g.neovide then
 	vim.g.neovide_position_animation_length = 0
 	vim.g.neovide_cursor_animation_length = 0.00

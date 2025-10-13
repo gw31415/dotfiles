@@ -18,10 +18,8 @@ vim.g.loaded_2html_plugin = true
 ----------------------------
 
 vim.defer_fn(function()
-	vim.cmd [[
-		source $HOME/.config/home-manager/nvim/lazy.vim
-		doautocmd CursorHold
-	]]
+	require 'init_lazy'
+	vim.api.nvim_exec_autocmds('CursorHold', {})
 end, 1)
 
 ----------------------------
