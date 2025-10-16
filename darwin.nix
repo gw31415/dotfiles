@@ -68,7 +68,6 @@ in
       "openssl@3"
       "fastlane"
       "gettext"
-      "iconsur"
       "gnupg"
       "libgpg-error"
       "mas"
