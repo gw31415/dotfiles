@@ -110,7 +110,6 @@ in
       "secretive"
       "slack"
       "smoothcsv"
-      "vlc"
       "wezterm@nightly"
       "zoom"
     ];
