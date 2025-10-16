@@ -65,7 +65,6 @@ in
       "macos-fuse-t/homebrew-cask"
     ];
     brews = [
-      "aider"
       "openssl@3"
       "fastlane"
       "gettext"
