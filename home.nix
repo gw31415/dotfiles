@@ -20,6 +20,7 @@ in
   home.packages =
     (with pkgs-stable; [
       pkgs.typescript-go
+      pkgs.codex
 
       # CLI tools
       aria2
@@ -27,7 +28,6 @@ in
       bat
       bindfs
       bun
-      codex
       comma
       deno
       emacs-nox
