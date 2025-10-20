@@ -19,8 +19,11 @@ in
   # Audiverisは手動でインストールすること
   home.packages =
     (with pkgs-stable; [
-      pkgs.typescript-go
       pkgs.codex
+
+      # LSPs
+      pkgs.basedpyright
+      pkgs.typescript-go
 
       # CLI tools
       aria2
