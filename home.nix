@@ -195,23 +195,28 @@ in
       "*.lockb binary diff=lockb"
       "*.ipynb binary diff=ipynb"
     ];
-    userName = "gw31415";
-    userEmail = "24710985+gw31415@users.noreply.github.com";
-    delta.enable = true;
     ignores = [
       ".DS_Store"
       "kls_database.db"
       ".aider*"
     ];
-    extraConfig = {
+    settings = {
       credential.helper = "/usr/local/share/gcm-core/git-credential-manager";
       init.defaultBranch = "main";
       commit.gpgSign = true;
-      user.signingKey = "B7E2A136"; # Expiration: 2025-09-01
+      user = {
+        signingKey = "B7E2A136"; # Expiration: 2025-09-01
+        name = "gw31415";
+        email = "24710985+gw31415@users.noreply.github.com";
+      };
       diff.lockb.binary = true;
       diff.lockb.textconv = "${pkgs.bun}/bin/bun";
       diff.ipynb.binary = true;
     };
+  };
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
   };
   programs.starship = {
     enable = true;
