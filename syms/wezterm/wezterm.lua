@@ -193,24 +193,26 @@ config.keys = {
 		mods = 'SUPER',
 		action = wezterm.action_callback(function(window, pane)
 			local target_pane_id = tostring(pane:pane_id())
-			window:perform_action(
-				wezterm.action.SplitPane({
-					direction = "Down",
-					size = { Cells = 10 },
-				}),
-				pane
-			)
-			wezterm.time.call_after(0.1, function()
-				window:perform_action(
-					wezterm.action.SendString(
-						string.format(
-							"pnpx editprompt --editor nvim --always-copy --mux wezterm --target-pane %s ; exit\n",
-							target_pane_id
-						)
-					),
-					window:active_pane()
-				)
-			end)
+			local env_path = string.format('%s/.nix-profile/bin:/opt/homebrew/bin:%s', os.getenv('HOME'),
+				os.getenv('PATH'))
+			pane:split {
+				direction = "Bottom",
+				set_environment_variables = {
+					PATH = env_path,
+				},
+				args = {
+					'pnpx',
+					'editprompt',
+					'--always-copy',
+					'--editor',
+					'nvim',
+					'--mux',
+					'wezterm',
+					'--target-pane',
+					target_pane_id,
+				},
+				size = 10,
+			}
 		end),
 	}
 }
