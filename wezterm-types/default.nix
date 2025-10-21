@@ -11,7 +11,7 @@ pkgs.stdenvNoCC.mkDerivation {
   };
   installPhase = ''
     mkdir -p $out
-    cp -r $src/types $src/.luarc.json $out/
+    cp -r $src/lua/wezterm/types $src/.luarc.json $out/
     cp ${./src}/*.lua $out/
   '';
 }
