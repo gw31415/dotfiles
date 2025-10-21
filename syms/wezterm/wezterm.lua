@@ -188,6 +188,31 @@ config.keys = {
 		mods = 'ALT',
 		action = 'ToggleFullScreen'
 	},
+	{
+		key = 'e',
+		mods = 'SUPER',
+		action = wezterm.action_callback(function(window, pane)
+			local target_pane_id = tostring(pane:pane_id())
+			window:perform_action(
+				wezterm.action.SplitPane({
+					direction = "Down",
+					size = { Cells = 10 },
+				}),
+				pane
+			)
+			wezterm.time.call_after(0.1, function()
+				window:perform_action(
+					wezterm.action.SendString(
+						string.format(
+							"pnpx editprompt --editor nvim --always-copy --mux wezterm --target-pane %s ; exit\n",
+							target_pane_id
+						)
+					),
+					window:active_pane()
+				)
+			end)
+		end),
+	}
 }
 
 return config
