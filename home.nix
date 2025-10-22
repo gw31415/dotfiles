@@ -340,5 +340,9 @@ in
       "OrbStack"
     ];
   };
+  programs.pay-respects = {
+    enable = true;
+    enableFishIntegration = true;
+  };
   manual.manpages.enable = true;
 }
