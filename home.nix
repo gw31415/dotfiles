@@ -19,11 +19,15 @@ in
   # Audiverisは手動でインストールすること
   home.packages =
     (with pkgs-stable; [
+      # AI tools
       pkgs.codex
+      pkgs.gemini-cli
+      pkgs.github-copilot-cli
 
       # LSPs
       pkgs.basedpyright
       pkgs.typescript-go
+      gopls
 
       # CLI tools
       aria2
@@ -39,10 +43,8 @@ in
       eza
       ffmpeg
       flyctl
-      gemini-cli
       gh
       gocryptfs
-      gopls
       home-manager
       hugo
       imagemagick
@@ -65,8 +67,6 @@ in
       rustup
       sccache
       silicon
-      slack-term
-      tectonic
       tdf
       tmux
       typst
@@ -87,6 +87,10 @@ in
 
       (pkgs.writeShellScriptBin "trash" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:trash-cli "$@"'')
       ctx.dot
+
+      # Unused tools
+      # tectonic
+      # slack-term
     ])
     ++ (
       if pkgs-stable.stdenv.isDarwin then
