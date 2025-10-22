@@ -140,3 +140,11 @@ for _, key in ipairs { '<space>', '<cr>' } do
 	end, { expr = true, replace_keycodes = false })
 end
 '''
+
+[[plugins]]
+repo = "haya14busa/vim-edgemotion"
+on_map = ["<c-j>", "<c-k>"]
+lua_after = '''
+vim.keymap.set({ 'n', 'x', 'o' }, '<c-j>', 'edgemotion#move(1)', { desc = 'Move down', expr = true })
+vim.keymap.set({ 'n', 'x', 'o' }, '<c-k>', 'edgemotion#move(0)', { desc = 'Move up', expr = true })
+'''
