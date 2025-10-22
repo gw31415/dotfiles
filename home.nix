@@ -35,7 +35,6 @@ in
       bat
       bindfs
       bun
-      comma
       deno
       emacs-nox
       envchain
@@ -88,6 +87,7 @@ in
       ctx.dot
 
       # Unused tools
+      # comma
       # tectonic
       # slack-term
     ])
