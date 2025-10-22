@@ -148,3 +148,19 @@ lua_after = '''
 vim.keymap.set({ 'n', 'x', 'o' }, '<c-j>', 'edgemotion#move(1)', { desc = 'Move down', expr = true })
 vim.keymap.set({ 'n', 'x', 'o' }, '<c-k>', 'edgemotion#move(0)', { desc = 'Move up', expr = true })
 '''
+
+# NOTE: on_map が機能しない：noremapでないmapは登録されない？
+[[plugins]]
+repo = "kamecha/bimove"
+on_map = { n = "M" }
+lua_after = '''
+vim.cmd 'highlight link BimoveHigh Search'
+vim.cmd 'highlight link BimoveCursor Visual'
+vim.cmd 'highlight link BimoveLow Visual'
+
+vim.keymap.set('n', 'M', '<Plug>(bimove-enter)<Plug>(bimove)', { noremap = true, desc = 'Enter BiMove mode' })
+vim.keymap.set('n', '<Plug>(bimove)H', '<Plug>(bimove-high)<Plug>(bimove)',
+	{ noremap = true, desc = 'Move selection up' })
+vim.keymap.set('n', '<Plug>(bimove)L', '<Plug>(bimove-low)<Plug>(bimove)',
+	{ noremap = true, desc = 'Move selection down' })
+'''
