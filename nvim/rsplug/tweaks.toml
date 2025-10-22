@@ -270,7 +270,8 @@ vim.api.nvim_create_autocmd('FileType', {
 		})
 		vim.wo.wrap = false
 		vim.keymap.set('n', 'i', require 'fzyselect'.input, { buffer = true, desc = 'Input for fuzzy query' })
-		vim.keymap.set('n', '<cr>', "<cmd>cal fzyselect#cr(v:count??'.')<cr>", { buffer = true, desc = 'Confirm selection' })
+		vim.keymap.set('n', '<cr>', "<cmd>cal fzyselect#cr(v:count??'.')<cr>",
+			{ buffer = true, desc = 'Confirm selection' })
 		vim.keymap.set('n', '<esc>', '<cmd>clo<cr>', { buffer = true, desc = 'Close fuzzy selection' })
 		vim.opt_local.number = true
 	end,
