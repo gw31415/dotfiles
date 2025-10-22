@@ -20,7 +20,7 @@ wezterm.on('gui-attached', function()
 end)
 
 config.color_scheme = 'Tomorrow Night'
-config.default_prog = { 'bash', '-c', '$HOME/.nix-profile/bin/fish' }
+config.default_prog = { 'sh', '-c', '$HOME/.nix-profile/bin/fish' }
 config.hide_tab_bar_if_only_one_tab = true
 config.font = wezterm.font_with_fallback { 'HackGen Console NF' }
 config.font_size = 13
