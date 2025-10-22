@@ -56,7 +56,6 @@ in
       litecli
       mise
       mmv-go
-      nodejs
       nixfmt-rfc-style
       p7zip
       pandoc
@@ -104,6 +103,8 @@ in
         [
           # NOTE: For the following gnupg, install by homebrew because of compatibility with pinentry-mac on MacOS.
           gnupg
+          # NOTE: In macOS, pnpm is installed by homebrew.
+          nodejs
         ]
     );
 
