@@ -655,50 +655,6 @@ vim.api.nvim_exec_autocmds('FileType', { pattern = vim.api.nvim_get_option_value
 '''
 
 [[plugins]]
-repo = "folke/sidekick.nvim"
-on_event = "CursorHold"
-on_cmd = "Sidekick"
-lua_after = '''
-require 'sidekick'.setup {
-	signs = {
-		enabled = true,
-		icon = "",
-	},
-	cli = {
-		mux = {
-			backend = 'tmux',
-			enabled = true,
-		},
-	},
-}
-vim.api.nvim_create_user_command('Sidekick', function(args)
-	local model = args.fargs[1]
-	require 'sidekick.cli'.toggle { focus = true, name = model }
-end, {
-	nargs = '?',
-	complete = function()
-		---@param a sidekick.cli.Tool
-		---@return string[]
-		return vim.tbl_map(function(a)
-			return a.name
-		end, require 'sidekick.cli'.get_tools {
-			installed = true,
-		});
-	end,
-})
-vim.keymap.set('n', '<Tab>', function()
-		if not require 'sidekick'.nes_jump_or_apply() then
-			return '<Tab>'
-		end
-	end,
-	{
-		expr = true,
-		desc = 'Goto/Apply Next Edit Suggestion',
-	}
-)
-'''
-
-[[plugins]]
 repo = "FabijanZulj/blame.nvim"
 on_cmd = "BlameToggle"
 on_map = { n = "<leader>b" }
