@@ -85,6 +85,7 @@ require 'sidekick'.setup {
 			enabled = true,
 		},
 	},
+	nes = { enabled = false },
 }
 vim.api.nvim_create_user_command('Sidekick', function(args)
 	local model = args.fargs[1]
