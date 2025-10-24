@@ -132,11 +132,41 @@ vim.keymap.set({ 'n', 'x' }, 'gq', function() return vim.fn['operator#stay_curso
 
 [[plugins]]
 repo = "gw31415/vim-ambicmdlesser"
+sym = true
 on_map = { c = ["<space>", "<cr>"] }
 lua_after = '''
+local function starts_with_lowercase(s)
+	local b = s:byte(1)
+	return b ~= nil and b >= string.byte 'a' and b <= string.byte 'z'
+end
 for _, key in ipairs { '<space>', '<cr>' } do
 	vim.keymap.set('c', key, function()
-		return vim.fn['ambicmdlesser#expand'](vim.keycode(key))
+		return vim.fn['ambicmdlesser#expand'](vim.keycode(key), {
+			---@param cmds string[]
+			---@param query string
+			---@return string?
+			matcher = function(cmds, query)
+				-- 1. システム定義コマンドの可能性がある場合、大小文字区別で前方一致するものがある場合は nil
+				if starts_with_lowercase(query) then
+					for _, cmd in ipairs(cmds) do
+						if cmd:sub(1, #query) == query then
+							return nil
+						end
+					end
+				end
+
+				-- 2. 大小文字区別なしで前方一致する最初のアイテムを返す
+				local lower_query = query:lower()
+				for _, cmd in ipairs(cmds) do
+					if cmd:sub(1, #query):lower() == lower_query then
+						return cmd
+					end
+				end
+
+				return nil
+			end
+		}
+		)
 	end, { expr = true, replace_keycodes = false })
 end
 '''
