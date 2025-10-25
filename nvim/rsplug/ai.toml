@@ -71,7 +71,7 @@ require 'avante'.setup {
 
 [[plugins]]
 repo = "folke/sidekick.nvim"
-on_event = "CursorHold"
+on_event = "VeryLazy"
 on_cmd = "Sidekick"
 lua_after = '''
 require 'sidekick'.setup {

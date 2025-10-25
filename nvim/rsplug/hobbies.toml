@@ -28,5 +28,5 @@ lua_after = "require 'hardtime'.setup()"
 # Discord Rich Presence
 [[plugins]]
 repo = "andweeb/presence.nvim"
-on_event = "CursorHold"
+on_event = "VeryLazy"
 lua_after = "require 'presence'.setup()"

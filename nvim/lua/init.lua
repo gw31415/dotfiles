@@ -19,7 +19,7 @@ vim.g.loaded_2html_plugin = true
 
 vim.defer_fn(function()
 	require 'init_lazy'
-	vim.api.nvim_exec_autocmds('CursorHold', {})
+	vim.api.nvim_exec_autocmds('User', { pattern = 'VeryLazy', modeline = false })
 end, 1)
 
 ----------------------------

@@ -175,7 +175,7 @@ require 'render-markdown'.setup {
 
 [[plugins]]
 repo = "JoosepAlviste/nvim-ts-context-commentstring"
-on_event = "CursorHold"
+on_event = "VeryLazy"
 lua_after = '''
 require 'ts_context_commentstring'.setup { enable_autocmd = false }
 '''

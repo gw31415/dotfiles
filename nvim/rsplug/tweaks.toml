@@ -46,12 +46,12 @@ start = true
 
 [[plugins]]
 repo = "stevearc/overseer.nvim"
-on_event = "CursorHold"
+on_event = "VeryLazy"
 lua_after = "require 'overseer'.setup()"
 
 [[plugins]]
 repo = "HakonHarnes/img-clip.nvim"
-on_event = "CursorHold"
+on_event = "VeryLazy"
 lua_after = '''
 require 'img-clip'.setup {
 	-- recommended settings
@@ -74,7 +74,7 @@ on_event = "TermOpen"
 
 [[plugins]]
 repo = "lewis6991/gitsigns.nvim"
-on_event = "CursorHold"
+on_event = "VeryLazy"
 lua_after = '''
 require 'gitsigns'.setup {
 	numhl = true,
@@ -321,7 +321,7 @@ vim.keymap.set('n', 'cL', '<Plug>(deepl-replace)$', { desc = 'Replace with DeepL
 
 [[plugins]]
 repo = "numToStr/Comment.nvim"
-on_event = "CursorHold"
+on_event = "VeryLazy"
 lua_after = '''
 require 'Comment'.setup {
 	toggler = {
@@ -386,7 +386,7 @@ end, {
 
 [[plugins]]
 repo = "j-hui/fidget.nvim@v*"
-on_event = "CursorHold"
+on_event = "VeryLazy"
 lua_after = '''
 require 'fidget'.setup {
 	notification = {
@@ -436,7 +436,7 @@ lua_after = "require 'nvim-navic'.setup { lsp = { auto_attach = true } }"
 [[plugins]]
 repo = "zbirenbaum/copilot.lua"
 on_cmd = "Copilot"
-on_event = "CursorHold"
+on_event = "VeryLazy"
 lua_after = "require 'copilot'.setup {}"
 
 [[plugins]]
@@ -459,7 +459,7 @@ vim.keymap.set('n', '<leader>A', function() require 'aerial'.toggle() end, { des
 
 [[plugins]]
 repo = "lukas-reineke/indent-blankline.nvim"
-on_event = "CursorHold"
+on_event = "VeryLazy"
 lua_after = "require 'ibl'.setup()"
 
 [[plugins]]
@@ -482,7 +482,7 @@ on_cmd = ["TSPlaygroundToggle", "TSHighlightCapturesUnderCursor"]
 
 [[plugins]]
 repo = "b0o/incline.nvim"
-on_event = "CursorHold"
+on_event = "VeryLazy"
 lua_after = '''
 local helpers = require 'incline.helpers'
 local navic = require 'nvim-navic'
@@ -530,7 +530,7 @@ require 'incline'.setup {
 # 命名規則を相互変換
 [[plugins]]
 repo = "gregorias/coerce.nvim"
-on_event = "CursorHold"
+on_event = "VeryLazy"
 lua_after = '''
 require 'coerce'.setup {
 	default_mode_keymap_prefixes = {
@@ -552,7 +552,7 @@ repo = "williamboman/mason-lspconfig.nvim"
 [[plugins]]
 repo = "jay-babu/mason-null-ls.nvim"
 with = ["mason.nvim", "none-ls.nvim"]
-on_event = "CursorHold"
+on_event = "VeryLazy"
 lua_after = '''
 require 'mason-null-ls'.setup {
 	automatic_setup = true,
@@ -572,7 +572,7 @@ require 'mason-null-ls'.setup {
 '''
 [[plugins]]
 repo = "neovim/nvim-lspconfig"
-on_event = ["LspAttach", "CursorHold"]
+on_event = ["LspAttach", "VeryLazy"]
 lua_after = '''
 local lsp_list = vim.list_extend({
 	'fish_lsp',
