@@ -21,7 +21,7 @@ start = true
 
 [[plugins]]
 repo = "m4xshen/hardtime.nvim"
-depends = "nui.nvim"
+with = "nui.nvim"
 on_cmd = "Hardtime"
 lua_after = "require 'hardtime'.setup()"
 

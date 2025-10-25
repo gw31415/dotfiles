@@ -2,7 +2,7 @@
 repo = "lambdalisue/nerdfont.vim"
 [[plugins]]
 repo = "lambdalisue/fern-renderer-nerdfont.vim"
-depends = "nerdfont.vim"
+with = "nerdfont.vim"
 [[plugins]]
 repo = "lambdalisue/fern-git-status.vim"
 [[plugins]]
@@ -14,7 +14,7 @@ repo = "andykog/fern-highlight.vim"
 
 [[plugins]]
 repo = "lambdalisue/vim-fern"
-depends = [
+with = [
 	"fern-renderer-nerdfont.vim",
 	"fern-git-status.vim",
 	"fern-mapping-git.vim",

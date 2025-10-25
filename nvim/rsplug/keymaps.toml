@@ -85,7 +85,7 @@ vim.keymap.set('n', 'J', '<cmd>TSJToggle<cr>', { desc = 'Join multi-lines' })
 
 [[plugins]]
 repo = "gw31415/vim-partedit"
-depends = "context_filetype.vim"
+with = "context_filetype.vim"
 on_map = { nx = "cx" }
 on_cmd = "Partedit"
 lua_after = '''
@@ -115,15 +115,15 @@ repo = "kana/vim-textobj-user"
 [[plugins]]
 repo = "glts/vim-textobj-comment"
 on_map = { ox = ["ic", "ac"] }
-depends = "vim-textobj-user"
+with = "vim-textobj-user"
 [[plugins]]
 repo = "kana/vim-textobj-entire"
 on_map = { ox = ["ae", "ie"] }
-depends = ["vim-textobj-user", "vim-operator-stay-cursor"]
+with = ["vim-textobj-user", "vim-operator-stay-cursor"]
 [[plugins]]
 repo = "osyo-manga/vim-operator-stay-cursor"
 on_func = "operator#stay_cursor#wrapper" # TODO: Imprement this attribute
-depends = "vim-operator-user"
+with = "vim-operator-user"
 on_map = { nx = "gq" }
 lua_after = '''
 vim.keymap.set({ 'n', 'x' }, 'gq', function() return vim.fn['operator#stay_cursor#wrapper'] 'gq' end,
