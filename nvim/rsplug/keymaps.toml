@@ -132,7 +132,6 @@ vim.keymap.set({ 'n', 'x' }, 'gq', function() return vim.fn['operator#stay_curso
 
 [[plugins]]
 repo = "gw31415/vim-ambicmdlesser"
-sym = true
 on_map = { c = ["<space>", "<cr>"] }
 lua_after = '''
 local function starts_with_lowercase(s)
