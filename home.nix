@@ -34,7 +34,6 @@ in
       asciinema
       bat
       bindfs
-      bun
       deno
       emacs-nox
       envchain
