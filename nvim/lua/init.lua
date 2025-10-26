@@ -17,10 +17,10 @@ vim.g.loaded_2html_plugin = true
 -- Lazy loading
 ----------------------------
 
-vim.defer_fn(function()
+vim.schedule(function()
 	require 'init_lazy'
 	vim.api.nvim_exec_autocmds('User', { pattern = 'VeryLazy', modeline = false })
-end, 1)
+end)
 
 ----------------------------
 -- Personal settings
