@@ -6,11 +6,11 @@
     "@types/bun": "latest"
   },
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.7.2"
   },
   "dependencies": {
     "cli-highlight": "^2.1.11",
-    "consola": "^3.3.3",
+    "consola": "^3.4.2",
     "dax-sh": "^0.42.0"
   }
 }
