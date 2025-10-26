@@ -225,8 +225,7 @@ vim.api.nvim_create_user_command('Restart', function()
 	vim.cmd('mksession! ' .. vim.fn.fnameescape(cache))
 	vim.cmd('restart source ' .. vim.fn.fnameescape(cache))
 end, {})
-vim.keymap.set('n', '<C-n>',
-	'<cmd>Fern ' .. vim.fn.fnameescape(require 'root'.find_project_root() or '.') .. ' -drawer -toggle -reveal=% <cr>')
+vim.keymap.set('n', '<C-n>', '<cmd>Fern . -drawer -toggle -reveal=% <cr>')
 
 -- local ok, extui = pcall(require, 'vim._extui')
 -- if ok then
