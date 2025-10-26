@@ -52,13 +52,13 @@
           inherit system;
           config.allowUnfree = true;
         };
+        pkgs-stable = import inputs.nixpkgs-stable {
+          inherit system;
+          config.allowUnfree = true;
+        };
         ctx = inputs // {
-          pkgs = pkgs;
-          pkgs-stable = import ctx.nixpkgs-stable {
-            inherit system;
-            config.allowUnfree = true;
-          };
-          dot = import ./dot/default.nix { inherit pkgs; };
+          inherit pkgs pkgs-stable;
+          dot = import ./dot/default.nix { pkgs = pkgs-stable; };
           system = system;
         };
         overlays = [
