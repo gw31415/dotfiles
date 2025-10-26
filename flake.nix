@@ -38,6 +38,15 @@
       flake = false;
     };
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    fenix = {
+      url = "github:nix-community/fenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    dot = {
+      url = "path:./dot";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
   };
 
   outputs =
@@ -56,10 +65,18 @@
           inherit system;
           config.allowUnfree = true;
         };
+        dot = import ./dot/default.nix {
+          inherit system;
+          pkgs = pkgs-stable;
+          fenix = ctx.fenix;
+        };
         ctx = inputs // {
-          inherit pkgs pkgs-stable;
-          dot = import ./dot/default.nix { pkgs = pkgs-stable; };
-          system = system;
+          inherit
+            pkgs
+            pkgs-stable
+            system
+            dot
+            ;
         };
         overlays = [
           inputs.neovim-nightly-overlay.overlays.default
