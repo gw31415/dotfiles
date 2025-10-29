@@ -5,6 +5,11 @@
 [[plugins]]
 start = true
 repo = "navarasu/onedark.nvim"
+lua_after = '''
+require 'onedark'.setup { transparent = true, dark = true }
+vim.cmd.colorscheme 'onedark'
+vim.cmd.colorscheme 'default' -- For debug
+'''
 
 [[plugins]]
 repo = "stevearc/conform.nvim"
