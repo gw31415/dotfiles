@@ -1,3 +1,47 @@
-# [[plugins]]
-# repo = "gw31415/denops-commitgen.vim"
-# start = true
+[[plugins]]
+repo = "vim-denops/denops.vim"
+start = true
+
+[[plugins]]
+repo = "lambdalisue/vim-gin"
+start = true
+
+[[plugins]]
+repo = "lambdalisue/vim-kensaku"
+start = true
+
+[[plugins]]
+repo = "gw31415/mstdn.vim"
+start = true
+
+[[plugins]]
+repo = "skanehira/denops-silicon.vim"
+start = true
+
+[[plugins]]
+repo = "yuki-yano/fuzzy-motion.vim"
+start = true
+
+[[plugins]]
+repo = "gw31415/denops-aioperator.nvim"
+start = true
+
+[[plugins]]
+repo = "vim-skk/skkeleton"
+start = true
+
+[[plugins]]
+repo = "lambdalisue/vim-guise"
+start = true
+
+[[plugins]]
+repo = "gw31415/denops-sixel-view.vim"
+start = true
+
+[[plugins]]
+repo = "gw31415/denops-commitgen.vim"
+start = true
+
+[[plugins]]
+repo = "gw31415/mstdn-imgview.vim"
+start = true

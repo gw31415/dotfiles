@@ -160,7 +160,7 @@ return {
 		end
 		setup_done = true
 
-		vim.pack.add(vim.tbl_map(function(pkg) return 'http://github.com/' .. pkg.repo end, packages))
+		-- vim.pack.add(vim.tbl_map(function(pkg) return 'http://github.com/' .. pkg.repo end, packages))
 
 		for _, pkg in ipairs(packages) do
 			if pkg.add then pkg.add() end
