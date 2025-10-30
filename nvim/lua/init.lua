@@ -35,8 +35,7 @@ vim.go.guifont = 'HackGen_Console_NF:h14'
 vim.opt.shiftwidth = 4
 vim.opt.tabstop = 4
 vim.go.cmdheight = 0
-vim.wo.foldcolumn = '1'
-vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
+vim.o.fillchars = [[eob: ,fold: ,foldopen:󱨉,foldsep: ,foldclose:]]
 
 -- Ignore startup treesitter errors
 vim.treesitter.start = (function(wrapped)
