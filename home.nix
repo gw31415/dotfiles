@@ -151,51 +151,7 @@ in
     RSPLUG_CONFIG_FILES = "${homeManagerDirectory}/nvim/rsplug/*.toml";
   };
 
-  programs.neovim =
-    let
-      plugins = [
-        pkgs.vimPlugins.denops-vim
-      ]
-      ++
-        builtins.map
-          (
-            name:
-            pkgs.vimUtils.buildVimPlugin {
-              name = name;
-              src = ctx.${name};
-            }
-          )
-          [
-            "dpp-vim"
-            "dpp-ext-installer"
-            "dpp-ext-lazy"
-            "dpp-ext-toml"
-            "dpp-protocol-git"
-
-          ];
-      runtimepath = (
-        builtins.concatStringsSep "\n" (map (p: "vim.opt.runtimepath:append '${p}'") plugins)
-      );
-    in
-    {
-      enable = true;
-      extraLuaConfig = ''
-        ${runtimepath}
-        local dpp = require 'dpp'
-        local dpp_base = '~/.cache/dpp'
-        if dpp.load_state(dpp_base) then
-          vim.opt.runtimepath:prepend '${pkgs.vimPlugins.denops-vim}'
-          vim.api.nvim_create_autocmd('User', {
-            pattern = 'DenopsReady',
-            callback = function()
-              dpp.make_state(dpp_base, '~/.config/home-manager/nvim/dpp.ts')
-            end
-          })
-        end
-
-        require 'init'
-      '';
-    };
+  programs.neovim.enable = true;
 
   programs.git = {
     enable = true;

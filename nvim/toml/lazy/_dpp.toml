@@ -1,8 +1,0 @@
-[[plugins]]
-repo = "gw31415/dpp-automkstate.nvim"
-on_event = "BufWritePre"
-lua_source = '''
-require 'dpp-automkstate'.setup('~/.cache/dpp/', '~/.config/home-manager/nvim/dpp.ts')
-require 'dpp-automkstate'.watch(vim.fn.stdpath 'config')
-require 'dpp-automkstate'.watch(vim.fn.expand '~/.config/home-manager/nvim')
-'''
