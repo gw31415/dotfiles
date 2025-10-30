@@ -151,7 +151,10 @@ in
     RSPLUG_CONFIG_FILES = "${homeManagerDirectory}/nvim/rsplug/*.toml";
   };
 
-  programs.neovim.enable = true;
+  programs.neovim = {
+    enable = true;
+    extraLuaConfig = "require 'init'";
+  };
 
   programs.git = {
     enable = true;
