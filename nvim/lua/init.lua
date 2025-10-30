@@ -1,5 +1,5 @@
 vim.opt.packpath:prepend '~/.cache/rsplug'
-require 'denops_init'.setup()
+require 'start_plugins_setup_workaround'.setup()
 
 require 'onedark'.setup { transparent = true, dark = true }
 vim.cmd.colorscheme 'onedark'
