@@ -92,6 +92,11 @@ vim.api.nvim_create_autocmd("FileType", {
 '''
 
 [[plugins]]
+repo = "HiPhish/rainbow-delimiters.nvim"
+# repo = "https://gitlab.com/HiPhish/rainbow-delimiters.nvim" # TODO: URL直接入力できるようにする
+on_event = "VimEnter"
+
+[[plugins]]
 repo = "kevinhwang91/nvim-ufo"
 on_event = ["BufAdd", "VimEnter", "UIEnter"]
 with = ["nvim-treesitter", "promise-async"]
