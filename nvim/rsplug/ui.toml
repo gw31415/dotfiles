@@ -86,6 +86,24 @@ vim.fn.setenv('EXTENSION_WIKI_LINK', 1)
 
 local parser_install_dir = vim.fn.stdpath 'data' .. '/treesitter'
 vim.opt.runtimepath:append(parser_install_dir)
+
+vim.treesitter.start = (function(wrapped)
+	return function(bufnr, lang)
+		bufnr = bufnr or vim.fn.bufnr()
+		lang = lang or vim.fn.getbufvar(bufnr, '&filetype')
+
+		-- Vimdocの場合無効化
+		if lang == 'help' then return end
+
+		pcall(wrapped, bufnr, lang)
+	end
+end)(vim.treesitter.start)
+
+vim.api.nvim_create_autocmd("FileType", {
+	group = vim.api.nvim_create_augroup("vim-treesitter-start", {}),
+	callback = function(ctx) vim.treesitter.start(0, ctx.match) end,
+})
+
 require 'nvim-treesitter.configs'.setup {
 	sync_install = false,
 	ignore_install = {},

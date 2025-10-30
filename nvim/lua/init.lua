@@ -37,21 +37,6 @@ vim.opt.tabstop = 4
 vim.go.cmdheight = 0
 vim.o.fillchars = [[eob: ,fold: ,foldopen:󱨉,foldsep: ,foldclose:]]
 
--- Ignore startup treesitter errors
-vim.treesitter.start = (function(wrapped)
-	return function(bufnr, lang)
-		lang = lang or vim.fn.getbufvar(bufnr, '&filetype')
-		-- Vimdocの場合無効化
-		if lang == 'help' then return end
-
-		pcall(wrapped, bufnr, lang)
-	end
-end)(vim.treesitter.start)
-vim.api.nvim_create_autocmd("FileType", {
-	group = vim.api.nvim_create_augroup("vim-treesitter-start", {}),
-	callback = function(ctx) vim.treesitter.start(0, ctx.match) end,
-})
-
 vim.cmd 'filetype plugin indent on'
 
 vim.filetype.add {
