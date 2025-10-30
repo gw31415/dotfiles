@@ -66,6 +66,7 @@ in
       silicon
       tdf
       tmux
+      tree-sitter
       typst
       uv
       vhs
