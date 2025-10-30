@@ -105,7 +105,12 @@ end, 1000)
 
 -- git ls-files
 vim.keymap.set('n', '<c-p>', function()
-	local res = vim.system({ 'git', 'ls-files' }, { text = true }):wait()
+	local res = vim.system({ 'sh', '-c', [[
+		(
+			git ls-files
+			git ls-files --others --exclude-standard
+		) | sort -u
+	]] }, { text = true }):wait()
 	if res.code ~= 0 then
 		vim.notify(vim.fn.trim(res.stderr), vim.log.levels.ERROR, { title = 'fzyselect: git ls-files' })
 	else
