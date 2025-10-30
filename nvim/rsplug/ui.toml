@@ -77,50 +77,18 @@ require 'lualine'.setup {
 '''
 
 [[plugins]]
-repo = "nvim-treesitter/nvim-treesitter"
+repo = "nvim-treesitter/nvim-treesitter@main"
 # build = ["nvim", "--headless", "-c", "TSUpdateSync | quit"] # TODO: 代替方法を考える
 on_event = "VimEnter"
 lua_after = '''
--- markdown treesitter のPluginの有効化
-vim.fn.setenv('EXTENSION_WIKI_LINK', 1)
-
-local parser_install_dir = vim.fn.stdpath 'data' .. '/treesitter'
-vim.opt.runtimepath:append(parser_install_dir)
-
-vim.treesitter.start = (function(wrapped)
-	return function(bufnr, lang)
-		bufnr = bufnr or vim.fn.bufnr()
-		lang = lang or vim.fn.getbufvar(bufnr, '&filetype')
-
-		-- Vimdocの場合無効化
-		if lang == 'help' then return end
-
-		pcall(wrapped, bufnr, lang)
-	end
-end)(vim.treesitter.start)
+local install_dir = vim.fn.stdpath 'data' .. '/treesitter'
+vim.opt.runtimepath:append(install_dir)
+require 'nvim-treesitter'.setup { install_dir = install_dir }
 
 vim.api.nvim_create_autocmd("FileType", {
 	group = vim.api.nvim_create_augroup("vim-treesitter-start", {}),
-	callback = function(ctx) vim.treesitter.start(0, ctx.match) end,
+	callback = function() pcall(vim.treesitter.start) end,
 })
-
-require 'nvim-treesitter.configs'.setup {
-	sync_install = false,
-	ignore_install = {},
-	modules = {},
-	parser_install_dir = parser_install_dir,
-	highlight = {
-		enable = true,
-		additional_vim_regex_highlighting = { 'markdown', 'edisch' },
-		disable = { 'vimdoc' },
-	},
-	indent = {
-		enable = true,
-		disable = { 'dart', 'vimdoc' },
-	},
-	auto_install = true,
-	ensure_installed = { 'query', 'markdown', 'markdown_inline', 'lua', 'vim' },
-}
 '''
 
 [[plugins]]
