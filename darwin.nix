@@ -82,6 +82,7 @@ in
       "fish-lsp"
     ];
     casks = [
+      "affinity"
       "alt-tab"
       "anki"
       "brave-browser"
@@ -90,7 +91,6 @@ in
       "figma"
       "gather"
       "gnucash"
-      "inkscape"
       "keybase"
       "macfuse"
       "macskk"
