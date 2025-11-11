@@ -583,7 +583,8 @@ local lsp_list = vim.list_extend({
 	'fish_lsp',
 	'sourcekit',
 	'ty',
-	'basedpyright'
+	'basedpyright',
+	'ruff'
 }, require 'mason-lspconfig'.get_installed_servers())
 
 local lsp_unloads = { 'biome', 'denols', 'vtsls', 'tsgo' }
