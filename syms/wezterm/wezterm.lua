@@ -190,7 +190,7 @@ config.keys = {
 	{
 		key = 'e',
 		mods = 'SUPER',
-		action = wezterm.action_callback(function(window, pane)
+		action = wezterm.action_callback(function(_window, pane)
 			local target_pane_id = tostring(pane:pane_id())
 			local env_path = string.format('%s/.nix-profile/bin:/opt/homebrew/bin:%s', os.getenv('HOME'),
 				os.getenv('PATH'))
