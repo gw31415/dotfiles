@@ -119,13 +119,17 @@ on_ft = "markdown"
 lua_before = "vim.g.vim_markdown_no_default_key_mappings = 1"
 
 [[plugins]]
+repo = "DrKJeff16/wezterm-types"
+start = true
+
+[[plugins]]
 repo = "folke/lazydev.nvim"
 on_ft = "lua"
 lua_after = '''
 require 'lazydev'.setup {
 	library = {
 		{ path = '${3rd}/luv/library',                words = { 'vim%.uv' } },
-		{ path = '~/.nix-deliverables/wezterm-types', mods = { 'wezterm' } },
+		{ path = 'wezterm-types', mods = { 'wezterm' } },
 	},
 }
 '''

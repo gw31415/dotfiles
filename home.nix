@@ -121,10 +121,6 @@ in
     ".latexmkrc".source = ./statics/latexmkrc;
     ".aider.conf.yml".source = ./statics/aider.conf.yml;
 
-    ".nix-deliverables/wezterm-types".source = "${import ./wezterm-types/default.nix {
-      inherit pkgs;
-    }}";
-
     "${configHome}/wezterm".source =
       config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/wezterm";
     "${configHome}/lazygit".source =
