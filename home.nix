@@ -30,6 +30,7 @@ in
       gopls
 
       # CLI tools
+      pkgs.magika
       aria2
       asciinema
       bat
