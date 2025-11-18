@@ -152,10 +152,10 @@ insx.add(
 	"'",
 	insx.with({
 		enabled = function(ctx)
-			local before_borrowing = ctx.match([=[&\%#]=])
+			local before_borrowing = ctx.match [=[&\%#]=]
 			local in_type_parameters = false
 
-			local node = vim.treesitter.get_node({ pos = { ctx.row(), ctx.col() } })
+			local node = vim.treesitter.get_node { pos = { ctx.row(), ctx.col() } }
 
 			if not node then
 				return true
@@ -187,11 +187,11 @@ insx.add(
 			return in_type_parameters or before_borrowing
 		end,
 		action = function(ctx)
-			ctx.send("'")
+			ctx.send "'"
 		end,
 		priority = 1000,
 	}, {
-		insx.with.filetype({ 'rust' }),
+		insx.with.filetype { 'rust' },
 	})
 )
 '''
