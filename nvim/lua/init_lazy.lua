@@ -125,6 +125,12 @@ end)
 -- Update
 vim.api.nvim_create_user_command('PackUpdate', function() vim.pack.update() end, {})
 
+vim.api.nvim_create_user_command('TSReinstall', function()
+	local ts_installed_list = require 'nvim-treesitter'.get_installed()
+	require 'nvim-treesitter'.uninstall(ts_installed_list):wait(180000)
+	require 'nvim-treesitter'.install(ts_installed_list, { summary = true })
+end, {})
+
 vim.g.gin_proxy_editor_opener = 'bo sp'
 vim.keymap.set('n', '<c-g>p', function() require 'commitgen'.paste {} end)
 vim.keymap.set('n', '<c-g>P', function() require 'commitgen'.paste { after = false } end)
