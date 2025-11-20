@@ -1,3 +1,5 @@
+vim.loader.enable()
+
 vim.opt.packpath:prepend '~/.cache/rsplug'
 require 'start_plugins_setup_workaround'.setup()
 
