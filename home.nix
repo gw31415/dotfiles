@@ -21,7 +21,6 @@ in
     (with pkgs-stable; [
       # AI tools
       pkgs.codex
-      pkgs.gemini-cli
       pkgs.github-copilot-cli
 
       # LSPs
