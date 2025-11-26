@@ -119,7 +119,6 @@ in
       recursive = true;
     };
     ".latexmkrc".source = ./statics/latexmkrc;
-    ".aider.conf.yml".source = ./statics/aider.conf.yml;
 
     "${configHome}/wezterm".source =
       config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/wezterm";
