@@ -66,7 +66,6 @@ in
     ];
     brews = [
       "openssl@3"
-      "fastlane"
       "gettext"
       "gnupg"
       "libgpg-error"
