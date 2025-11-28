@@ -66,6 +66,7 @@ in
       tmux
       tree-sitter
       typst
+      usage
       uv
       vhs
       vim-startuptime
