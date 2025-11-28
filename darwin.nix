@@ -70,7 +70,6 @@ in
       "gnupg"
       "libgpg-error"
       "mas"
-      "mise"
       "pinentry-mac"
       "pkgconf"
       "xcode-build-server"
