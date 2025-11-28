@@ -44,7 +44,6 @@ in
       gh
       gocryptfs
       home-manager
-      hugo
       imagemagick
       jdupes
       jnv
