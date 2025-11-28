@@ -301,10 +301,9 @@ in
       "OrbStack"
     ];
   };
-  # mise と競合する
-  # programs.pay-respects = {
-  #   enable = true;
-  #   enableFishIntegration = true;
-  # };
+  programs.pay-respects = {
+    enable = true;
+    enableFishIntegration = true;
+  };
   manual.manpages.enable = true;
 }
