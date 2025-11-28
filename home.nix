@@ -156,6 +156,7 @@ in
 
   programs.direnv = {
     enable = true;
+    silent = true;
     mise = {
       enable = true;
       package = pkgs.mise;
