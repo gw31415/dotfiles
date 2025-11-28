@@ -1,5 +1,8 @@
 # dotfiles and configurations for ama
 
+> [!warning]
+> This version depends on the project [`gw31415/rsplug.nvim`](https://github.com/gw31415/rsplug.nvim), which is currently private.
+
 ## Installation
 
 ```bash
