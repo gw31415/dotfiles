@@ -268,10 +268,6 @@ in
         abbr -a n -f _na
       '';
   };
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-  };
   programs.go = {
     enable = true;
     env.GOPATH = "${env.homeDirectory}/.go";
