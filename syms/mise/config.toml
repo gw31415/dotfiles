@@ -3,4 +3,4 @@ experimental = true
 idiomatic_version_file_enable_tools = ["python", "node"]
 
 [tools]
-usage = "latest"
+usage = "2.8.0"
