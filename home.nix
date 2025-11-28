@@ -51,7 +51,7 @@ in
       lazygit
       librsvg # rsvg-convert CLI
       litecli
-      mise
+      pkgs.mise
       mmv-go
       nixfmt-rfc-style
       p7zip
