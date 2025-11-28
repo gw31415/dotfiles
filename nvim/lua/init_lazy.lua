@@ -142,7 +142,7 @@ vim.api.nvim_create_user_command('Restart', function()
 	vim.cmd('mksession! ' .. vim.fn.fnameescape(cache))
 	vim.cmd('restart source ' .. vim.fn.fnameescape(cache))
 end, {})
-vim.keymap.set('n', '<C-n>', '<cmd>Fern . -drawer -toggle -reveal=% <cr>')
+vim.keymap.set('n', '<c-n>', function() require 'fyler'.toggle { kind = "float" } end, { desc = "Toggle Fyler View" })
 
 -- local ok, extui = pcall(require, 'vim._extui')
 -- if ok then
