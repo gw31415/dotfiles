@@ -51,7 +51,6 @@ in
       lazygit
       librsvg # rsvg-convert CLI
       litecli
-      pkgs.mise
       mmv-go
       nixfmt-rfc-style
       p7zip
@@ -148,6 +147,20 @@ in
   programs.neovim = {
     enable = true;
     extraLuaConfig = "require 'init'";
+  };
+
+  programs.mise = {
+    enable = true;
+    package = pkgs.mise;
+  };
+
+  programs.direnv = {
+    enable = true;
+    mise = {
+      enable = true;
+      package = pkgs.mise;
+    };
+    nix-direnv.enable = true;
   };
 
   programs.git = {
@@ -256,9 +269,7 @@ in
       )
       + ''
         set fish_greeting
-        if status is-interactive
-          mise activate fish | source
-        else
+        if ! status is-interactive
           mise activate fish --shims | source
         end
         if test -f $HOME/.cargo/env.fish
