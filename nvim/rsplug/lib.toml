@@ -1,4 +1,7 @@
 [[plugins]]
+repo = "nvim-mini/mini.icons"
+
+[[plugins]]
 repo = "MunifTanjim/nui.nvim"
 
 [[plugins]]

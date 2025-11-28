@@ -1,4 +1,10 @@
 [[plugins]]
+repo = "A7Lavinraj/fyler.nvim@stable"
+with = "mini.icons"
+on_cmd = "Fyler"
+lua_after = "require 'fyler'.setup()"
+
+[[plugins]]
 repo = "lambdalisue/nerdfont.vim"
 [[plugins]]
 repo = "lambdalisue/fern-renderer-nerdfont.vim"
