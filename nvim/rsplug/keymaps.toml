@@ -1,0 +1,197 @@
+[[plugins]]
+repo = "tani/dmacro.nvim"
+on_event = "VeryLazy"
+lua_after = "vim.keymap.set({ 'n', 'i' }, '<S-Right>', '<Plug>(dmacro-play-macro)', { desc = 'Play macro' })"
+
+[[plugins]]
+repo = "gbprod/substitute.nvim"
+on_map = { nx = '_' }
+lua_after = '''
+require 'substitute'.setup()
+
+vim.keymap.set('n', '_', function() require 'substitute'.operator() end, { desc = 'Replace' })
+vim.keymap.set('x', '_', function() require 'substitute'.visual() end, { desc = 'Replace selection' })
+vim.keymap.set('n', '__', function() require 'substitute'.line() end, { desc = 'Replace line' })
+'''
+
+[[plugins]]
+repo = "jiaoshijie/undotree"
+on_map = { n = '<Leader>u' }
+lua_after = '''
+require 'undotree'.setup { keymaps = { ['<Esc>'] = 'quit' } }
+vim.keymap.set('n', '<Leader>u', function() require 'undotree'.toggle() end, { desc = 'Toggle undotree' })
+'''
+
+[[plugins]]
+repo = "kylechui/nvim-surround"
+on_map = { n = [
+	"ys",
+	"yss",
+	"yS",
+	"ySS",
+	"ds",
+	"cs",
+	"cS",
+], i = [
+	"<C-g>s",
+	"<C-g>S",
+], x = [
+	"S",
+	"gS",
+] }
+lua_after = """
+require 'nvim-surround'.setup {
+	surrounds = {
+		["3"] = {
+			add = { "'''", "'''" },
+		},
+	}
+}
+"""
+
+[[plugins]]
+repo = "simeji/winresizer"
+on_cmd = [
+	"WinResizerStartResize",
+	"WinResizerStartFocus",
+	"WinResizerStartMove",
+]
+on_map = { n = "<c-w>e" }
+lua_before = "vim.api.nvim_set_var('winresizer_start_key', '<c-w>e')"
+# Override to make silent
+lua_after = "vim.keymap.set('n', '<c-w>e', '<cmd>WinResizerStartResize<cr>', { silent = true })"
+
+[[plugins]]
+repo = "ysmb-wtsg/in-and-out.nvim"
+on_map = { i = "<C-CR>" }
+lua_after = '''
+vim.keymap.set('i', '<C-CR>', function() require 'in-and-out'.in_and_out() end, { desc = 'Toggle in and out of bracket' })
+'''
+
+[[plugins]]
+repo = "Wansmer/treesj"
+on_cmd = "TSJToggle"
+on_map = { n = 'J' }
+lua_after = '''
+require 'treesj'.setup { use_default_keymaps = false, max_join_length = 150 }
+vim.keymap.set('n', 'J', '<cmd>TSJToggle<cr>', { desc = 'Join multi-lines' })
+'''
+
+# context_filetypeの代替になる？
+# [[plugins]]
+# repo = "monaqa/nvim-treesitter-clipping"
+# on_map = "<Plug>(ts-clipping-clip)"
+# lua_add = "vim.keymap.set('n', 'cx', '<Plug>(ts-clipping-clip)')"
+
+[[plugins]]
+repo = "gw31415/vim-partedit"
+with = "context_filetype.vim"
+on_map = { nx = "cx" }
+on_cmd = "Partedit"
+lua_after = '''
+vim.g['partedit#suffix_pattern'] = '\\v\\s*$'
+vim.g['partedit#opener'] = 'bo sp'
+
+vim.keymap.set('n', 'cx', function()
+	local context = vim.fn['context_filetype#get']()
+	if vim.fn.max(vim.fn.flatten(context.range)) == 0 then
+		vim.cmd [[
+			echohl WarningMsg
+			echomsg 'Context is not found'
+			echohl NONE
+		]]
+	else
+		vim.fn['partedit#start'](context.range[1][1], context.range[2][1], { filetype = context.filetype })
+		vim.keymap.set('n', 'Q', 'ZZ', { buffer = true, nowait = true, desc = 'Quit the Partedit' })
+		vim.keymap.set('n', '<C-6>', 'ZZ', { buffer = true, nowait = true, desc = 'Quit the Partedit' })
+	end
+end, { desc = 'Edit the context part' })
+'''
+
+[[plugins]]
+repo = "kana/vim-operator-user"
+[[plugins]]
+repo = "kana/vim-textobj-user"
+[[plugins]]
+repo = "glts/vim-textobj-comment"
+on_map = { ox = ["ic", "ac"] }
+with = "vim-textobj-user"
+[[plugins]]
+repo = "kana/vim-textobj-entire"
+on_map = { ox = ["ae", "ie"] }
+with = ["vim-textobj-user", "vim-operator-stay-cursor"]
+[[plugins]]
+repo = "osyo-manga/vim-operator-stay-cursor"
+on_func = "operator#stay_cursor#wrapper" # TODO: Imprement this attribute
+with = "vim-operator-user"
+on_map = { nx = "gq" }
+lua_after = '''
+vim.keymap.set({ 'n', 'x' }, 'gq', function() return vim.fn['operator#stay_cursor#wrapper'] 'gq' end,
+	{ expr = true, noremap = false })
+'''
+
+[[plugins]]
+repo = "gw31415/vim-ambicmdlesser"
+on_map = { c = ["<space>", "<cr>"] }
+lua_after = '''
+local function starts_with_lowercase(s)
+	local b = s:byte(1)
+	return b ~= nil and b >= string.byte 'a' and b <= string.byte 'z'
+end
+
+---@param cmds string[]
+---@param query string
+---@return string?
+local function matcher(cmds, query)
+	-- 1. システム定義コマンドの可能性がある場合、大小文字区別で前方一致するものがある場合は nil
+	if starts_with_lowercase(query) then
+		for _, cmd in ipairs(cmds) do
+			if cmd:sub(1, #query) == query then
+				return nil
+			end
+		end
+	end
+
+	-- 2. 大小文字区別なしで前方一致する最初のアイテムを返す
+	local lower_query = query:lower()
+	for _, cmd in ipairs(cmds) do
+		if cmd:sub(1, #query):lower() == lower_query then
+			return cmd
+		end
+	end
+
+	return nil
+end
+for _, key in ipairs { '<space>', '<cr>' } do
+	vim.keymap.set('c', key, function()
+		return vim.fn['ambicmdlesser#expand'](vim.keycode(key), { matcher = matcher })
+	end, { expr = true, replace_keycodes = false })
+end
+vim.keymap.set('c', '<tab>', function()
+	return vim.fn['ambicmdlesser#expand'](vim.keycode '<tab>', { matcher = matcher }) .. vim.keycode '<bs>'
+end, { expr = true, replace_keycodes = false })
+'''
+
+[[plugins]]
+repo = "haya14busa/vim-edgemotion"
+on_map = ["<c-j>", "<c-k>"]
+lua_after = '''
+vim.keymap.set({ 'n', 'x', 'o' }, '<c-j>', 'edgemotion#move(1)', { desc = 'Move down', expr = true })
+vim.keymap.set({ 'n', 'x', 'o' }, '<c-k>', 'edgemotion#move(0)', { desc = 'Move up', expr = true })
+'''
+
+# NOTE: on_map が機能しない：noremapでないmapは登録されない？
+[[plugins]]
+repo = "kamecha/bimove"
+on_map = { n = "M" }
+lua_after = '''
+vim.cmd 'highlight link BimoveHigh Search'
+vim.cmd 'highlight link BimoveCursor Visual'
+vim.cmd 'highlight link BimoveLow Visual'
+
+vim.keymap.set('n', 'M', '<Plug>(bimove-enter)<Plug>(bimove)', { noremap = true, desc = 'Enter BiMove mode' })
+vim.keymap.set('n', '<Plug>(bimove)H', '<Plug>(bimove-high)<Plug>(bimove)',
+	{ noremap = true, desc = 'Move selection up' })
+vim.keymap.set('n', '<Plug>(bimove)L', '<Plug>(bimove-low)<Plug>(bimove)',
+	{ noremap = true, desc = 'Move selection down' })
+'''

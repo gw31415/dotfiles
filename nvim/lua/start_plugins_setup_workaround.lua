@@ -1,0 +1,169 @@
+---@type { add?: fun(), repo: string }[]
+local packages = {
+	{ repo = "vim-denops/denops.vim" },
+	{
+		repo = "lambdalisue/vim-gin",
+		add = function()
+			vim.g.gin_proxy_apply_without_confirm = 1
+		end,
+	},
+	{
+		repo = "lambdalisue/vim-kensaku",
+		add = function()
+			vim.call("kensaku#set_roman_table", require("dvorakjp").kensaku)
+		end,
+	},
+	{
+		repo = "gw31415/mstdn.vim",
+		add = function()
+			vim.cmd [[
+autocmd FileType mstdn call s:mstdn_config()
+autocmd FileType mstdn-editor call s:mstdn_editor_config()
+
+function s:mstdn_config() abort
+	" Some preferences
+	setl nonu so=0 scl=yes
+
+	" Key mappings
+	nn <buffer> <enter> <cmd>call mstdn#timeline#load_more()<cr>
+	nn <buffer> <expr> G getcurpos()[1] == line('$') ? "\<cmd>call mstdn#timeline#load_more()\<cr>" : "\<cmd>norm! G\<cr>"
+	nn <buffer><nowait> > <cmd>call mstdn#timeline#favourite()<cr>
+	nn <buffer><nowait> < <cmd>call mstdn#timeline#unfavourite()<cr>
+	nn <buffer> <C-r> <cmd>call mstdn#timeline#reconnect()<cr>
+
+    " Configuration for mstdn-imgview.vim
+	nn <buffer> <C-k> <cmd>call mstdn#imgview#view(-1)<cr>
+	nn <buffer> <C-j> <cmd>call mstdn#imgview#view(+1)<cr>
+	nn <buffer> <esc> <esc><cmd>call mstdn#imgview#clear()<cr>
+
+    " Configuration for mstdn-editor.vim
+    nn <buffer> i <Plug>(mstdn-editor-open)
+	nn <buffer> r <Plug>(mstdn-editor-open-reply)
+
+	call timer_start(1500, {-> mstdn#timeline#reconnect_all()}, #{repeat: -1})
+endfunction
+
+function s:mstdn_editor_config() abort
+	com -nargs=* -buffer -bang -complete=file Attachment call s:add_attachment('!' == <q-bang>, <f-args>)
+
+	nn <buffer> <C-k> <cmd>call mstdn#imgview#view(-1)<cr>
+	nn <buffer> <C-j> <cmd>call mstdn#imgview#view(+1)<cr>
+endfunction
+
+function s:add_attachment(clipboard, ...) abort
+	let media_ids = get(mstdn#editor#get_statusparams(), "media_ids", [])
+	if a:clipboard
+		let id = mstdn#request#upload_attachment(mstdn#editor#get_user(bufnr()), "clipboard")
+		if id < 0
+			echo "Failed to upload attachment"
+			return
+		endif
+		setl modified
+		let media_ids += [id]
+	endif
+	for file in a:000
+		let id = mstdn#request#upload_attachment(mstdn#editor#get_user(bufnr()), file)
+		if id < 0
+			echo "Failed to upload attachment"
+			return
+		endif
+		setl modified
+		let media_ids += [id]
+	endfor
+	call mstdn#editor#update_statusparams(#{ media_ids: media_ids })
+endfunction
+      ]]
+		end,
+	},
+	{
+		repo = "skanehira/denops-silicon.vim",
+		add = function()
+			vim.cmd [[
+let g:denops#server#deno_args = g:denops#server#deno_args + ['--unstable-ffi']
+
+let g:silicon_options = {
+	  \  'font': 'HackGen Console NF',
+	  \  'background_color': '#FFF',
+	  \  'tab_width': 4,
+	  \  'shadow_blur_radius': 8,
+	  \  'shadow_offset_x': 4,
+	  \  'shadow_offset_y': 4,
+	  \  'shadow_color': '#555555',
+	  \ }
+      ]]
+		end,
+	},
+	{
+		repo = "yuki-yano/fuzzy-motion.vim",
+		add = function()
+			vim.keymap.set("n", "<Space>", "<cmd>FuzzyMotion<cr>")
+			vim.g.fuzzy_motion_labels = {
+				"U", "H", "E", "T", "O", "N", "A", "S", "P", "G", "I", "D", "K", "B", "J", "M",
+			}
+			vim.g.fuzzy_motion_matchers = { "fzf", "kensaku" }
+		end,
+	},
+	{
+		repo = "gw31415/denops-aioperator.nvim",
+		add = function()
+			vim.api.nvim_set_var("aioperator_opts", {
+				openai = {
+					apiKey = os.getenv("OPENAI_API_KEY"),
+				},
+			})
+
+			vim.keymap.set({ "n", "x" }, "gG", function(arg)
+				return require("aioperator").opfunc(arg)
+			end, { expr = true })
+		end,
+	},
+	{
+		repo = "vim-skk/skkeleton",
+		add = function()
+			vim.keymap.set({ "i", "c", "t" }, "<C-j>", "<Plug>(skkeleton-enable)")
+
+			vim.fn["skkeleton#config"] {
+				markerHenkan = "▹",
+				eggLikeNewline = true,
+				markerHenkanSelect = "▸",
+				globalDictionaries = { "~/.skk/SKK-JISYO.L" },
+				selectCandidateKeys = "aoeuhtn",
+			}
+
+			for _, map in pairs {
+				{ "input",  "<c-e>", "" },
+				{ "henkan", "<c-e>", "" },
+				{ "input",  "<c-n>", "henkanFirst" },
+				{ "henkan", "<c-n>", "henkanForward" },
+				{ "henkan", "<c-p>", "henkanBackward" },
+				{ "henkan", "<bs>",  "henkanBackward" },
+				{ "henkan", "<c-h>", "" },
+				{ "henkan", "<c-h>", "henkanBackward" },
+			} do
+				vim.fn["skkeleton#register_keymap"](unpack(map))
+			end
+
+			vim.call("skkeleton#register_kanatable", "rom", require("dvorakjp").skkeleton)
+		end,
+	},
+	{ repo = "lambdalisue/vim-guise" },
+	{ repo = "gw31415/denops-sixel-view.vim" },
+	{ repo = "gw31415/denops-commitgen.vim" },
+	{ repo = "gw31415/mstdn-imgview.vim" },
+}
+
+local setup_done = false
+return {
+	setup = function()
+		if setup_done then
+			return
+		end
+		setup_done = true
+
+		-- vim.pack.add(vim.tbl_map(function(pkg) return 'http://github.com/' .. pkg.repo end, packages))
+
+		for _, pkg in ipairs(packages) do
+			if pkg.add then pkg.add() end
+		end
+	end
+}

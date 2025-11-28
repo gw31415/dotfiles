@@ -1,0 +1,719 @@
+# [[plugins]]
+# start = true
+# repo = "vim-denops/denops.vim"
+
+[[plugins]]
+start = true
+repo = "navarasu/onedark.nvim"
+lua_after = '''
+require 'onedark'.setup { transparent = true, dark = true }
+vim.cmd.colorscheme 'onedark'
+vim.cmd.colorscheme 'default' -- For debug
+'''
+
+[[plugins]]
+repo = "stevearc/conform.nvim"
+on_event = ["BufWritePre", "LspAttach"]
+on_cmd = "ConformInfo"
+lua_after = '''
+-- local js_formatters = { 'biome', 'prettierd', 'prettier', stop_after_first = true }
+require 'conform'.setup {
+	toml = { 'taplo', },
+	python = { 'ruff', 'isort', 'black' },
+	-- formatters_by_ft = {
+	-- 	json = js_formatters,
+	-- 	javascript = js_formatters,
+	-- 	javascriptreact = js_formatters,
+	-- 	typescript = js_formatters,
+	-- 	typescriptreact = js_formatters,
+	-- 	astro = js_formatters,
+	-- },
+}
+'''
+
+[[plugins]]
+repo = "9seconds/repolink.nvim"
+on_cmd = "RepoLink"
+lua_after = "require 'repolink'.setup()"
+
+[[plugins]]
+repo = "NvChad/showkeys"
+on_cmd = "ShowkeysToggle"
+lua_after = "require 'showkeys'.setup { maxkeys = 10 }"
+
+[[plugins]]
+repo = "lambdalisue/fern-hijack.vim"
+start = true
+
+[[plugins]]
+repo = "gw31415/edisch.vim"
+start = true
+
+[[plugins]]
+repo = "stevearc/overseer.nvim"
+on_event = "VeryLazy"
+lua_after = "require 'overseer'.setup()"
+
+[[plugins]]
+repo = "HakonHarnes/img-clip.nvim"
+on_event = "VeryLazy"
+lua_after = '''
+require 'img-clip'.setup {
+	-- recommended settings
+	default = {
+		embed_image_as_base64 = false,
+		prompt_for_file_name = false,
+		drag_and_drop = {
+			insert_mode = true,
+		},
+		-- required for Windows users
+		use_absolute_path = true,
+	},
+}
+'''
+
+[[plugins]]
+repo = "chomosuke/term-edit.nvim"
+lua_after = "require 'term-edit'.setup{ prompt_end = '%3 ' }"
+on_event = "TermOpen"
+
+[[plugins]]
+repo = "lewis6991/gitsigns.nvim"
+on_event = "VeryLazy"
+lua_after = '''
+require 'gitsigns'.setup {
+	numhl = true,
+	signcolumn = false,
+}
+
+local function create_opfunc(name, inner)
+	if type(inner) ~= 'table' then
+		inner = {}
+	end
+
+	local opfunc = function(typ)
+		if not typ or typ == '' then
+			vim.api.nvim_set_option_value('operatorfunc', 'v:lua.' .. name, {})
+			return 'g@'
+		end
+
+		-- Add highlights
+		local pos = {}
+		local _, line1, col1, _ = unpack(vim.fn.getpos "'[" or { 0, 0, 0, 0 })
+		local _, line2, col2, _ = unpack(vim.fn.getpos "']" or { 0, 0, 0, 0 })
+		if typ == 'line' then
+			col2 = #vim.fn.getline(line2)
+		end
+		for line = line1, math.min(line2, vim.fn.line 'w$') do
+			if line ~= line1 and line ~= line2 then
+				table.insert(pos, vim.fn.matchaddpos('Visual', { line }))
+			else
+				local str = vim.fn.getline(line)
+				local start_idx = line == line1 and col1 or 1
+				local end_idx = line == line2 and col2 or #str
+				for i = start_idx, end_idx do
+					table.insert(pos, vim.fn.matchaddpos('Visual', { { line, i } }))
+				end
+			end
+		end
+		vim.cmd.redraw()
+
+		if type(inner.on_select) == 'function' then
+			inner.on_select(typ)
+		end
+
+		-- Remove highlights
+		for _, id in pairs(pos) do
+			vim.fn.matchdelete(id)
+		end
+		vim.cmd.redraw()
+
+		if type(inner.callback) == 'function' then
+			inner.callback(typ)
+		end
+	end
+	_G[name] = opfunc
+	return _G[name]
+end
+
+vim.keymap.set({ 'n', 'x' }, '<C-g>a', create_opfunc('_gitsigns_stage_hunk', {
+	on_select = function(_)
+		local startline = vim.fn.line "'["
+		local endline = vim.fn.line "']"
+		require 'gitsigns'.stage_hunk { startline, endline }
+	end
+}), { expr = true, desc = 'Stage the hunk' })
+vim.keymap.set('n', '<C-g>aae', function() require 'gitsigns'.stage_buffer() end, { desc = 'Stage the whole file' })
+
+vim.keymap.set({ 'n', 'x' }, '<C-g>r', create_opfunc('_gitsigns_reset_hunk', {
+	on_select = function(_)
+		local startline = vim.fn.line "'["
+		local endline = vim.fn.line "']"
+		require 'gitsigns'.reset_hunk { startline, endline }
+	end
+}), { expr = true, desc = 'Restore the hunk' }) 
+
+vim.keymap.set('n', '<C-g>k', function() require 'gitsigns'.preview_hunk_inline() end, { desc = 'View the diff of the Hunk' })
+vim.keymap.set('n', ']<C-g>', function() require 'gitsigns'.nav_hunk 'next' end, { desc = 'Go to the next Hunk' })
+vim.keymap.set('n', '[<C-g>', function() require 'gitsigns'.nav_hunk 'prev' end, { desc = 'Go to the previous Hunk' })
+'''
+
+[[plugins]]
+repo = "ogaken-1/nvim-gin-preview"
+on_ft = "gin-status"
+
+[[plugins]]
+repo = "onsails/diaglist.nvim"
+on_event = "LspAttach"
+lua_after = '''
+vim.api.nvim_create_user_command('Diaglist', function()
+	require 'diaglist.quickfix'.populate_qflist()
+end, { force = true })
+require 'diaglist'.init()
+require 'diaglist.quickfix'.populate_qflist()
+'''
+
+[[plugins]]
+repo = "mfussenegger/nvim-dap"
+on_map = { n = ["<F5>", "<F10>", "<F11>", "<F12>", "bb"] }
+lua_after = '''
+vim.fn.sign_define('DapBreakpoint', { text = '', texthl = 'Macro', linehl = '', numhl = '' })
+vim.fn.sign_define('DapBreakpointCondition', { text = '󰆗', texthl = 'Macro', linehl = '', numhl = '' })
+vim.fn.sign_define('DapLogPoint', { text = '󰵛', texthl = '', linehl = 'Macro', numhl = '' })
+vim.fn.sign_define('DapBreakpointRejected', { text = '', texthl = 'Macro', linehl = '', numhl = '' })
+require 'dapui'.setup()
+require 'dap'.listeners.before['event_initialized']['custom'] = function() require 'dapui'.open {} end
+require 'dap'.listeners.before['event_terminated']['custom'] = function() require 'dapui'.close {} end
+
+vim.keymap.set('n', '<F5>', function() require 'dap'.continue() end, { desc = 'DAP: continue' })
+vim.keymap.set('n', '<F10>', function() require 'dap'.step_over() end, { desc = 'DAP: step over' })
+vim.keymap.set('n', '<F11>', function() require 'dap'.step_into() end, { desc = 'DAP: step into' })
+vim.keymap.set('n', '<F12>', function() require 'dap'.step_out() end, { desc = 'DAP: step out' })
+vim.keymap.set('n', 'bb', function() require 'dap'.toggle_breakpoint() end, { desc = 'DAP: toggle breakpoint' })
+'''
+
+[[plugins]]
+repo = "nvim-neotest/nvim-nio"
+[[plugins]]
+repo = "rcarriga/nvim-dap-ui"
+with = ["nvim-nio", "nvim-dap-virtual-text"]
+[[plugins]]
+repo = "theHamsta/nvim-dap-virtual-text"
+lua_after = '''
+require 'nvim-dap-virtual-text'.setup { enabled_commands = false }
+'''
+
+[[plugins]]
+repo = "rachartier/tiny-inline-diagnostic.nvim"
+on_event = "LspAttach"
+lua_after = '''
+require 'tiny-inline-diagnostic'.setup {
+	options = {
+		multiple_diag_under_cursor = true,
+		show_all_diags_on_cursorline = true,
+		multilines = {
+			enabled = true,
+			always_show = true,
+		},
+	},
+}
+'''
+
+[[plugins]]
+repo = "xzbdmw/colorful-menu.nvim"
+lua_after = "require 'colorful-menu'.setup {}"
+
+[[plugins]]
+repo = "aznhe21/actions-preview.nvim"
+with = "nui.nvim"
+lua_after = '''
+local hl = require 'actions-preview.highlight'
+require 'actions-preview'.setup {
+	backend = { 'snacks' },
+	highlight_command = {
+		hl.delta 'delta --no-gitconfig --side-by-side',
+	},
+}
+'''
+
+[[plugins]]
+repo = "gw31415/fzyselect-nui-opener.nvim"
+with = "nui.nvim"
+
+[[plugins]]
+repo = "gw31415/fzyselect-lines.nvim"
+on_map = { n = "g/" }
+with = "fzyselect.vim"
+lua_after = '''
+vim.keymap.set('n', 'g/', function() require 'fzyselect-lines'.open() end, { desc = 'Fuzzy-Find the line and jump' })
+'''
+
+[[plugins]]
+repo = "gw31415/fzyselect.vim"
+with = "fzyselect-nui-opener.nvim"
+lua_after = '''
+vim.g.fzyselect_opener = require 'fzyselect-nui-opener'
+
+vim.api.nvim_create_autocmd('FileType', {
+	pattern = 'fzyselect',
+	callback = function()
+		vim.wo.winblend = 0
+		vim.api.nvim_create_autocmd('TextChanged', {
+			buffer = 0,
+			once = true,
+			callback = function()
+				local lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
+				local width = 0
+				for _, line in ipairs(lines) do
+					width = math.max(width, vim.fn.strdisplaywidth(line))
+				end
+				width = vim.fn.float2nr(math.max(width, vim.api.nvim_get_option_value('columns', {}) * 0.6))
+				local row = math.max(math.floor(vim.api.nvim_get_option_value('lines', {}) / 2), 1)
+				local col = math.max(math.floor((vim.api.nvim_get_option_value('columns', {}) - width) / 2), 1)
+				vim.api.nvim_win_set_config(0, { width = width + 2, row = row, col = col, relative = 'editor' })
+			end,
+		})
+		vim.wo.wrap = false
+		vim.keymap.set('n', 'i', require 'fzyselect'.input, { buffer = true, desc = 'Input for fuzzy query' })
+		vim.keymap.set('n', '<cr>', "<cmd>cal fzyselect#cr(v:count??'.')<cr>",
+			{ buffer = true, desc = 'Confirm selection' })
+		vim.keymap.set('n', '<esc>', '<cmd>clo<cr>', { buffer = true, desc = 'Close fuzzy selection' })
+		vim.opt_local.number = true
+	end,
+})
+'''
+
+
+[[plugins]]
+repo = "gw31415/bufmanager.nvim"
+with = "fzyselect.vim"
+on_event = "BufAdd"
+lua_after = '''
+vim.keymap.set('n', 'gb', function()
+	vim.api.nvim_create_autocmd('FileType', {
+		once = true,
+		pattern = 'fzyselect',
+		callback = function()
+			vim.keymap.set({ 'n', 'x' }, 'd', '<Plug>(bufmanager-bdelete)', { buffer = true, desc = 'Delete the buffer' })
+			vim.keymap.set('n', 'dd', '<Plug>(bufmanager-bdelete)_', { buffer = true, desc = 'Delete the buffer in current-line' })
+		end,
+	})
+	vim.fn['bufmanager#open']()
+end)
+'''
+
+[[plugins]]
+repo = "gw31415/deepl-commands.nvim"
+on_event = "CmdlineEnter"
+on_map = { n = "c<c-l>" }
+with = ["deepl.vim", "fzyselect.vim"]
+lua_after = '''
+require 'deepl-commands'.setup {
+	selector_func = function(...) require 'fzyselect'.start(...) end,
+}
+vim.keymap.set('n', 'c<c-l>', '<cmd>DeepLTarget<cr>', { desc = 'Select the DeepL translation target lang' })
+'''
+
+[[plugins]]
+repo = "gw31415/deepl-operator.vim"
+with = "deepl.vim"
+on_map = { nx = ["cl", "cL"] }
+lua_after = '''
+vim.keymap.set({ 'n', 'x' }, 'cl', '<Plug>(deepl-replace)', { desc = 'Replace with DeepL translation' })
+vim.keymap.set('n', 'cll', '<Plug>(deepl-replace)_', { desc = 'Replace with DeepL translation and keep cursor' })
+vim.keymap.set('n', 'cL', '<Plug>(deepl-replace)$', { desc = 'Replace with DeepL translation at end of line' })
+'''
+
+[[plugins]]
+repo = "numToStr/Comment.nvim"
+on_event = "VeryLazy"
+lua_after = '''
+require 'Comment'.setup {
+	toggler = {
+		block = 'gCC',
+	},
+	opleader = {
+		block = 'gC',
+	},
+	pre_hook = require 'ts_context_commentstring.integrations.comment_nvim'.create_pre_hook(),
+}
+'''
+
+[[plugins]]
+repo = "CRAG666/code_runner.nvim"
+on_event = "CmdlineEnter"
+lua_after = '''
+require 'code_runner'.setup {
+	mode = 'term',
+	focus = true,
+	startinsert = false,
+	filetype = {
+		java = 'cd $dir && javac $fileName && java $fileNameWithoutExt',
+		python = 'python3 -u',
+		typescript = 'deno run -A',
+		rust = 'cd $dir && rustc $fileName && $dir/$fileNameWithoutExt',
+		go = 'go run',
+	},
+	term = {
+		position = 'rightb vert',
+		size = 70,
+	},
+	-- filetype_path = vim.fn.expand('~/.config/nvim/code_runner.json'),
+	-- project_path = vim.fn.expand('~/.config/nvim/project_manager.json')
+}
+'''
+
+
+[[plugins]]
+repo = "folke/snacks.nvim"
+on_cmd = "Snacks"
+lua_after = '''
+require 'snacks'.setup { picker = { enabled = true } }
+vim.api.nvim_create_user_command('Snacks', 'lua require("snacks").picker()', {})
+'''
+
+[[plugins]]
+repo = "gw31415/root.nvim"
+on_cmd = "Root"
+lua_after = '''
+local quiet = true
+-- Timer for startup 20ms to avoid noisy-messages on startup
+vim.defer_fn(function()
+	quiet = false
+end, 20)
+vim.api.nvim_create_user_command('Root', function(opts)
+	require 'root'.cd(opts.args, quiet)
+end, {
+	nargs = '?',
+	complete = 'file',
+})
+'''
+
+[[plugins]]
+repo = "j-hui/fidget.nvim@v*"
+on_event = "VeryLazy"
+lua_after = '''
+require 'fidget'.setup {
+	notification = {
+		override_vim_notify = true,
+	}
+}
+'''
+
+[[plugins]]
+repo = "NI57721/skkeleton-henkan-highlight"
+on_event = "InsertEnter"
+lua_after = "vim.api.nvim_set_hl(0, 'SkkeletonHenkan', { reverse = true })"
+[[plugins]]
+repo = "delphinus/skkeleton_indicator.nvim"
+on_event = "InsertEnter"
+lua_after = '''
+vim.api.nvim_set_hl(0, 'SkkeletonIndicatorEiji', { fg = '#88c0d0', bg = '#2e3440', bold = true })
+vim.api.nvim_set_hl(0, 'SkkeletonIndicatorHira', { fg = '#2e3440', bg = '#a3be8c', bold = true })
+vim.api.nvim_set_hl(0, 'SkkeletonIndicatorKata', { fg = '#2e3440', bg = '#ebcb8b', bold = true })
+vim.api.nvim_set_hl(0, 'SkkeletonIndicatorHankata', { fg = '#2e3440', bg = '#b48ead', bold = true })
+vim.api.nvim_set_hl(0, 'SkkeletonIndicatorZenkaku', { fg = '#2e3440', bg = '#88c0d0', bold = true })
+vim.api.nvim_set_hl(0, 'SkkeletonIndicatorAbbrev', { fg = '#e5e9f0', bg = '#bf616a', bold = true })
+require 'skkeleton_indicator'.setup {
+	-- eijiText = "󱌯",
+	-- hiraText = "󱌴",
+	-- kataText = "󱌵",
+	-- hankataText = "󱌶",
+	-- zenkakuText = "󱌭",
+	-- aboutText = "󰥤",
+}
+'''
+
+[[plugins]]
+repo = "stevearc/dressing.nvim"
+lua_after = '''
+require 'dressing'.setup {
+	input = { enabled = false },
+	select = { enabled = false },
+}
+'''
+
+[[plugins]]
+repo = "SmiteshP/nvim-navic"
+on_event = "LspAttach"
+lua_after = "require 'nvim-navic'.setup { lsp = { auto_attach = true } }"
+
+[[plugins]]
+repo = "zbirenbaum/copilot.lua"
+on_cmd = "Copilot"
+on_event = "VeryLazy"
+lua_after = "require 'copilot'.setup {}"
+
+[[plugins]]
+repo = "pwntester/octo.nvim"
+on_cmd = "Octo"
+lua_after = "require 'octo'.setup {}"
+
+[[plugins]]
+repo = "stevearc/aerial.nvim"
+on_map = { n = ["<leader>A", "{", "}"] }
+lua_after = '''
+require 'aerial'.setup {
+	on_attach = function(bufnr)
+		vim.keymap.set('n', '{', '<cmd>AerialPrev<CR>', { buffer = bufnr, desc = 'Jump to the aerial-prev' })
+		vim.keymap.set('n', '}', '<cmd>AerialNext<CR>', { buffer = bufnr, desc = 'Jump to the aerial-next' })
+	end,
+}
+vim.keymap.set('n', '<leader>A', function() require 'aerial'.toggle() end, { desc = 'Toggle the aerial' })
+'''
+
+[[plugins]]
+repo = "lukas-reineke/indent-blankline.nvim"
+on_event = "VeryLazy"
+lua_after = '''
+local highlight = {
+	'RainbowRed',
+	'RainbowYellow',
+	'RainbowBlue',
+	'RainbowOrange',
+	'RainbowGreen',
+	'RainbowViolet',
+	'RainbowCyan',
+}
+local hooks = require 'ibl.hooks'
+
+hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+	vim.api.nvim_set_hl(0, 'RainbowRed', { fg = '#E06C75' })
+	vim.api.nvim_set_hl(0, 'RainbowYellow', { fg = '#E5C07B' })
+	vim.api.nvim_set_hl(0, 'RainbowBlue', { fg = '#61AFEF' })
+	vim.api.nvim_set_hl(0, 'RainbowOrange', { fg = '#D19A66' })
+	vim.api.nvim_set_hl(0, 'RainbowGreen', { fg = '#98C379' })
+	vim.api.nvim_set_hl(0, 'RainbowViolet', { fg = '#C678DD' })
+	vim.api.nvim_set_hl(0, 'RainbowCyan', { fg = '#56B6C2' })
+end)
+
+vim.g.rainbow_delimiters = { highlight = highlight }
+require 'ibl'.setup { scope = { highlight = highlight } }
+
+hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
+'''
+
+[[plugins]]
+repo = "nvim-treesitter/playground"
+on_cmd = ["TSPlaygroundToggle", "TSHighlightCapturesUnderCursor"]
+
+# NOTE: このプラグインが有効だとウィンドウのフリックが頻発する
+# [[plugins]]
+# repo = "rasulomaroff/reactive.nvim"
+# on_event = ["ModeChanged", "WinEnter"]
+# lua_after = '''
+# require 'reactive'.setup {
+# 	builtin = {
+# 		cursorline = true,
+# 		cursor = false,
+# 		modemsg = false,
+# 	}
+# }
+# '''
+
+[[plugins]]
+repo = "b0o/incline.nvim"
+on_event = "VeryLazy"
+lua_after = '''
+local helpers = require 'incline.helpers'
+local navic = require 'nvim-navic'
+local devicons = require 'nvim-web-devicons'
+require 'incline'.setup {
+	hide = {
+		cursorline = true,
+	},
+	window = {
+		padding = 0,
+		margin = { horizontal = 0, vertical = 0 },
+	},
+	render = function(props)
+		local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
+		if filename == '' then
+			filename = '[No Name]'
+		end
+		local ft_icon, ft_color = devicons.get_icon_color(filename)
+		local modified = vim.bo[props.buf].modified
+		local res = {
+			ft_icon and { ' ', ft_icon, ' ', guibg = ft_color, guifg = helpers.contrast_color(ft_color) } or '',
+			' ',
+			{ filename, gui = modified and 'bold,italic' or 'bold' },
+		}
+		if props.focused then
+			res.guibg = '#54507e'
+		else
+			res.guibg = '#000000'
+		end
+		if props.focused then
+			for _, item in ipairs(navic.get_data(props.buf) or {}) do
+				table.insert(res, {
+					{ ' > ',     group = 'NavicSeparator' },
+					{ item.icon, group = 'NavicIcons' .. item.type },
+					{ item.name, group = 'NavicText' },
+				})
+			end
+		end
+		table.insert(res, ' ')
+		return res
+	end,
+}
+'''
+
+# 命名規則を相互変換
+[[plugins]]
+repo = "gregorias/coerce.nvim"
+on_event = "VeryLazy"
+lua_after = '''
+require 'coerce'.setup {
+	default_mode_keymap_prefixes = {
+		normal_mode = 'cr',
+		motion_mode = "cr",
+		visual_mode = "cr",
+	}
+}
+'''
+
+[[plugins]]
+repo = "williamboman/mason.nvim"
+lua_after = "require 'mason'.setup()"
+[[plugins]]
+repo = "nvimtools/none-ls.nvim"
+lua_after = "require 'null-ls'.setup()"
+[[plugins]]
+repo = "williamboman/mason-lspconfig.nvim"
+[[plugins]]
+repo = "jay-babu/mason-null-ls.nvim"
+with = ["mason.nvim", "none-ls.nvim"]
+on_event = "VeryLazy"
+lua_after = '''
+require 'mason-null-ls'.setup {
+	automatic_setup = true,
+	automatic_installation = true,
+	ensure_installed = {},
+	handlers = {
+		function(sourcename, methods)
+			-- Disable biome in null-ls because it works as a standalone LSP
+			if sourcename == 'biome' then
+				return
+			else
+				require 'mason-null-ls'.default_setup(sourcename, methods)
+			end
+		end,
+	},
+}
+'''
+[[plugins]]
+repo = "neovim/nvim-lspconfig"
+on_event = ["LspAttach", "VeryLazy"]
+lua_after = '''
+local lsp_list = vim.list_extend({
+	'fish_lsp',
+	'sourcekit',
+	'ty',
+	'basedpyright',
+	'ruff'
+}, require 'mason-lspconfig'.get_installed_servers())
+
+local lsp_unloads = { 'biome', 'denols', 'vtsls', 'tsgo' }
+
+vim.lsp.enable(vim.tbl_filter(function(name) return not vim.list_contains(lsp_unloads, name) end, lsp_list))
+
+vim.api.nvim_create_autocmd('FileType', {
+	pattern = { 'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx' },
+	callback = function(args)
+		---@param files string[]
+		local function has_root(files)
+			local found_dirs = vim.fs.find(files, {
+				upward = true,
+				path = vim.fs.dirname(vim.fs.normalize(vim.api.nvim_buf_get_name(args.buf))),
+			})
+			return #found_dirs > 0
+		end
+
+		-- TODO: ワークスペース毎に適切なLSPを選択する
+		---@param name string
+		local function enable_or_attach(name)
+			local client = vim.lsp.get_clients { name = name }[1]
+			if client then
+				vim.lsp.buf_attach_client(args.buf, client.id)
+			else
+				-- TODO: enableの場合、denolsとその他のJS/TS系LSを両方起動すると(恐らく)競合する
+				-- INFO: vim.lsp.start(vim.lsp.config(name)) だと :LspInfo でエラーになる。
+				vim.lsp.enable(name)
+			end
+		end
+		if has_root { 'deno.json', 'deno.jsonc', 'deno.lock', 'deps.ts', 'denops' } then
+			enable_or_attach 'denols'
+		else
+			-- INFO: 何故かvtslsよりtsgoが遅いのでvtslsを使っている
+			enable_or_attach 'vtsls'
+		end
+
+		if has_root { 'biome.json' } then
+			enable_or_attach 'biome'
+			for _, name in ipairs { 'denols', 'vtsls', 'tsgo' } do
+				vim.lsp.config(name, {
+					capabilities = {
+						documentFormattingProvider = false,
+						documentRangeFormattingProvider = false,
+					},
+				})
+			end
+		end
+	end,
+})
+vim.api.nvim_create_autocmd('FileType', {
+	pattern = 'json',
+	callback = function(args)
+		---@param files string[]
+		local function has_root(files)
+			local found_dirs = vim.fs.find(files, {
+				upward = true,
+				path = vim.fs.dirname(vim.fs.normalize(vim.api.nvim_buf_get_name(args.buf))),
+			})
+			return #found_dirs > 0
+		end
+
+		if has_root { 'biome.json' } then
+			vim.lsp.config('jsonls', {
+				capabilities = {
+					documentFormattingProvider = false,
+					documentRangeFormattingProvider = false,
+				},
+			})
+		end
+	end,
+})
+vim.api.nvim_exec_autocmds('FileType', { pattern = vim.api.nvim_get_option_value('filetype', {}) })
+'''
+
+[[plugins]]
+repo = "FabijanZulj/blame.nvim"
+on_cmd = "BlameToggle"
+on_map = { n = "<leader>b" }
+lua_after = '''
+require 'blame'.setup()
+vim.keymap.set("n", "<leader>b", "<cmd>BlameToggle<cr>", { noremap = true, silent = true })
+'''
+
+[[plugins]]
+repo = "gw31415/emjpick.vim"
+on_cmd = "Emoji"
+lua_after = "vim.api.nvim_create_user_command('Emoji', 'call emjpick#insert()', {})"
+
+[[plugins]]
+repo = "kdheepak/lazygit.nvim"
+on_cmd = [
+	"LazyGit",
+	"LazyGitConfig",
+	"LazyGitCurrentFile",
+	"LazyGitFilter",
+	"LazyGitFilterCurrentFile",
+]
+on_map = { n = "gll" }
+lua_after = '''
+vim.cmd [[
+let $VISUAL = $EDITOR
+let $GIT_EDITOR = $EDITOR
+]]
+vim.keymap.set('n', 'gll', '<cmd>LazyGit<cr>', {})
+'''

@@ -1,4 +1,3 @@
----@diagnostic disable: missing-fields, return-type-mismatch, undefined-field, unused-local
 local wezterm = require 'wezterm';
 
 local config = wezterm.config_builder()
@@ -20,12 +19,12 @@ wezterm.on('gui-attached', function()
 end)
 
 config.color_scheme = 'Tomorrow Night'
-config.default_prog = { 'bash', '-c', '$HOME/.nix-profile/bin/fish' }
+config.default_prog = { 'sh', '-c', '$HOME/.nix-profile/bin/fish' }
 config.hide_tab_bar_if_only_one_tab = true
 config.font = wezterm.font_with_fallback { 'HackGen Console NF' }
-config.font_size = 14
-config.initial_cols = 180
-config.initial_rows = 52
+config.font_size = 13
+config.initial_cols = 150
+config.initial_rows = 45
 config.front_end = 'WebGpu'
 ---@diagnostic disable-next-line: assign-type-mismatch
 config.macos_forward_to_ime_modifier_mask = 'SHIFT|CTRL'
@@ -62,7 +61,8 @@ wezterm.on('format-tab-title', function(tab, _tabs, _panes, _config, _hover, max
 	local bg = 'none'
 	local fg = 'white'
 	if tab.is_active then
-		bg = '#5f5575'
+		bg = '#e5e5e5'
+		fg = 'black'
 	end
 	local title = ' ' .. wezterm.truncate_right(
 		wezterm.nerdfonts
@@ -187,6 +187,33 @@ config.keys = {
 		mods = 'ALT',
 		action = 'ToggleFullScreen'
 	},
+	{
+		key = 'e',
+		mods = 'SUPER',
+		action = wezterm.action_callback(function(_window, pane)
+			local target_pane_id = tostring(pane:pane_id())
+			local env_path = string.format('%s/.nix-profile/bin:/opt/homebrew/bin:%s', os.getenv('HOME'),
+				os.getenv('PATH'))
+			pane:split {
+				direction = "Bottom",
+				set_environment_variables = {
+					PATH = env_path,
+				},
+				args = {
+					'pnpx',
+					'editprompt',
+					'--always-copy',
+					'--editor',
+					'nvim',
+					'--mux',
+					'wezterm',
+					'--target-pane',
+					target_pane_id,
+				},
+				size = 10,
+			}
+		end),
+	}
 }
 
 return config

@@ -17,37 +17,11 @@
     nix-homebrew = {
       url = "github:zhaofengli-wip/nix-homebrew";
     };
-    nuschtosSearch = {
-      url = "github:NuschtOS/search";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
-    };
-    nixvim = {
-      url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.nuschtosSearch.follows = "nuschtosSearch";
-    };
-    dpp-vim = {
-      url = "github:Shougo/dpp.vim";
-      flake = false;
-    };
-    dpp-ext-installer = {
-      url = "github:Shougo/dpp-ext-installer";
-      flake = false;
-    };
-    dpp-ext-lazy = {
-      url = "github:Shougo/dpp-ext-lazy";
-      flake = false;
-    };
-    dpp-ext-toml = {
-      url = "github:Shougo/dpp-ext-toml";
-      flake = false;
-    };
-    dpp-protocol-git = {
-      url = "github:Shougo/dpp-protocol-git";
-      flake = false;
-    };
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    fenix = {
+      url = "github:nix-community/fenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -62,14 +36,22 @@
           inherit system;
           config.allowUnfree = true;
         };
+        pkgs-stable = import inputs.nixpkgs-stable {
+          inherit system;
+          config.allowUnfree = true;
+        };
+        dot = import ./dot/default.nix {
+          inherit system;
+          pkgs = pkgs-stable;
+          fenix = ctx.fenix;
+        };
         ctx = inputs // {
-          pkgs = pkgs;
-          pkgs-stable = import ctx.nixpkgs-stable {
-            inherit system;
-            config.allowUnfree = true;
-          };
-          dot = import ./dot/default.nix { inherit pkgs; };
-          system = system;
+          inherit
+            pkgs
+            pkgs-stable
+            system
+            dot
+            ;
         };
         overlays = [
           inputs.neovim-nightly-overlay.overlays.default
@@ -111,10 +93,7 @@
                   inherit config ctx;
                 }
               )
-              {
-                nixpkgs.overlays = overlays;
-              }
-              ctx.nixvim.homeManagerModules.nixvim
+              { nixpkgs.overlays = overlays; }
             ];
           };
           default = ctx.dot;

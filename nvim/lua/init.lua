@@ -1,3 +1,11 @@
+vim.loader.enable()
+
+vim.opt.packpath:prepend '~/.cache/rsplug'
+require 'start_plugins_setup_workaround'.setup()
+
+require 'onedark'.setup { transparent = true, dark = true }
+vim.cmd.colorscheme 'onedark'
+
 ----------------------------
 -- Disable built-in plugins
 ----------------------------
@@ -12,12 +20,10 @@ vim.g.loaded_2html_plugin = true
 -- Lazy loading
 ----------------------------
 
-vim.defer_fn(function()
-	vim.cmd [[
-		source $HOME/.config/home-manager/nvim/lazy.vim
-		doautocmd CursorHold
-	]]
-end, 1)
+vim.schedule(function()
+	require 'init_lazy'
+	vim.api.nvim_exec_autocmds('User', { pattern = 'VeryLazy', modeline = false })
+end)
 
 ----------------------------
 -- Personal settings
@@ -29,19 +35,10 @@ vim.wo.number = true
 vim.go.winblend = 20
 vim.go.pumblend = 20
 vim.go.guifont = 'HackGen_Console_NF:h14'
-vim.go.tabstop = 4
-vim.go.shiftwidth = 4
+vim.opt.shiftwidth = 4
+vim.opt.tabstop = 4
 vim.go.cmdheight = 0
-vim.wo.foldcolumn = '1'
-vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
-
--- Ignore startup treesitter errors
-vim.treesitter.start = (function(wrapped)
-	return function(bufnr, lang)
-		lang = lang or vim.fn.getbufvar(bufnr or '', '&filetype')
-		pcall(wrapped, bufnr, lang)
-	end
-end)(vim.treesitter.start)
+vim.o.fillchars = [[eob: ,fold: ,foldopen:󱨉,foldsep: ,foldclose:]]
 
 vim.cmd 'filetype plugin indent on'
 

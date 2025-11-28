@@ -11,20 +11,29 @@ in
     username = env.username;
     homeDirectory = env.homeDirectory;
     stateVersion = "25.05";
+    sessionPath = [
+      "$HOME/.local/bin"
+    ];
   };
 
   # Audiverisは手動でインストールすること
   home.packages =
     (with pkgs-stable; [
-      pkgs.nodejs
-      pkgs.gemini-cli
+      # AI tools
+      pkgs.codex
+      pkgs.github-copilot-cli
+
+      # LSPs
+      pkgs.basedpyright
+      pkgs.typescript-go
+      gopls
 
       # CLI tools
+      pkgs.magika
       aria2
       asciinema
       bat
       bindfs
-      bun
       deno
       emacs-nox
       envchain
@@ -33,9 +42,7 @@ in
       ffmpeg
       flyctl
       gh
-      gnupg
       gocryptfs
-      gopls
       home-manager
       hugo
       imagemagick
@@ -57,10 +64,9 @@ in
       rustup
       sccache
       silicon
-      slack-term
-      tectonic
       tdf
       tmux
+      tree-sitter
       typst
       uv
       vhs
@@ -79,6 +85,11 @@ in
 
       (pkgs.writeShellScriptBin "trash" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:trash-cli "$@"'')
       ctx.dot
+
+      # Unused tools
+      # comma
+      # tectonic
+      # slack-term
     ])
     ++ (
       if pkgs-stable.stdenv.isDarwin then
@@ -88,7 +99,13 @@ in
           cocoapods
         ]
       else
-        [ ]
+        with pkgs-stable;
+        [
+          # NOTE: For the following gnupg, install by homebrew because of compatibility with pinentry-mac on MacOS.
+          gnupg
+          # NOTE: In macOS, pnpm is installed by homebrew.
+          nodejs
+        ]
     );
 
   home.file = {
@@ -102,10 +119,6 @@ in
       recursive = true;
     };
     ".latexmkrc".source = ./statics/latexmkrc;
-
-    ".nix-deliverables/wezterm-types".source = "${import ./wezterm-types/default.nix {
-      inherit pkgs;
-    }}";
 
     "${configHome}/wezterm".source =
       config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/wezterm";
@@ -130,65 +143,13 @@ in
     XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
     DIRENV_LOG_FORMAT = "";
     TEST_TEXT = "${config.home.homeDirectory}";
+    RSPLUG_CONFIG_FILES = "${homeManagerDirectory}/nvim/rsplug/*.toml";
   };
 
-  programs.nixvim =
-    let
-      dpp-vim = pkgs.vimUtils.buildVimPlugin {
-        name = "dpp.vim";
-        src = ctx.dpp-vim;
-      };
-      dpp-ext-installer = pkgs.vimUtils.buildVimPlugin {
-        name = "dpp-ext-installer";
-        src = ctx.dpp-ext-installer;
-      };
-      dpp-ext-lazy = pkgs.vimUtils.buildVimPlugin {
-        name = "dpp-ext-lazy";
-        src = ctx.dpp-ext-lazy;
-      };
-      dpp-ext-toml = pkgs.vimUtils.buildVimPlugin {
-        name = "dpp-ext-toml";
-        src = ctx.dpp-ext-toml;
-      };
-      dpp-protocol-git = pkgs.vimUtils.buildVimPlugin {
-        name = "dpp-protocol-git";
-        src = ctx.dpp-protocol-git;
-      };
-    in
-    {
-      package = ctx.neovim-nightly-overlay.packages.${pkgs.system}.default;
-      enable = true;
-      colorschemes.monokai-pro = {
-        enable = true;
-        settings = { transparent_background = true; };
-      };
-      extraPlugins = [
-        pkgs.vimPlugins.denops-vim
-      ];
-      extraConfigLuaPost = ''
-        vim.opt.runtimepath:prepend '${dpp-vim}'
-
-        local dpp = require 'dpp'
-        local dpp_base = '~/.cache/dpp'
-
-        vim.opt.runtimepath:append '${dpp-ext-toml}'
-        vim.opt.runtimepath:append '${dpp-protocol-git}'
-        vim.opt.runtimepath:append '${dpp-ext-lazy}'
-        vim.opt.runtimepath:append '${dpp-ext-installer}'
-
-        if dpp.load_state(dpp_base) then
-          -- vim.opt.runtimepath:prepend '$HOME/.cache/dpp/repos/github.com/vim-denops/denops.vim'
-
-          vim.api.nvim_create_autocmd('User', {
-            pattern = 'DenopsReady',
-            callback = function()
-              dpp.make_state(dpp_base, '${homeManagerDirectory}/nvim/dpp.ts')
-            end
-          })
-        end
-        require 'init'
-      '';
-    };
+  programs.neovim = {
+    enable = true;
+    extraLuaConfig = "require 'init'";
+  };
 
   programs.git = {
     enable = true;
@@ -196,22 +157,28 @@ in
       "*.lockb binary diff=lockb"
       "*.ipynb binary diff=ipynb"
     ];
-    userName = "gw31415";
-    userEmail = "gw31415@amas.dev";
-    delta.enable = true;
     ignores = [
       ".DS_Store"
       "kls_database.db"
+      ".aider*"
     ];
-    extraConfig = {
+    settings = {
       credential.helper = "/usr/local/share/gcm-core/git-credential-manager";
       init.defaultBranch = "main";
       commit.gpgSign = true;
-      user.signingKey = "B7E2A136"; # Expiration: 2025-09-01
+      user = {
+        signingKey = "B7E2A136"; # Expiration: 2025-09-01
+        name = "gw31415";
+        email = "24710985+gw31415@users.noreply.github.com";
+      };
       diff.lockb.binary = true;
       diff.lockb.textconv = "${pkgs.bun}/bin/bun";
       diff.ipynb.binary = true;
     };
+  };
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
   };
   programs.starship = {
     enable = true;
@@ -219,8 +186,8 @@ in
     settings = {
       add_newline = true;
       character = {
-        error_symbol = "[\\(](yellow)[´o_o](bold red)[\\)](yellow)[ =3](cyan)";
-        success_symbol = "[\\(](yellow)[´‐_‐](bold green)[\\)](yellow)[ =3](cyan)";
+        error_symbol = "[\\(](yellow)[´-_-](bold red)[\\)](yellow)[ =3](cyan)";
+        success_symbol = "[\\(](yellow)[ 'u'](bold green)[\\)](yellow)[ =3](cyan)";
       };
       directory = {
         truncate_to_repo = true;
@@ -234,11 +201,12 @@ in
   programs.fish = {
     enable = true;
     shellAbbrs = {
-      tree = "eza -T";
-      gll = "lazygit";
       dcd = "cd ${homeManagerDirectory}";
-      unitydroidlog = "adb logcat -s Unity ActivityManager PackageManager dalvikvm DEBUG";
+      gll = "lazygit";
+      rp = "rsplug";
       sqlite3 = "litecli";
+      tree = "eza -T";
+      unitydroidlog = "adb logcat -s Unity ActivityManager PackageManager dalvikvm DEBUG";
     };
     shellAliases = {
       vi = "nvim";
@@ -257,7 +225,7 @@ in
         name = "fish-na";
         src = (
           fetchTarball {
-            url = "https://github.com/ryoppippi/fish-na/archive/refs/tags/v0.1.1.tar.gz";
+            url = "https://github.com/ryoppippi/fish-na/archive/refs/tags/v0.1.2.tar.gz";
             sha256 = "0dzchdawcpw307jszr5wiv5gj8mw9ai875g3n17kd7y4a8m0bgcy";
           }
         );
@@ -307,7 +275,7 @@ in
   };
   programs.go = {
     enable = true;
-    goPath = ".go";
+    env.GOPATH = "${env.homeDirectory}/.go";
   };
   programs.fzf = {
     enable = true;
@@ -325,6 +293,10 @@ in
       "Library"
       "OrbStack"
     ];
+  };
+  programs.pay-respects = {
+    enable = true;
+    enableFishIntegration = true;
   };
   manual.manpages.enable = true;
 }

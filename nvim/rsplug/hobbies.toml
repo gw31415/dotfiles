@@ -1,0 +1,32 @@
+[[plugins]]
+repo = "eandrju/cellular-automaton.nvim"
+on_cmd = "CellularAutomaton"
+
+[[plugins]]
+repo = "gw31415/nvim-tetris"
+on_cmd = "Tetris"
+
+[[plugins]]
+repo = "seandewar/nvimesweeper"
+on_cmd = "Nvimesweeper"
+
+[[plugins]]
+repo = "jim-fx/sudoku.nvim"
+on_cmd = "Sudoku"
+lua_after = "require 'sudoku'.setup{}"
+
+[[plugins]]
+repo = "gw31415/mstdn-editor.vim"
+start = true
+
+[[plugins]]
+repo = "m4xshen/hardtime.nvim"
+with = "nui.nvim"
+on_cmd = "Hardtime"
+lua_after = "require 'hardtime'.setup()"
+
+# Discord Rich Presence
+[[plugins]]
+repo = "andweeb/presence.nvim"
+on_event = "VeryLazy"
+lua_after = "require 'presence'.setup()"

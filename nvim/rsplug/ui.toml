@@ -1,0 +1,153 @@
+[[plugins]]
+repo = "nvim-lualine/lualine.nvim"
+on_event = "UIEnter"
+lua_after = '''
+--------------------------------------------------------------------------------
+-- Global Functions used in Statusline
+--------------------------------------------------------------------------------
+
+local macro_state = {
+	---@return string
+	function()
+		local key = vim.fn.reg_recording()
+		return key ~= '' and ('MACRO:' .. key) or ''
+	end,
+	color = { bg = 'red', fg = 'black', gui = 'bold' }
+}
+
+local search_count = {
+	---@return string
+	function()
+		if vim.v.hlsearch == 0 then
+			return ''
+		end
+		local count = vim.fn.searchcount { recompute = 1, maxcount = 999 }
+		local current = count.current
+		local total = count.total
+		return current ~= 0 and string.format('%d/%d', current, total) or ''
+	end,
+	color = { fg = 'orange' },
+}
+
+---@return string
+local function indent()
+	return '' .. (vim.bo.expandtab and vim.bo.shiftwidth .. ' 󱁐' or vim.bo.tabstop .. ' ')
+end
+
+local sidekick = {
+	function()
+		return ''
+	end,
+	color = function()
+		local status = require 'sidekick.status'.get()
+		if status then
+			return status.kind == "Error" and "DiagnosticError" or status.busy and "DiagnosticWarn" or nil
+		end
+	end,
+	cond = function()
+		local status = require 'sidekick.status'
+		return status.get() ~= nil
+	end,
+}
+
+require 'lualine'.setup {
+	sections = {
+		lualine_b = { macro_state, 'branch', 'diff', 'diagnostics' },
+		lualine_c = { 'filename', sidekick },
+		lualine_x = { 'encoding', 'fileformat', indent, 'filetype' },
+		lualine_y = { 'progress', search_count },
+	},
+	refresh = {
+		events = {
+			'WinEnter',
+			'BufEnter',
+			'BufWritePost',
+			'SessionLoadPost',
+			'FileChangedShellPost',
+			'VimResized',
+			'Filetype',
+			'CursorMoved',
+			'CursorMovedI',
+			'ModeChanged',
+			'RecordingEnter',
+			'RecordingLeave',
+		},
+	}
+}
+'''
+
+[[plugins]]
+repo = "nvim-treesitter/nvim-treesitter@main"
+# build = ["nvim", "--headless", "-c", "TSUpdateSync | quit"] # TODO: 代替方法を考える
+on_event = "VimEnter"
+lua_after = '''
+local install_dir = vim.fn.stdpath 'data' .. '/treesitter'
+vim.opt.runtimepath:append(install_dir)
+require 'nvim-treesitter'.setup { install_dir = install_dir }
+
+vim.api.nvim_create_autocmd("FileType", {
+	group = vim.api.nvim_create_augroup("vim-treesitter-start", {}),
+	callback = function() pcall(vim.treesitter.start) end,
+})
+'''
+
+[[plugins]]
+repo = "HiPhish/rainbow-delimiters.nvim"
+# repo = "https://gitlab.com/HiPhish/rainbow-delimiters.nvim" # TODO: URL直接入力できるようにする
+on_event = "VimEnter"
+
+[[plugins]]
+repo = "kevinhwang91/nvim-ufo"
+on_event = ["BufAdd", "VimEnter", "UIEnter"]
+with = ["nvim-treesitter", "promise-async"]
+lua_after = '''
+vim.o.foldcolumn = '2'
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
+
+vim.keymap.set('n', 'zR', require 'ufo'.openAllFolds)
+vim.keymap.set('n', 'zM', require 'ufo'.closeAllFolds)
+
+require 'ufo'.setup {
+	provider_selector = function()
+		return { 'treesitter', 'indent' }
+	end,
+	fold_virt_text_handler = function(virtText, lnum, endLnum, width, truncate)
+		local newVirtText = {}
+		local suffix = ('   %d '):format(endLnum - lnum)
+		local sufWidth = vim.fn.strdisplaywidth(suffix)
+		local targetWidth = width - sufWidth
+		local curWidth = 0
+		for _, chunk in ipairs(virtText) do
+			local chunkText = chunk[1]
+			local chunkWidth = vim.fn.strdisplaywidth(chunkText)
+			if targetWidth > curWidth + chunkWidth then
+				table.insert(newVirtText, chunk)
+			else
+				chunkText = truncate(chunkText, targetWidth - curWidth)
+				local hlGroup = chunk[2]
+				table.insert(newVirtText, { chunkText, hlGroup })
+				chunkWidth = vim.fn.strdisplaywidth(chunkText)
+				-- str width returned from truncate() may less than 2nd argument, need padding
+				if curWidth + chunkWidth < targetWidth then
+					suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
+				end
+				break
+			end
+			curWidth = curWidth + chunkWidth
+		end
+		table.insert(newVirtText, { suffix, 'MoreMsg' })
+		return newVirtText
+	end
+}
+
+vim.lsp.config('*', {
+	textDocument = {
+		foldingRange = {
+			dynamicRegistration = false,
+			lineFoldingOnly = true,
+		},
+	}
+})
+'''

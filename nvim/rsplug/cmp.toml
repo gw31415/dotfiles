@@ -1,38 +1,32 @@
 [[plugins]]
-repo = "xzbdmw/colorful-menu.nvim"
-on_lua = "colorful-menu"
-lua_source = '''
-require 'colorful-menu'.setup {}
-'''
-
-[[plugins]]
-repo = "zbirenbaum/copilot.lua"
-on_cmd = "Copilot"
-lua_source = '''
-require 'copilot'.setup {
-	suggestion = { enabled = false },
-	panel = { enabled = false },
-	copilot_node_command = 'node'
-}
-'''
-
-[[plugins]]
 repo = "Kaiser-Yang/blink-cmp-git"
+
 [[plugins]]
 repo = "fang2hou/blink-copilot"
-depends = "copilot.lua"
-lua_source = '''
+lua_after = '''
 require 'blink-copilot'.setup {
 	max_completions = 3,
-	max_attempts = 5,
+	max_attempts = 7,
 }
 '''
+
 [[plugins]]
-repo = "saghen/blink.cmp"
-depends = ["blink-copilot", "blink-cmp-git"]
+repo = "disrupted/blink-cmp-conventional-commits"
+
+[[plugins]]
+repo = "Kaiser-Yang/blink-cmp-avante"
+
+[[plugins]]
+repo = "saghen/blink.cmp@v1.*"
+with = [
+	"blink-copilot",
+	"blink-cmp-git",
+	"blink-cmp-conventional-commits",
+	"blink-cmp-avante",
+]
 on_event = ["InsertEnter", "CmdlineEnter", "LspAttach"]
-extAttrs.installerBuild = "nix run .#build-plugin"
-lua_source = '''
+build = ["cargo", "build", "--release"]
+lua_after = '''
 require 'blink.cmp'.setup {
 	sources = {
 		default = { 'snippets', 'lsp', 'copilot', 'path', 'buffer' },
@@ -42,7 +36,8 @@ require 'blink.cmp'.setup {
 			typst = { 'snippets', 'lsp', 'copilot', 'path' },
 			tex = { 'snippets', 'lsp', 'copilot', 'path' },
 			lua = { inherit_defaults = true, 'lazydev' },
-			gitcommit = { inherit_defaults = true, 'git' },
+			gitcommit = { inherit_defaults = true, 'git', 'conventional_commits' },
+			AvanteInput = { inherit_defaults = true, 'avante' },
 		},
 		providers = {
 			copilot = {
@@ -59,6 +54,16 @@ require 'blink.cmp'.setup {
 			git = {
 				module = 'blink-cmp-git',
 				name = 'Git',
+			},
+			conventional_commits = {
+				name = 'Conventional Commits',
+				module = 'blink-cmp-conventional-commits',
+				opts = {},
+			},
+			avante = {
+				module = 'blink-cmp-avante',
+				name = 'Avante',
+				opts = {},
 			},
 		},
 	},
@@ -83,21 +88,26 @@ require 'blink.cmp'.setup {
 	cmdline = {
 		keymap = {
 			preset = 'inherit',
-			['<space>'] = {
-				function(cmp)
-					local function fallback()
-						vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<space>', true, false, true), 'n', true)
-					end
-
-					if vim.tbl_contains({ ':', '@' }, vim.fn.getcmdtype()) and cmp.is_visible() then
-						return cmp.accept { callback = fallback }
-					end
-					return fallback()
-				end,
-			},
+			-- ['<space>'] = {
+			-- 	function(cmp)
+			-- 		local function fallback()
+			-- 			vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<space>', true, false, true), 'n', true)
+			-- 		end
+			--
+			-- 		if vim.tbl_contains({ ':', '@' }, vim.fn.getcmdtype()) and cmp.is_visible() then
+			-- 			return cmp.accept { callback = fallback }
+			-- 		end
+			-- 		return fallback()
+			-- 	end,
+			-- },
 		},
 		completion = {
 			menu = { auto_show = true },
+			list = {
+				selection = {
+					preselect = false,
+				},
+			},
 		},
 	},
 	signature = { enabled = true },
