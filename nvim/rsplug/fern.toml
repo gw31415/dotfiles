@@ -2,7 +2,20 @@
 repo = "A7Lavinraj/fyler.nvim@stable"
 with = "mini.icons"
 on_cmd = "Fyler"
-lua_after = "require 'fyler'.setup()"
+lua_after = '''
+require 'fyler'.setup {
+	views = {
+		finder = {
+			delete_to_trash = true,
+			mappings = {
+				gx = function(finder)
+					vim.ui.open(finder:cursor_node_entry().path)
+				end,
+			}
+		}
+	},
+}
+'''
 
 [[plugins]]
 repo = "lambdalisue/nerdfont.vim"
