@@ -229,7 +229,7 @@ with = "nui.nvim"
 lua_after = '''
 local hl = require 'actions-preview.highlight'
 require 'actions-preview'.setup {
-	backend = { 'snacks' },
+	backend = { 'nui' },
 	highlight_command = {
 		hl.delta 'delta --no-gitconfig --side-by-side',
 	},
@@ -368,8 +368,8 @@ require 'code_runner'.setup {
 repo = "folke/snacks.nvim"
 on_cmd = "Snacks"
 lua_after = '''
-require 'snacks'.setup { picker = { enabled = true } }
-vim.api.nvim_create_user_command('Snacks', 'lua require("snacks").picker()', {})
+require 'snacks'.setup { picker = { enabled = true, ui_select = false } }
+vim.api.nvim_create_user_command('Snacks', 'lua require "snacks".picker()', {})
 '''
 
 [[plugins]]
