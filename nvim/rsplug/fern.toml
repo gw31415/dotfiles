@@ -9,8 +9,47 @@ require 'fyler'.setup {
 			delete_to_trash = true,
 			mappings = {
 				gx = function(finder)
+					-- Open with system default application
 					vim.ui.open(finder:cursor_node_entry().path)
 				end,
+				["<CR>"] = "Select",
+				["<Esc>"] = "CloseView",
+				zM = "CollapseAll",
+				zc = "CollapseNode",
+				za = function(finder)
+					-- Toggle node
+					local entry = finder:cursor_node_entry()
+					if entry:isdir() then
+						finder:exec_action "n_select"
+					else
+						finder:exec_action "n_collapse_node"
+					end
+				end,
+				["<c-h>"] = "GotoParent",
+				gf = function(finder)
+					-- Open file or goto directory
+					local entry = finder:cursor_node_entry()
+					if entry:isdir() then
+						finder:exec_action "n_goto_node"
+					else
+						finder:exec_action "n_select"
+					end
+				end,
+				["="] = "GotoCwd",
+				cx = "GotoNode",
+
+				-- Disabled mappings
+				q = false,
+				["<C-t>"] = false,
+				-- ["<C-t>"] = "SelectTab",
+				["|"] = false,
+				-- ["|"] = "SelectVSplit",
+				["-"] = false,
+				-- ["-"] = "SelectSplit",
+				["^"] = false,
+				["."] = false,
+				["#"] = false,
+				["<BS>"] = false,
 			}
 		}
 	},
