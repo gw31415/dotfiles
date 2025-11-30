@@ -86,7 +86,7 @@ vim.keymap.set('n', 'J', '<cmd>TSJToggle<cr>', { desc = 'Join multi-lines' })
 [[plugins]]
 repo = "gw31415/vim-partedit"
 with = "context_filetype.vim"
-on_map = { nx = "cx" }
+on_map = { n = "cx" }
 on_cmd = "Partedit"
 lua_after = '''
 vim.g['partedit#suffix_pattern'] = '\\v\\s*$'
