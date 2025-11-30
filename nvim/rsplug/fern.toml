@@ -38,6 +38,46 @@ require 'fyler'.setup {
 				end,
 				["="] = "GotoCwd",
 				cx = "GotoNode",
+				-- ["<C-p>"] = function(self)
+				-- 	local current_node = self:cursor_node_entry()
+				-- 	local stat = vim.uv.fs_stat(current_node.path)
+				-- 	if not stat then
+				-- 		return
+				-- 	end
+				-- 	if stat.size == 0 then
+				-- 		vim.print("empty file.")
+				-- 		return
+				-- 	end
+				-- 	local buf = vim.api.nvim_create_buf(false, true)
+				-- 	local lines = vim.fn.readfile(current_node.path)
+				-- 	vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+				--
+				-- 	-- fyler のフローティングウィンドウの情報を取得
+				-- 	local current_win = vim.api.nvim_get_current_win()
+				-- 	local win_config = vim.api.nvim_win_get_config(current_win)
+				--
+				-- 	local opts = {
+				-- 		relative = "editor",
+				-- 		-- プレビュー画面は fyler のフローティングウィンドウの高さなどを基準に表示する
+				-- 		width = math.floor(win_config.width / 2),
+				-- 		height = math.floor(win_config.height),
+				-- 		row = math.floor(win_config.row),
+				-- 		col = math.floor(win_config.col + win_config.width / 2),
+				-- 		style = "minimal",
+				-- 		border = "rounded"
+				-- 	}
+				-- 	vim.api.nvim_open_win(buf, true, opts)
+				-- 	vim.keymap.set('n', 'q', '<cmd>close<CR>', {
+				-- 		buffer = buf,
+				-- 		silent = true,
+				-- 		nowait = true,
+				-- 	})
+				-- 	vim.keymap.set('n', '<C-p>', '<cmd>close<CR>', {
+				-- 		buffer = buf,
+				-- 		silent = true,
+				-- 		nowait = true,
+				-- 	})
+				-- end,
 
 				-- Disabled mappings
 				q = false,
