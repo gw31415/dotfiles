@@ -7,6 +7,10 @@ lua_after = '''
 require 'fyler'.setup {
 	views = {
 		finder = {
+			icon = {
+				directory_collapsed = "",
+				directory_expanded = "",
+			},
 			delete_to_trash = true,
 			mappings = {
 				gx = function(finder)
