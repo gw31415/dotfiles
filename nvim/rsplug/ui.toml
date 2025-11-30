@@ -51,6 +51,9 @@ local sidekick = {
 }
 
 require 'lualine'.setup {
+	options = {
+		globalstatus = true,
+	},
 	sections = {
 		lualine_b = { macro_state, 'branch', 'diff', 'diagnostics' },
 		lualine_c = { 'filename', sidekick },
