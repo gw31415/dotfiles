@@ -518,6 +518,24 @@ lua_after = '''
 local helpers = require 'incline.helpers'
 local navic = require 'nvim-navic'
 local devicons = require 'nvim-web-devicons'
+
+local function smart_path(bufnr)
+	local path = vim.api.nvim_buf_get_name(bufnr)
+	if path == '' then
+		return '[No Name]'
+	end
+
+	path = vim.fn.fnamemodify(path, ':.')
+
+	if vim.fn.strdisplaywidth(path) > vim.o.columns * 0.3 then
+		path = vim.fn.pathshorten(path)
+	end
+	if vim.fn.strdisplaywidth(path) > vim.o.columns * 0.3 then
+		path = vim.fn.fnamemodify(path, ':t')
+	end
+
+	return path
+end
 require 'incline'.setup {
 	hide = {
 		cursorline = true,
@@ -527,10 +545,7 @@ require 'incline'.setup {
 		margin = { horizontal = 0, vertical = 0 },
 	},
 	render = function(props)
-		local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
-		if filename == '' then
-			filename = '[No Name]'
-		end
+		local filename = smart_path(props.buf)
 		local ft_icon, ft_color = devicons.get_icon_color(filename)
 		local modified = vim.bo[props.buf].modified
 		local res = {
