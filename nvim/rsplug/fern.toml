@@ -2,6 +2,7 @@
 repo = "A7Lavinraj/fyler.nvim@stable"
 with = "mini.icons"
 on_cmd = "Fyler"
+on_map = { n = '<c-n>' }
 lua_after = '''
 require 'fyler'.setup {
 	views = {
@@ -54,6 +55,9 @@ require 'fyler'.setup {
 		}
 	},
 }
+
+vim.api.nvim_create_autocmd('FileType', { pattern = 'fern', command = 'setl sw=0' })
+vim.keymap.set('n', '<c-n>', function() require 'fyler'.toggle { kind = "float" } end, { desc = "Toggle Fyler View" })
 '''
 
 [[plugins]]
