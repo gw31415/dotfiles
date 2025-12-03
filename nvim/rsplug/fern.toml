@@ -1,4 +1,19 @@
 [[plugins]]
+repo = "stevearc/oil.nvim"
+on_event = "VimEnter"
+lua_after = '''
+require 'oil'.setup {
+	default_file_explorer = true,
+	delete_to_trash = true,
+	extra_s3_args = { '--region', 'ap-northeast-1' },
+}
+'''
+
+# [[plugins]]
+# repo = "lambdalisue/fern-hijack.vim"
+# start = true
+
+[[plugins]]
 repo = "A7Lavinraj/fyler.nvim@stable"
 with = "mini.icons"
 on_cmd = "Fyler"

@@ -42,10 +42,6 @@ on_cmd = "ShowkeysToggle"
 lua_after = "require 'showkeys'.setup { maxkeys = 10 }"
 
 [[plugins]]
-repo = "lambdalisue/fern-hijack.vim"
-start = true
-
-[[plugins]]
 repo = "gw31415/edisch.vim"
 start = true
 
