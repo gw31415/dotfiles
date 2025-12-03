@@ -45,7 +45,7 @@ require 'fyler'.setup {
 						finder:exec_action "n_collapse_node"
 					end
 				end,
-				["<c-h>"] = "GotoParent",
+				["-"] = "GotoParent",
 				gf = function(finder)
 					-- Open file or goto directory
 					local entry = finder:cursor_node_entry()
@@ -104,7 +104,6 @@ require 'fyler'.setup {
 				-- ["<C-t>"] = "SelectTab",
 				["|"] = false,
 				-- ["|"] = "SelectVSplit",
-				["-"] = false,
 				-- ["-"] = "SelectSplit",
 				["^"] = false,
 				["."] = false,
