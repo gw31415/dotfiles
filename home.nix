@@ -43,6 +43,7 @@ in
       flyctl
       gh
       gocryptfs
+      goofys
       home-manager
       imagemagick
       jdupes
