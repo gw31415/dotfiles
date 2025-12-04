@@ -280,10 +280,10 @@ in
         abbr -a n -f _na
       '';
   };
-  programs.go = {
-    enable = true;
-    env.GOPATH = "${env.homeDirectory}/.go";
-  };
+  # programs.go = {
+  #   enable = true;
+  #   env.GOPATH = "${env.homeDirectory}/.go";
+  # };
   programs.fzf = {
     enable = true;
     enableFishIntegration = true;
