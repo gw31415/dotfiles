@@ -21,7 +21,7 @@ in
     (with pkgs-stable; [
       # AI tools
       pkgs.codex
-      pkgs.github-copilot-cli
+      # pkgs.github-copilot-cli
 
       # LSPs
       pkgs.basedpyright
@@ -35,7 +35,7 @@ in
       bat
       bindfs
       deno
-      emacs-nox
+      # emacs-nox
       envchain
       era
       eza
@@ -112,10 +112,6 @@ in
     ########################################
 
     ".skk/SKK-JISYO.L".source = "${pkgs.skkDictionaries.l}/share/skk/SKK-JISYO.L";
-    ".emacs.d" = {
-      source = ./statics/emacs.d;
-      recursive = true;
-    };
     ".latexmkrc".source = ./statics/latexmkrc;
 
     "${configHome}/wezterm".source =
