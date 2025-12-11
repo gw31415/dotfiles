@@ -136,6 +136,6 @@ in
   ########################################
   system.activationScripts.extraActivation.text = ''
     softwareupdate --all --download --background
-    mise i && mise up --bump
+    ${ctx.pkgs.mise} i && ${ctx.pkgs.mise} up --bump
   '';
 }
