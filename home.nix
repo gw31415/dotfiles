@@ -37,10 +37,8 @@ in
       deno
       # emacs-nox
       envchain
-      era
       eza
       ffmpeg
-      flyctl
       gh
       gocryptfs
       home-manager
@@ -56,7 +54,6 @@ in
       p7zip
       pandoc
       poppler_utils
-      python3
       ripgrep
       ruby
       rustup
@@ -81,7 +78,7 @@ in
       source-han-serif
       twemoji-color-font
 
-      (pkgs.writeShellScriptBin "trash" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:trash-cli "$@"'')
+      # (pkgs.writeShellScriptBin "trash" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:trash-cli "$@"'')
       ctx.dot
 
       # Unused tools

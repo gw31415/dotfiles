@@ -136,5 +136,6 @@ in
   ########################################
   system.activationScripts.extraActivation.text = ''
     softwareupdate --all --download --background
+    mise i && mise up --bump
   '';
 }

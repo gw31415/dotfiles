@@ -4,8 +4,9 @@ idiomatic_version_file_enable_tools = ["python", "node"]
 
 [tools]
 go = "1.25.5"
-"go:github.com/kahing/goofys" = "0.20.0"
+# "go:github.com/kahing/goofys" = "0.20.0"
 node = "latest"
 "npm:fish-lsp" = "latest"
+"npm:trash-cli" = "latest"
 pnpm = "latest"
 usage = "2.9.0"
