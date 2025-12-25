@@ -30,11 +30,13 @@ in
 
       # CLI tools
       pkgs.magika
+      pkgs.mise
       aria2
       asciinema
       bat
       bindfs
       deno
+      direnv
       # emacs-nox
       envchain
       eza
@@ -113,6 +115,8 @@ in
 
     "${configHome}/wezterm".source =
       config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/wezterm";
+    "${configHome}/direnv".source =
+      config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/direnv";
     "${configHome}/lazygit".source =
       config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/lazygit";
     "${configHome}/mise".source =
@@ -140,21 +144,6 @@ in
   programs.neovim = {
     enable = true;
     extraLuaConfig = "require 'init'";
-  };
-
-  programs.mise = {
-    enable = true;
-    package = pkgs.mise;
-  };
-
-  programs.direnv = {
-    enable = true;
-    silent = true;
-    mise = {
-      enable = true;
-      package = pkgs.mise;
-    };
-    nix-direnv.enable = true;
   };
 
   programs.git = {
@@ -263,7 +252,10 @@ in
       )
       + ''
         set fish_greeting
-        if ! status is-interactive
+        if status is-interactive
+          direnv hook fish | source
+          mise activate fish | source
+        else
           mise activate fish --shims | source
         end
         if test -f $HOME/.cargo/env.fish
