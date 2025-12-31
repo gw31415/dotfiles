@@ -266,9 +266,6 @@ in
         abbr -a n -f _na
       '';
   };
-  # programs.go = {
-  #   enable = true;
-  # };
   programs.fzf = {
     enable = true;
     enableFishIntegration = true;
