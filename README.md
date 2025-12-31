@@ -10,7 +10,7 @@ nix run github:gw31415/dotfiles
 ```
 
 > [!note]
-> This is just running the `dot` package. The `dot` package is a helper command to manage `gw31415/dotfiles`.
+> This is just running [the `dot` package](https://github.com/gw31415/dot-cli). The `dot` package is a helper command to manage `gw31415/dotfiles`.
 
 ### macFUSE
 
