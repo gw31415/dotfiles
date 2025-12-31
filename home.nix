@@ -137,7 +137,6 @@ in
     SHELL = "${pkgs.fish}/bin/fish";
     XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
     DIRENV_LOG_FORMAT = "";
-    TEST_TEXT = "${config.home.homeDirectory}";
     RSPLUG_CONFIG_FILES = "${homeManagerDirectory}/nvim/rsplug/*.toml";
   };
 
