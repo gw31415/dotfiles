@@ -105,6 +105,21 @@ in
           pkgs.alt-tab-macos
           pkgs.orbstack
           pkgs.teams
+          # Uni - Pie style storage utility for macOS
+          (pkgs-stable.stdenvNoCC.mkDerivation {
+            pname = "uni-macos";
+            version = "0.1.1";
+            src = pkgs.fetchurl {
+              url = "https://github.com/fiahfy/uni/releases/download/v0.1.1/Uni-0.1.1.dmg";
+              sha256 = "1r9a856p2w99zsa6xi9pb3ydcc524ya0rxvzai0qh04cchm286xp";
+            };
+            nativeBuildInputs = [ pkgs-stable.undmg ];
+            unpackPhase = ''undmg "$src"'';
+            installPhase = ''
+              mkdir -p "$out/Applications"
+              cp -R *.app "$out/Applications/"
+            '';
+          })
         ]
       else
         with pkgs-stable;

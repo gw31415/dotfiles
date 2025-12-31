@@ -81,6 +81,7 @@ in
       "gather"
       "gnucash"
       "keybase"
+      "keyboardcleantool"
       "macfuse"
       "macskk"
       "musicbrainz-picard"
