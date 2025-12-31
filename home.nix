@@ -72,10 +72,10 @@ in
       yt-dlp
 
       # GUI apps
-      anki
-      brave
-      discord
-      wezterm
+      pkgs.anki
+      pkgs.brave
+      pkgs.discord
+      pkgs.wezterm
 
       # Fonts
       hackgen-nf-font
@@ -102,9 +102,9 @@ in
           cocoapods
 
           # GUI apps
-          alt-tab-macos
-          orbstack
-          teams
+          pkgs.alt-tab-macos
+          pkgs.orbstack
+          pkgs.teams
         ]
       else
         with pkgs-stable;
