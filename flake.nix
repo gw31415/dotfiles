@@ -14,9 +14,7 @@
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-homebrew = {
-      url = "github:zhaofengli-wip/nix-homebrew";
-    };
+    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     dot = {
       url = "github:gw31415/dot-cli";
@@ -47,8 +45,9 @@
           inherit
             pkgs
             pkgs-stable
-            system;
-            dot = inputs.dot.packages.${system}.default;
+            system
+            ;
+          dot = inputs.dot.packages.${system}.default;
         };
         overlays = [
           inputs.neovim-nightly-overlay.overlays.default
