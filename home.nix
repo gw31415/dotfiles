@@ -10,7 +10,7 @@ in
   home = {
     username = env.username;
     homeDirectory = env.homeDirectory;
-    stateVersion = "25.05";
+    stateVersion = "25.11";
     sessionPath = [
       "$HOME/.local/bin"
     ];
@@ -45,7 +45,7 @@ in
       gocryptfs
       home-manager
       imagemagick
-      jdupes
+      # jdupes errors on nixos 25.11
       jnv
       jq
       lazygit
@@ -55,7 +55,7 @@ in
       nixfmt-rfc-style
       p7zip
       pandoc
-      poppler_utils
+      poppler-utils
       ripgrep
       ruby
       rustup
