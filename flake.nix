@@ -18,9 +18,12 @@
       url = "github:zhaofengli-wip/nix-homebrew";
     };
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-    fenix = {
-      url = "github:nix-community/fenix";
-      inputs.nixpkgs.follows = "nixpkgs";
+    dot = {
+      url = "github:gw31415/dot-cli";
+      inputs = {
+        nixpkgs.follows = "nixpkgs-stable";
+        flake-utils.follows = "flake-utils";
+      };
     };
   };
 
@@ -40,18 +43,12 @@
           inherit system;
           config.allowUnfree = true;
         };
-        dot = import ./dot/default.nix {
-          inherit system;
-          pkgs = pkgs-stable;
-          fenix = ctx.fenix;
-        };
         ctx = inputs // {
           inherit
             pkgs
             pkgs-stable
-            system
-            dot
-            ;
+            system;
+            dot = inputs.dot.packages.${system}.default;
         };
         overlays = [
           inputs.neovim-nightly-overlay.overlays.default
