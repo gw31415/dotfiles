@@ -133,11 +133,13 @@ in
 
   home.sessionVariables = {
     EDITOR = "nvim";
-    RUSTC_WRAPPER = "${pkgs.sccache}/bin/sccache";
     SHELL = "${pkgs.fish}/bin/fish";
     XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
+
     DIRENV_LOG_FORMAT = "";
+    GOPATH = "${env.homeDirectory}/.go";
     RSPLUG_CONFIG_FILES = "${homeManagerDirectory}/nvim/rsplug/*.toml";
+    RUSTC_WRAPPER = "${pkgs.sccache}/bin/sccache";
   };
 
   programs.neovim = {
@@ -266,7 +268,6 @@ in
   };
   # programs.go = {
   #   enable = true;
-  #   env.GOPATH = "${env.homeDirectory}/.go";
   # };
   programs.fzf = {
     enable = true;
