@@ -71,6 +71,12 @@ in
       wget
       yt-dlp
 
+      # GUI apps
+      anki
+      brave
+      discord
+      wezterm
+
       # Fonts
       hackgen-nf-font
       ipaexfont
@@ -94,6 +100,11 @@ in
         [
           # macOS specific packages
           cocoapods
+
+          # GUI apps
+          alt-tab-macos
+          orbstack
+          teams
         ]
       else
         with pkgs-stable;
