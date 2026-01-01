@@ -77,6 +77,7 @@ in
     ];
     casks = [
       "affinity"
+      "anki"
       "chatgpt"
       "gather"
       "gnucash"
@@ -102,7 +103,6 @@ in
 
       # Home Manager GUI apps
       # "alt-tab"
-      # "anki"
       # "brave-browser"
       # "discord"
       # "microsoft-auto-update"

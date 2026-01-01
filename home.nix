@@ -72,7 +72,6 @@ in
       yt-dlp
 
       # GUI apps
-      pkgs.anki
       pkgs.brave
       pkgs.discord
       pkgs.wezterm
