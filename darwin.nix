@@ -11,7 +11,13 @@ in
   nixpkgs.hostPlatform = ctx.system;
 
   # REQUIRED: To keep-enabled experimental features after installation, since nix is managed by nix-darwin.
-  nix.settings.experimental-features = "nix-command flakes";
+  nix.settings = {
+    experimental-features = "nix-command flakes";
+    trusted-users = [
+      "root"
+      "${env.username}"
+    ];
+  };
 
   # REQUIRED: Because this dotfiles is intended for a nix-darwin multi-user environment.
   nix.package = ctx.pkgs.nix;
