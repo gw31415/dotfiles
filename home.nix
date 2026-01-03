@@ -99,6 +99,7 @@ in
         [
           # macOS specific packages
           cocoapods
+          pkgs.container
 
           # GUI apps
           pkgs.alt-tab-macos
