@@ -103,7 +103,6 @@ in
 
           # GUI apps
           pkgs.alt-tab-macos
-          pkgs.orbstack
           pkgs.teams
           # Uni - Pie style storage utility for macOS
           (pkgs-stable.stdenvNoCC.mkDerivation {
