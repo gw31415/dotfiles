@@ -29,6 +29,7 @@ in
       gopls
 
       # CLI tools
+      pkgs.attic-client
       pkgs.magika
       pkgs.mise
       aria2
