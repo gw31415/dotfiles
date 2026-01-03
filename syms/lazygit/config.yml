@@ -2,6 +2,6 @@ gui:
   nerdFontsVersion: "3"
 git:
   overrideGpg: true
-  paging:
-    colorArg: always
-    pager: delta -s --dark --paging=never --24-bit-color=never
+  pagers:
+    - colorArg: always
+      pager: delta -s --dark --paging=never --24-bit-color=never
