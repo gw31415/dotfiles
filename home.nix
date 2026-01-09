@@ -104,7 +104,6 @@ in
 
           # GUI apps
           pkgs.alt-tab-macos
-          pkgs.teams
           # Uni - Pie style storage utility for macOS
           (pkgs-stable.stdenvNoCC.mkDerivation {
             pname = "uni-macos";

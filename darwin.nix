@@ -112,7 +112,7 @@ in
       # "brave-browser"
       # "discord"
       # "microsoft-auto-update"
-      # "microsoft-teams"
+      "microsoft-teams"
       # "orbstack"
       # "wezterm@nightly"
     ];
