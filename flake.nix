@@ -94,9 +94,8 @@
           };
           default = ctx.dot;
         };
-        apps = rec {
-          dot-app = ctx.flake-utils.lib.mkApp { drv = ctx.dot; };
-          default = dot-app;
+        apps.default = ctx.flake-utils.lib.mkApp {
+          drv = self.packages.${system}.default;
         };
       }
     );
