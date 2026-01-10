@@ -4,6 +4,16 @@ on_event = "VeryLazy"
 lua_after = "vim.keymap.set({ 'n', 'i' }, '<S-Right>', '<Plug>(dmacro-play-macro)', { desc = 'Play macro' })"
 
 [[plugins]]
+repo = "mattn/vim-rosetta"
+on_map = { n = "<leader>" }
+on_cmd = ["RosettaTranslateComment", "RosettaTranslateBuffer"]
+lua_after = '''
+vim.g.rosetta_target_lang = 'ja'
+vim.g.rosetta.provider = 'deepl'
+vim.g.rosetta_deepl_api_key = os.getenv 'DEEPL_API_KEY'
+'''
+
+[[plugins]]
 repo = "gbprod/substitute.nvim"
 on_map = { nx = '_' }
 lua_after = '''
