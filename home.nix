@@ -74,7 +74,6 @@ in
 
       # GUI apps
       pkgs.brave
-      pkgs.discord
       pkgs.wezterm
 
       # Fonts

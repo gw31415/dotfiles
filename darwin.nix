@@ -110,7 +110,7 @@ in
       # Home Manager GUI apps
       # "alt-tab"
       # "brave-browser"
-      # "discord"
+      "discord"
       # "microsoft-auto-update"
       "microsoft-teams"
       # "orbstack"
