@@ -1,17 +1,5 @@
 [[plugins]]
 repo = "ravitemer/mcphub.nvim"
-on_event = "CmdlineEnter" # Workaround to avoid error during avante.nvim loading. Why?
-build = ["sh", "-c", '''
-npm install -g mcp-hub@latest
-
-TARGET_PATH="$HOME/.config/mcphub/servers.json"
-mkdir -p "$(dirname "$TARGET_PATH")"
-if [ ! -f "$TARGET_PATH" ]; then
-  echo '{"mcpServers": {}}' > "$TARGET_PATH"
-fi
-''']
-lua_after = "require 'mcphub'.setup()"
-
 [[plugins]]
 repo = "yetone/avante.nvim"
 build = ["make"]
@@ -58,7 +46,7 @@ require 'avante'.setup {
 		},
 	},
 	system_prompt = function()
-		local hub = (require 'mcphub' or require 'mcphub').get_hub_instance()
+		local hub = require 'mcphub'.get_hub_instance()
 		return hub:get_active_servers_prompt()
 	end,
 	custom_tools = function()
