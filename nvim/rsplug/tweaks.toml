@@ -673,6 +673,23 @@ vim.api.nvim_create_autocmd('FileType', {
 	end,
 })
 vim.api.nvim_create_autocmd('FileType', {
+	pattern = { 'css' },
+	callback = function(args)
+		---@param files string[]
+		local function has_root(files)
+			local found_dirs = vim.fs.find(files, {
+				upward = true,
+				path = vim.fs.dirname(vim.fs.normalize(vim.api.nvim_buf_get_name(args.buf))),
+			})
+			return #found_dirs > 0
+		end
+
+		if has_root { 'biome.json' } then
+			vim.lsp.enable('biome')
+		end
+	end,
+})
+vim.api.nvim_create_autocmd('FileType', {
 	pattern = 'json',
 	callback = function(args)
 		---@param files string[]

@@ -1,18 +1,5 @@
 ---@type vim.lsp.Config
 return {
-	init_options = {
-		lint = true,
-		unstable = true,
-		suggest = {
-			imports = {
-				hosts = {
-					['https://deno.land'] = true,
-					['https://cdn.nest.land'] = true,
-					['https://crux.land'] = true,
-				},
-			},
-		},
-	},
 	on_attach = function(client, bufnr)
 		local root_dir = client.config.root_dir
 		local biome_configured = root_dir and vim.uv.fs_stat(root_dir .. '/biome.json') ~= nil
