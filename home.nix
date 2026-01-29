@@ -168,7 +168,7 @@ in
 
   programs.neovim = {
     enable = true;
-    extraLuaConfig = "require 'init'";
+    initLua = "require 'init'";
   };
 
   programs.git = {
