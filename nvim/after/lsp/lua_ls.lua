@@ -3,7 +3,12 @@ return {
 	settings = {
 		Lua = {
 			diagnostics = {
-				unusedLocalExclude = { '_*' }
+				globals = { 'vim' },
+				unusedLocalExclude = { '_*' },
+			},
+			workspace = {
+				library = { vim.env.VIMRUNTIME },
+				checkThirdParty = false,
 			},
 			format = {
 				enable = true,
