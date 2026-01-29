@@ -138,7 +138,11 @@ repo = "Darazaki/indent-o-matic"
 on_event = ["BufReadPost", "BufNewFile", "BufAdd"]
 on_cmd = "IndentOMatic"
 lua_after = '''
-require 'indent-o-matic'.setup{ standard_width = { 2, 4 } }
+require 'indent-o-matic'.setup {
+	standard_widths = { 2, 4 },
+	-- Avoid calling Tree-sitter when it's unavailable.
+	skip_multiline = false,
+}
 '''
 
 [[plugins]]
