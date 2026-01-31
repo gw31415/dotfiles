@@ -5,11 +5,11 @@ lua_after = "vim.keymap.set({ 'n', 'i' }, '<S-Right>', '<Plug>(dmacro-play-macro
 
 [[plugins]]
 repo = "mattn/vim-rosetta"
-on_map = { n = "<leader>" }
+on_map = { n = ["<leader>tc", "<leader>tt"] }
 on_cmd = ["RosettaTranslateComment", "RosettaTranslateBuffer"]
 lua_after = '''
 vim.g.rosetta_target_lang = 'ja'
-vim.g.rosetta.provider = 'deepl'
+vim.g.rosetta_provider = 'deepl'
 vim.g.rosetta_deepl_api_key = os.getenv 'DEEPL_API_KEY'
 '''
 
