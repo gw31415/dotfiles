@@ -25,7 +25,7 @@ with = [
 	"blink-cmp-avante",
 ]
 on_event = ["InsertEnter", "CmdlineEnter", "LspAttach"]
-build = ["cargo", "build", "--release"]
+build = ["cargo", "+nightly-2025-12-15" , "build", "--release"]
 lua_after = '''
 require 'blink.cmp'.setup {
 	sources = {
