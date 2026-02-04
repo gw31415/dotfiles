@@ -1,5 +1,6 @@
 [[plugins]]
 repo = "tani/dmacro.nvim"
+# on_map = { ni = "<S-Right>" } # Does not work. Why?
 on_event = "VeryLazy"
 lua_after = "vim.keymap.set({ 'n', 'i' }, '<S-Right>', '<Plug>(dmacro-play-macro)', { desc = 'Play macro' })"
 
