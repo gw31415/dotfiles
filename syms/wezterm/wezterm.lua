@@ -1,12 +1,26 @@
 local wezterm = require 'wezterm';
 
 local config = wezterm.config_builder()
+
+local blur_mode = 0
 local function toggle_blur(window)
 	local overrides = window:get_config_overrides() or {}
-	if not overrides.macos_window_background_blur then
-		overrides.macos_window_background_blur = 0
+	if blur_mode == 0 then
+		blur_mode = 1
+	elseif blur_mode == 1 then
+		blur_mode = 2
 	else
+		blur_mode = 0
+	end
+	if blur_mode == 0 then
+		overrides.macos_window_background_blur = 0
+		overrides.window_background_opacity = 0.8
+	elseif blur_mode == 1 then
 		overrides.macos_window_background_blur = nil
+		overrides.window_background_opacity = 0.8
+	else
+		overrides.macos_window_background_blur = 100
+		overrides.window_background_opacity = 1.0
 	end
 	window:set_config_overrides(overrides)
 end
