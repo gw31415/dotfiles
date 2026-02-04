@@ -1,1 +1,1 @@
-/Users/ama/Applications/Home Manager Apps/OrbStack.app/Contents/MacOS/../Resources/completions/fish/orbctl.fish
+/Applications/OrbStack.app/Contents/MacOS/../Resources/completions/fish/orbctl.fish
