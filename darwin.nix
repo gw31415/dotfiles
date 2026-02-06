@@ -85,6 +85,7 @@ in
       "affinity"
       "anki"
       "chatgpt"
+      "codex"
       "gather"
       "gnucash"
       "keybase"

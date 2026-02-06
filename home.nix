@@ -19,8 +19,6 @@ in
   # Audiverisは手動でインストールすること
   home.packages =
     (with pkgs-stable; [
-      # AI tools
-      pkgs.codex
       # pkgs.github-copilot-cli
 
       # LSPs
