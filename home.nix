@@ -219,6 +219,7 @@ in
   programs.fish = {
     enable = true;
     shellAbbrs = {
+      c = "claude";
       dcd = "cd ${homeManagerDirectory}";
       gll = "lazygit";
       rp = "rsplug";
