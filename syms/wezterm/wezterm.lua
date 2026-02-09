@@ -2,7 +2,7 @@ local wezterm = require 'wezterm';
 
 local config = wezterm.config_builder()
 
-local blur_mode = 0
+local blur_mode = 1
 local function toggle_blur(window)
 	local overrides = window:get_config_overrides() or {}
 	if blur_mode == 0 then
