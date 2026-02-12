@@ -27,9 +27,7 @@ in
       gopls
 
       # CLI tools
-      pkgs.attic-client
       pkgs.magika
-      pkgs.mise
       aria2
       asciinema
       bat
@@ -69,10 +67,6 @@ in
       vim-startuptime
       wget
       yt-dlp
-
-      # GUI apps
-      pkgs.brave
-      pkgs.wezterm
 
       # Fonts
       hackgen-nf-font
@@ -120,6 +114,10 @@ in
       else
         with pkgs-stable;
         [
+          pkgs.brave
+          pkgs.mise
+          pkgs.wezterm
+
           # NOTE: For the following gnupg, install by homebrew because of compatibility with pinentry-mac on MacOS.
           gnupg
           # NOTE: In macOS, pnpm is installed by homebrew.
