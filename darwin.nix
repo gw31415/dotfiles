@@ -85,6 +85,7 @@ in
       "affinity"
       "anki"
       "brave-browser"
+      "codex"
       "chatgpt"
       "discord"
       "figma"

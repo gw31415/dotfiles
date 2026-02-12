@@ -115,6 +115,7 @@ in
         with pkgs-stable;
         [
           pkgs.brave
+          pkgs.codex
           pkgs.mise
           pkgs.wezterm
 
