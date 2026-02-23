@@ -34,29 +34,13 @@ local function indent()
 	return '' .. (vim.bo.expandtab and vim.bo.shiftwidth .. ' 󱁐' or vim.bo.tabstop .. ' ')
 end
 
-local sidekick = {
-	function()
-		return ''
-	end,
-	color = function()
-		local status = require 'sidekick.status'.get()
-		if status then
-			return status.kind == "Error" and "DiagnosticError" or status.busy and "DiagnosticWarn" or nil
-		end
-	end,
-	cond = function()
-		local status = require 'sidekick.status'
-		return status.get() ~= nil
-	end,
-}
-
 require 'lualine'.setup {
 	options = {
 		globalstatus = true,
 	},
 	sections = {
 		lualine_b = { macro_state, 'branch', 'diff', 'diagnostics' },
-		lualine_c = { 'filename', sidekick },
+		lualine_c = { 'filename' },
 		lualine_x = { 'encoding', 'fileformat', indent, 'filetype' },
 		lualine_y = { 'progress', search_count },
 	},
