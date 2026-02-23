@@ -1,7 +1,4 @@
 [[plugins]]
-repo = "ravitemer/mcphub.nvim"
-
-[[plugins]]
 repo = "folke/sidekick.nvim"
 on_event = "VeryLazy"
 on_cmd = "Sidekick"
