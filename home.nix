@@ -178,6 +178,7 @@ in
       ".DS_Store"
       "kls_database.db"
       ".aider*"
+      ".cocoindex_code"
     ];
     settings = {
       credential.helper = "/usr/local/share/gcm-core/git-credential-manager";
