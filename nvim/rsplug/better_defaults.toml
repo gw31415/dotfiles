@@ -1,5 +1,5 @@
 [[plugins]]
-repo = "gw31415/extend_word_motion.nvim"
+repo = "s-show/extend_word_motion.nvim"
 on_map = ["w", "b", "e", "ge"]
 lua_after = "require 'extend_word_motion'.setup{}"
 
