@@ -98,10 +98,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
 -- fzyselect.vim - Custom tweaks
 --------------------------------------------------------------------------------
 
-vim.defer_fn(function()
-	---@diagnostic disable-next-line: duplicate-set-field
-	vim.ui.select = function(...) require 'fzyselect'.start(...) end
-end, 1000)
+---@diagnostic disable-next-line: duplicate-set-field
+vim.ui.select = function(...) return require 'fzyselect'.start(...) end
 
 -- git ls-files
 vim.keymap.set('n', '<c-p>', function()
