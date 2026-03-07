@@ -65,8 +65,12 @@ require 'lualine'.setup {
 
 [[plugins]]
 repo = "nvim-treesitter/nvim-treesitter@main"
-# build = ["nvim", "--headless", "-c", "TSUpdateSync | quit"] # TODO: 代替方法を考える
 on_event = "VimEnter"
+lua_build = '''
+local ts_installed_list = require 'nvim-treesitter'.get_installed()
+require 'nvim-treesitter'.uninstall(ts_installed_list):wait(180000)
+require 'nvim-treesitter'.install(ts_installed_list, { summary = true }):wait(180000)
+'''
 lua_after = '''
 local install_dir = vim.fn.stdpath 'data' .. '/treesitter'
 vim.opt.runtimepath:append(install_dir)
