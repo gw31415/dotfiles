@@ -68,6 +68,7 @@ in
       "homebrew/core"
       "homebrew/services"
       "jorgelbg/tap"
+      "arto-app/tap"
       "macos-fuse-t/homebrew-cask"
     ];
     brews = [
@@ -82,6 +83,7 @@ in
       "jorgelbg/tap/pinentry-touchid"
     ];
     casks = [
+      "arto"
       "affinity"
       "anki"
       "brave-browser"
