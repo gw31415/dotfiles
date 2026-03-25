@@ -27,7 +27,7 @@ in
       gopls
 
       # CLI tools
-      pkgs.magika
+      # pkgs.magika
       aria2
       asciinema
       bat
