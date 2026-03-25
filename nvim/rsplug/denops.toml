@@ -1,5 +1,6 @@
 [[plugins]]
 repo = "vim-denops/denops.vim"
+sym = true                     # NOTE: denops.vim は要所コピーではなくシンボリックリンクで参照させないと動かない
 start = true
 
 [[plugins]]
