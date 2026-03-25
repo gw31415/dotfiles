@@ -213,7 +213,8 @@ function fishify --description "Generate a valid fish command from natural langu
         set last_candidate $candidate
 
         set -l syntax_error (__fishify_syntax_error "$candidate" | string collect)
-        if test $status -eq 0
+        set -l syntax_status $pipestatus[1]
+        if test $syntax_status -eq 0
             printf '%s\n' "$candidate"
             return 0
         end
