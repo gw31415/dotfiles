@@ -33,7 +33,9 @@ in
       bat
       bindfs
       deno
-      direnv
+      # nixpkgs-stable の direnv 2.37.1 は Darwin で cgo 無効のまま
+      # external link を要求してビルドに失敗するため、unstable 側を使う。
+      pkgs.direnv
       # emacs-nox
       envchain
       eza
