@@ -289,6 +289,8 @@ in
         end
         set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
         abbr -a n -f _na
+
+        bind \ea __fishify_replace_buffer
       '';
   };
   programs.fzf = {
