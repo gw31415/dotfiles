@@ -23,7 +23,6 @@ in
 
       # LSPs
       pkgs.basedpyright
-      pkgs.typescript-go
       gopls
 
       # CLI tools
