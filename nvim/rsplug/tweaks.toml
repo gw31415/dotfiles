@@ -654,8 +654,11 @@ vim.api.nvim_create_autocmd('FileType', {
 		if has_root { 'deno.json', 'deno.jsonc', 'deno.lock', 'deps.ts', 'denops' } then
 			enable_or_attach 'denols'
 		else
-			-- INFO: 何故かvtslsよりtsgoが遅いのでvtslsを使っている
-			enable_or_attach 'vtsls'
+			if vim.fn.executable 'tsgo' ~= 0 then
+				enable_or_attach 'tsgo'
+			else
+				enable_or_attach 'vtsls'
+			end
 		end
 
 		if has_root { 'biome.json' } then
