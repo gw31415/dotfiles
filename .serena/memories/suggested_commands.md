@@ -1,0 +1,5 @@
+- `home-manager switch --flake .#ama` to apply Home Manager changes on this machine.
+- `home-manager switch --flake .#ama --show-trace` for failing evaluations.
+- `nix build .#linux-x86_64-musl-static` or other flake targets when validating package outputs.
+- `rg PATTERN nvim` to search Neovim config quickly.
+- `nvim --clean --headless '+lua dofile("/absolute/path/to/file.lua")' +q` for syntax/loading checks on Lua snippets when sandbox-safe.

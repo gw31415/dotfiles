@@ -1,0 +1,3 @@
+- After edits, run the smallest relevant validation for the touched area.
+- For Neovim Lua changes, prefer a headless `nvim` load/syntax check.
+- Avoid reverting unrelated work in this dotfiles repo; the tree may be dirty.

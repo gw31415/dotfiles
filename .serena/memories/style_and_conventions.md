@@ -1,0 +1,4 @@
+- Prefer minimal, targeted edits that match existing style.
+- Nix files use two-space indentation and declarative composition.
+- Lua/Neovim config commonly uses tabs, single quotes in many places, and small local helper functions near the relevant config.
+- Keep changes integrated into existing initialization flow rather than introducing extra files unless necessary.

@@ -1,0 +1,4 @@
+- Purpose: personal dotfiles and machine configuration for ama, centered on Nix flakes, Home Manager, nix-darwin, and a custom Neovim setup.
+- Stack: Nix, Home Manager, nix-darwin, Lua for Neovim config, assorted shell/tooling on Darwin.
+- Structure: top-level flake files (`flake.nix`, `home.nix`, `darwin.nix`, `env.nix`), `nvim/` for Neovim config, `syms/` and `statics/` for app/tool configs.
+- Platform: Darwin/macOS is a first-class target.
