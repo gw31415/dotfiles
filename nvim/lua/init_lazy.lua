@@ -35,10 +35,10 @@ vim.cmd [[
 	cno <c-e> <end>
 ]]
 
--- Use mise cmds
-vim.env.PATH = vim.env.HOME .. "/.local/share/mise/shims:" .. vim.env.PATH
-
 local path_sep = package.config:sub(1, 1) == '\\' and ';' or ':'
+
+-- Use mise cmds
+vim.env.PATH = vim.env.HOME .. "/.local/share/mise/shims" .. path_sep .. vim.env.PATH
 
 local function prepend_node_modules_bin(path)
 	if not path or path == '' then return end
