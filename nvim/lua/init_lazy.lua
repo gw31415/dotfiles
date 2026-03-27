@@ -38,6 +38,39 @@ vim.cmd [[
 -- Use mise cmds
 vim.env.PATH = vim.env.HOME .. "/.local/share/mise/shims:" .. vim.env.PATH
 
+local path_sep = package.config:sub(1, 1) == '\\' and ';' or ':'
+
+local function prepend_node_modules_bin(path)
+	if not path or path == '' then return end
+
+	local node_modules_dir = vim.fs.find('node_modules', {
+		path = path,
+		upward = true,
+		type = 'directory',
+	})[1]
+	if not node_modules_dir then return end
+
+	local bin_dir = vim.fs.joinpath(node_modules_dir, '.bin')
+	if vim.fn.isdirectory(bin_dir) == 0 then return end
+
+	local path_entries = vim.split(vim.env.PATH or '', path_sep, { plain = true, trimempty = true })
+	if vim.tbl_contains(path_entries, bin_dir) then return end
+
+	vim.env.PATH = bin_dir .. path_sep .. (vim.env.PATH or '')
+end
+
+prepend_node_modules_bin(vim.fn.getcwd())
+vim.api.nvim_create_autocmd({ 'VimEnter', 'DirChanged', 'BufEnter' }, {
+	callback = function(args)
+		prepend_node_modules_bin(vim.fn.getcwd())
+
+		local bufname = args.buf and vim.api.nvim_buf_get_name(args.buf) or ''
+		if bufname ~= '' then
+			prepend_node_modules_bin(vim.fs.dirname(bufname))
+		end
+	end,
+})
+
 if vim.g.neovide then
 	vim.g.neovide_position_animation_length = 0
 	vim.g.neovide_cursor_animation_length = 0.00
