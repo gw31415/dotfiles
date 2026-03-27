@@ -38,7 +38,13 @@ vim.go.guifont = 'HackGen_Console_NF:h14'
 vim.opt.shiftwidth = 4
 vim.opt.tabstop = 4
 vim.go.cmdheight = 0
-vim.o.fillchars = [[eob: ,fold: ,foldopen:󱨉,foldsep: ,foldclose:]]
+vim.opt.fillchars = {
+	eob = ' ',
+	foldopen = '󱨉',
+	foldclose = '',
+	foldsep = ' ',
+	foldinner = ''
+}
 
 vim.cmd 'filetype plugin indent on'
 
