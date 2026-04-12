@@ -616,6 +616,7 @@ repo = "neovim/nvim-lspconfig"
 on_event = ["LspAttach", "VeryLazy"]
 lua_after = '''
 local lsp_list = vim.list_extend({
+	'gopls',
 	'fish_lsp',
 	'sourcekit',
 	'ty',
