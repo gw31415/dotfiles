@@ -84,13 +84,13 @@ in
     ];
     casks = [
       "arto"
-      "affinity"
+      # "affinity"
       "anki"
       "brave-browser"
       "codex"
       "chatgpt"
       "discord"
-      "figma"
+      # "figma"
       "gnucash"
       "keybase"
       "keyboardcleantool"
