@@ -49,6 +49,7 @@ in
       lazygit
       librsvg # rsvg-convert CLI
       litecli
+      mergiraf # 構文認識によるGitコンフリクトの自動解決
       mmv-go
       nixfmt-rfc-style
       p7zip
@@ -172,6 +173,7 @@ in
   programs.git = {
     enable = true;
     attributes = [
+      "* merge=mergiraf"
       "*.lockb binary diff=lockb"
       "*.ipynb binary diff=ipynb"
     ];
@@ -182,6 +184,11 @@ in
       ".cocoindex_code"
     ];
     settings = {
+      merge = {
+        conflictstyle = "diff3";
+        mergiraf.name = "mergiraf";
+        mergiraf.driver = "mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L";
+      };
       credential.helper = "/usr/local/share/gcm-core/git-credential-manager";
       init.defaultBranch = "main";
       commit.gpgSign = true;
