@@ -1,0 +1,77 @@
+name: Publish Container
+
+on:
+  push:
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ghcr.io/gw31415/ama-home-manager
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build container image
+        run: nix build .#packages.x86_64-linux.dockerImages.home-manager
+
+      - name: Load image into Docker
+        run: docker load < result
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login "${REGISTRY}" -u "${{ github.actor }}" --password-stdin
+
+      - name: Tag image
+        env:
+          REF_NAME: ${{ github.ref_name }}
+          REF_TYPE: ${{ github.ref_type }}
+          SHA: ${{ github.sha }}
+        run: |
+          set -eu
+          sanitize_ref() {
+            printf '%s' "$1" | tr '/:@' '-' | tr -cd '[:alnum:]._-'
+          }
+
+          docker tag ama-home-manager:latest "${IMAGE_NAME}:sha-${SHA}"
+
+          if [ "${REF_TYPE}" = "branch" ]; then
+            docker tag ama-home-manager:latest "${IMAGE_NAME}:$(sanitize_ref "${REF_NAME}")"
+          elif [ "${REF_TYPE}" = "tag" ]; then
+            docker tag ama-home-manager:latest "${IMAGE_NAME}:$(sanitize_ref "${REF_NAME}")"
+          fi
+
+          if [ "${REF_NAME}" = "main" ]; then
+            docker tag ama-home-manager:latest "${IMAGE_NAME}:latest"
+          fi
+
+      - name: Push image
+        env:
+          REF_NAME: ${{ github.ref_name }}
+          REF_TYPE: ${{ github.ref_type }}
+          SHA: ${{ github.sha }}
+        run: |
+          set -eu
+          sanitize_ref() {
+            printf '%s' "$1" | tr '/:@' '-' | tr -cd '[:alnum:]._-'
+          }
+
+          docker push "${IMAGE_NAME}:sha-${SHA}"
+
+          if [ "${REF_TYPE}" = "branch" ] || [ "${REF_TYPE}" = "tag" ]; then
+            docker push "${IMAGE_NAME}:$(sanitize_ref "${REF_NAME}")"
+          fi
+
+          if [ "${REF_NAME}" = "main" ]; then
+            docker push "${IMAGE_NAME}:latest"
+          fi
