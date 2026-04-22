@@ -114,17 +114,30 @@
             pkgs.coreutils
             pkgs.git
             pkgs.fish
+            pkgs.nix
             pkgs.dockerTools.binSh
             dockerHomeConfiguration.activationPackage
           ];
           extraCommands = ''
-            mkdir -p tmp home/${env.username}
+            mkdir -p \
+              tmp \
+              home/${env.username} \
+              home/${env.username}/.local/state/nix/profiles \
+              nix/var/nix/profiles/per-user/${env.username} \
+              nix/var/nix/gcroots/per-user/${env.username} \
+              etc/nix
             chmod u+rwx home/${env.username}
+            printf '%s\n' \
+              'experimental-features = nix-command flakes' \
+              'build-users-group =' \
+              > etc/nix/nix.conf
           '';
           config = {
             WorkingDir = "/home/${env.username}";
             Env = [
               "HOME=/home/${env.username}"
+              "NIX_CONFIG=experimental-features = nix-command flakes"
+              "XDG_STATE_HOME=/home/${env.username}/.local/state"
               "USER=${env.username}"
               "SHELL=${pkgs.fish}/bin/fish"
               "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
@@ -134,7 +147,7 @@
               "XDG_CONFIG_HOME=/home/${env.username}/.config"
               "HOME_MANAGER_ACTIVATE=${dockerHomeConfiguration.activationPackage}/activate"
               "HOME_MANAGER_HOME_PATH=${dockerHomeConfiguration.activationPackage}/home-path"
-              "PATH=${dockerHomeConfiguration.activationPackage}/home-path/bin:${pkgs.fish}/bin:${pkgs.coreutils}/bin:${pkgs.bashInteractive}/bin"
+              "PATH=${dockerHomeConfiguration.activationPackage}/home-path/bin:${pkgs.nix}/bin:${pkgs.fish}/bin:${pkgs.coreutils}/bin:${pkgs.bashInteractive}/bin"
               "TERM=xterm-256color"
             ];
             Cmd = [ "${pkgs.fish}/bin/fish" "-l" ];
