@@ -254,7 +254,7 @@ in
         src = (
           fetchTarball {
             url = "https://github.com/ryoppippi/fish-na/archive/refs/tags/v0.1.2.tar.gz";
-            sha256 = "0dzchdawcpw307jszr5wiv5gj8mw9ai875g3n17kd7y4a8m0bgcy";
+            sha256 = "1rmpsddn5k4s4wdnv6a34c1bwnvg6yhb9f3zf6ba977pjg7smys3";
           }
         );
       }
