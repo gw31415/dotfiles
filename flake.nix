@@ -49,6 +49,17 @@
             inherit system;
             config.allowUnfree = true;
           };
+          containerHomeManagerGitRepo = pkgs.fetchgit {
+            url = "https://github.com/gw31415/dotfiles";
+            rev = "2fc30b4ddb41f0b5312c1a9c20094a1877b4c440";
+            hash = "sha256-bTzmXFNmPrpTpqgTD+gsMYXixGKQpa+uQTC0ymct7XI=";
+            leaveDotGit = true;
+          };
+          containerHomeManagerRepo = pkgs.runCommand "container-home-manager-repo" { } ''
+            cp -a ${self.outPath}/. $out
+            chmod -R u+w $out
+            cp -a ${containerHomeManagerGitRepo}/.git $out/.git
+          '';
         in
         inputs
         // {
@@ -56,6 +67,7 @@
             pkgs
             pkgs-stable
             system
+            containerHomeManagerRepo
             ;
           dot = inputs.dot.packages.${system}.default;
         };

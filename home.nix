@@ -7,11 +7,17 @@ let
   pkgs = ctx.pkgs;
   pkgs-stable = ctx.pkgs-stable;
   configHome = "${config.xdg.configHome}";
-  homeManagerDirectory = if container then ./. else "${configHome}/home-manager";
+  homeManagerDirectory = "${configHome}/home-manager";
   env = import ./env.nix;
   effectiveHomeDirectory = if container then "/home/${env.username}" else env.homeDirectory;
   managedSource =
-    path: if container then path else config.lib.file.mkOutOfStoreSymlink (toString path);
+    path:
+    let
+      relativePath = toString path;
+      target = "${homeManagerDirectory}/${relativePath}";
+    in
+    assert !(pkgs.lib.strings.hasPrefix "/" relativePath);
+    config.lib.file.mkOutOfStoreSymlink target;
   commonPackages =
     with pkgs-stable;
     [
@@ -160,24 +166,27 @@ in
     )
   );
 
-  home.file = {
-    ########################################
-    # Common files
-    ########################################
+  home.file =
+    {
+      ########################################
+      # Common files
+      ########################################
 
-    ".skk/SKK-JISYO.L".source = "${pkgs.skkDictionaries.l}/share/skk/SKK-JISYO.L";
-    ".latexmkrc".source = ./statics/latexmkrc;
+      ".skk/SKK-JISYO.L".source = "${pkgs.skkDictionaries.l}/share/skk/SKK-JISYO.L";
+      ".latexmkrc".source = ./statics/latexmkrc;
 
-    "${configHome}/wezterm".source = managedSource "${homeManagerDirectory}/syms/wezterm";
-    "${configHome}/direnv".source = managedSource "${homeManagerDirectory}/syms/direnv";
-    "${configHome}/lazygit".source = managedSource "${homeManagerDirectory}/syms/lazygit";
-    "${configHome}/mise".source = managedSource "${homeManagerDirectory}/syms/mise";
-    "${configHome}/nvim/lua".source = managedSource "${homeManagerDirectory}/nvim/lua";
-    "${configHome}/nvim/after".source = managedSource "${homeManagerDirectory}/nvim/after";
-    "${configHome}/fish/completions".source =
-      managedSource "${homeManagerDirectory}/syms/fish_completions";
-    "${configHome}/fish/functions".source = managedSource "${homeManagerDirectory}/syms/fish_functions";
-  };
+      "${configHome}/wezterm".source = managedSource "syms/wezterm";
+      "${configHome}/direnv".source = managedSource "syms/direnv";
+      "${configHome}/lazygit".source = managedSource "syms/lazygit";
+      "${configHome}/mise".source = managedSource "syms/mise";
+      "${configHome}/nvim/lua".source = managedSource "nvim/lua";
+      "${configHome}/nvim/after".source = managedSource "nvim/after";
+      "${configHome}/fish/completions".source = managedSource "syms/fish_completions";
+      "${configHome}/fish/functions".source = managedSource "syms/fish_functions";
+    }
+    // pkgs.lib.optionalAttrs container {
+      "${configHome}/home-manager".source = ctx.containerHomeManagerRepo;
+    };
 
   home.sessionVariables = {
     EDITOR = "nvim";
