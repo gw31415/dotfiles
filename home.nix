@@ -59,6 +59,7 @@ let
       poppler-utils
       ripgrep
       ruby
+      ctx.rsplug
       sccache
       silicon
       tdf

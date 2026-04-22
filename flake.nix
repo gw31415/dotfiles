@@ -23,6 +23,13 @@
         flake-utils.follows = "flake-utils";
       };
     };
+    rsplug = {
+      url = "github:gw31415/rsplug.nvim";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
   };
 
   outputs =
@@ -70,6 +77,7 @@
             containerHomeManagerRepo
             ;
           dot = inputs.dot.packages.${system}.default;
+          rsplug = inputs.rsplug.packages.${system}.default;
         };
 
       mkHomeModules =
