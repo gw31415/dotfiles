@@ -24,7 +24,7 @@ jobs:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build container image
-        run: nix build .#packages.x86_64-linux.dockerImages.home-manager
+        run: nix build .#packages.x86_64-linux.dockerImage
 
       - name: Load image into Docker
         run: docker load < result

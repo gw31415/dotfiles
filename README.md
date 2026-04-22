@@ -12,7 +12,7 @@ nix run github:gw31415/dotfiles
 ## Docker
 
 ```bash
-nix build .#packages.x86_64-linux.dockerImages.home-manager
+nix build .#packages.x86_64-linux.dockerImage
 docker load < result
 docker run --rm -it ama-home-manager:latest
 ```
@@ -21,7 +21,7 @@ The image is built directly by `dockerTools.buildLayeredImage` from the dedicate
 
 ### GitHub Container Registry
 
-Pushes to GitHub also build and publish the image with GitHub Actions via [publish-container.yml](/Users/ama/.config/home-manager/.github/workflows/publish-container.yml:1). The workflow builds `.#packages.x86_64-linux.dockerImages.home-manager`, loads it into Docker, and pushes these tags to `ghcr.io/gw31415/ama-home-manager`:
+Pushes to GitHub also build and publish the image with GitHub Actions via [publish-container.yml](/Users/ama/.config/home-manager/.github/workflows/publish-container.yml:1). The workflow builds `.#packages.x86_64-linux.dockerImage`, loads it into Docker, and pushes these tags to `ghcr.io/gw31415/ama-home-manager`:
 
 - `latest` on pushes to `main`
 - `sha-<commit sha>` on every push
