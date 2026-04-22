@@ -110,6 +110,7 @@
           tag = "latest";
           contents = [
             pkgs.bashInteractive
+            pkgs.cacert
             pkgs.coreutils
             pkgs.git
             pkgs.fish
@@ -118,10 +119,7 @@
           ];
           extraCommands = ''
             mkdir -p tmp home/${env.username}
-            cp -a ${dockerHomeConfiguration.activationPackage}/home-files/. home/${env.username}/
             chmod u+rwx home/${env.username}
-            rm -rf home/${env.username}/.nix-profile
-            ln -s ${dockerHomeConfiguration.activationPackage}/home-path home/${env.username}/.nix-profile
           '';
           config = {
             WorkingDir = "/home/${env.username}";
@@ -129,8 +127,14 @@
               "HOME=/home/${env.username}"
               "USER=${env.username}"
               "SHELL=${pkgs.fish}/bin/fish"
+              "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+              "NIX_SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+              "GIT_SSL_CAINFO=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+              "CURL_CA_BUNDLE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
               "XDG_CONFIG_HOME=/home/${env.username}/.config"
-              "PATH=/home/${env.username}/.nix-profile/bin:${pkgs.fish}/bin:${pkgs.coreutils}/bin:${pkgs.bashInteractive}/bin"
+              "HOME_MANAGER_ACTIVATE=${dockerHomeConfiguration.activationPackage}/activate"
+              "HOME_MANAGER_HOME_PATH=${dockerHomeConfiguration.activationPackage}/home-path"
+              "PATH=${dockerHomeConfiguration.activationPackage}/home-path/bin:${pkgs.fish}/bin:${pkgs.coreutils}/bin:${pkgs.bashInteractive}/bin"
               "TERM=xterm-256color"
             ];
             Cmd = [ "${pkgs.fish}/bin/fish" "-l" ];
