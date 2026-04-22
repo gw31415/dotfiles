@@ -1,24 +1,20 @@
-{ config, ctx }:
+{
+  config,
+  ctx,
+  container ? false,
+}:
 let
   pkgs = ctx.pkgs;
   pkgs-stable = ctx.pkgs-stable;
   configHome = "${config.xdg.configHome}";
-  homeManagerDirectory = "${configHome}/home-manager";
+  homeManagerDirectory = if container then ./. else "${configHome}/home-manager";
   env = import ./env.nix;
-in
-{
-  home = {
-    username = env.username;
-    homeDirectory = env.homeDirectory;
-    stateVersion = "25.11";
-    sessionPath = [
-      "$HOME/.local/bin"
-    ];
-  };
-
-  # Audiverisは手動でインストールすること
-  home.packages =
-    (with pkgs-stable; [
+  effectiveHomeDirectory = if container then "/home/${env.username}" else env.homeDirectory;
+  managedSource =
+    path: if container then path else config.lib.file.mkOutOfStoreSymlink (toString path);
+  commonPackages =
+    with pkgs-stable;
+    [
       # pkgs.github-copilot-cli
 
       # LSPs
@@ -57,7 +53,6 @@ in
       poppler-utils
       ripgrep
       ruby
-      rustup
       sccache
       silicon
       tdf
@@ -80,53 +75,90 @@ in
       twemoji-color-font
 
       # (pkgs.writeShellScriptBin "trash" ''exec ${pkgs.deno}/bin/deno run -qA --no-config npm:trash-cli "$@"'')
-      ctx.dot
 
       # Unused tools
       # comma
       # tectonic
       # slack-term
-    ])
+    ]
+    ++ pkgs.lib.optionals (!container) [
+      ctx.dot
+      rustup
+    ];
+  dockerPackages = with pkgs-stable; [
+    bat
+    eza
+    pkgs.fish
+    gnupg
+    jq
+    mise
+    nodejs
+    ripgrep
+    tmux
+    uv
+    wget
+  ];
+  desktopLinuxPackages = with pkgs-stable; [
+    pkgs.brave
+    pkgs.codex
+    pkgs.mise
+    pkgs.wezterm
+
+    # NOTE: For the following gnupg, install by homebrew because of compatibility with pinentry-mac on MacOS.
+    gnupg
+    # NOTE: In macOS, pnpm is installed by homebrew.
+    nodejs
+  ];
+in
+{
+  home = {
+    username = env.username;
+    homeDirectory = effectiveHomeDirectory;
+    stateVersion = "25.11";
+    sessionPath = [
+      "$HOME/.local/bin"
+    ];
+  };
+
+  # Audiverisは手動でインストールすること
+  home.packages = (
+    commonPackages
     ++ (
-      if pkgs-stable.stdenv.isDarwin then
-        with pkgs-stable;
-        [
-          # macOS specific packages
-          cocoapods
-          pkgs.container
-
-          # GUI apps
-          pkgs.alt-tab-macos
-          # Uni - Pie style storage utility for macOS
-          (pkgs-stable.stdenvNoCC.mkDerivation {
-            pname = "uni-macos";
-            version = "0.1.1";
-            src = pkgs.fetchurl {
-              url = "https://github.com/fiahfy/uni/releases/download/v0.1.1/Uni-0.1.1.dmg";
-              sha256 = "1r9a856p2w99zsa6xi9pb3ydcc524ya0rxvzai0qh04cchm286xp";
-            };
-            nativeBuildInputs = [ pkgs-stable.undmg ];
-            unpackPhase = ''undmg "$src"'';
-            installPhase = ''
-              mkdir -p "$out/Applications"
-              cp -R *.app "$out/Applications/"
-            '';
-          })
-        ]
+      if container then
+        dockerPackages
       else
-        with pkgs-stable;
-        [
-          pkgs.brave
-          pkgs.codex
-          pkgs.mise
-          pkgs.wezterm
 
-          # NOTE: For the following gnupg, install by homebrew because of compatibility with pinentry-mac on MacOS.
-          gnupg
-          # NOTE: In macOS, pnpm is installed by homebrew.
-          nodejs
-        ]
-    );
+        (
+          if pkgs-stable.stdenv.isDarwin then
+            with pkgs-stable;
+            [
+              # macOS specific packages
+              cocoapods
+              pkgs.container
+
+              # GUI apps
+              pkgs.alt-tab-macos
+              # Uni - Pie style storage utility for macOS
+              (pkgs-stable.stdenvNoCC.mkDerivation {
+                pname = "uni-macos";
+                version = "0.1.1";
+                src = pkgs.fetchurl {
+                  url = "https://github.com/fiahfy/uni/releases/download/v0.1.1/Uni-0.1.1.dmg";
+                  sha256 = "1r9a856p2w99zsa6xi9pb3ydcc524ya0rxvzai0qh04cchm286xp";
+                };
+                nativeBuildInputs = [ pkgs-stable.undmg ];
+                unpackPhase = ''undmg "$src"'';
+                installPhase = ''
+                  mkdir -p "$out/Applications"
+                  cp -R *.app "$out/Applications/"
+                '';
+              })
+            ]
+          else
+            desktopLinuxPackages
+        )
+    )
+  );
 
   home.file = {
     ########################################
@@ -136,22 +168,15 @@ in
     ".skk/SKK-JISYO.L".source = "${pkgs.skkDictionaries.l}/share/skk/SKK-JISYO.L";
     ".latexmkrc".source = ./statics/latexmkrc;
 
-    "${configHome}/wezterm".source =
-      config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/wezterm";
-    "${configHome}/direnv".source =
-      config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/direnv";
-    "${configHome}/lazygit".source =
-      config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/lazygit";
-    "${configHome}/mise".source =
-      config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/mise";
-    "${configHome}/nvim/lua".source =
-      config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/nvim/lua";
-    "${configHome}/nvim/after".source =
-      config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/nvim/after";
+    "${configHome}/wezterm".source = managedSource "${homeManagerDirectory}/syms/wezterm";
+    "${configHome}/direnv".source = managedSource "${homeManagerDirectory}/syms/direnv";
+    "${configHome}/lazygit".source = managedSource "${homeManagerDirectory}/syms/lazygit";
+    "${configHome}/mise".source = managedSource "${homeManagerDirectory}/syms/mise";
+    "${configHome}/nvim/lua".source = managedSource "${homeManagerDirectory}/nvim/lua";
+    "${configHome}/nvim/after".source = managedSource "${homeManagerDirectory}/nvim/after";
     "${configHome}/fish/completions".source =
-      config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/fish_completions";
-    "${configHome}/fish/functions".source =
-      config.lib.file.mkOutOfStoreSymlink "${homeManagerDirectory}/syms/fish_functions";
+      managedSource "${homeManagerDirectory}/syms/fish_completions";
+    "${configHome}/fish/functions".source = managedSource "${homeManagerDirectory}/syms/fish_functions";
   };
 
   home.sessionVariables = {
@@ -160,7 +185,7 @@ in
     XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
 
     DIRENV_LOG_FORMAT = "";
-    GOPATH = "${env.homeDirectory}/.go";
+    GOPATH = "${config.home.homeDirectory}/.go";
     RSPLUG_CONFIG_FILES = "${homeManagerDirectory}/nvim/rsplug/*.toml";
     RUSTC_WRAPPER = "${pkgs.sccache}/bin/sccache";
   };
@@ -191,9 +216,8 @@ in
         mergiraf.name = "mergiraf";
         mergiraf.driver = "mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L";
       };
-      credential.helper = "/usr/local/share/gcm-core/git-credential-manager";
       init.defaultBranch = "main";
-      commit.gpgSign = true;
+      commit.gpgSign = !container;
       user = {
         signingKey = "B7E2A136"; # Expiration: 2025-09-01
         name = "gw31415";
@@ -202,6 +226,9 @@ in
       diff.lockb.binary = true;
       diff.lockb.textconv = "${pkgs.bun}/bin/bun";
       diff.ipynb.binary = true;
+    }
+    // pkgs.lib.optionalAttrs (!container && pkgs.stdenv.isDarwin) {
+      credential.helper = "/usr/local/share/gcm-core/git-credential-manager";
     };
   };
   programs.delta = {
@@ -323,5 +350,5 @@ in
     enable = true;
     enableFishIntegration = true;
   };
-  manual.manpages.enable = true;
+  manual.manpages.enable = !container;
 }

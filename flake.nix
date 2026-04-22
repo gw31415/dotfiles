@@ -29,19 +29,29 @@
     { self, ... }@inputs:
     let
       env = import ./env.nix;
-    in
-    inputs.flake-utils.lib.eachDefaultSystem (
-      system:
-      let
-        pkgs = import inputs.nixpkgs {
-          inherit system;
-          config.allowUnfree = true;
-        };
-        pkgs-stable = import inputs.nixpkgs-stable {
-          inherit system;
-          config.allowUnfree = true;
-        };
-        ctx = inputs // {
+      systems = [
+        "aarch64-darwin"
+        "aarch64-linux"
+        "x86_64-linux"
+      ];
+      overlays = [
+        inputs.neovim-nightly-overlay.overlays.default
+      ];
+
+      mkCtx =
+        system:
+        let
+          pkgs = import inputs.nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+          };
+          pkgs-stable = import inputs.nixpkgs-stable {
+            inherit system;
+            config.allowUnfree = true;
+          };
+        in
+        inputs
+        // {
           inherit
             pkgs
             pkgs-stable
@@ -49,54 +59,124 @@
             ;
           dot = inputs.dot.packages.${system}.default;
         };
-        overlays = [
-          inputs.neovim-nightly-overlay.overlays.default
+
+      mkHomeModules =
+        ctx: container:
+        [
+          (
+            { config, ... }:
+            import ./home.nix {
+              inherit config ctx container;
+            }
+          )
+          { nixpkgs.overlays = overlays; }
         ];
+
+      mkHomeConfiguration =
+        {
+          system,
+          container ? false,
+        }:
+        let
+          ctx = mkCtx system;
+        in
+        ctx.home-manager.lib.homeManagerConfiguration {
+          pkgs = ctx.pkgs;
+          modules = mkHomeModules ctx container;
+        };
+
+      mkDockerImage =
+        system:
+        let
+          ctx = mkCtx system;
+          pkgs = ctx.pkgs;
+          dockerHomeConfiguration = mkHomeConfiguration {
+            inherit system;
+            container = true;
+          };
+        in
+        pkgs.dockerTools.buildLayeredImage {
+          name = "ama-home-manager";
+          tag = "latest";
+          contents = [
+            pkgs.bashInteractive
+            pkgs.coreutils
+            pkgs.git
+            pkgs.fish
+            pkgs.dockerTools.binSh
+            dockerHomeConfiguration.activationPackage
+          ];
+          extraCommands = ''
+            mkdir -p tmp home/${env.username}
+            cp -a ${dockerHomeConfiguration.activationPackage}/home-files/. home/${env.username}/
+            chmod u+rwx home/${env.username}
+            rm -rf home/${env.username}/.nix-profile
+            ln -s ${dockerHomeConfiguration.activationPackage}/home-path home/${env.username}/.nix-profile
+          '';
+          config = {
+            WorkingDir = "/home/${env.username}";
+            Env = [
+              "HOME=/home/${env.username}"
+              "USER=${env.username}"
+              "SHELL=${pkgs.fish}/bin/fish"
+              "XDG_CONFIG_HOME=/home/${env.username}/.config"
+              "PATH=/home/${env.username}/.nix-profile/bin:${pkgs.fish}/bin:${pkgs.coreutils}/bin:${pkgs.bashInteractive}/bin"
+              "TERM=xterm-256color"
+            ];
+            Cmd = [ "${pkgs.fish}/bin/fish" "-l" ];
+          };
+        };
+    in
+    inputs.flake-utils.lib.eachSystem systems (
+      system:
+      let
+        ctx = mkCtx system;
+        pkgs = ctx.pkgs;
       in
       {
-        ########################################
-        # Package sets
-        ########################################
-        packages = {
-          nix-darwin = ctx.nix-darwin.packages.${system}.default;
+        packages =
+          {
+            default = ctx.dot;
+          }
+          // pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
+            dockerImage = mkDockerImage system;
+          };
 
-          ########################################
-          # Darwin configuration with nix-homebrew
-          ########################################
-          darwinConfigurations.${env.hostname} = ctx.nix-darwin.lib.darwinSystem {
-            modules = [
-              ({ pkgs, ... }: import ./darwin.nix { inherit ctx; })
-              (ctx.nix-homebrew.darwinModules.nix-homebrew {
-                lib = ctx.nix-darwin.lib;
-                nix-homebrew = {
-                  enable = true;
-                  enableRosetta = true;
-                  user = env.username;
-                  autoMigrate = true;
-                };
-              })
-            ];
-          };
-          ########################################
-          # Home manager configuration
-          ########################################
-          homeConfigurations.${env.username} = ctx.home-manager.lib.homeManagerConfiguration {
-            inherit pkgs;
-            modules = [
-              (
-                { config, ... }:
-                import ./home.nix {
-                  inherit config ctx;
-                }
-              )
-              { nixpkgs.overlays = overlays; }
-            ];
-          };
-          default = ctx.dot;
-        };
         apps.default = ctx.flake-utils.lib.mkApp {
           drv = self.packages.${system}.default;
         };
       }
-    );
+    )
+    // {
+      darwinConfigurations.${env.hostname} =
+        let
+          ctx = mkCtx "aarch64-darwin";
+        in
+        ctx.nix-darwin.lib.darwinSystem {
+          modules = [
+            ({ pkgs, ... }: import ./darwin.nix { inherit ctx; })
+            (ctx.nix-homebrew.darwinModules.nix-homebrew {
+              lib = ctx.nix-darwin.lib;
+              nix-homebrew = {
+                enable = true;
+                enableRosetta = true;
+                user = env.username;
+                autoMigrate = true;
+              };
+            })
+          ];
+        };
+
+      homeConfigurations.${env.username} = mkHomeConfiguration {
+        system = "aarch64-darwin";
+      };
+      homeConfigurations."${env.username}-docker-aarch64-linux" = mkHomeConfiguration {
+        system = "aarch64-linux";
+        container = true;
+      };
+      homeConfigurations."${env.username}-docker-x86_64-linux" = mkHomeConfiguration {
+        system = "x86_64-linux";
+        container = true;
+      };
+    };
 }
