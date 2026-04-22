@@ -59,7 +59,7 @@
           containerHomeManagerGitRepo = pkgs.fetchgit {
             url = "https://github.com/gw31415/dotfiles";
             rev = "2fc30b4ddb41f0b5312c1a9c20094a1877b4c440";
-            hash = "sha256-bTzmXFNmPrpTpqgTD+gsMYXixGKQpa+uQTC0ymct7XI=";
+            hash = "sha256-ed94DGKdIaZn/OOiq/ueCy5LGweOG61484FOPelZDhQ=";
             leaveDotGit = true;
           };
           containerHomeManagerRepo = pkgs.runCommand "container-home-manager-repo" { } ''
