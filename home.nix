@@ -184,9 +184,6 @@ in
       "${configHome}/nvim/after".source = managedSource "nvim/after";
       "${configHome}/fish/completions".source = managedSource "syms/fish_completions";
       "${configHome}/fish/functions".source = managedSource "syms/fish_functions";
-    }
-    // pkgs.lib.optionalAttrs container {
-      "${configHome}/home-manager".source = ctx.containerHomeManagerRepo;
     };
 
   home.sessionVariables = {
