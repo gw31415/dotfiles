@@ -19,9 +19,11 @@ docker run --rm -it ama-home-manager:latest
 
 The image is built directly by `dockerTools.buildLayeredImage` from the dedicated flake output `.#homeConfigurations.ama-docker`, so it does not need a `Dockerfile` or an Ubuntu base image. The image bakes the generated Home Manager files and profile into `/home/ama`, then starts `fish -l` directly without running `home-manager` at container startup. This output is exposed only for Linux systems; if you want another architecture, switch `x86_64-linux` to the target Linux system such as `aarch64-linux`.
 
+For mutable container bootstrap tasks that should stay out of the Nix build, use [container-post-build.sh](/Users/ama/.config/home-manager/container-post-build.sh:1). The GitHub Actions workflow runs it once against the loaded image, then commits the mutated container filesystem back into the image before pushing it.
+
 ### GitHub Container Registry
 
-Pushes to GitHub also build and publish the image with GitHub Actions via [publish-container.yml](/Users/ama/.config/home-manager/.github/workflows/publish-container.yml:1). The workflow builds `.#packages.x86_64-linux.dockerImage`, loads it into Docker, and pushes these tags to `ghcr.io/gw31415/ama-home-manager`:
+Pushes to GitHub also build and publish the image with GitHub Actions via [publish-container.yml](/Users/ama/.config/home-manager/.github/workflows/publish-container.yml:1). The workflow builds `.#packages.x86_64-linux.dockerImage`, loads it into Docker, runs the mutable bootstrap script once to populate `~/.config/home-manager` and execute extra setup commands, then pushes these tags to `ghcr.io/gw31415/ama-home-manager`:
 
 - `latest` on pushes to `main`
 - `sha-<commit sha>` on every push
