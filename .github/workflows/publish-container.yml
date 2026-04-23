@@ -31,10 +31,13 @@ jobs:
 
       - name: Materialize mutable container state
         env:
+          HOME_MANAGER_BOOTSTRAP_TOOLS: "1"
           REF_NAME: ${{ github.ref_name }}
           REF_TYPE: ${{ github.ref_type }}
         run: |
           set -eu
+
+          image_cmd="$(docker image inspect ama-home-manager:latest --format '{{json .Config.Cmd}}')"
 
           branch=main
           if [ "${REF_TYPE}" = "branch" ]; then
@@ -44,12 +47,34 @@ jobs:
           docker run \
             --name ama-home-manager-bootstrap \
             --volume "${GITHUB_WORKSPACE}:/work:ro" \
+            --entrypoint /bin/sh \
             --env HOME_MANAGER_GIT_BRANCH="${branch}" \
+            --env HOME_MANAGER_BOOTSTRAP_TOOLS="${HOME_MANAGER_BOOTSTRAP_TOOLS}" \
             ama-home-manager:latest \
-            /bin/sh /work/container-post-build.sh /work
+            /work/container-post-build.sh /work
 
-          docker commit ama-home-manager-bootstrap ama-home-manager:latest
+          docker commit \
+            --change "CMD ${image_cmd}" \
+            ama-home-manager-bootstrap \
+            ama-home-manager:latest
           docker rm ama-home-manager-bootstrap
+
+          actual_cmd="$(docker image inspect ama-home-manager:latest --format '{{json .Config.Cmd}}')"
+          if [ "${actual_cmd}" != "${image_cmd}" ]; then
+            echo "unexpected image CMD after docker commit: ${actual_cmd}" >&2
+            exit 1
+          fi
+
+          docker run \
+            --rm \
+            --entrypoint /bin/sh \
+            ama-home-manager:latest \
+            -lc '
+              set -eu
+              test -d "$HOME/.config/home-manager/.git"
+              test -f "$HOME/.config/fish/config.fish"
+              test -d "$HOME/.local/state/nix/profiles"
+            '
 
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login "${REGISTRY}" -u "${{ github.actor }}" --password-stdin
