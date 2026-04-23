@@ -94,13 +94,17 @@ let
     ];
   dockerPackages = with pkgs-stable; [
     bat
+    cargo
     eza
     pkgs.fish
     gnupg
     jq
     mise
     nodejs
+    pkg-config
     ripgrep
+    rustc
+    stdenv.cc
     tmux
     uv
     wget

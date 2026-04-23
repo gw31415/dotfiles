@@ -47,7 +47,11 @@ jobs:
             import_args+=(--change "$change")
           done < <(
             docker image inspect ama-home-manager:latest |
-              jq -jr '.[0].Config.Env[] | "ENV " + . + "\u0000"'
+              jq -jr '
+                .[0].Config.Env[]
+                | select(test("[\\n\\r]") | not)
+                | "ENV " + . + "\u0000"
+              '
           )
           if [ -n "${image_workdir}" ]; then
             import_args+=(--change "WORKDIR ${image_workdir}")

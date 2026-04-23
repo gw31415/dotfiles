@@ -123,6 +123,7 @@
             pkgs.coreutils
             pkgs.git
             pkgs.fish
+            pkgs.iana-etc
             pkgs.nix
             pkgs.dockerTools.binSh
             pkgs.dockerTools.caCertificates
@@ -154,7 +155,6 @@
             WorkingDir = containerHome;
             Env = [
               "HOME=${containerHome}"
-              "NIX_CONFIG=experimental-features = nix-command flakes\nsandbox = false\nfilter-syscalls = false"
               "XDG_STATE_HOME=${containerHome}/.local/state"
               "USER=${env.username}"
               "SHELL=${pkgs.fish}/bin/fish"
