@@ -15,7 +15,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
-    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    # neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     dot = {
       url = "github:gw31415/dot-cli";
       inputs = {
@@ -41,9 +41,9 @@
         "aarch64-linux"
         "x86_64-linux"
       ];
-      overlays = [
-        inputs.neovim-nightly-overlay.overlays.default
-      ];
+      # overlays = [
+      #   inputs.neovim-nightly-overlay.overlays.default
+      # ];
 
       mkCtx =
         system:
@@ -79,7 +79,7 @@
               inherit config ctx container;
             }
           )
-          { nixpkgs.overlays = overlays; }
+          # { nixpkgs.overlays = overlays; }
         ];
 
       mkHomeConfiguration =
