@@ -98,6 +98,7 @@ in
       "macskk"
       "microsoft-teams"
       "musicbrainz-picard"
+      "puremac"
       "slack"
       "smoothcsv"
       "wezterm@nightly"
