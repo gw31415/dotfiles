@@ -6,9 +6,11 @@ target_repo="${HOME:-/home/ama}/.config/home-manager"
 target_parent="$(dirname "$target_repo")"
 branch="${HOME_MANAGER_GIT_BRANCH:-main}"
 activate_script="${HOME_MANAGER_ACTIVATE:?HOME_MANAGER_ACTIVATE must be set}"
+home_manager_home_path="${HOME_MANAGER_HOME_PATH:?HOME_MANAGER_HOME_PATH must be set}"
 bootstrap_tools="${HOME_MANAGER_BOOTSTRAP_TOOLS:-0}"
 default_ca_bundle="${NIX_SSL_CERT_FILE:-/etc/ssl/certs/ca-bundle.crt}"
 mise_config_file="${XDG_CONFIG_HOME:-${HOME:-/home/ama}/.config}/mise/config.toml"
+hm_session_vars="${home_manager_home_path}/etc/profile.d/hm-session-vars.sh"
 
 # ~/.config/home-manager をワークツリーからコピーし、originを含む.git/も生成する
 
@@ -38,6 +40,11 @@ git -C "$target_repo" pull --ff-only origin "$branch"
 
 cd "${HOME:-/home/ama}"
 "$activate_script"
+if [ -f "$hm_session_vars" ]; then
+  # Load Home Manager sessionVariables into this shell before running bootstrap tools.
+  # shellcheck disable=SC1090
+  . "$hm_session_vars"
+fi
 
 cd "$target_repo"
 if [ "$bootstrap_tools" != "1" ]; then
