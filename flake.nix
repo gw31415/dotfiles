@@ -100,6 +100,7 @@
         let
           ctx = mkCtx system;
           pkgs = ctx.pkgs;
+          gccLib = pkgs.lib.getLib pkgs.gcc.cc;
           dockerHomeConfiguration = mkHomeConfiguration {
             inherit system;
             container = true;
@@ -117,6 +118,7 @@
             pkgs.fish
             pkgs.nix
             pkgs.dockerTools.binSh
+            gccLib
             dockerHomeConfiguration.activationPackage
           ];
           extraCommands = ''
@@ -153,6 +155,7 @@
               "XDG_CONFIG_HOME=/home/${env.username}/.config"
               "HOME_MANAGER_ACTIVATE=${dockerHomeConfiguration.activationPackage}/activate"
               "HOME_MANAGER_HOME_PATH=${dockerHomeConfiguration.activationPackage}/home-path"
+              "LD_LIBRARY_PATH=${gccLib}/lib"
               "PATH=${dockerHomeConfiguration.activationPackage}/home-path/bin:${pkgs.nix}/bin:${pkgs.fish}/bin:${pkgs.coreutils}/bin:${pkgs.bashInteractive}/bin"
               "TERM=xterm-256color"
             ];
