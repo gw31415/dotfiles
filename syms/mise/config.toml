@@ -5,7 +5,6 @@ idiomatic_version_file_enable_tools = ["python", "node"]
 [tools]
 "gem:terminal-notifier" = { version = "latest", os = ["macos"] }
 "github:bit-vcs/bit" = "latest"
-"github:vyrti/cleaner" = "latest"
 go = "1.25.5"
 # "go:github.com/kahing/goofys" = "0.20.0"
 node = "latest"
