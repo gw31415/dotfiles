@@ -38,6 +38,27 @@ jobs:
           set -eu
 
           image_cmd="$(docker image inspect ama-home-manager:latest --format '{{json .Config.Cmd}}')"
+          image_entrypoint="$(docker image inspect ama-home-manager:latest --format '{{json .Config.Entrypoint}}')"
+          image_user="$(docker image inspect ama-home-manager:latest --format '{{.Config.User}}')"
+          image_workdir="$(docker image inspect ama-home-manager:latest --format '{{.Config.WorkingDir}}')"
+
+          import_args=()
+          while IFS= read -r -d '' change; do
+            import_args+=(--change "$change")
+          done < <(
+            docker image inspect ama-home-manager:latest |
+              jq -jr '.[0].Config.Env[] | "ENV " + . + "\u0000"'
+          )
+          if [ -n "${image_workdir}" ]; then
+            import_args+=(--change "WORKDIR ${image_workdir}")
+          fi
+          if [ -n "${image_user}" ]; then
+            import_args+=(--change "USER ${image_user}")
+          fi
+          if [ "${image_entrypoint}" != "null" ]; then
+            import_args+=(--change "ENTRYPOINT ${image_entrypoint}")
+          fi
+          import_args+=(--change "CMD ${image_cmd}")
 
           branch=main
           if [ "${REF_TYPE}" = "branch" ]; then
@@ -53,15 +74,13 @@ jobs:
             ama-home-manager:latest \
             /work/container-post-build.sh /work
 
-          docker commit \
-            --change "CMD ${image_cmd}" \
-            ama-home-manager-bootstrap \
-            ama-home-manager:latest
+          docker export ama-home-manager-bootstrap \
+            | docker import "${import_args[@]}" - ama-home-manager:latest
           docker rm ama-home-manager-bootstrap
 
           actual_cmd="$(docker image inspect ama-home-manager:latest --format '{{json .Config.Cmd}}')"
           if [ "${actual_cmd}" != "${image_cmd}" ]; then
-            echo "unexpected image CMD after docker commit: ${actual_cmd}" >&2
+            echo "unexpected image CMD after flattening import: ${actual_cmd}" >&2
             exit 1
           fi
 
