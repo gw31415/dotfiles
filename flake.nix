@@ -171,6 +171,10 @@
           {
             default = ctx.dot;
           }
+          // pkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
+            # Compatibility output for tools that still do `nix run .#nix-darwin`.
+            nix-darwin = inputs.nix-darwin.packages.${system}.default;
+          }
           // pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
             dockerImage = mkDockerImage system;
           };
