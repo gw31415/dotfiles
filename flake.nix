@@ -100,11 +100,19 @@
         let
           ctx = mkCtx system;
           pkgs = ctx.pkgs;
+          caCertPath = "/etc/ssl/certs/ca-certificates.crt";
+          containerHome = "/home/${env.username}";
           gccLib = pkgs.lib.getLib pkgs.gcc.cc;
           dockerHomeConfiguration = mkHomeConfiguration {
             inherit system;
             container = true;
           };
+          caEnvVars = [
+            "SSL_CERT_FILE"
+            "NIX_SSL_CERT_FILE"
+            "GIT_SSL_CAINFO"
+            "CURL_CA_BUNDLE"
+          ];
         in
         pkgs.dockerTools.buildLayeredImage {
           name = "ama-home-manager";
@@ -112,12 +120,14 @@
           includeNixDB = true;
           contents = [
             pkgs.bashInteractive
-            pkgs.cacert
             pkgs.coreutils
             pkgs.git
             pkgs.fish
             pkgs.nix
             pkgs.dockerTools.binSh
+            pkgs.dockerTools.caCertificates
+            pkgs.dockerTools.fakeNss
+            pkgs.dockerTools.usrBinEnv
             gccLib
             dockerHomeConfiguration.activationPackage
           ];
@@ -141,24 +151,20 @@
               > etc/nix/nix.conf
           '';
           config = {
-            WorkingDir = "/home/${env.username}";
+            WorkingDir = containerHome;
             Env = [
-              "HOME=/home/${env.username}"
+              "HOME=${containerHome}"
               "NIX_CONFIG=experimental-features = nix-command flakes\nsandbox = false\nfilter-syscalls = false"
-              "XDG_STATE_HOME=/home/${env.username}/.local/state"
+              "XDG_STATE_HOME=${containerHome}/.local/state"
               "USER=${env.username}"
               "SHELL=${pkgs.fish}/bin/fish"
-              "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
-              "NIX_SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
-              "GIT_SSL_CAINFO=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
-              "CURL_CA_BUNDLE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
-              "XDG_CONFIG_HOME=/home/${env.username}/.config"
+              "XDG_CONFIG_HOME=${containerHome}/.config"
               "HOME_MANAGER_ACTIVATE=${dockerHomeConfiguration.activationPackage}/activate"
               "HOME_MANAGER_HOME_PATH=${dockerHomeConfiguration.activationPackage}/home-path"
               "LD_LIBRARY_PATH=${gccLib}/lib"
               "PATH=${dockerHomeConfiguration.activationPackage}/home-path/bin:${pkgs.nix}/bin:${pkgs.fish}/bin:${pkgs.coreutils}/bin:${pkgs.bashInteractive}/bin"
               "TERM=xterm-256color"
-            ];
+            ] ++ map (name: "${name}=${caCertPath}") caEnvVars;
             Cmd = [ "${pkgs.fish}/bin/fish" "-l" ];
           };
         };
