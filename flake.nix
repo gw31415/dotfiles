@@ -97,6 +97,12 @@
           ctx = mkCtx system;
           pkgs = ctx.pkgs;
           glibcLib = pkgs.lib.getLib pkgs.gcc.cc;
+          dynamicLinkerName =
+            {
+              x86_64-linux = "ld-linux-x86-64.so.2";
+              aarch64-linux = "ld-linux-aarch64.so.1";
+            }
+            .${system};
           dockerHomeConfiguration = mkHomeConfiguration {
             inherit system;
             target = "linux-container";
@@ -126,6 +132,7 @@
           ];
           extraCommands = ''
             mkdir -p \
+              lib \
               lib64 \
               tmp \
               home/${env.username} \
@@ -135,7 +142,8 @@
               nix/var/nix/gcroots/per-user/${env.username} \
               etc/nix
             chmod u+rwx home/${env.username}
-            ln -sf ${pkgs.stdenv.cc.bintools.dynamicLinker} lib64/ld-linux-x86-64.so.2
+            ln -sf ${pkgs.stdenv.cc.bintools.dynamicLinker} lib/${dynamicLinkerName}
+            ln -sf ${pkgs.stdenv.cc.bintools.dynamicLinker} lib64/${dynamicLinkerName}
             printf '%s\n' \
               'experimental-features = nix-command flakes' \
               'sandbox = false' \
