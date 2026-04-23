@@ -17,9 +17,9 @@ docker load < result
 docker run --rm -it ama-home-manager:latest
 ```
 
-The image is built directly by `dockerTools.buildLayeredImage` from the dedicated flake output `.#homeConfigurations.ama-docker`, so it does not need a `Dockerfile` or an Ubuntu base image. The image bakes the generated Home Manager files and profile into `/home/ama`, then starts `fish -l` directly without running `home-manager` at container startup. This output is exposed only for Linux systems; if you want another architecture, switch `x86_64-linux` to the target Linux system such as `aarch64-linux`.
+The image is built directly by Nix from `.#packages.<system>.dockerImage`, using the `ama-linux-container-*` Home Manager configuration and a small Nix-built runtime root. The image bakes the generated Home Manager profile into `/home/ama`, then starts `fish -l` directly without running `home-manager` at container startup. This output is exposed only for Linux systems; if you want another architecture, switch `x86_64-linux` to the target Linux system such as `aarch64-linux`.
 
-For mutable container bootstrap tasks that should stay out of the Nix build, use [container-post-build.sh](/Users/ama/.config/home-manager/container-post-build.sh:1). The GitHub Actions workflow runs it once against the loaded image, then commits the mutated container filesystem back into the image before pushing it.
+For mutable container bootstrap tasks that should stay out of the Nix build, use [bootstrap-published-container.sh](/Users/ama/.config/home-manager/.github/scripts/bootstrap-published-container.sh:1). The GitHub Actions workflow runs it once against the loaded image, then commits the mutated container filesystem back into the image before pushing it.
 
 ### GitHub Container Registry
 

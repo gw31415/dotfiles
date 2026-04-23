@@ -31,7 +31,6 @@ jobs:
 
       - name: Materialize mutable container state
         env:
-          HOME_MANAGER_BOOTSTRAP_TOOLS: "1"
           REF_NAME: ${{ github.ref_name }}
           REF_TYPE: ${{ github.ref_type }}
         run: |
@@ -74,9 +73,8 @@ jobs:
             --volume "${GITHUB_WORKSPACE}:/work:ro" \
             --entrypoint /bin/sh \
             --env HOME_MANAGER_GIT_BRANCH="${branch}" \
-            --env HOME_MANAGER_BOOTSTRAP_TOOLS="${HOME_MANAGER_BOOTSTRAP_TOOLS}" \
             ama-home-manager:latest \
-            /work/container-post-build.sh /work
+            /work/.github/scripts/bootstrap-published-container.sh
 
           docker export ama-home-manager-bootstrap \
             | docker import "${import_args[@]}" - ama-home-manager:latest

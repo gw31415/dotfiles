@@ -56,7 +56,6 @@
             inherit system;
             config.allowUnfree = true;
           };
-          containerHomeManagerRepo = self.outPath;
         in
         inputs
         // {
@@ -64,20 +63,17 @@
             pkgs
             pkgs-stable
             system
-            containerHomeManagerRepo
             ;
           dot = inputs.dot.packages.${system}.default;
           rsplug = inputs.rsplug.packages.${system}.default;
         };
 
       mkHomeModules =
-        ctx: container:
+        ctx: target:
         [
           (
             { config, ... }:
-            import ./home.nix {
-              inherit config ctx container;
-            }
+            import ./home.nix { inherit config ctx target; }
           )
           # { nixpkgs.overlays = overlays; }
         ];
@@ -85,14 +81,14 @@
       mkHomeConfiguration =
         {
           system,
-          container ? false,
+          target,
         }:
         let
           ctx = mkCtx system;
         in
         ctx.home-manager.lib.homeManagerConfiguration {
           pkgs = ctx.pkgs;
-          modules = mkHomeModules ctx container;
+          modules = mkHomeModules ctx target;
         };
 
       mkDockerImage =
@@ -100,19 +96,15 @@
         let
           ctx = mkCtx system;
           pkgs = ctx.pkgs;
-          caCertPath = "/etc/ssl/certs/ca-certificates.crt";
-          containerHome = "/home/${env.username}";
-          gccLib = pkgs.lib.getLib pkgs.gcc.cc;
+          glibcLib = pkgs.lib.getLib pkgs.gcc.cc;
           dockerHomeConfiguration = mkHomeConfiguration {
             inherit system;
-            container = true;
+            target = "linux-container";
           };
-          caEnvVars = [
-            "SSL_CERT_FILE"
-            "NIX_SSL_CERT_FILE"
-            "GIT_SSL_CAINFO"
-            "CURL_CA_BUNDLE"
-          ];
+          containerEnv = import ./modules/lib/container-env.nix {
+            inherit env pkgs;
+            activationPackage = dockerHomeConfiguration.activationPackage;
+          };
         in
         pkgs.dockerTools.buildLayeredImage {
           name = "ama-home-manager";
@@ -129,7 +121,7 @@
             pkgs.dockerTools.caCertificates
             pkgs.dockerTools.fakeNss
             pkgs.dockerTools.usrBinEnv
-            gccLib
+            glibcLib
             dockerHomeConfiguration.activationPackage
           ];
           extraCommands = ''
@@ -152,19 +144,8 @@
               > etc/nix/nix.conf
           '';
           config = {
-            WorkingDir = containerHome;
-            Env = [
-              "HOME=${containerHome}"
-              "XDG_STATE_HOME=${containerHome}/.local/state"
-              "USER=${env.username}"
-              "SHELL=${pkgs.fish}/bin/fish"
-              "XDG_CONFIG_HOME=${containerHome}/.config"
-              "HOME_MANAGER_ACTIVATE=${dockerHomeConfiguration.activationPackage}/activate"
-              "HOME_MANAGER_HOME_PATH=${dockerHomeConfiguration.activationPackage}/home-path"
-              "LD_LIBRARY_PATH=${gccLib}/lib"
-              "PATH=${dockerHomeConfiguration.activationPackage}/home-path/bin:${pkgs.nix}/bin:${pkgs.fish}/bin:${pkgs.coreutils}/bin:${pkgs.bashInteractive}/bin"
-              "TERM=xterm-256color"
-            ] ++ map (name: "${name}=${caCertPath}") caEnvVars;
+            WorkingDir = containerEnv.containerHome;
+            Env = containerEnv.envList;
             Cmd = [ "${pkgs.fish}/bin/fish" "-l" ];
           };
         };
@@ -213,16 +194,25 @@
           ];
         };
 
-      homeConfigurations.${env.username} = mkHomeConfiguration {
+      homeConfigurations."${env.username}-darwin" = mkHomeConfiguration {
         system = "aarch64-darwin";
+        target = "darwin";
       };
-      homeConfigurations."${env.username}-docker-aarch64-linux" = mkHomeConfiguration {
+      homeConfigurations."${env.username}-linux-container-aarch64" = mkHomeConfiguration {
         system = "aarch64-linux";
-        container = true;
+        target = "linux-container";
       };
-      homeConfigurations."${env.username}-docker-x86_64-linux" = mkHomeConfiguration {
+      homeConfigurations."${env.username}-linux-container-x86_64" = mkHomeConfiguration {
         system = "x86_64-linux";
-        container = true;
+        target = "linux-container";
+      };
+      homeConfigurations."${env.username}-linux-desktop-aarch64" = mkHomeConfiguration {
+        system = "aarch64-linux";
+        target = "linux-desktop";
+      };
+      homeConfigurations."${env.username}-linux-desktop-x86_64" = mkHomeConfiguration {
+        system = "x86_64-linux";
+        target = "linux-desktop";
       };
     };
 }

@@ -1,0 +1,197 @@
+{
+  config,
+  ctx,
+  target,
+  ...
+}:
+let
+  pkgs = ctx.pkgs;
+  env = import ../../env.nix;
+  packageGroups = import ./packages.nix { inherit ctx; };
+  configHome = "${config.xdg.configHome}";
+  homeManagerDirectory = "${configHome}/home-manager";
+  managedSource =
+    path:
+    let
+      relativePath = toString path;
+      repoPath = "${homeManagerDirectory}/${relativePath}";
+    in
+    assert !(pkgs.lib.strings.hasPrefix "/" relativePath);
+    config.lib.file.mkOutOfStoreSymlink repoPath;
+in
+{
+  home = {
+    username = env.username;
+    homeDirectory = env.homeDirectory;
+    stateVersion = "25.11";
+    sessionPath = [
+      "$HOME/.local/bin"
+    ];
+    packages = packageGroups.forTarget target;
+  };
+
+  home.file = {
+    ".skk/SKK-JISYO.L".source = "${pkgs.skkDictionaries.l}/share/skk/SKK-JISYO.L";
+    ".latexmkrc".source = ./../../statics/latexmkrc;
+
+    "${configHome}/wezterm".source = managedSource "syms/wezterm";
+    "${configHome}/direnv".source = managedSource "syms/direnv";
+    "${configHome}/lazygit".source = managedSource "syms/lazygit";
+    "${configHome}/mise".source = managedSource "syms/mise";
+    "${configHome}/nvim/lua".source = managedSource "nvim/lua";
+    "${configHome}/nvim/after".source = managedSource "nvim/after";
+    "${configHome}/fish/completions".source = managedSource "syms/fish_completions";
+    "${configHome}/fish/functions".source = managedSource "syms/fish_functions";
+  };
+
+  home.sessionVariables = {
+    EDITOR = "nvim";
+    SHELL = "${pkgs.fish}/bin/fish";
+    XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
+
+    DIRENV_LOG_FORMAT = "";
+    GOPATH = "${config.home.homeDirectory}/.go";
+    RSPLUG_CONFIG_FILES = "${homeManagerDirectory}/nvim/rsplug/*.toml";
+    RUSTC_WRAPPER = "${pkgs.sccache}/bin/sccache";
+  };
+
+  programs.neovim = {
+    enable = true;
+    initLua = "require 'init'";
+    withPython3 = false;
+    withRuby = false;
+  };
+
+  programs.git = {
+    enable = true;
+    attributes = [
+      "* merge=mergiraf"
+      "*.lockb binary diff=lockb"
+      "*.ipynb binary diff=ipynb"
+    ];
+    ignores = [
+      ".DS_Store"
+      "kls_database.db"
+      ".aider*"
+      ".cocoindex_code"
+    ];
+    settings = {
+      merge = {
+        conflictstyle = "diff3";
+        mergiraf.name = "mergiraf";
+        mergiraf.driver = "mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L";
+      };
+      init.defaultBranch = "main";
+      commit.gpgSign = target != "linux-container";
+      user = {
+        signingKey = "B7E2A136";
+        name = "gw31415";
+        email = "24710985+gw31415@users.noreply.github.com";
+      };
+      diff.lockb.binary = true;
+      diff.lockb.textconv = "${pkgs.bun}/bin/bun";
+      diff.ipynb.binary = true;
+    };
+  };
+
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
+  };
+
+  programs.starship = {
+    enable = true;
+    enableFishIntegration = true;
+    settings = {
+      add_newline = true;
+      character = {
+        error_symbol = "[\\(](yellow)[´-_-](bold red)[\\)](yellow)[ =3](cyan)";
+        success_symbol = "[\\(](yellow)[ 'u'](bold green)[\\)](yellow)[ =3](cyan)";
+      };
+      directory = {
+        truncate_to_repo = true;
+        truncation_symbol = "󰟐 :";
+      };
+      time = {
+        disabled = true;
+      };
+    };
+  };
+
+  programs.fish = {
+    enable = true;
+    shellAbbrs = {
+      c = "claude";
+      dcd = "cd ${homeManagerDirectory}";
+      g = "bit";
+      gll = "lazygit";
+      rp = "rsplug";
+      sqlite3 = "litecli";
+      tree = "eza -T";
+      unitydroidlog = "adb logcat -s Unity ActivityManager PackageManager dalvikvm DEBUG";
+    };
+    shellAliases = {
+      vi = "nvim";
+      vim = "nvim";
+    };
+    plugins = [
+      {
+        name = "z";
+        src = pkgs.fishPlugins.z.src;
+      }
+      {
+        name = "autopair";
+        src = pkgs.fishPlugins.autopair.src;
+      }
+      {
+        name = "fish-na";
+        src = fetchTarball {
+          url = "https://github.com/ryoppippi/fish-na/archive/refs/tags/v0.1.2.tar.gz";
+          sha256 = "1rmpsddn5k4s4wdnv6a34c1bwnvg6yhb9f3zf6ba977pjg7smys3";
+        };
+      }
+    ];
+    shellInit = ''
+      set fish_greeting
+      if status is-interactive
+        direnv hook fish | source
+        mise activate fish | source
+      else
+        mise activate fish --shims | source
+      end
+      if test -f $HOME/.cargo/env.fish
+        source "$HOME/.cargo/env.fish"
+      end
+      set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
+      abbr -a n -f _na
+
+      bind \ea __fishify_replace_buffer
+    '';
+  };
+
+  programs.fzf = {
+    enable = true;
+    enableFishIntegration = true;
+    defaultCommand = "fd --type f --hidden --exclude .git --follow --color=always";
+    defaultOptions = [ "--ansi" ];
+  };
+
+  programs.fd = {
+    enable = true;
+    ignores = [
+      ".local"
+      ".cache"
+      ".cargo"
+      "node_modules"
+      "Library"
+      "OrbStack"
+    ];
+  };
+
+  programs.pay-respects = {
+    enable = true;
+    enableFishIntegration = true;
+  };
+
+  manual.manpages.enable = pkgs.lib.mkDefault true;
+}
