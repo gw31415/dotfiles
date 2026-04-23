@@ -199,6 +199,7 @@ in
 
   programs.neovim = {
     enable = true;
+    package = if container then pkgs-stable.neovim-unwrapped else pkgs.neovim;
     initLua = "require 'init'";
     withPython3 = false;
     withRuby = false;

@@ -108,6 +108,7 @@
         pkgs.dockerTools.buildLayeredImage {
           name = "ama-home-manager";
           tag = "latest";
+          includeNixDB = true;
           contents = [
             pkgs.bashInteractive
             pkgs.cacert
@@ -120,15 +121,20 @@
           ];
           extraCommands = ''
             mkdir -p \
+              lib64 \
               tmp \
               home/${env.username} \
+              home/${env.username}/.local/state/home-manager/gcroots \
               home/${env.username}/.local/state/nix/profiles \
               nix/var/nix/profiles/per-user/${env.username} \
               nix/var/nix/gcroots/per-user/${env.username} \
               etc/nix
             chmod u+rwx home/${env.username}
+            ln -sf ${pkgs.stdenv.cc.bintools.dynamicLinker} lib64/ld-linux-x86-64.so.2
             printf '%s\n' \
               'experimental-features = nix-command flakes' \
+              'sandbox = false' \
+              'filter-syscalls = false' \
               'build-users-group =' \
               > etc/nix/nix.conf
           '';
@@ -136,7 +142,7 @@
             WorkingDir = "/home/${env.username}";
             Env = [
               "HOME=/home/${env.username}"
-              "NIX_CONFIG=experimental-features = nix-command flakes"
+              "NIX_CONFIG=experimental-features = nix-command flakes\nsandbox = false\nfilter-syscalls = false"
               "XDG_STATE_HOME=/home/${env.username}/.local/state"
               "USER=${env.username}"
               "SHELL=${pkgs.fish}/bin/fish"

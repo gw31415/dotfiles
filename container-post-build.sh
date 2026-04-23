@@ -6,7 +6,10 @@ target_repo="${HOME:-/home/ama}/.config/home-manager"
 target_parent="$(dirname "$target_repo")"
 branch="${HOME_MANAGER_GIT_BRANCH:-main}"
 activate_script="${HOME_MANAGER_ACTIVATE:?HOME_MANAGER_ACTIVATE must be set}"
+bootstrap_tools="${HOME_MANAGER_BOOTSTRAP_TOOLS:-0}"
 default_ca_bundle="${NIX_SSL_CERT_FILE:-/etc/ssl/certs/ca-bundle.crt}"
+mise_config_file="${XDG_CONFIG_HOME:-${HOME:-/home/ama}/.config}/mise/config.toml"
+filtered_mise_config=""
 
 if [ ! -d "$workspace_source/.git" ]; then
   echo "expected a git worktree at $workspace_source" >&2
@@ -34,5 +37,30 @@ cd "${HOME:-/home/ama}"
 "$activate_script"
 
 cd "$target_repo"
+if [ "$bootstrap_tools" != "1" ]; then
+  exit 0
+fi
+if [ "$(uname -s)" = "Linux" ] && [ -f "$mise_config_file" ]; then
+  filtered_mise_config="$(mktemp)"
+  while IFS= read -r line; do
+    case "$line" in
+      '"gem:terminal-notifier"'*)
+        continue
+        ;;
+    esac
+    printf '%s\n' "$line"
+  done < "$mise_config_file" > "$filtered_mise_config"
+  export MISE_CONFIG_FILE="$filtered_mise_config"
+fi
+if [ -f "$mise_config_file" ]; then
+  mise trust "$mise_config_file"
+fi
+if [ -n "$filtered_mise_config" ]; then
+  mise trust "$filtered_mise_config"
+fi
 mise i
 rsplug -i
+
+if [ -n "$filtered_mise_config" ]; then
+  rm -f "$filtered_mise_config"
+fi
