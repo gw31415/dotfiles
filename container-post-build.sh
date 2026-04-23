@@ -10,6 +10,8 @@ bootstrap_tools="${HOME_MANAGER_BOOTSTRAP_TOOLS:-0}"
 default_ca_bundle="${NIX_SSL_CERT_FILE:-/etc/ssl/certs/ca-bundle.crt}"
 mise_config_file="${XDG_CONFIG_HOME:-${HOME:-/home/ama}/.config}/mise/config.toml"
 
+# ~/.config/home-manager をワークツリーからコピーし、originを含む.git/も生成する
+
 if [ ! -d "$workspace_source/.git" ]; then
   echo "expected a git worktree at $workspace_source" >&2
   exit 1
@@ -32,6 +34,8 @@ git -C "$target_repo" fetch --depth=1 origin "$branch"
 git -C "$target_repo" checkout -B "$branch" FETCH_HEAD
 git -C "$target_repo" pull --ff-only origin "$branch"
 
+# home-manager の世代を activate する
+
 cd "${HOME:-/home/ama}"
 "$activate_script"
 
@@ -39,6 +43,10 @@ cd "$target_repo"
 if [ "$bootstrap_tools" != "1" ]; then
   exit 0
 fi
+
+# クリーンアップ
+nix-collect-garbage -d
+
 if [ -f "$mise_config_file" ]; then
   mise trust "$mise_config_file"
 fi
