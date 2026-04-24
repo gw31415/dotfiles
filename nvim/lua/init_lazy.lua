@@ -173,6 +173,7 @@ vim.api.nvim_create_user_command('Restart', function()
 	vim.cmd('mksession! ' .. vim.fn.fnameescape(cache))
 	vim.cmd('restart source ' .. vim.fn.fnameescape(cache))
 end, {})
+vim.keymap.set('n', 'zr', '<cmd>Restart<cr>')
 
 -- 残りのウィンドウが特殊ウィンドウのみである場合、終了する
 -- https://zenn.dev/vim_jp/articles/ff6cd224fab0c7
