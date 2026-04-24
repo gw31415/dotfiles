@@ -36,6 +36,14 @@ Pushes to GitHub also build and publish the image with GitHub Actions via [publi
 
 [macFUSE](https://macfuse.github.io) needs to change the [`Security Policy`](https://github.com/macfuse/macfuse/wiki/Getting-Started).
 
+## Sources
+
+Package sources with fixed hashes are managed by `nvfetcher`.
+
+```bash
+nix run .#update-sources
+```
+
 ## `dot` Usage
 
 ### Switching (update/upgrade) Environments

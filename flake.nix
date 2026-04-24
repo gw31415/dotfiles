@@ -176,6 +176,15 @@
         apps.default = ctx.flake-utils.lib.mkApp {
           drv = self.packages.${system}.default;
         };
+        apps.update-sources = ctx.flake-utils.lib.mkApp {
+          drv = pkgs.writeShellApplication {
+            name = "update-sources";
+            runtimeInputs = [ pkgs.nvfetcher ];
+            text = ''
+              nvfetcher "$@"
+            '';
+          };
+        };
       }
     )
     // {

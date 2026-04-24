@@ -1,0 +1,38 @@
+{
+    "fish-na": {
+        "cargoLock": null,
+        "date": null,
+        "extract": null,
+        "name": "fish-na",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "ryoppippi",
+            "repo": "fish-na",
+            "rev": "v0.1.2",
+            "sha256": "sha256-Q/uqz5P3nKSWcX+4tKA3b1u+AiNDmW0bJ5rMYlvTt+Y=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "v0.1.2"
+    },
+    "uni-macos": {
+        "cargoLock": null,
+        "date": null,
+        "extract": null,
+        "name": "uni-macos",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "name": null,
+            "sha256": "sha256-txskKmSMAIhBVH/3DJQnojDW/Fg3xW6U/ilxcU1BKuU=",
+            "type": "url",
+            "url": "https://github.com/fiahfy/uni/releases/download/v0.1.1/Uni-0.1.1.dmg"
+        },
+        "version": "0.1.1"
+    }
+}
