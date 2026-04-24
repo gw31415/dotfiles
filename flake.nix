@@ -86,13 +86,14 @@
         let
           ctx = mkCtx system;
           pkgs = ctx.pkgs;
-          glibcLib = pkgs.lib.getLib pkgs.gcc.cc;
-          dynamicLinkerName =
-            {
-              x86_64-linux = "ld-linux-x86-64.so.2";
-              aarch64-linux = "ld-linux-aarch64.so.1";
-            }
-            .${system};
+          sources = import ./_sources/generated.nix {
+            inherit (pkgs)
+              fetchgit
+              fetchurl
+              fetchFromGitHub
+              dockerTools
+              ;
+          };
           dockerHomeConfiguration = mkHomeConfiguration {
             inherit system;
             target = "linux-container";
@@ -101,49 +102,38 @@
             inherit env pkgs;
             activationPackage = dockerHomeConfiguration.activationPackage;
           };
+          dockerArchForSystem = if pkgs.stdenv.hostPlatform.isAarch64 then "arm64" else "amd64";
+          nixConfig = pkgs.writeTextDir "etc/nix/nix.conf" ''
+            experimental-features = nix-command flakes
+            sandbox = false
+            filter-syscalls = false
+            build-users-group =
+          '';
         in
-        pkgs.dockerTools.buildLayeredImage {
+        pkgs.dockerTools.buildImage {
           name = "ama-home-manager";
           tag = "latest";
+          fromImage =
+            sources."debian-stable-slim-${dockerArchForSystem}".src;
           includeNixDB = true;
-          contents =
-            with pkgs;
-            [
-              bashInteractive
-              coreutils
-              git
-              fish
-              iana-etc
-              nix
-              dockerTools.binSh
-              dockerTools.caCertificates
-              dockerTools.fakeNss
-              dockerTools.usrBinEnv
-            ]
-            ++ [
-              glibcLib
-              dockerHomeConfiguration.activationPackage
-            ];
+          contents = with pkgs; [
+            git
+            fish
+            nix
+            dockerTools.binSh
+            dockerTools.fakeNss
+            dockerHomeConfiguration.activationPackage
+            nixConfig
+          ];
           extraCommands = ''
             mkdir -p \
-              lib \
-              lib64 \
               tmp \
               home/${env.username} \
               home/${env.username}/.local/state/home-manager/gcroots \
               home/${env.username}/.local/state/nix/profiles \
               nix/var/nix/profiles/per-user/${env.username} \
-              nix/var/nix/gcroots/per-user/${env.username} \
-              etc/nix
+              nix/var/nix/gcroots/per-user/${env.username}
             chmod u+rwx home/${env.username}
-            ln -sf ${pkgs.stdenv.cc.bintools.dynamicLinker} lib/${dynamicLinkerName}
-            ln -sf ${pkgs.stdenv.cc.bintools.dynamicLinker} lib64/${dynamicLinkerName}
-            printf '%s\n' \
-              'experimental-features = nix-command flakes' \
-              'sandbox = false' \
-              'filter-syscalls = false' \
-              'build-users-group =' \
-              > etc/nix/nix.conf
           '';
           config = {
             WorkingDir = containerEnv.containerHome;
@@ -186,7 +176,10 @@
         apps.update-sources = ctx.flake-utils.lib.mkApp {
           drv = pkgs.writeShellApplication {
             name = "update-sources";
-            runtimeInputs = with pkgs; [ nvfetcher nix-prefetch-docker ];
+            runtimeInputs = with pkgs; [
+              nvfetcher
+              nix-prefetch-docker
+            ];
             text = ''
               nvfetcher "$@"
             '';

@@ -97,7 +97,7 @@ jobs:
             --rm \
             --entrypoint /bin/sh \
             ama-home-manager:latest \
-            -lc '
+            -c '
               set -eu
               test -d "$HOME/.config/home-manager/.git"
               test -f "$HOME/.config/fish/config.fish"
@@ -200,7 +200,7 @@ jobs:
             --rm \
             --entrypoint /bin/sh \
             ama-home-manager:latest \
-            -lc '
+            -c '
               set -eu
               test -d "$HOME/.config/home-manager/.git"
               test -f "$HOME/.config/fish/config.fish"
