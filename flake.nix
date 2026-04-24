@@ -154,12 +154,19 @@
             ];
           };
         };
+
+      defaultHomeTargetForSystem =
+        system: if inputs.nixpkgs.lib.hasSuffix "-darwin" system then "darwin" else "linux-desktop";
     in
     inputs.flake-utils.lib.eachSystem systems (
       system:
       let
         ctx = mkCtx system;
         pkgs = ctx.pkgs;
+        defaultHomeConfiguration = mkHomeConfiguration {
+          inherit system;
+          target = defaultHomeTargetForSystem system;
+        };
       in
       {
         packages = {
@@ -185,6 +192,8 @@
             '';
           };
         };
+
+        legacyPackages.homeConfigurations.${env.username} = defaultHomeConfiguration;
       }
     )
     // {
