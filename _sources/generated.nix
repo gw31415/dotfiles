@@ -6,6 +6,16 @@
   dockerTools,
 }:
 {
+  debian-stable-slim = {
+    pname = "debian-stable-slim";
+    version = "stable-slim";
+    src = dockerTools.pullImage {
+      imageName = "library/debian";
+      imageDigest = "sha256:8f0c555de6a2f9c2bda1b170b67479d11f7f5e3b66bb4a7a1d8843361c9dd3ff";
+      sha256 = "sha256-/J3ZJIJuj0nTphvCNVTwfer9pIQx7d45Dx7ZdzCuwvw=";
+      finalImageTag = "stable-slim";
+    };
+  };
   fish-na = {
     pname = "fish-na";
     version = "v0.1.2";

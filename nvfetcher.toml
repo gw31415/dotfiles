@@ -6,3 +6,7 @@ fetch.url = "https://github.com/fiahfy/uni/releases/download/v$ver/Uni-$ver.dmg"
 [fish-na]
 src.github = "ryoppippi/fish-na"
 fetch.github = "ryoppippi/fish-na"
+
+[debian-stable-slim]
+src.manual = "stable-slim"
+fetch.docker = "library/debian"
