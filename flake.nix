@@ -186,7 +186,7 @@
         apps.update-sources = ctx.flake-utils.lib.mkApp {
           drv = pkgs.writeShellApplication {
             name = "update-sources";
-            runtimeInputs = [ pkgs.nvfetcher ];
+            runtimeInputs = with pkgs; [ nvfetcher nix-prefetch-docker ];
             text = ''
               nvfetcher "$@"
             '';

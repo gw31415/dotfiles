@@ -53,8 +53,9 @@ rec {
     litecli
     mergiraf
     mmv-go
+    nix-prefetch-docker
     nixfmt-rfc-style
-    nvfetcher
+    pkgs.nvfetcher
     p7zip
     pandoc
     poppler-utils
