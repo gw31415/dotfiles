@@ -15,7 +15,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
-    # neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     dot = {
       url = "github:gw31415/dot-cli";
       inputs = {
@@ -41,9 +40,6 @@
         "aarch64-linux"
         "x86_64-linux"
       ];
-      # overlays = [
-      #   inputs.neovim-nightly-overlay.overlays.default
-      # ];
 
       mkCtx =
         system:
@@ -68,15 +64,9 @@
           rsplug = inputs.rsplug.packages.${system}.default;
         };
 
-      mkHomeModules =
-        ctx: target:
-        [
-          (
-            { config, ... }:
-            import ./home.nix { inherit config ctx target; }
-          )
-          # { nixpkgs.overlays = overlays; }
-        ];
+      mkHomeModules = ctx: target: [
+        ({ config, ... }: import ./home.nix { inherit config ctx target; })
+      ];
 
       mkHomeConfiguration =
         {
@@ -116,20 +106,24 @@
           name = "ama-home-manager";
           tag = "latest";
           includeNixDB = true;
-          contents = [
-            pkgs.bashInteractive
-            pkgs.coreutils
-            pkgs.git
-            pkgs.fish
-            pkgs.iana-etc
-            pkgs.nix
-            pkgs.dockerTools.binSh
-            pkgs.dockerTools.caCertificates
-            pkgs.dockerTools.fakeNss
-            pkgs.dockerTools.usrBinEnv
-            glibcLib
-            dockerHomeConfiguration.activationPackage
-          ];
+          contents =
+            with pkgs;
+            [
+              bashInteractive
+              coreutils
+              git
+              fish
+              iana-etc
+              nix
+              dockerTools.binSh
+              dockerTools.caCertificates
+              dockerTools.fakeNss
+              dockerTools.usrBinEnv
+            ]
+            ++ [
+              glibcLib
+              dockerHomeConfiguration.activationPackage
+            ];
           extraCommands = ''
             mkdir -p \
               lib \
@@ -154,7 +148,10 @@
           config = {
             WorkingDir = containerEnv.containerHome;
             Env = containerEnv.envList;
-            Cmd = [ "${pkgs.fish}/bin/fish" "-l" ];
+            Cmd = [
+              "${pkgs.fish}/bin/fish"
+              "-l"
+            ];
           };
         };
     in
@@ -165,17 +162,16 @@
         pkgs = ctx.pkgs;
       in
       {
-        packages =
-          {
-            default = ctx.dot;
-          }
-          // pkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
-            # Compatibility output for tools that still do `nix run .#nix-darwin`.
-            nix-darwin = inputs.nix-darwin.packages.${system}.default;
-          }
-          // pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
-            dockerImage = mkDockerImage system;
-          };
+        packages = {
+          default = ctx.dot;
+        }
+        // pkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
+          # Compatibility output for tools that still do `nix run .#nix-darwin`.
+          nix-darwin = inputs.nix-darwin.packages.${system}.default;
+        }
+        // pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
+          dockerImage = mkDockerImage system;
+        };
 
         apps.default = ctx.flake-utils.lib.mkApp {
           drv = self.packages.${system}.default;
