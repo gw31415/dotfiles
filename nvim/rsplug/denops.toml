@@ -12,14 +12,6 @@ repo = "lambdalisue/vim-kensaku"
 start = true
 
 [[plugins]]
-repo = "gw31415/mstdn.vim"
-start = true
-
-[[plugins]]
-repo = "skanehira/denops-silicon.vim"
-start = true
-
-[[plugins]]
 repo = "yuki-yano/fuzzy-motion.vim"
 start = true
 
@@ -36,13 +28,24 @@ repo = "lambdalisue/vim-guise"
 start = true
 
 [[plugins]]
-repo = "gw31415/denops-sixel-view.vim"
-start = true
-
-[[plugins]]
 repo = "gw31415/denops-commitgen.vim"
 start = true
 
-[[plugins]]
-repo = "gw31415/mstdn-imgview.vim"
-start = true
+# 以下、Linuxの環境で動作しなかったもの。
+# TODO: 依存関係を洗い出す
+
+# [[plugins]]
+# repo = "skanehira/denops-silicon.vim"
+# start = true
+
+# [[plugins]]
+# repo = "gw31415/mstdn.vim"
+# start = true
+
+# [[plugins]]
+# repo = "gw31415/denops-sixel-view.vim"
+# start = true
+
+# [[plugins]]
+# repo = "gw31415/mstdn-imgview.vim"
+# start = true
