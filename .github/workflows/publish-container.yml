@@ -1,7 +1,7 @@
 name: Publish Container
 
 on:
-  push:
+  # push:
   workflow_dispatch:
 
 concurrency:
@@ -29,9 +29,13 @@ jobs:
         uses: cachix/install-nix-action@v31
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            # Needed for "runAsRoot" capability
+            system-features = kvm
+            extra-experimental-features = nix-command flakes
 
       - name: Build container image
-        run: nix build ".#packages.${NIX_SYSTEM}.dockerImage"
+        run: nix build ".#dockerImage"
 
       - name: Load image into Docker
         run: docker load < result

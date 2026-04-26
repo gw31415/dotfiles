@@ -86,62 +86,58 @@
         let
           ctx = mkCtx system;
           pkgs = ctx.pkgs;
-          sources = import ./_sources/generated.nix {
-            inherit (pkgs)
-              fetchgit
-              fetchurl
-              fetchFromGitHub
-              dockerTools
-              ;
-          };
           dockerHomeConfiguration = mkHomeConfiguration {
             inherit system;
             target = "linux-container";
           };
-          containerEnv = import ./modules/lib/container-env.nix {
-            inherit env pkgs;
-            activationPackage = dockerHomeConfiguration.activationPackage;
-          };
-          dockerArchForSystem = if pkgs.stdenv.hostPlatform.isAarch64 then "arm64" else "amd64";
           nixConfig = pkgs.writeTextDir "etc/nix/nix.conf" ''
+            substituters = https://cache.nixos.org/
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
             experimental-features = nix-command flakes
+            build-users-group = nixbld
+            allowed-users = *
             sandbox = false
-            filter-syscalls = false
-            build-users-group =
           '';
         in
         pkgs.dockerTools.buildImage {
           name = "ama-home-manager";
           tag = "latest";
-          fromImage =
-            sources."debian-stable-slim-${dockerArchForSystem}".src;
           includeNixDB = true;
-          contents = with pkgs; [
-            git
-            fish
-            nix
-            dockerTools.binSh
-            dockerTools.fakeNss
-            dockerHomeConfiguration.activationPackage
-            nixConfig
-          ];
-          extraCommands = ''
-            mkdir -p \
-              tmp \
-              home/${env.username} \
-              home/${env.username}/.local/state/home-manager/gcroots \
-              home/${env.username}/.local/state/nix/profiles \
-              nix/var/nix/profiles/per-user/${env.username} \
-              nix/var/nix/gcroots/per-user/${env.username}
-            chmod u+rwx home/${env.username}
+
+          # Requires: `system-features = kvm`
+          runAsRoot = ''
+            #!${pkgs.runtimeShell}
+            ${pkgs.dockerTools.shadowSetup}
+            groupadd -r nixbld
+            adduser -G nixbld -D -H nixbld
+            chmod 1777 /tmp
+
+            export HOME=/root LOGIN=root USER=root
+            mkdir -p /nix/var/nix/profiles/per-user/$USER $HOME/.config
+            cp -r ${./.} $HOME/.config/home-manager
+            chmod 644 -R $HOME/.config/home-manager
           '';
-          config = {
-            WorkingDir = containerEnv.containerHome;
-            Env = containerEnv.envList;
-            Cmd = [
-              "${pkgs.fish}/bin/fish"
-              "-l"
+
+          copyToRoot = pkgs.buildEnv {
+            name = "base-before-activation";
+            paths = with pkgs; [
+              git
+              less
+              busybox
+              nix
+              dockerTools.caCertificates
+              nixConfig
+              dockerHomeConfiguration.activationPackage
             ];
+          };
+          config = {
+            User = "root";
+            Env = [
+              "USER=root"
+              "LOGNAME=root"
+              "HOME=/root"
+            ];
+            WorkingDir = "/root";
           };
         };
 

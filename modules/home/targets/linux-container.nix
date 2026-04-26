@@ -1,8 +1,6 @@
 { lib, ... }:
-let
-  env = import ../../../env.nix;
-in
 {
-  home.homeDirectory = lib.mkForce "/home/${env.username}";
+  home.username = lib.mkForce "root";
+  home.homeDirectory = lib.mkForce "/root";
   manual.manpages.enable = false;
 }
