@@ -27,11 +27,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1777395585,
-        "narHash": "sha256-5owKT+x+N8ZqOxjI0ltWtHVtyKD91Duf8mor2B8aYRs=",
+        "lastModified": 1777400345,
+        "narHash": "sha256-o8lbLTkBgy8KQdGK6TNw4dJ+JY3V+rZJNa0tSTr9s0g=",
         "owner": "gw31415",
         "repo": "dot-cli",
-        "rev": "c2c6497997822f28b8880db800da20ac7da9199d",
+        "rev": "cd3b2311fd8790ef3a87c6dfe89752f257b7d946",
         "type": "github"
       },
       "original": {
