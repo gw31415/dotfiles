@@ -25,20 +25,21 @@ in
 rec {
   inherit sources;
 
-  commonCli = with pkgs-stable; [
+  common = with pkgs-stable; [
     # LSPs
     pkgs.basedpyright
     gopls
 
-    # CLI tools
+    # nixpkgs-stable の direnv 2.37.1 は Darwin で cgo 無効のまま
+    # external link を要求してビルドに失敗するため、unstable 側を使う。
+    pkgs.direnv
+    pkgs.nvfetcher
     aria2
     asciinema
     bat
     bindfs
+    comma
     deno
-    # nixpkgs-stable の direnv 2.37.1 は Darwin で cgo 無効のまま
-    # external link を要求してビルドに失敗するため、unstable 側を使う。
-    pkgs.direnv
     envchain
     eza
     ffmpeg
@@ -55,7 +56,6 @@ rec {
     mmv-go
     nix-prefetch-docker
     nixfmt-rfc-style
-    pkgs.nvfetcher
     p7zip
     pandoc
     poppler-utils
@@ -78,55 +78,46 @@ rec {
     source-han-sans
     source-han-serif
     twemoji-color-font
-  ];
 
-  commonDev = with pkgs-stable; [
+    # Development tools
+    ctx.dot
     ctx.rsplug
     sccache
     tree-sitter
     typst
-  ];
-
-  desktopExtras = with pkgs-stable; [
-    ctx.dot
     rustup
   ];
 
-  linuxDesktopApps = with pkgs-stable; [
-    pkgs.brave
-    pkgs.codex
-    pkgs.mise
-    pkgs.wezterm
-    gnupg
-    nodejs
-  ];
-
-  linuxContainerDev = with pkgs-stable; [
-    cargo
-    gnupg
-    mise
-    nodejs
-    pkg-config
-    rustc
-    stdenv.cc
-    pkgs.fish
-  ];
-
-  darwinNixPackages = with pkgs-stable; [
-    cocoapods
-    pkgs.container
+  darwinPkgs = with pkgs-stable; [
     pkgs.alt-tab-macos
+    cocoapods
+    container
     uniMacos
+  ];
+
+  # TODO: 以下のパッケージを整理する
+  linuxPkgs = with pkgs; [
+    # macOSでは darwin.nix で有効化する
+    fish
+
+    # macOSでは brew でインストールする
+    mise
+    codex
+  ];
+
+  linuxDesktopPkgs = with pkgs; [
+    brave
+    wezterm
   ];
 
   forTarget =
     target:
     if target == "darwin" then
-      commonCli ++ commonDev ++ desktopExtras ++ darwinNixPackages
-    else if target == "linux-desktop" then
-      commonCli ++ commonDev ++ desktopExtras ++ linuxDesktopApps
+      common ++ darwinPkgs
     else if target == "linux-container" then
-      commonCli ++ commonDev ++ linuxContainerDev
+      common ++ linuxPkgs
+    else if target == "linux-desktop" then
+      common ++ linuxPkgs ++ linuxDesktopPkgs
     else
       throw "unsupported package target: ${target}";
 }

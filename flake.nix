@@ -98,37 +98,58 @@
             allowed-users = *
             sandbox = false
           '';
+          sources = import ./_sources/generated.nix {
+            inherit (pkgs)
+              dockerTools
+              fetchFromGitHub
+              fetchgit
+              fetchurl
+              ;
+          };
         in
         pkgs.dockerTools.buildImage {
           name = "ama-home-manager";
           tag = "latest";
           includeNixDB = true;
 
+          # fromImage = sources.distroless-cc-debian13.src;
+
           # Requires: `system-features = kvm`
           runAsRoot = ''
             #!${pkgs.runtimeShell}
             ${pkgs.dockerTools.shadowSetup}
-            groupadd -r nixbld
-            adduser -G nixbld -D -H nixbld
+
             chmod 1777 /tmp
 
-            export HOME=/root LOGIN=root USER=root
+            export USER=root LOGNAME=root HOME=/root
             mkdir -p /nix/var/nix/profiles/per-user/$USER $HOME/.config
             cp -r ${./.} $HOME/.config/home-manager
             chmod 644 -R $HOME/.config/home-manager
+
+            # busybox によるもの
+            addgroup -S nixbld
+            adduser -G nixbld -D -H nixbld
+
+            # Standard Unix コマンドによるもの
+            # groupadd -r nixbld
+            # useradd -g nixbld -M -r nixbld
+
+            # busyboxによる色なしPAGERはつらい
+            # cp -f {pkgs.less}/bin/less /sbin/less
           '';
 
           copyToRoot = pkgs.buildEnv {
             name = "base-before-activation";
             paths = with pkgs; [
-              git
-              less
-              busybox
-              nix
-              dockerTools.caCertificates
-              nixConfig
               dockerHomeConfiguration.activationPackage
+              busybox # Scratch ならこれは必要っぽい
+              nix
+              nixConfig
+
+              # 必要っぽいライブラリ
+              dockerTools.caCertificates
             ];
+            pathsToLink = [ "/bin" ];
           };
           config = {
             User = "root";

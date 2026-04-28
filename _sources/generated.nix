@@ -6,28 +6,6 @@
   dockerTools,
 }:
 {
-  debian-stable-slim-amd64 = {
-    pname = "debian-stable-slim-amd64";
-    version = "stable-slim";
-    src = dockerTools.pullImage {
-      imageName = "library/debian";
-      imageDigest = "sha256:8f0c555de6a2f9c2bda1b170b67479d11f7f5e3b66bb4a7a1d8843361c9dd3ff";
-      sha256 = "sha256-/J3ZJIJuj0nTphvCNVTwfer9pIQx7d45Dx7ZdzCuwvw=";
-      finalImageTag = "stable-slim";
-      arch = "amd64";
-    };
-  };
-  debian-stable-slim-arm64 = {
-    pname = "debian-stable-slim-arm64";
-    version = "stable-slim";
-    src = dockerTools.pullImage {
-      imageName = "library/debian";
-      imageDigest = "sha256:8f0c555de6a2f9c2bda1b170b67479d11f7f5e3b66bb4a7a1d8843361c9dd3ff";
-      sha256 = "sha256-eMy1F8KB9G8pixG0xwoXyYJXGpPUOQJxNREhTcbk16U=";
-      finalImageTag = "stable-slim";
-      arch = "arm64";
-    };
-  };
   fish-na = {
     pname = "fish-na";
     version = "v0.1.2";

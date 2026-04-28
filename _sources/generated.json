@@ -1,44 +1,4 @@
 {
-    "debian-stable-slim-amd64": {
-        "cargoLock": null,
-        "date": null,
-        "extract": null,
-        "name": "debian-stable-slim-amd64",
-        "passthru": null,
-        "pinned": false,
-        "src": {
-            "arch": "amd64",
-            "finalImageName": null,
-            "finalImageTag": null,
-            "imageDigest": "sha256:8f0c555de6a2f9c2bda1b170b67479d11f7f5e3b66bb4a7a1d8843361c9dd3ff",
-            "imageName": "library/debian",
-            "imageTag": "stable-slim",
-            "os": null,
-            "sha256": "sha256-/J3ZJIJuj0nTphvCNVTwfer9pIQx7d45Dx7ZdzCuwvw=",
-            "tlsVerify": null
-        },
-        "version": "stable-slim"
-    },
-    "debian-stable-slim-arm64": {
-        "cargoLock": null,
-        "date": null,
-        "extract": null,
-        "name": "debian-stable-slim-arm64",
-        "passthru": null,
-        "pinned": false,
-        "src": {
-            "arch": "arm64",
-            "finalImageName": null,
-            "finalImageTag": null,
-            "imageDigest": "sha256:8f0c555de6a2f9c2bda1b170b67479d11f7f5e3b66bb4a7a1d8843361c9dd3ff",
-            "imageName": "library/debian",
-            "imageTag": "stable-slim",
-            "os": null,
-            "sha256": "sha256-eMy1F8KB9G8pixG0xwoXyYJXGpPUOQJxNREhTcbk16U=",
-            "tlsVerify": null
-        },
-        "version": "stable-slim"
-    },
     "fish-na": {
         "cargoLock": null,
         "date": null,
