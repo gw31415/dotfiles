@@ -21,6 +21,13 @@ The image is built directly by Nix from `.#packages.<system>.dockerImage`, using
 
 For mutable container bootstrap tasks that should stay out of the Nix build, use [bootstrap-published-container.sh](/Users/ama/.config/home-manager/.github/scripts/bootstrap-published-container.sh:1). The GitHub Actions workflow runs it once against the loaded image, then commits the mutated container filesystem back into the image before pushing it.
 
+`dockerImageImpure` intentionally performs mutable setup during the build, so it must be evaluated with `--impure`. On macOS, build it from a Linux Nix container:
+
+```bash
+docker run --rm -v "$PWD":/work -w /work nixos/nix \
+  sh -lc 'nix --extra-experimental-features "nix-command flakes" build --impure .#dockerImageImpure'
+```
+
 ### GitHub Container Registry
 
 Pushes to GitHub also build and publish the image with GitHub Actions via [publish-container.yml](/Users/ama/.config/home-manager/.github/workflows/publish-container.yml:1). The workflow builds `.#packages.x86_64-linux.dockerImage`, loads it into Docker, runs the mutable bootstrap script once to populate `~/.config/home-manager` and execute extra setup commands, then pushes these tags to `ghcr.io/gw31415/ama-home-manager`:
@@ -35,14 +42,6 @@ Pushes to GitHub also build and publish the image with GitHub Actions via [publi
 ### macFUSE
 
 [macFUSE](https://macfuse.github.io) needs to change the [`Security Policy`](https://github.com/macfuse/macfuse/wiki/Getting-Started).
-
-## Sources
-
-Package sources with fixed hashes are managed by `nvfetcher`.
-
-```bash
-nix run .#update-sources
-```
 
 ## `dot` Usage
 

@@ -100,9 +100,11 @@ rec {
     # macOSでは darwin.nix で有効化する
     fish
 
+
     # macOSでは brew でインストールする
-    mise
     codex
+    gnupg
+    mise
   ];
 
   linuxDesktopPkgs = with pkgs; [

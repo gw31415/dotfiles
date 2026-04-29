@@ -3,7 +3,7 @@ experimental = true
 idiomatic_version_file_enable_tools = ["python", "node"]
 
 [tools]
-# aube = { version = "latest", os = "macos" }
+aube = "latest"
 "gem:terminal-notifier" = { version = "latest", os = "macos" }
 "github:bit-vcs/bit" = { version = "latest", os = ["macos", "linux-x64"] }
 go = "1.25.5"
