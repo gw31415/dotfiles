@@ -90,20 +90,17 @@
                 executable = true;
                 name = "write-${builtins.baseNameOf destination}";
               };
-            fishProfileLoader = writeScriptDir "etc/fish/conf.d/profile.fish" ''
+            fishProfileLoader = writeScriptDir "/etc/fish/conf.d/profile.fish" ''
               if status --is-login
                 source /etc/profile.d/*.fish
               end
             '';
-            impureSh = writeScriptDir "root/impure.sh" (builtins.readFile ./impure.sh);
           in
           pkgs.dockerTools.buildImage {
-            name = "ama-home-manager";
+            name = "ama-home-manager-pure";
             tag = "latest";
             includeNixDB = true;
             buildVMMemorySize = 2048;
-
-            # fromImage = sources.distroless-cc-debian13.src;
 
             # Requires: `system-features = kvm`
             runAsRoot = ''
@@ -142,8 +139,6 @@
                 stdenv.cc
                 pkg-config
                 curl
-
-                impureSh
               ];
             };
             config = {
@@ -156,82 +151,6 @@
               WorkingDir = "/root";
             };
           };
-        dockerImageImpure =
-          let
-            pkgs = ctx.pkgs;
-            fishCmd = [
-              "/root/.nix-profile/bin/fish"
-              "-l"
-            ];
-          in
-          pkgs.runCommand "ama-home-manager-impure.tar.gz"
-            {
-              DOCKER_HOST =
-                let
-                  dockerHost = builtins.getEnv "DOCKER_HOST";
-                in
-                if dockerHost != "" then dockerHost else "tcp://host.docker.internal:23750";
-              nativeBuildInputs = with pkgs; [
-                docker-client
-                gzip
-              ];
-              preferLocalBuild = true;
-              allowSubstitutes = false;
-            }
-            ''
-              set -euo pipefail
-
-              if [ -z "''${DOCKER_HOST:-}" ] && [ ! -S /var/run/docker.sock ]; then
-                echo "docker socket or DOCKER_HOST is required to build dockerImageImpure" >&2
-                exit 1
-              fi
-
-              base_ref="ama-home-manager:latest"
-              temp_base_ref="ama-home-manager:pure-build-$$"
-              temp_impure_ref="ama-home-manager:impure-build-$$"
-              cid=""
-              previous_base_id="$(docker image inspect "$base_ref" --format '{{.Id}}' 2>/dev/null || true)"
-
-              cleanup() {
-                if [ -n "$cid" ]; then
-                  docker rm -f "$cid" >/dev/null 2>&1 || true
-                fi
-                docker image rm -f "$temp_impure_ref" >/dev/null 2>&1 || true
-                docker image rm -f "$temp_base_ref" >/dev/null 2>&1 || true
-
-                if [ -n "$previous_base_id" ]; then
-                  docker tag "$previous_base_id" "$base_ref" >/dev/null 2>&1 || true
-                else
-                  docker image rm -f "$base_ref" >/dev/null 2>&1 || true
-                fi
-              }
-              trap cleanup EXIT
-
-              docker load -i ${dockerImage} >/dev/null
-              docker tag "$base_ref" "$temp_base_ref"
-
-              cid="$(docker create \
-                --env USER=root \
-                --env LOGNAME=root \
-                --env HOME=/root \
-                --workdir /root \
-                "$temp_base_ref" \
-                sh -lc ' /root/impure.sh || true')"
-
-              docker start -a "$cid" >/dev/null 2>&1 || true
-
-              docker commit \
-                --change 'CMD ${builtins.toJSON fishCmd}' \
-                --change 'USER root' \
-                --change 'WORKDIR /root' \
-                --change 'ENV USER=root' \
-                --change 'ENV LOGNAME=root' \
-                --change 'ENV HOME=/root' \
-                "$cid" \
-                "$temp_impure_ref" >/dev/null
-
-              docker save "$temp_impure_ref" | gzip -1 > "$out"
-            '';
       in
       {
 
@@ -261,7 +180,7 @@
           };
         }
         // pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
-          inherit dockerImage dockerImageImpure;
+          inherit dockerImage;
         };
 
         apps.default = ctx.flake-utils.lib.mkApp {

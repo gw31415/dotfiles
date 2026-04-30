@@ -1,12 +1,9 @@
 # dotfiles and configurations for ama
 
-> [!warning]
-> This version depends on the project [`gw31415/rsplug.nvim`](https://github.com/gw31415/rsplug.nvim), which is currently private.
-
 ## Installation
 
 ```bash
-nix run github:gw31415/dotfiles
+nix run github:gw31415/dot-cli#install
 ```
 
 ## Docker
@@ -35,9 +32,6 @@ Pushes to GitHub also build and publish the image with GitHub Actions via [publi
 - `latest` on pushes to `main`
 - `sha-<commit sha>` on every push
 - `<branch>` or `<tag>` using the pushed ref name
-
-> [!note]
-> This is just running [the `dot` package](https://github.com/gw31415/dot-cli). The `dot` package is a helper command to manage `gw31415/dotfiles`.
 
 ### macFUSE
 

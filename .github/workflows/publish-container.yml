@@ -1,9 +1,9 @@
 name: Publish Container
 
 on:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 concurrency:
@@ -53,22 +53,25 @@ jobs:
       - name: Restore and save Nix store
         uses: nix-community/cache-nix-action@v7
         with:
-          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
-          restore-prefixes-first-match: nix-${{ runner.os }}-
-          gc-max-store-size-linux: 8G
+          primary-key: nix-${{ runner.os }}-${{ matrix.arch }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-${{ matrix.arch }}-
+          gc-max-store-size-linux: 4.5G
           purge: true
-          purge-prefixes: nix-${{ runner.os }}-
+          purge-prefixes: nix-${{ runner.os }}-${{ matrix.arch }}-
           purge-created: 0
           purge-last-accessed: P1DT12H
           purge-primary-key: never
 
       - name: Build container image
-        run: nix build --impure ".#dockerImageImpure"
+        run: nix build ".#dockerImage"
 
       - name: Load image into Docker
         run: docker load < result
 
-      - name: Materialize mutable container state
+      - name: Modify image
+        run: docker build ./docker -t ama-home-manager:latest
+
+      - name: Tag image based on ref
         env:
           REF_NAME: ${{ github.ref_name }}
           REF_TYPE: ${{ github.ref_type }}
