@@ -320,21 +320,6 @@ vim.keymap.set('n', 'cL', '<Plug>(deepl-replace)$', { desc = 'Replace with DeepL
 '''
 
 [[plugins]]
-repo = "numToStr/Comment.nvim"
-on_event = "VeryLazy"
-lua_after = '''
-require 'Comment'.setup {
-	toggler = {
-		block = 'gCC',
-	},
-	opleader = {
-		block = 'gC',
-	},
-	pre_hook = require 'ts_context_commentstring.integrations.comment_nvim'.create_pre_hook(),
-}
-'''
-
-[[plugins]]
 repo = "CRAG666/code_runner.nvim"
 on_event = "CmdlineEnter"
 lua_after = '''
