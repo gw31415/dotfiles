@@ -101,7 +101,7 @@ in
       "puremac"
       "slack"
       "smoothcsv"
-      "wezterm@nightly"
+      "ghostty"
       # "android-studio"
       # "container"
       # "cursor"

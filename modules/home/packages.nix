@@ -109,7 +109,7 @@ rec {
 
   linuxDesktopPkgs = with pkgs; [
     brave
-    wezterm
+    ghostty
   ];
 
   forTarget =

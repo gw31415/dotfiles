@@ -36,6 +36,7 @@ in
 
     "${configHome}/wezterm".source = managedSource "syms/wezterm";
     "${configHome}/direnv".source = managedSource "syms/direnv";
+    "${configHome}/ghostty".source = managedSource "syms/ghostty";
     "${configHome}/lazygit".source = managedSource "syms/lazygit";
     "${configHome}/mise".source = managedSource "syms/mise";
     "${configHome}/nvim/lua".source = managedSource "nvim/lua";

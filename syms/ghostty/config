@@ -1,0 +1,22 @@
+cursor-style-blink = false
+font-family = Hackgen Console NF
+font-size = 13
+mouse-hide-while-typing = true
+
+quit-after-last-window-closed = true
+
+background = 1D1F24
+background-blur = macos-glass-clear
+background-opacity = 0.8
+command = ~/.nix-profile/bin/fish
+macos-titlebar-proxy-icon = hidden
+macos-window-buttons = hidden
+auto-update = check
+
+# https://github.com/ghostty-org/ghostty/discussions/5071
+keybind = ctrl+[=esc:
+macos-option-as-alt = true
+
+keybind = super+[=previous_tab
+keybind = super+]=next_tab
+keybind = super+b=toggle_background_opacity
