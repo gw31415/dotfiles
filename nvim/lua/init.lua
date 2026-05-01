@@ -51,5 +51,6 @@ vim.cmd 'filetype plugin indent on'
 vim.filetype.add {
 	filename = {
 		Appfile = 'ruby',
+		config = 'config',
 	}
 }
