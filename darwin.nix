@@ -96,7 +96,7 @@ in
       "keyboardcleantool"
       "macfuse"
       "macskk"
-      "microsoft-teams"
+      # "microsoft-teams"
       "musicbrainz-picard"
       "puremac"
       "slack"
@@ -123,7 +123,7 @@ in
     masApps = {
       "1Blocker" = 1365531024;
       "Amphetamine" = 937984704;
-      "Goodnotes" = 1444383602;
+      # "Goodnotes" = 1444383602;
       "Keynote" = 409183694;
       "LINE" = 539883307;
       "Logic Pro" = 634148309;
