@@ -100,25 +100,6 @@ in
     enableGitIntegration = true;
   };
 
-  programs.starship = {
-    enable = true;
-    enableFishIntegration = true;
-    settings = {
-      add_newline = true;
-      character = {
-        error_symbol = "[\\(](yellow)[´-_-](bold red)[\\)](yellow)[ =3](cyan)";
-        success_symbol = "[\\(](yellow)[ 'u'](bold green)[\\)](yellow)[ =3](cyan)";
-      };
-      directory = {
-        truncate_to_repo = true;
-        truncation_symbol = "󰟐 :";
-      };
-      time = {
-        disabled = true;
-      };
-    };
-  };
-
   programs.fish = {
     enable = true;
     shellAbbrs = {
