@@ -17,6 +17,17 @@
       sha256 = "sha256-Q/uqz5P3nKSWcX+4tKA3b1u+AiNDmW0bJ5rMYlvTt+Y=";
     };
   };
+  sponge = {
+    pname = "sponge";
+    version = "1.1.0";
+    src = fetchFromGitHub {
+      owner = "meaningful-ooo";
+      repo = "sponge";
+      rev = "1.1.0";
+      fetchSubmodules = false;
+      sha256 = "sha256-MdcZUDRtNJdiyo2l9o5ma7nAX84xEJbGFhAVhK+Zm1w=";
+    };
+  };
   uni-macos = {
     pname = "uni-macos";
     version = "0.1.1";

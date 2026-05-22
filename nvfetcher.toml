@@ -6,3 +6,7 @@ fetch.url = "https://github.com/fiahfy/uni/releases/download/v$ver/Uni-$ver.dmg"
 [fish-na]
 src.github = "ryoppippi/fish-na"
 fetch.github = "ryoppippi/fish-na"
+
+[sponge]
+src.github = "meaningful-ooo/sponge"
+fetch.github = "meaningful-ooo/sponge"

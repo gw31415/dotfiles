@@ -129,6 +129,10 @@ in
         name = "fish-na";
         src = packageGroups.sources.fish-na.src;
       }
+      {
+        name = "sponge";
+        src = packageGroups.sources.sponge.src;
+      }
     ];
     shellInit = ''
       set fish_greeting
