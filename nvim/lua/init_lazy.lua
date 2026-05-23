@@ -119,7 +119,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.keymap.set('n', 'gra', function()
 			require 'actions-preview'.code_actions()
 		end, bufopts)
-		vim.keymap.set('n', 'gqae', function()
+		vim.keymap.set('n', 'gqal', function()
 				require 'conform'.format { async = true, lsp_format = 'fallback' }
 			end,
 			{ buffer = true }

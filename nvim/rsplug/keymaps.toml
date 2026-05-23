@@ -129,8 +129,11 @@ on_map = { ox = ["ic", "ac"] }
 with = "vim-textobj-user"
 [[plugins]]
 repo = "kana/vim-textobj-entire"
-on_map = { ox = ["ae", "ie"] }
+on_map = { ox = "al" }
 with = ["vim-textobj-user", "vim-operator-stay-cursor"]
+lua_before = "vim.g.textobj_entire_no_default_key_mappings = 1"
+lua_after = "vim.keymap.set({ 'o', 'x' }, 'al', '<Plug>(textobj-entire-a)')"
+
 [[plugins]]
 repo = "osyo-manga/vim-operator-stay-cursor"
 on_func = "operator#stay_cursor#wrapper" # TODO: Imprement this attribute
