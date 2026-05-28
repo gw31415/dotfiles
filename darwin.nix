@@ -96,6 +96,7 @@ in
       "keyboardcleantool"
       "macfuse"
       "macskk"
+      "macshot"
       # "microsoft-teams"
       "musicbrainz-picard"
       "puremac"
