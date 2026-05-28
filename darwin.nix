@@ -127,7 +127,7 @@ in
       "Keynote" = 409183694;
       "LINE" = 539883307;
       "Logic Pro" = 634148309;
-      "Mona" = 1659154653;
+      "Ice Cubes for Mastodon" = 6444915884;
       "Numbers" = 409203825;
       "Pages" = 409201541;
       "RunCat" = 1429033973;
