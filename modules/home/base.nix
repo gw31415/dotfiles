@@ -105,7 +105,7 @@ in
     shellAbbrs = {
       c = "claude";
       dcd = "cd ${homeManagerDirectory}";
-      g = "bit";
+      # g = "bit";
       gll = "lazygit";
       rp = "rsplug";
       sqlite3 = "litecli";
