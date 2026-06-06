@@ -106,6 +106,7 @@ in
       "slack"
       "smoothcsv"
       "ghostty"
+      "jordanbaird-ice"
       # "android-studio"
       # "container"
       # "cursor"
