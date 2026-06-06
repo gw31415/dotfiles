@@ -69,6 +69,7 @@ in
       "homebrew/services"
       "jorgelbg/tap"
       "arto-app/tap"
+      "anomalyco/tap"
       "macos-fuse-t/homebrew-cask"
     ];
     brews = [
@@ -99,6 +100,8 @@ in
       "macshot"
       # "microsoft-teams"
       "musicbrainz-picard"
+      "opencode"
+      "opencode-desktop"
       "puremac"
       "slack"
       "smoothcsv"

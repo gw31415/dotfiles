@@ -103,7 +103,6 @@ in
   programs.fish = {
     enable = true;
     shellAbbrs = {
-      c = "claude";
       dcd = "cd ${homeManagerDirectory}";
       # g = "bit";
       gll = "lazygit";
