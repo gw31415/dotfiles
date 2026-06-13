@@ -193,11 +193,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781333225,
-        "narHash": "sha256-zr55i8VdzjVbrEJIl2IOAYNr5fas+QWqiK/6nJBdMfY=",
+        "lastModified": 1781360197,
+        "narHash": "sha256-hgZ4n1GcFGiF7aic2cyXh4IqInZBxOXbDg8I58hbEEM=",
         "owner": "gw31415",
         "repo": "rsplug.nvim",
-        "rev": "a5dba23a852d7998192ec89e569a19f1d6549240",
+        "rev": "d2cc570d36764476006ad8af2e5732da7bfbb49e",
         "type": "github"
       },
       "original": {
