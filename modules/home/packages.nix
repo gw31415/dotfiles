@@ -84,7 +84,6 @@ rec {
     ctx.rsplug
     sccache
     tree-sitter
-    typst
     rustup
   ];
 
