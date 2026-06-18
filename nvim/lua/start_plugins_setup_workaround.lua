@@ -109,7 +109,7 @@ let g:silicon_options = {
 			vim.api.nvim_set_var('aioperator_opts', {
 				openai = {
 					api_key = os.getenv 'OPENROUTER_API_KEY',
-					model = 'openrouter/free',
+					model = 'deepseek/deepseek-v4-flash',
 					base_url = 'https://openrouter.ai/api/v1',
 				},
 			})
