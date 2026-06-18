@@ -6,6 +6,7 @@ idiomatic_version_file_enable_tools = ["python", "node"]
 aube = "latest"
 "gem:terminal-notifier" = { version = "latest", os = "macos" }
 # "github:bit-vcs/bit" = { version = "latest", os = ["macos", "linux-x64"] }
+"github:gw31415/commitgen" = { version = "latest", bin = "commitgen" }
 go = "1.25.5"
 # "go:github.com/kahing/goofys" = "0.20.0"
 node = { version = "latest", os = "macos" }

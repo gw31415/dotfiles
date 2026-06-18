@@ -156,7 +156,7 @@ let g:silicon_options = {
 			-- 後々こっちのほうが安そう
 			-- vim.g.commitgen_model = 'google/gemini-2.5-flash'
 			-- 今はクレジットを減らしたい
-			vim.g.commitgen_model = 'openrouter/auto'
+			vim.g.commitgen_model = 'openai/gpt-5.1-codex-mini'
 			vim.g.commitgen_api_key = os.getenv 'OPENROUTER_API_KEY'
 			vim.g.commitgen_base_url = 'https://openrouter.ai/api/v1'
 		end,
