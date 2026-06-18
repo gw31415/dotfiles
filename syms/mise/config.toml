@@ -12,5 +12,6 @@ node = { version = "latest", os = "macos" }
 "npm:fish-lsp" = "latest"
 "npm:takt" = "latest"
 "npm:trash-cli" = "latest"
+"pipx:git+https://github.com/gw31415/aiocr.git" = "latest"
 pnpm = "latest"
 usage = "2"
