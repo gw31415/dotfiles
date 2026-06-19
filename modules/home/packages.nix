@@ -34,6 +34,7 @@ rec {
     # external link を要求してビルドに失敗するため、unstable 側を使う。
     pkgs.direnv
     pkgs.nvfetcher
+    pkgs.ollama
     aria2
     asciinema
     bat
