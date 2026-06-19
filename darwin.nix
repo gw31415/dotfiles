@@ -119,7 +119,7 @@ in
       # "piphero"
       # "postman"
       # "secretive"
-      # "zoom"
+      "zoom"
 
       # Home Manager GUI apps
       # "alt-tab"
