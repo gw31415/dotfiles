@@ -84,6 +84,7 @@ in
       "xcode-build-server"
       "jorgelbg/tap/pinentry-touchid"
     ];
+    # メモ： MTG補助用AI - Cluely はCaskなし (https://cluely.com/)
     casks = [
       "arto"
       # "affinity"
