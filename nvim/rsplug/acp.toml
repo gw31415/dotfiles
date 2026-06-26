@@ -1,0 +1,16 @@
+[[plugins]]
+repo = "carlos-algms/agentic.nvim"
+on_map = { nxi = '<C-\\>' }
+lua_after = '''
+vim.keymap.set({ 'n', 'x', 'i' }, '<C-\\>', require 'agentic'.toggle, { desc = 'Toggle Agentic' })
+require 'agentic'.setup {
+	provider = 'hermes-acp',
+	acp_providers = {
+		['hermes-acp'] = {
+			name = 'Hermes Agent ACP',
+			command = 'hermes',
+			args = { 'acp' },
+		},
+	},
+}
+'''
