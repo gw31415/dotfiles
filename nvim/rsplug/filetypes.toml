@@ -167,11 +167,6 @@ vim.keymap.set({ 'n', 'x', 'i' }, '<C-\\>', require 'agentic'.toggle, { desc = '
 require 'agentic'.setup {
 	provider = 'opencode-acp',
 	acp_providers = {
-		['hermes-agent'] = {
-			name = 'Hermes Agent',
-			command = 'hermes',
-			args = { 'acp' },
-		}
 	}
 }
 '''
