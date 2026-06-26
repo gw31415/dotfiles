@@ -160,6 +160,23 @@ require 'flutter-tools'.setup {
 '''
 
 [[plugins]]
+repo = "carlos-algms/agentic.nvim"
+on_map = { nxi = '<C-\\>' }
+lua_after = '''
+vim.keymap.set({ 'n', 'x', 'i' }, '<C-\\>', require 'agentic'.toggle, { desc = 'Toggle Agentic' })
+require 'agentic'.setup {
+	provider = 'opencode-acp',
+	acp_providers = {
+		['hermes-agent'] = {
+			name = 'Hermes Agent',
+			command = 'hermes',
+			args = { 'acp' },
+		}
+	}
+}
+'''
+
+[[plugins]]
 repo = "MeanderingProgrammer/render-markdown.nvim"
 on_ft = ["markdown", "mdx", "mstdn"]
 lua_after = '''
