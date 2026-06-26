@@ -161,7 +161,7 @@ require 'flutter-tools'.setup {
 
 [[plugins]]
 repo = "MeanderingProgrammer/render-markdown.nvim"
-on_ft = ["markdown", "mdx", "mstdn", "Avante"]
+on_ft = ["markdown", "mdx", "mstdn"]
 lua_after = '''
 require 'render-markdown'.setup {
 	heading = {
@@ -174,7 +174,7 @@ require 'render-markdown'.setup {
 	code = {
 		width = 'block',
 	},
-	file_types = { 'markdown', 'mdx', 'mstdn', 'Avante' },
+	file_types = { 'markdown', 'mdx', 'mstdn' },
 }
 '''
 
