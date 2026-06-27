@@ -38,6 +38,7 @@ in
     "${configHome}/direnv".source = managedSource "syms/direnv";
     "${configHome}/ghostty".source = managedSource "syms/ghostty";
     "${configHome}/lazygit".source = managedSource "syms/lazygit";
+    "${configHome}/commitgen".source = managedSource "syms/commitgen";
     "${configHome}/mise".source = managedSource "syms/mise";
     "${configHome}/nvim/lua".source = managedSource "nvim/lua";
     "${configHome}/nvim/after".source = managedSource "nvim/after";

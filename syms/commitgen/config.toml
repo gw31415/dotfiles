@@ -1,0 +1,7 @@
+model     = "openai/gpt-5.1-codex-mini"
+count     = 5
+max_chars = 50
+base_url  = "https://openrouter.ai/api/v1"
+
+[env]
+api_key  = "OPENROUTER_API_KEY"
