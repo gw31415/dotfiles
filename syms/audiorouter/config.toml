@@ -11,4 +11,4 @@ from = "VT-4"
 to = "BlackHole 2ch"
 from_channels = [3, 4]
 to_channels = [1, 2]
-# gain_db = 0.0
+gain_db = 15
