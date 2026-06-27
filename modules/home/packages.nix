@@ -82,7 +82,6 @@ rec {
 
     # Development tools
     ctx.dot
-    ctx.rsplug
     sccache
     tree-sitter
     rustup
