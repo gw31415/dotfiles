@@ -8,7 +8,12 @@ merge = false                  # denops の autoload は他プラグインと me
 repo = "lambdalisue/vim-gin"
 start = true
 depends = ["denops.vim"]
-lua_after = "vim.g.gin_proxy_apply_without_confirm = 1"
+lua_after = '''
+vim.g.gin_proxy_apply_without_confirm = 1
+vim.g.gin_proxy_editor_opener = 'bo sp'
+vim.keymap.set('n', '<c-g>c', '<cmd>Gin commit<cr>', { silent = true })
+vim.keymap.set('n', '<c-g>C', '<cmd>Gin commit --amend<cr>', { silent = true })
+'''
 
 [[plugins]]
 repo = "lambdalisue/vim-kensaku"
@@ -93,6 +98,9 @@ lua_after = '''
 vim.g.commitgen_model = 'openai/gpt-5.1-codex-mini'
 vim.g.commitgen_api_key = os.getenv 'OPENROUTER_API_KEY'
 vim.g.commitgen_base_url = 'https://openrouter.ai/api/v1'
+
+vim.keymap.set('n', '<c-g>p', function() require 'commitgen'.paste {} end)
+vim.keymap.set('n', '<c-g>P', function() require 'commitgen'.paste { after = false } end)
 '''
 
 # 以下、Linuxの環境で動作しなかったもの。

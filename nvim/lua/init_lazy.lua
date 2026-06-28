@@ -71,15 +71,18 @@ vim.api.nvim_create_autocmd({ 'VimEnter', 'DirChanged', 'BufEnter' }, {
 	end,
 })
 
-if vim.g.neovide then
-	vim.g.neovide_position_animation_length = 0
-	vim.g.neovide_cursor_animation_length = 0.00
-	vim.g.neovide_cursor_trail_size = 0
-	vim.g.neovide_cursor_animate_in_insert_mode = false
-	vim.g.neovide_cursor_animate_command_line = false
-	vim.g.neovide_scroll_animation_far_lines = 0
-	vim.g.neovide_scroll_animation_length = 0.00
-end
+vim.api.nvim_create_user_command('Restart', function()
+	local cache = vim.fn.stdpath 'cache' .. '/nvim-restart-session.vim'
+	vim.cmd('mksession! ' .. vim.fn.fnameescape(cache))
+	vim.cmd('restart source ' .. vim.fn.fnameescape(cache))
+end, {})
+vim.keymap.set('n', 'zr', '<cmd>Restart<cr>')
+
+vim.api.nvim_create_user_command('TSReinstall', function()
+	local ts_installed_list = require 'nvim-treesitter'.get_installed()
+	require 'nvim-treesitter'.uninstall(ts_installed_list):wait(180000)
+	require 'nvim-treesitter'.install(ts_installed_list, { summary = true })
+end, {})
 
 -- 空行での編集開始時に自動でインデント
 for _, key in ipairs { 'a', 'A' } do
@@ -87,6 +90,31 @@ for _, key in ipairs { 'a', 'A' } do
 		return vim.fn.empty(vim.fn.getline('.')) == 1 and '"_cc' or key
 	end, { expr = true })
 end
+
+-- 残りのウィンドウが特殊ウィンドウのみである場合、終了する
+-- https://zenn.dev/vim_jp/articles/ff6cd224fab0c7
+vim.api.nvim_create_autocmd('QuitPre', {
+	callback = function()
+		-- 現在のウィンドウ番号を取得
+		local current_win = vim.api.nvim_get_current_win()
+		-- すべてのウィンドウをループして調べる
+		for _, win in ipairs(vim.api.nvim_list_wins()) do
+			-- カレント以外を調査
+			if win ~= current_win then
+				local buf = vim.api.nvim_win_get_buf(win)
+				-- buftypeが空文字（通常のバッファ）があればループ終了
+				if vim.bo[buf].buftype == '' then
+					return
+				end
+			end
+		end
+		-- ここまで来たらカレント以外がすべて特殊ウィンドウということなので
+		-- カレント以外をすべて閉じる
+		vim.cmd.only({ bang = true })
+		-- この後、ウィンドウ1つの状態でquitが実行されるので、Vimが終了する
+	end,
+	desc = 'Close all special buffers and quit Neovim',
+})
 
 --------------------------------------------------------------------------------
 -- Global Mappings/Configs used in LSP
@@ -131,86 +159,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 -- fzyselect.vim - Custom tweaks
 --------------------------------------------------------------------------------
 
----@diagnostic disable-next-line: duplicate-set-field
 vim.defer_fn(function()
 	vim.ui.select = function(...) return require 'fzyselect'.start(...) end
 end, 1000)
-
--- git ls-files
-vim.keymap.set('n', '<c-p>', function()
-	local res = vim.system({ 'sh', '-c', [[
-		(
-			git ls-files
-			git ls-files --others --exclude-standard
-		) | sort -u
-	]] }, { text = true }):wait()
-	if res.code ~= 0 then
-		vim.notify(vim.fn.trim(res.stderr), vim.log.levels.ERROR, { title = 'fzyselect: git ls-files' })
-	else
-		require 'fzyselect'.start(vim.fn.split(res.stdout, '\n'),
-			{ prompt = 'git ls-files: <Enter> to edit' },
-			function(path)
-				if path then vim.cmd.edit(path) end
-			end)
-	end
-end)
-
--- Update
-vim.api.nvim_create_user_command('PackUpdate', function() vim.pack.update() end, {})
-
-vim.api.nvim_create_user_command('TSReinstall', function()
-	local ts_installed_list = require 'nvim-treesitter'.get_installed()
-	require 'nvim-treesitter'.uninstall(ts_installed_list):wait(180000)
-	require 'nvim-treesitter'.install(ts_installed_list, { summary = true })
-end, {})
-
-vim.g.gin_proxy_editor_opener = 'bo sp'
-vim.keymap.set('n', '<c-g>p', function() require 'commitgen'.paste {} end)
-vim.keymap.set('n', '<c-g>P', function() require 'commitgen'.paste { after = false } end)
-vim.keymap.set('n', '<c-g>c', '<cmd>Gin commit<cr>', { silent = true })
-vim.keymap.set('n', '<c-g>C', '<cmd>Gin commit --amend<cr>', { silent = true })
-
-vim.api.nvim_create_user_command('Restart', function()
-	local cache = vim.fn.stdpath 'cache' .. '/nvim-restart-session.vim'
-	vim.cmd('mksession! ' .. vim.fn.fnameescape(cache))
-	vim.cmd('restart source ' .. vim.fn.fnameescape(cache))
-end, {})
-vim.keymap.set('n', 'zr', '<cmd>Restart<cr>')
-
--- 残りのウィンドウが特殊ウィンドウのみである場合、終了する
--- https://zenn.dev/vim_jp/articles/ff6cd224fab0c7
-vim.api.nvim_create_autocmd('QuitPre', {
-	callback = function()
-		-- 現在のウィンドウ番号を取得
-		local current_win = vim.api.nvim_get_current_win()
-		-- すべてのウィンドウをループして調べる
-		for _, win in ipairs(vim.api.nvim_list_wins()) do
-			-- カレント以外を調査
-			if win ~= current_win then
-				local buf = vim.api.nvim_win_get_buf(win)
-				-- buftypeが空文字（通常のバッファ）があればループ終了
-				if vim.bo[buf].buftype == '' then
-					return
-				end
-			end
-		end
-		-- ここまで来たらカレント以外がすべて特殊ウィンドウということなので
-		-- カレント以外をすべて閉じる
-		vim.cmd.only({ bang = true })
-		-- この後、ウィンドウ1つの状態でquitが実行されるので、Vimが終了する
-	end,
-	desc = 'Close all special buffers and quit Neovim',
-})
-
--- local ok, extui = pcall(require, 'vim._extui')
--- if ok then
--- 	extui.enable({
--- 		enable = true,
--- 		msg = {
--- 			pos = 'cmd',
--- 			box = {
--- 				timeout = 5000,
--- 			},
--- 		},
--- 	})
--- end

@@ -1,7 +1,3 @@
-# [[plugins]]
-# start = true
-# repo = "vim-denops/denops.vim"
-
 [[plugins]]
 start = true
 repo = "navarasu/onedark.nvim"
@@ -237,10 +233,29 @@ depends = "nui.nvim"
 
 [[plugins]]
 repo = "gw31415/fzyselect-lines.nvim"
-on_map = { n = "g/" }
+on_map = { n = ["g/", "<c-p>"] }
 depends = "fzyselect.vim"
 lua_after = '''
 vim.keymap.set('n', 'g/', function() require 'fzyselect-lines'.open() end, { desc = 'Fuzzy-Find the line and jump' })
+
+-- git ls-files
+vim.keymap.set('n', '<c-p>', function()
+	local res = vim.system({ 'sh', '-c', [[
+		(
+			git ls-files
+			git ls-files --others --exclude-standard
+		) | sort -u
+	]] }, { text = true }):wait()
+	if res.code ~= 0 then
+		vim.notify(vim.fn.trim(res.stderr), vim.log.levels.ERROR, { title = 'fzyselect: git ls-files' })
+	else
+		require 'fzyselect'.start(vim.fn.split(res.stdout, '\n'),
+			{ prompt = 'git ls-files: <Enter> to edit' },
+			function(path)
+				if path then vim.cmd.edit(path) end
+			end)
+	end
+end)
 '''
 
 [[plugins]]

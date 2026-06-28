@@ -2,9 +2,6 @@ vim.loader.enable()
 
 dofile(vim.fn.expand '~/.cache/rsplug/init.lua')
 
-require 'onedark'.setup { transparent = true, dark = true }
-vim.cmd.colorscheme 'onedark'
-
 ----------------------------
 -- Disable built-in plugins
 ----------------------------
