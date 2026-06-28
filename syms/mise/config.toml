@@ -8,8 +8,8 @@ aube = "latest"
 # "github:bit-vcs/bit" = { version = "latest", os = ["macos", "linux-x64"] }
 "github:gw31415/commitgen" = { version = "latest", bin = "commitgen" }
 "github:gw31415/rsplug.nvim" = { version = "latest", bin = "rsplug" }
-"github:gw31415/audiorouter" = { version = "latest", bin = "audiorouter" }
-go = "1.25.5"
+"github:gw31415/audiorouter" = "latest"
+go = "1.26.4"
 # "go:github.com/kahing/goofys" = "0.20.0"
 node = { version = "latest", os = "macos" }
 "npm:fish-lsp" = "latest"
