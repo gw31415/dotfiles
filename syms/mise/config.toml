@@ -13,7 +13,7 @@ go = "1.25.5"
 # "go:github.com/kahing/goofys" = "0.20.0"
 node = { version = "latest", os = "macos" }
 "npm:fish-lsp" = "latest"
-"npm:takt" = "latest"
+# "npm:takt" = "latest"
 "npm:trash-cli" = "latest"
 "pipx:git+https://github.com/gw31415/aiocr.git" = "latest"
 pnpm = "latest"
