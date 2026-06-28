@@ -1,7 +1,6 @@
 vim.loader.enable()
 
-vim.opt.packpath:prepend '~/.cache/rsplug'
-require 'start_plugins_setup_workaround'.setup()
+dofile(vim.fn.expand '~/.cache/rsplug/init.lua')
 
 require 'onedark'.setup { transparent = true, dark = true }
 vim.cmd.colorscheme 'onedark'

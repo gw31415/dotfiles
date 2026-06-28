@@ -191,7 +191,7 @@ vim.keymap.set('n', 'bb', function() require 'dap'.toggle_breakpoint() end, { de
 repo = "nvim-neotest/nvim-nio"
 [[plugins]]
 repo = "rcarriga/nvim-dap-ui"
-with = ["nvim-nio", "nvim-dap-virtual-text"]
+depends = ["nvim-nio", "nvim-dap-virtual-text"]
 [[plugins]]
 repo = "theHamsta/nvim-dap-virtual-text"
 lua_after = '''
@@ -220,7 +220,7 @@ lua_after = "require 'colorful-menu'.setup {}"
 
 [[plugins]]
 repo = "aznhe21/actions-preview.nvim"
-with = "nui.nvim"
+depends = "nui.nvim"
 lua_after = '''
 local hl = require 'actions-preview.highlight'
 require 'actions-preview'.setup {
@@ -233,19 +233,19 @@ require 'actions-preview'.setup {
 
 [[plugins]]
 repo = "gw31415/fzyselect-nui-opener.nvim"
-with = "nui.nvim"
+depends = "nui.nvim"
 
 [[plugins]]
 repo = "gw31415/fzyselect-lines.nvim"
 on_map = { n = "g/" }
-with = "fzyselect.vim"
+depends = "fzyselect.vim"
 lua_after = '''
 vim.keymap.set('n', 'g/', function() require 'fzyselect-lines'.open() end, { desc = 'Fuzzy-Find the line and jump' })
 '''
 
 [[plugins]]
 repo = "gw31415/fzyselect.vim"
-with = "fzyselect-nui-opener.nvim"
+depends = "fzyselect-nui-opener.nvim"
 lua_after = '''
 vim.g.fzyselect_opener = require 'fzyselect-nui-opener'
 
@@ -281,7 +281,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
 [[plugins]]
 repo = "gw31415/bufmanager.nvim"
-with = "fzyselect.vim"
+depends = "fzyselect.vim"
 on_event = "BufAdd"
 lua_after = '''
 vim.keymap.set('n', 'gb', function()
@@ -301,7 +301,7 @@ end)
 repo = "gw31415/deepl-commands.nvim"
 on_event = "CmdlineEnter"
 on_map = { n = "c<c-l>" }
-with = ["deepl.vim", "fzyselect.vim"]
+depends = ["deepl.vim", "fzyselect.vim"]
 lua_after = '''
 require 'deepl-commands'.setup {
 	selector_func = function(...) require 'fzyselect'.start(...) end,
@@ -311,7 +311,7 @@ vim.keymap.set('n', 'c<c-l>', '<cmd>DeepLTarget<cr>', { desc = 'Select the DeepL
 
 [[plugins]]
 repo = "gw31415/deepl-operator.vim"
-with = "deepl.vim"
+depends = "deepl.vim"
 on_map = { nx = ["cl", "cL"] }
 lua_after = '''
 vim.keymap.set({ 'n', 'x' }, 'cl', '<Plug>(deepl-replace)', { desc = 'Replace with DeepL translation' })
@@ -577,7 +577,7 @@ lua_after = "require 'null-ls'.setup()"
 repo = "williamboman/mason-lspconfig.nvim"
 [[plugins]]
 repo = "jay-babu/mason-null-ls.nvim"
-with = ["mason.nvim", "none-ls.nvim"]
+depends = ["mason.nvim", "none-ls.nvim"]
 on_event = "VeryLazy"
 lua_after = '''
 require 'mason-null-ls'.setup {

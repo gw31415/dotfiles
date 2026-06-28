@@ -15,114 +15,101 @@ require 'oil'.setup {
 
 [[plugins]]
 repo = "A7Lavinraj/fyler.nvim@stable"
-with = "mini.icons"
+depends = "mini.icons"
 on_cmd = "Fyler"
 on_map = { n = '<c-n>' }
 lua_after = '''
 require 'fyler'.setup {
-	views = {
-		finder = {
-			icon = {
-				directory_collapsed = "",
-				directory_expanded = "",
+	extensions = { trash = { enabled = true } },
+	integrations = { icon = 'mini_icons' },
+	mappings = {
+		n = {
+			-- システムデフォルトアプリで開く
+			gx = {
+				action = function(finder)
+					local entry = require('fyler.finder').parse_cursor_line(finder)
+					if entry then vim.ui.open(entry.path) end
+				end,
 			},
-			delete_to_trash = true,
-			mappings = {
-				gx = function(finder)
-					-- Open with system default application
-					vim.ui.open(finder:cursor_node_entry().path)
+			-- 開く（ディレクトリなら展開切替）
+			["<CR>"] = { action = 'select', args = { close = true } },
+			-- 閉じる
+			["<Esc>"] = { action = 'close' },
+			-- 全折叠
+			zM = {
+				action = function(finder)
+					-- 全ディレクトリを再帰的に折りたたむ
+					finder.state:walk(function(node)
+						if node.value then
+							local entry = finder.state.store[node.value]
+							if entry and entry.type == 'directory' then
+								finder.state:toggle(entry.path, false)
+							end
+						end
+					end)
+					finder:refresh({ recursive = true })
 				end,
-				["<CR>"] = "Select",
-				["<Esc>"] = "CloseView",
-				zM = "CollapseAll",
-				zc = "CollapseNode",
-				za = function(finder)
-					-- Toggle node
-					local entry = finder:cursor_node_entry()
-					if entry:isdir() then
-						finder:exec_action "n_select"
+			},
+			-- カーソルノードを折りたたむ
+			zc = { action = 'shrink' },
+			-- カーソルノードを展開/折りたたみ（トグル）
+			za = {
+				action = function(finder)
+					local entry = require('fyler.finder').parse_cursor_line(finder)
+					if not entry then return end
+					if entry.type == 'directory' then
+						finder.state:toggle(entry.path)
+						finder:refresh({ recursive = true })
 					else
-						finder:exec_action "n_collapse_node"
+						finder.state:toggle(entry.path, false)
+						finder:refresh({ target_path = vim.fn.fnamemodify(entry.path, ':h') })
 					end
 				end,
-				["-"] = "GotoParent",
-				gf = function(finder)
-					-- Open file or goto directory
-					local entry = finder:cursor_node_entry()
-					if entry:isdir() then
-						finder:exec_action "n_goto_node"
+			},
+			-- 親ディレクトリへ移動
+			["-"] = { action = 'visit', args = { parent = true } },
+			-- ファイルを開く / ディレクトリへ移動
+			gf = {
+				action = function(finder)
+					local entry = require('fyler.finder').parse_cursor_line(finder)
+					if not entry then return end
+					if entry.type == 'directory' then
+						finder:visit({ cursor = true })
 					else
-						finder:exec_action "n_select"
+						finder:select({ close = true })
 					end
 				end,
-				["="] = "GotoCwd",
-				cx = "GotoNode",
-				-- ["<C-p>"] = function(self)
-				-- 	local current_node = self:cursor_node_entry()
-				-- 	local stat = vim.uv.fs_stat(current_node.path)
-				-- 	if not stat then
-				-- 		return
-				-- 	end
-				-- 	if stat.size == 0 then
-				-- 		vim.print("empty file.")
-				-- 		return
-				-- 	end
-				-- 	local buf = vim.api.nvim_create_buf(false, true)
-				-- 	local lines = vim.fn.readfile(current_node.path)
-				-- 	vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-				--
-				-- 	-- fyler のフローティングウィンドウの情報を取得
-				-- 	local current_win = vim.api.nvim_get_current_win()
-				-- 	local win_config = vim.api.nvim_win_get_config(current_win)
-				--
-				-- 	local opts = {
-				-- 		relative = "editor",
-				-- 		-- プレビュー画面は fyler のフローティングウィンドウの高さなどを基準に表示する
-				-- 		width = math.floor(win_config.width / 2),
-				-- 		height = math.floor(win_config.height),
-				-- 		row = math.floor(win_config.row),
-				-- 		col = math.floor(win_config.col + win_config.width / 2),
-				-- 		style = "minimal",
-				-- 		border = "rounded"
-				-- 	}
-				-- 	vim.api.nvim_open_win(buf, true, opts)
-				-- 	vim.keymap.set('n', 'q', '<cmd>close<CR>', {
-				-- 		buffer = buf,
-				-- 		silent = true,
-				-- 		nowait = true,
-				-- 	})
-				-- 	vim.keymap.set('n', '<C-p>', '<cmd>close<CR>', {
-				-- 		buffer = buf,
-				-- 		silent = true,
-				-- 		nowait = true,
-				-- 	})
-				-- end,
+			},
+			-- カレントディレクトリへ移動
+			["="] = {
+				action = function(finder)
+					finder:visit({ path = vim.fn.getcwd() })
+				end,
+			},
+			-- カーソルノードへ移動
+			cx = { action = 'visit', args = { cursor = true } },
 
-				-- Disabled mappings
-				q = false,
-				["<C-t>"] = false,
-				-- ["<C-t>"] = "SelectTab",
-				["|"] = false,
-				-- ["|"] = "SelectVSplit",
-				-- ["-"] = "SelectSplit",
-				["^"] = false,
-				["."] = false,
-				["#"] = false,
-				["<BS>"] = false,
-			}
-		}
+			-- 無効化するデフォルトマッピング
+			q = { disabled = true },
+			["<C-t>"] = { disabled = true },
+			["|"] = { disabled = true },
+			["^"] = { disabled = true },
+			["."] = { disabled = true },
+			["#"] = { disabled = true },
+			["<BS>"] = { disabled = true },
+		},
 	},
 }
 
 vim.api.nvim_create_autocmd('FileType', { pattern = 'fern', command = 'setl sw=0' })
-vim.keymap.set('n', '<c-n>', function() require 'fyler'.toggle { kind = "float" } end, { desc = "Toggle Fyler View" })
+vim.keymap.set('n', '<c-n>', function() require 'fyler'.toggle { kind = "floating" } end, { desc = "Toggle Fyler View" })
 '''
 
 [[plugins]]
 repo = "lambdalisue/nerdfont.vim"
 [[plugins]]
 repo = "lambdalisue/fern-renderer-nerdfont.vim"
-with = "nerdfont.vim"
+depends = "nerdfont.vim"
 [[plugins]]
 repo = "lambdalisue/fern-git-status.vim"
 [[plugins]]
@@ -134,7 +121,7 @@ repo = "andykog/fern-highlight.vim"
 
 [[plugins]]
 repo = "lambdalisue/vim-fern"
-with = [
+depends = [
 	"fern-renderer-nerdfont.vim",
 	"fern-git-status.vim",
 	"fern-mapping-git.vim",

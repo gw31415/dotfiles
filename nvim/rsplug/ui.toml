@@ -90,7 +90,7 @@ on_event = "VimEnter"
 [[plugins]]
 repo = "kevinhwang91/nvim-ufo"
 on_event = ["BufAdd", "VimEnter", "UIEnter"]
-with = ["nvim-treesitter", "promise-async"]
+depends = ["nvim-treesitter", "promise-async"]
 lua_after = '''
 vim.o.foldcolumn = '2'
 vim.o.foldlevel = 99

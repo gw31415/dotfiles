@@ -15,7 +15,7 @@ repo = "disrupted/blink-cmp-conventional-commits"
 
 [[plugins]]
 repo = "saghen/blink.cmp@v1.*"
-with = [
+depends = [
 	"blink-copilot",
 	"blink-cmp-git",
 	"blink-cmp-conventional-commits",
