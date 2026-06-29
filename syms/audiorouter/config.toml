@@ -3,11 +3,17 @@ device = "BlackHole 2ch"
 limiter = true
 
 [[devices]]
-name = "mic"
 device = "MacBook Airのマイク"
+name = "mic"
 
 [[routes]]
 from = "VT-4"
+from_channels = [
+    3,
+    4,
+]
 to = "BlackHole 2ch"
-from_channels = [3, 4]
-to_channels = [1, 2]
+to_channels = [
+    1,
+    2,
+]
