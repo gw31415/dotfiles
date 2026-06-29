@@ -18,3 +18,4 @@ node = { version = "latest", os = "macos" }
 "pipx:git+https://github.com/gw31415/aiocr.git" = "latest"
 pnpm = "latest"
 usage = "latest"
+"npm:gnhf" = "latest"
