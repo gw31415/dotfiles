@@ -90,6 +90,7 @@ in
       # "affinity"
       "anki"
       # "brave-browser"
+      "blackhole-2ch"
       "codex"
       "chatgpt"
       "discord"
