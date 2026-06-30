@@ -1,10 +1,10 @@
 [[devices]]
-device = "BlackHole 2ch"
-limiter = true
-
-[[devices]]
 device = "MacBook Airのマイク"
 name = "mic"
+
+[[devices]]
+device = "BlackHole 2ch"
+limiter = true
 
 [[routes]]
 from = "VT-4"
