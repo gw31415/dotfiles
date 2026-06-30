@@ -19,3 +19,5 @@ node = { version = "latest", os = "macos" }
 pnpm = "latest"
 usage = "latest"
 "npm:gnhf" = "latest"
+"github:isak102/neowright" = "latest"
+"aqua:tak848/ccgate" = "latest"
