@@ -71,6 +71,7 @@ in
       "arto-app/tap"
       "anomalyco/tap"
       "macos-fuse-t/homebrew-cask"
+      "vorssaint/tap"
     ];
     brews = [
       "openssl@3"
@@ -94,13 +95,13 @@ in
       "codex"
       "chatgpt"
       "discord"
+      "dockdoor"
       # "figma"
       "gnucash"
       "keybase"
-      "keyboardcleantool"
       "macfuse"
       "macskk"
-      "macshot"
+      # "macshot" # QWERTY以外でショートカットキーが異なる不具合
       # "microsoft-teams"
       "musicbrainz-picard"
       "opencode-desktop"
@@ -110,6 +111,7 @@ in
       "google-chrome"
       "ghostty"
       "jordanbaird-ice"
+      "vorssaint"
       # "android-studio"
       # "container"
       # "cursor"
@@ -124,7 +126,6 @@ in
       "zoom"
 
       # Home Manager GUI apps
-      # "alt-tab"
       # "microsoft-auto-update"
       # "orbstack"
     ];

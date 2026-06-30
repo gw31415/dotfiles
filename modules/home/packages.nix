@@ -88,7 +88,6 @@ rec {
   ];
 
   darwinPkgs = with pkgs-stable; [
-    pkgs.alt-tab-macos
     cocoapods
     container
     uniMacos
