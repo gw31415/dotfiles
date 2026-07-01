@@ -83,8 +83,7 @@ vim.api.nvim_create_autocmd("FileType", {
 '''
 
 [[plugins]]
-repo = "HiPhish/rainbow-delimiters.nvim"
-# repo = "https://gitlab.com/HiPhish/rainbow-delimiters.nvim" # TODO: URL直接入力できるようにする
+repo = "https://gitlab.com/HiPhish/rainbow-delimiters.nvim"
 on_event = "VimEnter"
 
 [[plugins]]
