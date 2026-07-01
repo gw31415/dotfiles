@@ -65,7 +65,7 @@ require 'img-clip'.setup {
 
 [[plugins]]
 repo = "chomosuke/term-edit.nvim"
-lua_after = "require 'term-edit'.setup{ prompt_end = '%3 ' }"
+lua_after = "require 'term-edit'.setup { prompt_end = '%3 ' }"
 on_event = "TermOpen"
 
 [[plugins]]

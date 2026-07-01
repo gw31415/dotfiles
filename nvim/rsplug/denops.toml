@@ -7,7 +7,7 @@ merge = false                  # denops の autoload は他プラグインと me
 [[plugins]]
 repo = "lambdalisue/vim-gin"
 start = true
-depends = ["denops.vim"]
+depends = "denops.vim"
 lua_after = '''
 vim.g.gin_proxy_apply_without_confirm = 1
 vim.g.gin_proxy_editor_opener = 'bo sp'
@@ -18,7 +18,7 @@ vim.keymap.set('n', '<c-g>C', '<cmd>Gin commit --amend<cr>', { silent = true })
 [[plugins]]
 repo = "lambdalisue/vim-kensaku"
 start = true
-depends = ["denops.vim"]
+depends = "denops.vim"
 lua_after = "vim.call('kensaku#set_roman_table', require 'dvorakjp'.kensaku)"
 
 [[plugins]]
@@ -36,7 +36,7 @@ vim.g.fuzzy_motion_matchers = { 'fzf', 'kensaku' }
 [[plugins]]
 repo = "gw31415/denops-aioperator.nvim"
 start = true
-depends = ["denops.vim"]
+depends = "denops.vim"
 lua_after = '''
 vim.api.nvim_set_var('aioperator_opts', {
 	openai = {
@@ -54,7 +54,7 @@ end, { expr = true })
 [[plugins]]
 repo = "vim-skk/skkeleton"
 start = true
-depends = ["denops.vim"]
+depends = "denops.vim"
 lua_after = '''
 vim.keymap.set({ 'i', 'c', 't' }, '<C-j>', '<Plug>(skkeleton-enable)')
 
@@ -85,12 +85,12 @@ vim.call('skkeleton#register_kanatable', 'rom', require 'dvorakjp'.skkeleton)
 [[plugins]]
 repo = "lambdalisue/vim-guise"
 start = true
-depends = ["denops.vim"]
+depends = "denops.vim"
 
 [[plugins]]
 repo = "gw31415/denops-commitgen.vim"
 start = true
-depends = ["denops.vim"]
+depends = "denops.vim"
 lua_after = '''
 -- 後々こっちのほうが安そう
 -- vim.g.commitgen_model = 'google/gemini-2.5-flash'
