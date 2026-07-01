@@ -103,6 +103,7 @@ in
       "macskk"
       # "macshot" # QWERTY以外でショートカットキーが異なる不具合
       # "microsoft-teams"
+      "music-decoy"
       "musicbrainz-picard"
       "opencode-desktop"
       "puremac"
