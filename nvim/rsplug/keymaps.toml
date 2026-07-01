@@ -130,13 +130,13 @@ depends = "vim-textobj-user"
 [[plugins]]
 repo = "kana/vim-textobj-entire"
 on_map = { ox = "al" }
-depends = ["vim-textobj-user", "vim-operator-stay-cursor"]
+depends = "vim-textobj-user"
 lua_before = "vim.g.textobj_entire_no_default_key_mappings = 1"
 lua_after = "vim.keymap.set({ 'o', 'x' }, 'al', '<Plug>(textobj-entire-a)')"
 
 [[plugins]]
 repo = "osyo-manga/vim-operator-stay-cursor"
-on_func = "operator#stay_cursor#wrapper" # TODO: Imprement this attribute
+on_func = "operator#stay_cursor#wrapper"
 depends = "vim-operator-user"
 on_map = { nx = "gq" }
 lua_after = '''
