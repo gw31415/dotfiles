@@ -25,7 +25,7 @@ repo = "sirasagi62/tinysegmenter.nvim"
 
 [[plugins]]
 repo = "gw31415/deepl.vim"
-lua_after = '''
+lua_before = '''
 vim.api.nvim_set_var('deepl_authkey', os.getenv('DEEPL_API_KEY'))
 vim.api.nvim_set_var('deepl_target_lang', 'EN')
 '''
