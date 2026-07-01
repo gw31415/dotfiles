@@ -105,7 +105,7 @@ in
       # "microsoft-teams"
       "music-decoy"
       "musicbrainz-picard"
-      "opencode-desktop"
+      # "opencode-desktop"
       "puremac"
       "slack"
       "smoothcsv"
