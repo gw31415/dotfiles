@@ -66,7 +66,7 @@ require 'lualine'.setup {
 [[plugins]]
 repo = "nvim-treesitter/nvim-treesitter@main"
 on_event = "VimEnter"
-lua_build = '''
+lua_post_update = '''
 local ts_installed_list = require 'nvim-treesitter'.get_installed()
 require 'nvim-treesitter'.uninstall(ts_installed_list):wait(180000)
 require 'nvim-treesitter'.install(ts_installed_list, { summary = true }):wait(180000)
