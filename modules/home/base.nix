@@ -85,7 +85,7 @@ in
         mergiraf.driver = "mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L";
       };
       init.defaultBranch = "main";
-      commit.gpgSign = target != "linux-container";
+      # commit.gpgSign = target != "linux-container";
       user = {
         signingKey = "B7E2A136";
         name = "gw31415";
