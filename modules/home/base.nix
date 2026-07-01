@@ -85,9 +85,11 @@ in
         mergiraf.driver = "mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L";
       };
       init.defaultBranch = "main";
-      # commit.gpgSign = target != "linux-container";
+      commit.gpgSign = target != "linux-container";
+      tag.gpgSign = true;
+      gpg.format = "openpgp";
       user = {
-        signingKey = "B7E2A136";
+        signingKey = "CF3AE17DB7E2A136";
         name = "gw31415";
         email = "24710985+gw31415@users.noreply.github.com";
       };
