@@ -3,6 +3,10 @@ src.github = "fiahfy/uni"
 src.prefix = "v"
 fetch.url = "https://github.com/fiahfy/uni/releases/download/v$ver/Uni-$ver.dmg"
 
+[herdr_editor]
+src.github = "gw31415/herdr_editor.fish"
+fetch.github = "gw31415/herdr_editor.fish"
+
 [fish-na]
 src.github = "ryoppippi/fish-na"
 fetch.github = "ryoppippi/fish-na"

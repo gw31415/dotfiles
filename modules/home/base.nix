@@ -137,6 +137,10 @@ in
         name = "sponge";
         src = packageGroups.sources.sponge.src;
       }
+      {
+        name = "herdr_editor";
+        src = packageGroups.sources.herdr_editor.src;
+      }
     ];
     shellInit = ''
       set fish_greeting

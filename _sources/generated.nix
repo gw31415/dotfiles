@@ -17,6 +17,17 @@
       sha256 = "sha256-Q/uqz5P3nKSWcX+4tKA3b1u+AiNDmW0bJ5rMYlvTt+Y=";
     };
   };
+  herdr_editor = {
+    pname = "herdr_editor";
+    version = "v0.1.0";
+    src = fetchFromGitHub {
+      owner = "gw31415";
+      repo = "herdr_editor.fish";
+      rev = "v0.1.0";
+      fetchSubmodules = false;
+      sha256 = "sha256-G/+aZ74YL5IN8n4UDM0Gvk7sGaZVNjOTESCDeh0dzMA=";
+    };
+  };
   sponge = {
     pname = "sponge";
     version = "1.1.0";

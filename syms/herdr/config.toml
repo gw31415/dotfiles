@@ -18,5 +18,13 @@ channel = "preview"
 [keys]
 prefix = "super+b"
 
+# Compose text (e.g. Japanese via SKK) in a small nvim split and send it to the
+# previously focused pane when nvim is saved-and-quit (:wq). See `herdr_editor`.
+[[keys.command]]
+key = "prefix+i"
+type = "shell"
+command = "fish -c herdr_editor"
+description = "compose text in nvim and send to the previous pane"
+
 [experimental]
 kitty_graphics = true
