@@ -17,3 +17,6 @@ channel = "preview"
 
 [keys]
 prefix = "super+b"
+
+[experimental]
+kitty_graphics = true
