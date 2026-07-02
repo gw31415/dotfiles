@@ -1,22 +1,47 @@
-cursor-style-blink = false
+##############
+# UI
+##############
 font-family = Hackgen Console NF
 font-size = 13
-mouse-hide-while-typing = true
-
-quit-after-last-window-closed = true
-
 background = 1D1F24
 background-blur = macos-glass-clear
 # background-opacity = 0.8
-command = ~/.nix-profile/bin/fish
-macos-titlebar-proxy-icon = hidden
+macos-titlebar-style = transparent
+# macos-titlebar-proxy-icon = hidden
+# a single space forces a blank title; an empty value falls back to the 👻 default
+title = " "
 macos-window-buttons = hidden
-auto-update = check
 
+##############
+# Action
+##############
+cursor-style-blink = false
+mouse-hide-while-typing = true
+quit-after-last-window-closed = true
+command = ~/.local/bin/herdr
+auto-update = check
+macos-dock-drop-behavior = new-window
+
+##############
+# Keybinds
+##############
+keybind = clear
+
+# Workarounds
+macos-option-as-alt = true
 # https://github.com/ghostty-org/ghostty/discussions/5071
 keybind = ctrl+[=esc:
-macos-option-as-alt = true
-
-keybind = super+[=previous_tab
-keybind = super+]=next_tab
-# keybind = super+u=toggle_background_opacity
+# clipboard
+keybind = super+c=copy_to_clipboard:mixed
+keybind = super+v=paste_from_clipboard
+# font size
+keybind = super+==increase_font_size:1
+keybind = super+-=decrease_font_size:1
+keybind = super+0=reset_font_size
+# window / tab
+keybind = super+q=quit
+keybind = super+w=close_surface
+# view
+keybind = super+enter=toggle_fullscreen
+# reload config after editing this file
+keybind = super+shift+,=reload_config

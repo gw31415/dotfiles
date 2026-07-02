@@ -3,19 +3,17 @@ onboarding = true
 [terminal]
 default_shell = "fish"
 
-[ui.sound]
-enabled = true
+[ui]
+show_agent_labels_on_pane_borders = true
+switch_ascii_input_source_in_prefix = true
+agent_panel_sort = "spaces"
+ui.sound.enable = true
 
 [ui.toast]
 delivery = "system"
 
-[ui]
-show_agent_labels_on_pane_borders = true
-
-# [experimental]
-# pane_history = false
-# switch_ascii_input_source_in_prefix = false
-agent_panel_sort = "spaces"
-
 [update]
 channel = "preview"
+
+[keys]
+prefix = "super+b"
