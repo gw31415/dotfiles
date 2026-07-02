@@ -122,7 +122,7 @@ in
       # "gather"
       # "keepassxc"
       # "obs"
-      # "obsidian"
+      "obsidian"
       # "piphero"
       # "postman"
       # "secretive"
