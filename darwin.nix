@@ -62,7 +62,7 @@ in
 
   homebrew = {
     enable = true;
-    onActivation.autoUpdate = true;
+    onActivation.autoUpdate = false;
     taps = [
       "homebrew/bundle"
       "homebrew/core"

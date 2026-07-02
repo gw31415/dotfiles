@@ -14,7 +14,7 @@
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     dot = {
       url = "github:gw31415/dot-cli";
       inputs = {
@@ -159,15 +159,27 @@
           darwinConfigurations.${env.hostname} = ctx.nix-darwin.lib.darwinSystem {
             modules = [
               ({ pkgs, ... }: import ./darwin.nix { inherit ctx; })
-              (ctx.nix-homebrew.darwinModules.nix-homebrew {
-                lib = ctx.nix-darwin.lib;
+              ctx.nix-homebrew.darwinModules.nix-homebrew
+              {
                 nix-homebrew = {
                   enable = true;
-                  enableRosetta = true;
+                  # Rosetta(Intel)プレフィックスは使用していないため無効化
+                  # /usr/local/bin/brew がPATH優先度で /opt/homebrew/bin/brew より先に
+                  # 解決され、brew bundle がIntel prefixで実行されて失敗する問題を回避
+                  enableRosetta = false;
                   user = env.username;
                   autoMigrate = true;
+                  # Homebrew 6.0 Tap-Trust: 非公式tapをactivation時に自動trust
+                  trust.taps = [
+                    "jorgelbg/tap"
+                    "arto-app/tap"
+                    "anomalyco/tap"
+                    "macos-fuse-t/cask"
+                    "vorssaint/tap"
+                    "steipete/tap"
+                  ];
                 };
-              })
+              }
             ];
           };
         }
