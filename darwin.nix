@@ -72,6 +72,7 @@ in
       "anomalyco/tap"
       "macos-fuse-t/homebrew-cask"
       "vorssaint/tap"
+      "steipete/tap"
     ];
     brews = [
       "openssl@3"
@@ -84,6 +85,7 @@ in
       "pkgconf"
       "xcode-build-server"
       "jorgelbg/tap/pinentry-touchid"
+      "steipete/tap/codexbar"
     ];
     # メモ： MTG補助用AI - Cluely はCaskなし (https://cluely.com/)
     casks = [
