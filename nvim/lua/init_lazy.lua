@@ -85,7 +85,7 @@ vim.api.nvim_create_user_command('TSReinstall', function()
 end, {})
 
 -- 空行での編集開始時に自動でインデント
-for _, key in ipairs { 'a', 'A' } do
+for _, key in ipairs { 'a', 'A', 'i', 'I' } do
 	vim.keymap.set('n', key, function()
 		return vim.fn.empty(vim.fn.getline('.')) == 1 and '"_cc' or key
 	end, { expr = true })
