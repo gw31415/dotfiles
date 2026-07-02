@@ -160,6 +160,14 @@ in
   ########################################
   system.activationScripts.extraActivation.text = ''
     softwareupdate --all --download --background
+
+    # pinentry-touchid falls back to the Homebrew `pinentry` formula's
+    # default pinentry. Keep it pointed at pinentry-mac so GPG commit signing
+    # can show the macOS/Touch ID prompt after Homebrew upgrades/relinks.
+    if [ -x /opt/homebrew/bin/pinentry-touchid ]; then
+      /opt/homebrew/bin/pinentry-touchid -fix || true
+    fi
+
     mise i && mise up --bump
   '';
 }
