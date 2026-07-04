@@ -14,7 +14,7 @@ ui.sound.enable = true
 delivery = "terminal"
 
 [update]
-channel = "stable"
+channel = "preview"
 
 [keys]
 prefix = "super+b"
