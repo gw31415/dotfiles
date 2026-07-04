@@ -18,6 +18,7 @@ channel = "preview"
 
 [keys]
 prefix = "super+b"
+detach = ["prefix+q", "super+w"]
 
 # Compose text (e.g. Japanese via SKK) in a small nvim split and send it to the
 # previously focused pane when nvim is saved-and-quit (:wq). See `herdr_editor`.
