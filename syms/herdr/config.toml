@@ -6,6 +6,7 @@ default_shell = "fish"
 [ui]
 show_agent_labels_on_pane_borders = true
 switch_ascii_input_source_in_prefix = true
+prompt_new_tab_name = false
 agent_panel_sort = "spaces"
 ui.sound.enable = true
 
