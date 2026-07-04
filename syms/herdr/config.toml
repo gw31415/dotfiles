@@ -1,4 +1,4 @@
-onboarding = true
+onboarding = false
 
 [terminal]
 default_shell = "fish"
@@ -14,7 +14,7 @@ ui.sound.enable = true
 delivery = "terminal"
 
 [update]
-channel = "preview"
+channel = "stable"
 
 [keys]
 prefix = "super+b"
