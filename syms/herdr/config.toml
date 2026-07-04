@@ -11,7 +11,7 @@ agent_panel_sort = "spaces"
 ui.sound.enable = true
 
 [ui.toast]
-delivery = "system"
+delivery = "terminal"
 
 [update]
 channel = "preview"
