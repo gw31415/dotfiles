@@ -24,7 +24,7 @@ prefix = "super+b"
 key = "prefix+i"
 type = "shell"
 command = "fish -c herdr_editor"
-description = "compose text in nvim and send to the previous pane"
+description = "compose text to input"
 
 [experimental]
 kitty_graphics = true
