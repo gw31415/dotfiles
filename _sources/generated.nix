@@ -19,13 +19,13 @@
   };
   herdr_editor = {
     pname = "herdr_editor";
-    version = "v0.1.0";
+    version = "v0.1.1";
     src = fetchFromGitHub {
       owner = "gw31415";
       repo = "herdr_editor.fish";
-      rev = "v0.1.0";
+      rev = "v0.1.1";
       fetchSubmodules = false;
-      sha256 = "sha256-G/+aZ74YL5IN8n4UDM0Gvk7sGaZVNjOTESCDeh0dzMA=";
+      sha256 = "sha256-7ROi6nGt06G6sZVyoRSfGriWgZkRWPm3alPBSDuJisg=";
     };
   };
   sponge = {
