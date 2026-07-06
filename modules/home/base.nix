@@ -85,6 +85,7 @@ in
         mergiraf.name = "mergiraf";
         mergiraf.driver = "mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L";
       };
+      core.pager = "hunk pager";
       init.defaultBranch = "main";
       commit.gpgSign = target != "linux-container";
       tag.gpgSign = true;
@@ -98,11 +99,6 @@ in
       diff.lockb.textconv = "${pkgs.bun}/bin/bun";
       diff.ipynb.binary = true;
     };
-  };
-
-  programs.delta = {
-    enable = true;
-    enableGitIntegration = true;
   };
 
   programs.fish = {
