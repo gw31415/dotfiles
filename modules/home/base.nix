@@ -26,6 +26,7 @@ in
     stateVersion = "25.11";
     sessionPath = [
       "$HOME/.local/bin"
+      "$HOME/.cargo/bin"
     ];
     packages = packageGroups.forTarget target;
   };
@@ -145,9 +146,6 @@ in
         mise activate fish | source
       else
         mise activate fish --shims | source
-      end
-      if test -f $HOME/.cargo/env.fish
-        source "$HOME/.cargo/env.fish"
       end
       set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
       abbr -a n -f _na
