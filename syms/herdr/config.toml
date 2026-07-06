@@ -30,3 +30,4 @@ description = "compose text to input"
 
 [experimental]
 kitty_graphics = true
+switch_ascii_input_source_in_prefix = true
