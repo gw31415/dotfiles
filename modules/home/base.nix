@@ -62,9 +62,7 @@ in
 
   programs.neovim = {
     enable = true;
-    initLua = "require 'init'";
-    withPython3 = false;
-    withRuby = false;
+    initLua = "require 'init'"; 
   };
 
   programs.git = {
