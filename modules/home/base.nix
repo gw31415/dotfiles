@@ -106,16 +106,10 @@ in
     enable = true;
     shellAbbrs = {
       dcd = "cd ${homeManagerDirectory}";
-      # g = "bit";
       gll = "lazygit";
       rp = "rsplug";
       sqlite3 = "litecli";
       tree = "eza -T";
-      unitydroidlog = "adb logcat -s Unity ActivityManager PackageManager dalvikvm DEBUG";
-    };
-    shellAliases = {
-      vi = "nvim";
-      vim = "nvim";
     };
     plugins = [
       {
