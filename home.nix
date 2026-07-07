@@ -3,7 +3,7 @@ let
   targetModule =
     if target == "darwin" then
       ./modules/home/targets/darwin.nix
-    else if target == "linux-container" then
+    else if target == "linux-container" || target == "linux-container-debug" then
       ./modules/home/targets/linux-container.nix
     else if target == "linux-desktop" then
       ./modules/home/targets/linux-desktop.nix

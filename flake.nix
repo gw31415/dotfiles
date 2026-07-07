@@ -61,11 +61,14 @@
             ];
           };
 
-        dockerImage =
+        # target を受け取って dockerImage を生成する共関数。
+        # dockerImage (linux-container) と dockerImageDebug (linux-container-debug) で共有。
+        mkDockerImage =
+          target:
           let
             pkgs = ctx.pkgs;
             dockerHomeConfiguration = mkHomeConfiguration {
-              target = "linux-container";
+              inherit target;
             };
             nixConfig = pkgs.writeTextDir "etc/nix/nix.conf" ''
               substituters = https://cache.nixos.org/
@@ -143,6 +146,9 @@
               WorkingDir = "/root";
             };
           };
+
+        dockerImage = mkDockerImage "linux-container";
+        dockerImageDebug = mkDockerImage "linux-container-debug";
       in
       {
 
@@ -184,7 +190,7 @@
           };
         }
         // pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
-          inherit dockerImage;
+          inherit dockerImage dockerImageDebug;
         };
 
         apps.default = ctx.flake-utils.lib.mkApp {

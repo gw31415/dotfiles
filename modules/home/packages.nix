@@ -110,10 +110,23 @@ rec {
     ghostty
   ];
 
+  # デバッグ用最小セット: dockerImageDebug での検証に必要なものだけ
+  debugMinimal = with pkgs; [
+    fish
+    rustup
+    mise
+    codex
+    gnupg
+    ctx.dot
+    sccache
+  ];
+
   forTarget =
     target:
     if target == "darwin" then
       common ++ darwinPkgs
+    else if target == "linux-container-debug" then
+      debugMinimal
     else if target == "linux-container" then
       common ++ linuxPkgs
     else if target == "linux-desktop" then

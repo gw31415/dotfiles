@@ -11,7 +11,7 @@ aube = "latest"
 "github:gw31415/audiorouter" = "latest"
 go = "1.26.4"
 # "go:github.com/kahing/goofys" = "0.20.0"
-node = { version = "latest", os = "macos" }
+node = { version = "latest", os = ["macos", "linux"] }
 "npm:fish-lsp" = "latest"
 # "npm:takt" = "latest"
 "npm:trash-cli" = "latest"
