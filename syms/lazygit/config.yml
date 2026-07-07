@@ -4,4 +4,4 @@ git:
   overrideGpg: true
   pagers:
     - colorArg: always
-      pager: delta -s --dark --paging=never --24-bit-color=never
+      pager: hunk pager
