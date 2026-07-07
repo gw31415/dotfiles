@@ -187,6 +187,12 @@ mise 公式 JSON スキーマでは `os` フィルタの例は `["linux","macos"
 - `rsplug -i`（nvim 必須）は**厳格**（失敗すればビルドを落とす）。
 - node os フィルタ削除で npm 系を導入。
 
+### フェーズ6 第2反復の結果と新知見 — 2026-07-07
+
+第2反復（run 28847321982）も両archで「Modify image」失敗。`mise install` のベストエフォート化自体は機能（WARNING 表示後に継続）したが、後続の `mise exec -- rsplug` が失敗。原因: **`mise exec` は全ツールの環境啓動を試み、導入不可ツール（idevice_pair=openssl不足, aiocr=uv/python, neowright=arm64バイナリ無）を再インストールしようとして non-zero で終了** → rsplug 未実行。mise の啓動が all-or-nothing であるため、オプションツールの失敗が必須の rsplug を巻き込む。
+
+**修正（第3反復）**: rsplug（prebuilt、mise install で確実導入済み）を `mise exec` 経由ではなく**バイナリ直接実行**に変更し、mise の環境啓動から切り離す。rsplug は git/ネットワークのみで単独動作するため、mise 環境不要。これで必須ステップがオプションツールの成否に依存しなくなる。
+
 
 ## Context and Orientation
 
