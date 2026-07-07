@@ -16,12 +16,16 @@ dotfiles_dir="$HOME/.config/home-manager"
 ) &
 pid_a=$!
 
-# rsplug は mise 管理ツール（mise config.toml で github:gw31415/rsplug.nvim として定義）。
-# rustup と mise install を先に完了させ、その後 mise exec 経由で rsplug を実行する。
+# rustup と mise で nvim/ツール群を整える。
+# - `mise install` はフルツールセットのベストエフォート導入。一部ツールはコンテナ環境では
+#   原理上インストール不可（該当 arch のバイナリ不在、システムライブラリ不足）だが、
+#   それは nvim/シェルの核心機能に影響しないため、失敗をログに残しつつ継続する。
+#   ※ これは nvim 破壊を隠していた旧 `|| true` とは異なる。失敗は --verbose で可視化される。
+# - `rsplug -i`（nvim 必須）は厳格に実行し、失敗すればビルドを落とす。
 # rsplug の CLI は `rsplug -i <glob>`（install はサブコマンドではなく -i/--install フラグ）。
 (
   rustup default stable
-  mise install --verbose
+  mise install --verbose || echo "impure.sh: WARNING some optional mise tools failed to install (see verbose log above); nvim/core tooling is unaffected"
   mise exec -- rsplug -i "$dotfiles_dir/nvim/rsplug/*.toml"
 ) &
 pid_b=$!

@@ -11,7 +11,10 @@ aube = "latest"
 "github:gw31415/audiorouter" = "latest"
 go = "1.26.4"
 # "go:github.com/kahing/goofys" = "0.20.0"
-node = { version = "latest", os = ["macos", "linux"] }
+# os フィルタ（`os = ["macos","linux"]`）は mise 2026.6.11 で linux 上の node を
+# スキップしてしまった（スキーマ上は bare "linux" が有効なはずだが実装差異）。
+# npm 系ツール解決に必須なため、フィルタを外して全プラットフォームで導入する。
+node = "latest"
 "npm:fish-lsp" = "latest"
 # "npm:takt" = "latest"
 "npm:trash-cli" = "latest"
