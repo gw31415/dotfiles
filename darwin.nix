@@ -1,6 +1,12 @@
 { ctx, ... }:
 let
   env = import ./env.nix;
+
+  # cli.ts は nixpkgs の vimPlugins.denops-vim に同梱されている
+  # (denops/@denops-private/cli.ts)。rsplug の worktree ハッシュはコミット毎に
+  # 変わるため、固定パスとして参照するには nixpkgs 由来のストアパスが最も安定。
+  denopsVim = ctx.pkgs.vimPlugins.denops-vim;
+  denopsCli = "${denopsVim}/denops/@denops-private/cli.ts";
 in
 {
   ########################################
@@ -170,4 +176,32 @@ in
 
     mise i && mise up --bump
   '';
+
+  ########################################
+  # denops Shared Server
+  ########################################
+  # Neovim の denops プラグインが接続する共通 Deno サーバーを常駐させる。
+  # Vim/Neovim 起動毎に Deno プロセスを spawn するオーバーヘッドが消え、
+  # skkeleton / vim-gin / fuzzy-motion 等の denops 系プラグインが即座に使える。
+  # 詳細: https://github.com/vim-denops/denops.vim/wiki または :help denops-shared-server
+  launchd.user.agents.denops-shared-server = {
+    serviceConfig = {
+      ProgramArguments = [
+        "${ctx.pkgs.deno}/bin/deno"
+        "run"
+        "-A"
+        "--no-lock"
+        "-q"
+        denopsCli
+        "--hostname"
+        "127.0.0.1"
+        "--port"
+        "32123"
+      ];
+      RunAtLoad = true;
+      KeepAlive = true;
+      StandardOutPath = "${env.homeDirectory}/Library/Logs/denops-shared-server.log";
+      StandardErrorPath = "${env.homeDirectory}/Library/Logs/denops-shared-server.log";
+    };
+  };
 }

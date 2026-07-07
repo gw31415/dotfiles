@@ -60,6 +60,11 @@ repo = "vim-denops/denops.vim"
 sym = true                     # NOTE: denops.vim は要所コピーではなくシンボリックリンクで参照させないと動かない
 start = true
 merge = false                  # denops の autoload は他プラグインと merge してはならない
+lua_before = '''
+if vim.loop.os_uname().sysname == 'Darwin' then
+	vim.g.denops_server_addr = '127.0.0.1:32123'
+end
+'''
 
 [[plugins]]
 repo = "lambdalisue/vim-gin"
