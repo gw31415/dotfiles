@@ -18,7 +18,6 @@ repo = "nvim-telescope/telescope.nvim"
 
 [[plugins]]
 repo = "vim-jp/vimdoc-ja"
-start = true
 
 [[plugins]]
 repo = "sirasagi62/tinysegmenter.nvim"
