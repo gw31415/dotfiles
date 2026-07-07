@@ -167,6 +167,11 @@ in
   system.activationScripts.extraActivation.text = ''
     softwareupdate --all --download --background
 
+    # activation スクリプトはクリーン環境で実行され PATH に
+    # /opt/homebrew/bin が含まれないため、明示的に先頭に追加する。
+    # これにより mise や pinentry-mac（pinentry-touchid -fix が内部で参照）が解決される。
+    export PATH=/opt/homebrew/bin:$PATH
+
     # pinentry-touchid falls back to the Homebrew `pinentry` formula's
     # default pinentry. Keep it pointed at pinentry-mac so GPG commit signing
     # can show the macOS/Touch ID prompt after Homebrew upgrades/relinks.
