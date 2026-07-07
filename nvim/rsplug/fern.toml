@@ -18,6 +18,7 @@ lua_after = '''
 require 'fyler'.setup {
 	extensions = { trash = { enabled = true } },
 	integrations = { icon = 'mini_icons' },
+	ui = { indent_guides = true },
 	mappings = {
 		n = {
 			-- システムデフォルトアプリで開く
