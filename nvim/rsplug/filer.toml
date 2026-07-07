@@ -1,3 +1,4 @@
+# fylerがマルチバッファに対応するまでこちらをデフォルトファイラにする
 [[plugins]]
 repo = "stevearc/oil.nvim"
 on_event = "VimEnter"
@@ -17,6 +18,7 @@ on_map = { n = '<c-n>' }
 lua_after = '''
 require 'fyler'.setup {
 	extensions = { trash = { enabled = true }, git = { enabled = true } },
+	use_as_default_explorer = false,
 	integrations = { icon = 'mini_icons' },
 	ui = { indent_guides = true },
 	mappings = {
