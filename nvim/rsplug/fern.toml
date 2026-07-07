@@ -16,7 +16,7 @@ on_cmd = "Fyler"
 on_map = { n = '<c-n>' }
 lua_after = '''
 require 'fyler'.setup {
-	extensions = { trash = { enabled = true } },
+	extensions = { trash = { enabled = true }, git = { enabled = true } },
 	integrations = { icon = 'mini_icons' },
 	ui = { indent_guides = true },
 	mappings = {
