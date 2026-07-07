@@ -175,8 +175,26 @@ in
     # pinentry-touchid falls back to the Homebrew `pinentry` formula's
     # default pinentry. Keep it pointed at pinentry-mac so GPG commit signing
     # can show the macOS/Touch ID prompt after Homebrew upgrades/relinks.
+    #
+    # `pinentry-touchid -fix` spawns pinentry-mac and bridges it over Assuan,
+    # printing "OK Hi from pinentry-mac!". In the non-interactive activation
+    # shell that spawned pinentry-mac then blocks forever waiting on the
+    # Assuan handshake -> `darwin-rebuild switch` hangs. So: close stdin so the
+    # spawned pinentry-mac sees EOF and exits, and bound the whole thing with a
+    # kill timer so a future relink still gets fixed without stalling the build.
     if [ -x /opt/homebrew/bin/pinentry-touchid ]; then
-      /opt/homebrew/bin/pinentry-touchid -fix || true
+      /opt/homebrew/bin/pinentry-touchid -fix </dev/null >/dev/null 2>&1 &
+      _pe_pid=$!
+      _pe_wait=0
+      while kill -0 "$_pe_pid" 2>/dev/null; do
+        _pe_wait=$((_pe_wait + 1))
+        if [ "$_pe_wait" -ge 10 ]; then
+          kill "$_pe_pid" 2>/dev/null
+          wait "$_pe_pid" 2>/dev/null
+          break
+        fi
+        sleep 1
+      done
     fi
 
     mise i && mise up --bump
