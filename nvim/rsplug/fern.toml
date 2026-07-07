@@ -24,14 +24,14 @@ require 'fyler'.setup {
 			-- システムデフォルトアプリで開く
 			gx = {
 				action = function(finder)
-					local entry = require('fyler.finder').parse_cursor_line(finder)
+					local entry = require 'fyler.finder'.parse_cursor_line(finder)
 					if entry then vim.ui.open(entry.path) end
 				end,
 			},
 			-- 開く（ディレクトリなら展開切替）
-			["<CR>"] = { action = 'select', args = { close = true } },
+			['<CR>'] = { action = 'select', args = { close = true } },
 			-- 閉じる
-			["<Esc>"] = { action = 'close' },
+			['<Esc>'] = { action = 'close' },
 			-- 全折叠
 			zM = {
 				action = function(finder)
@@ -44,7 +44,7 @@ require 'fyler'.setup {
 							end
 						end
 					end)
-					finder:refresh({ recursive = true })
+					finder:refresh { recursive = true }
 				end,
 			},
 			-- カーソルノードを折りたたむ
@@ -52,48 +52,63 @@ require 'fyler'.setup {
 			-- カーソルノードを展開/折りたたみ（トグル）
 			za = {
 				action = function(finder)
-					local entry = require('fyler.finder').parse_cursor_line(finder)
+					local entry = require 'fyler.finder'.parse_cursor_line(finder)
 					if not entry then return end
 					if entry.type == 'directory' then
 						finder.state:toggle(entry.path)
-						finder:refresh({ recursive = true })
+						finder:refresh { recursive = true }
 					else
 						finder.state:toggle(entry.path, false)
-						finder:refresh({ target_path = vim.fn.fnamemodify(entry.path, ':h') })
+						finder:refresh { target_path = vim.fn.fnamemodify(entry.path, ':h') }
 					end
 				end,
 			},
 			-- 親ディレクトリへ移動
-			["-"] = { action = 'visit', args = { parent = true } },
+			['-'] = { action = 'visit', args = { parent = true } },
 			-- ファイルを開く / ディレクトリへ移動
 			gf = {
 				action = function(finder)
-					local entry = require('fyler.finder').parse_cursor_line(finder)
+					local entry = require 'fyler.finder'.parse_cursor_line(finder)
 					if not entry then return end
 					if entry.type == 'directory' then
-						finder:visit({ cursor = true })
+						finder:visit { cursor = true }
 					else
-						finder:select({ close = true })
+						finder:select { close = true }
 					end
 				end,
 			},
+			-- 隠しファイルのトグル
+			['g.'] = {
+				action = 'toggle_ui',
+				args = { 'hidden_items' },
+			},
 			-- カレントディレクトリへ移動
-			["="] = {
+			['='] = {
 				action = function(finder)
-					finder:visit({ path = vim.fn.getcwd() })
+					finder:visit { path = vim.fn.getcwd() }
 				end,
 			},
 			-- カーソルノードへ移動
 			cx = { action = 'visit', args = { cursor = true } },
 
+			['<C-L>'] = {
+				action = 'refresh',
+				args = { recursive = true, force = true },
+			},
+
 			-- 無効化するデフォルトマッピング
+			['<2-LeftMouse>'] = { disabled = true },
+			['<C-S>'] = { disabled = true },
+			['<C-V>'] = { disabled = true },
+			['<C-T>'] = { disabled = true },
+			['<C-R>'] = { disabled = true },
+			['|'] = { disabled = true },
+			['^'] = { disabled = true },
+			['.'] = { disabled = true },
+			['#'] = { disabled = true },
+			['<BS>'] = { disabled = true },
+			gi = { disabled = true },
 			q = { disabled = true },
-			["<C-t>"] = { disabled = true },
-			["|"] = { disabled = true },
-			["^"] = { disabled = true },
-			["."] = { disabled = true },
-			["#"] = { disabled = true },
-			["<BS>"] = { disabled = true },
 		},
 	},
 }
