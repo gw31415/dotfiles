@@ -209,15 +209,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1783478005,
-        "narHash": "sha256-OBFskA5Pb5Up3CmPRSulHFZZLknFp3XWeZFsDaBerOc=",
+        "lastModified": 1783479528,
+        "narHash": "sha256-Mjhy+aAdSMxxsi2/X/m8CivSTkuetvT8K4gLDIBcNlc=",
         "owner": "gw31415",
         "repo": "rsplug.nvim",
-        "rev": "7e2b74e2469ecf6314426bbbdcdddd2fe5997975",
+        "rev": "9ed296922bbcb4f0bcf9984130c358c5a91a50eb",
         "type": "github"
       },
       "original": {
         "owner": "gw31415",
+        "ref": "fix-flake-build",
         "repo": "rsplug.nvim",
         "type": "github"
       }
