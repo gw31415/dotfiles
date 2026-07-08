@@ -22,6 +22,12 @@
         flake-utils.follows = "flake-utils";
       };
     };
+    # rsplug (Neovim プラグインマネージャ) は nix でビルドしてコンテナのプロファイルに
+    # 入れる。mise の prebuild は glibc 動的リンカを期待し nix コンテナで起動できないため。
+    rsplug = {
+      url = "github:gw31415/rsplug.nvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -49,6 +55,7 @@
             config.allowUnfree = true;
           };
           dot = inputs.dot.packages.${system}.default;
+          rsplug = inputs.rsplug.packages.${system}.default;
         };
         pkgs = ctx.pkgs;
 

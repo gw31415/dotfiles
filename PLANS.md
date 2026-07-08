@@ -193,6 +193,24 @@ mise 公式 JSON スキーマでは `os` フィルタの例は `["linux","macos"
 
 **修正（第3反復）**: rsplug（prebuilt、mise install で確実導入済み）を `mise exec` 経由ではなく**バイナリ直接実行**に変更し、mise の環境啓動から切り離す。rsplug は git/ネットワークのみで単独動作するため、mise 環境不要。これで必須ステップがオプションツールの成否に依存しなくなる。
 
+### フェーズ6 第3反復の結果と更深い根本原因 — 2026-07-07
+
+第3反復（run 28869085119）も両archで「Modify image」失敗。実ログ: `/tmp/impure.sh: line 38: /root/.local/share/mise/installs/github-gw31415-rsplug-nvim/0.2.3/rsplug: not found`。
+
+これは「ファイルは存在するが実行できない」= **動的リンカ未解決**。mise の prebuild rsplug（`*-unknown-linux-gnu`、glibc 動的リンク）は、nix コンテナには FHS の `/lib64/ld-linux-*.so` が無いためカーネルが起動できない。併せて amd64 の mise cargo ビルド（ghzinga/idevice_pair）も `bash`/`ld` が PATH に無く失敗。
+
+**これは rsplug だけでなく、mise が導入する prebuild ツール全般の問題**（nix コンテナは FHS を持たない）。nix パッケージ（fish/nvim/rustup/mise 本体）は nix の glibc にリンクされて起動するが、prebuild は起動しない。
+
+### フェーズ6 第4反復の方針（B 案）— 2026-07-07
+
+rsplug を **nix でビルド**してコンテナのプロファイルに組み込む（nix の glibc にリンク → 起動可能）。これが当初計画の「rsplug をパッケージに追加」の正しい形。
+
+- dotfiles 側: `rsplug` を flake input に追加し `ctx.rsplug = inputs.rsplug.packages.${system}.default`、linuxPkgs/debugMinimal に組み込み、impure.sh は `rsplug -i` を直接実行。
+- **ブロッカー**: rsplug.nvim の flake は fenix（2025-10 ピン）経由で Rust **1.96.0** を要求するが、fenix が 1.96.0 を知らず `channel-rust-1.96.0.toml.drv` の fixed-output hash mismatch でビルド不可。nixpkgs(unstable) の rust は 1.95.0（< 1.96）。
+- **決定（B 案）**: ユーザーが rsplug.nvim 側で fenix を更新（`nix flake lock --update-input fenix`）して 1.96.0 を解決 → re-push。その後 dotfiles 側で `nix flake lock --update-input rsplug` して取り込み、CI 検証。
+
+※ mise prebuild ツール全般の FHS 問題は本件（nvim）のスコープ外。別途 FHS 互換化（buildFHSEnv）等で扱う。
+
 
 ## Context and Orientation
 

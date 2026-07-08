@@ -103,6 +103,9 @@ rec {
     codex
     gnupg
     mise
+
+    # rsplug は nix ビルドで導入（mise の prebuild は nix コンテナで動的リンカが解決せず起動不可）
+    ctx.rsplug
   ];
 
   linuxDesktopPkgs = with pkgs; [
@@ -118,6 +121,7 @@ rec {
     codex
     gnupg
     ctx.dot
+    ctx.rsplug
     sccache
   ];
 
