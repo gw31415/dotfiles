@@ -13,6 +13,10 @@ dotfiles_dir="$HOME/.config/home-manager"
   git -C "$dotfiles_dir" fetch
   git -C "$dotfiles_dir" branch main origin/main
   git -C "$dotfiles_dir" reset --hard main
+  # reset --hard は untracked ファイルを削除しない。イメージに bake-in された旧ファイル
+  # （例: main で fern.toml→filer.toml にリネームされた後の旧 fern.toml）が残ると rsplug が
+  # duplicate node で失敗するため、main の tracked ツリー以外を掃除してクリーンな checkout にする。
+  git -C "$dotfiles_dir" clean -fdx
 ) &
 pid_a=$!
 
