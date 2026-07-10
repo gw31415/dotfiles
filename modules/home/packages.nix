@@ -106,6 +106,11 @@ rec {
 
     # rsplug は nix ビルドで導入（mise の prebuild は nix コンテナで動的リンカが解決せず起動不可）
     ctx.rsplug
+
+    # cargo ビルド（mise の cargo 系ツール・rsplug の Rust プラグイン）が amd64 で
+    # bash/ld を PATH から解決できるように（gc wrapper の ld 参照が amd64 で壊れる問題の対策）。
+    bash
+    binutils
   ];
 
   linuxDesktopPkgs = with pkgs; [
@@ -123,6 +128,8 @@ rec {
     ctx.dot
     ctx.rsplug
     sccache
+    bash
+    binutils
   ];
 
   forTarget =
