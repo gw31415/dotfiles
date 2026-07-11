@@ -201,6 +201,23 @@ mise 公式 JSON スキーマでは `os` フィルタの例は `["linux","macos"
 
 **これは rsplug だけでなく、mise が導入する prebuild ツール全般の問題**（nix コンテナは FHS を持たない）。nix パッケージ（fish/nvim/rustup/mise 本体）は nix の glibc にリンクされて起動するが、prebuild は起動しない。
 
+### フェーズ6 成功 — 2026-07-11
+
+run 29139340100（commit 19f7a07）が **両archで SUCCESS**（amd64 21m37s, arm64 34m40s, publish-manifest ✓）。`|| true` を外した状態で impure.sh が成功＝rsplug -i が実行され init.lua が生成された＝nvim クラッシュ（報告された根本問題）は解決。
+
+最終的に効いた修正の累積:
+1. `|| true` 削除で impure.sh の失敗を可視化（Dockerfile）
+2. rsplug CLI `-i`（`install` サブコマンドは存在しない）
+3. `wait "$pid"` の POSIX 化（`wait %N` は非移植）
+4. `git reset --hard main` + **`git clean -fdx`**（bake-in 旧ファイルと main の重複による rsplug duplicate-node を解消）
+5. node の os フィルタ削除（npm 系ツール解決）
+6. `mise install` ベストエフォート化（`|| echo`、オプションツール失敗をログ化）
+7. rsplug を **nix ビルド**で導入（mise prebuild は nix コンテナの FHS 不足で起動不可）
+8. rsplug.nvim flake 修正（sha256/cmake/git/buildInputs/autoPatchelfHook/gcc-unwrapped.lib）— `fix-flake-build` ブランチ
+9. **bash + binutils** を linuxPkgs に追加（amd64 の cargo ビルドが bash/ld を PATH から解決）
+
+残課題（別途）: mise prebuild ツール全般の FHS 問題（node/go 等の起動）。本件（nvim）のスコープ外。
+
 ### フェーズ6 第4反復の方針（B 案）— 2026-07-07
 
 rsplug を **nix でビルド**してコンテナのプロファイルに組み込む（nix の glibc にリンク → 起動可能）。これが当初計画の「rsplug をパッケージに追加」の正しい形。
