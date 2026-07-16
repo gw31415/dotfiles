@@ -77,7 +77,6 @@ in
       "arto-app/tap"
       "anomalyco/tap"
       "macos-fuse-t/homebrew-cask"
-      "vorssaint/tap"
       "steipete/tap"
     ];
     brews = [
