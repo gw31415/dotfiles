@@ -5,16 +5,15 @@ default_shell = "/run/current-system/sw/bin/fish"
 
 [ui]
 show_agent_labels_on_pane_borders = true
-switch_ascii_input_source_in_prefix = true
 prompt_new_tab_name = false
 agent_panel_sort = "priority"
-ui.sound.enable = true
+sound.enabled = true
 
 [ui.toast]
 delivery = "terminal"
 
 [update]
-channel = "preview"
+channel = "stable"
 
 [keys]
 prefix = "super+b"
