@@ -99,6 +99,8 @@ in
       "anki"
       # "brave-browser"
       "blackhole-2ch"
+      "claude"
+      "codex"
       "codex-app"
       "discord"
       "dockdoor"

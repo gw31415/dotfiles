@@ -100,6 +100,7 @@ rec {
 
 
     # macOSでは brew でインストールする
+    claude
     codex
     gnupg
     mise
