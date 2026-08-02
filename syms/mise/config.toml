@@ -9,24 +9,21 @@ aube = "latest"
 "github:gw31415/commitgen" = { version = "latest", bin = "commitgen" }
 "github:gw31415/rsplug.nvim" = { version = "latest", bin = "rsplug" }
 "github:gw31415/audiorouter" = "latest"
-go = "1.26.4"
+go = "1.26.5"
 # "go:github.com/kahing/goofys" = "0.20.0"
 # os フィルタ（`os = ["macos","linux"]`）は mise 2026.6.11 で linux 上の node を
 # スキップしてしまった（スキーマ上は bare "linux" が有効なはずだが実装差異）。
 # npm 系ツール解決に必須なため、フィルタを外して全プラットフォームで導入する。
 node = "latest"
 "npm:fish-lsp" = "latest"
-# "npm:takt" = "latest"
 "npm:trash-cli" = "latest"
 "pipx:git+https://github.com/gw31415/aiocr.git" = "latest"
 pnpm = "latest"
 usage = "latest"
-"npm:gnhf" = "latest"
 "github:isak102/neowright" = "latest"
-"cargo:ghzinga" = "latest"
 "cargo:https://github.com/jkcoxson/idevice_pair" = "latest"
 "npm:hunkdiff" = "latest"
-stylua = "2.5.2"
-"cargo:mdbook" = "0.4.51"
-bun = "1.3.14"
+stylua = "latest"
+"cargo:mdbook" = "latest"
+bun = "latest"
 "github:can1357/oh-my-pi" = "latest"
