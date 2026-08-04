@@ -36,6 +36,7 @@ in
     ".latexmkrc".source = ./../../statics/latexmkrc;
 
     "${configHome}/wezterm".source = managedSource "syms/wezterm";
+    "${configHome}/tunnel-client".source = managedSource "syms/tunnel-client";
     "${configHome}/direnv".source = managedSource "syms/direnv";
     "${configHome}/ghostty".source = managedSource "syms/ghostty";
     "${configHome}/lazygit".source = managedSource "syms/lazygit";

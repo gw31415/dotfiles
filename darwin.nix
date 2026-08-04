@@ -227,4 +227,35 @@ in
       StandardErrorPath = "${env.homeDirectory}/Library/Logs/denops-shared-server.log";
     };
   };
+
+  ########################################
+  # tunnel-client (OpenAI MCP control-plane tunnel)
+  ########################################
+  # ローカル MCP サーバー (local-mcp) を OpenAI の制御プレーンへ常駐トンネルする。
+  # プロファイル local-mcp-stdio は api_key を env:CONTROL_PLANE_API_KEY で参照するため、
+  # 起動時に ~/.env を source してランタイム解決する (シークレットを nix store に焼かない)。
+  # local-mcp は tunnel-client から PATH 経由で起動されるため mise shims を通す。
+  launchd.user.agents.tunnel-client = {
+    serviceConfig = {
+      ProgramArguments = [
+        "${ctx.pkgs.writeShellScript "tunnel-client-run" ''
+          set -eo pipefail
+          if [[ -f "$HOME/.env" ]]; then
+            set -a
+            set +u
+            source "$HOME/.env"
+            set -u
+            set +a
+          fi
+          export PATH="$HOME/.local/share/mise/shims:$PATH"
+          exec "${env.homeDirectory}/.local/share/mise/installs/github-openai-tunnel-client/latest/tunnel-client" \
+            run --profile local-mcp-stdio
+        ''}"
+      ];
+      RunAtLoad = true;
+      KeepAlive = true;
+      StandardOutPath = "${env.homeDirectory}/Library/Logs/tunnel-client/tunnel-client.log";
+      StandardErrorPath = "${env.homeDirectory}/Library/Logs/tunnel-client/tunnel-client.error.log";
+    };
+  };
 }
