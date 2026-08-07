@@ -100,7 +100,6 @@ in
       # "brave-browser"
       "blackhole-2ch"
       "claude"
-      "chatgpt-classic"
       "codex"
       "codex-app"
       "discord"
