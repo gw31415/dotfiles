@@ -106,6 +106,7 @@ in
       "dockdoor"
       # "figma"
       "gnucash"
+      "iloader"
       "keybase"
       "macfuse"
       "macskk"
