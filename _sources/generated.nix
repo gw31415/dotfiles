@@ -39,12 +39,4 @@
       sha256 = "sha256-MdcZUDRtNJdiyo2l9o5ma7nAX84xEJbGFhAVhK+Zm1w=";
     };
   };
-  uni-macos = {
-    pname = "uni-macos";
-    version = "0.1.1";
-    src = fetchurl {
-      url = "https://github.com/fiahfy/uni/releases/download/v0.1.1/Uni-0.1.1.dmg";
-      sha256 = "sha256-txskKmSMAIhBVH/3DJQnojDW/Fg3xW6U/ilxcU1BKuU=";
-    };
-  };
 }

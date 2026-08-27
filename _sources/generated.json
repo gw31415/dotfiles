@@ -61,20 +61,5 @@
             "type": "github"
         },
         "version": "1.1.0"
-    },
-    "uni-macos": {
-        "cargoLock": null,
-        "date": null,
-        "extract": null,
-        "name": "uni-macos",
-        "passthru": null,
-        "pinned": false,
-        "src": {
-            "name": null,
-            "sha256": "sha256-txskKmSMAIhBVH/3DJQnojDW/Fg3xW6U/ilxcU1BKuU=",
-            "type": "url",
-            "url": "https://github.com/fiahfy/uni/releases/download/v0.1.1/Uni-0.1.1.dmg"
-        },
-        "version": "0.1.1"
     }
 }

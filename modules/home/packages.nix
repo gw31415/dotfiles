@@ -10,17 +10,6 @@ let
       fetchurl
       ;
   };
-
-  uniMacos = pkgs-stable.stdenvNoCC.mkDerivation {
-    pname = "uni-macos";
-    inherit (sources.uni-macos) version src;
-    nativeBuildInputs = [ pkgs-stable.undmg ];
-    unpackPhase = ''undmg "$src"'';
-    installPhase = ''
-      mkdir -p "$out/Applications"
-      cp -R *.app "$out/Applications/"
-    '';
-  };
 in
 rec {
   inherit sources;
@@ -90,7 +79,6 @@ rec {
   darwinPkgs = with pkgs-stable; [
     cocoapods
     container
-    uniMacos
   ];
 
   # TODO: 以下のパッケージを整理する
