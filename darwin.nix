@@ -109,7 +109,7 @@ in
       "keybase"
       "macfuse"
       "macskk"
-      # "macshot" # QWERTY以外でショートカットキーが異なる不具合
+      # "macshot" # Vorssaint
       # "microsoft-teams"
       "music-decoy"
       "musicbrainz-picard"
