@@ -111,7 +111,7 @@ in
       "macskk"
       # "macshot" # Vorssaint
       # "microsoft-teams"
-      "music-decoy"
+      # "music-decoy" # Vorssaint
       "musicbrainz-picard"
       # "opencode-desktop"
       "puremac"
