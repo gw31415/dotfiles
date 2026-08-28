@@ -9,7 +9,7 @@ aube = "latest"
 "github:gw31415/commitgen" = { version = "latest", bin = "commitgen" }
 "github:gw31415/rsplug.nvim" = { version = "latest", bin = "rsplug" }
 "github:gw31415/audiorouter" = "latest"
-go = "1.26.5"
+go = "1.27.0"
 # "go:github.com/kahing/goofys" = "0.20.0"
 # os フィルタ（`os = ["macos","linux"]`）は mise 2026.6.11 で linux 上の node を
 # スキップしてしまった（スキーマ上は bare "linux" が有効なはずだが実装差異）。
