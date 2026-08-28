@@ -103,7 +103,6 @@ in
       "codex"
       "codex-app"
       "discord"
-      "dockdoor"
       # "figma"
       "gnucash"
       "iloader"
