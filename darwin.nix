@@ -114,6 +114,7 @@ in
       # "music-decoy" # Vorssaint
       "musicbrainz-picard"
       # "opencode-desktop"
+      "open-design"
       "puremac"
       "slack"
       "smoothcsv"
