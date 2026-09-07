@@ -49,7 +49,6 @@ rec {
     p7zip
     pandoc
     poppler-utils
-    ripgrep
     ruby
     silicon
     tdf

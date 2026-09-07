@@ -78,6 +78,7 @@ in
       "kls_database.db"
       ".aider*"
       ".cocoindex_code"
+      ".tgrep"
     ];
     settings = {
       merge = {
@@ -110,6 +111,7 @@ in
       ssh = "tssh";
       sqlite3 = "litecli";
       tree = "eza -T";
+      rg = "tgrep";
     };
     plugins = [
       {
