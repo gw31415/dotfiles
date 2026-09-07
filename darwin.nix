@@ -85,7 +85,6 @@ in
       "gnupg"
       "libgpg-error"
       "mas"
-      "opencode"
       "pinentry-mac"
       "pkgconf"
       "xcode-build-server"
