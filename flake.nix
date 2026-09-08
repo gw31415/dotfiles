@@ -22,30 +22,22 @@
         flake-utils.follows = "flake-utils";
       };
     };
-    # rsplug (Neovim プラグインマネージャ) は nix でビルドしてコンテナのプロファイルに
-    # 入れる。mise の prebuild は glibc 動的リンカを期待し nix コンテナで起動できないため。
-    # 一時的に fix-flake-build ブランチを参照（main へのマージ待ち。ビルド修正: sha256/cmake/git/buildInputs）。
-    rsplug = {
-      url = "github:gw31415/rsplug.nvim?ref=fix-flake-build";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
+  # NOTE: nix-darwin / darwinConfigurations はトップレベル出力にする。
+  # eachSystem 配下に置くと `nix run .#nix-darwin` が derivation ではなく
+  # set に解決され、`darwin-rebuild switch --flake .` の
+  # `darwinConfigurations.<hostname>` 解決も失敗する。
+  # Linux では home-manager のみ提供し、nix-darwin 系は除外される。
   outputs =
     { self, ... }@inputs:
     let
-      env = import ./env.nix;
-      systems = [
-        "aarch64-darwin"
-        "aarch64-linux"
-        "x86_64-linux"
-      ];
-
-    in
-    inputs.flake-utils.lib.eachSystem systems (
-      system:
-      let
-        ctx = inputs // {
+      env = import ./nix/env.nix;
+      darwinSystem = "aarch64-darwin";
+      mkCtx =
+        system:
+        inputs
+        // {
           inherit system;
           pkgs = import inputs.nixpkgs {
             inherit system;
@@ -56,154 +48,67 @@
             config.allowUnfree = true;
           };
           dot = inputs.dot.packages.${system}.default;
-          rsplug = inputs.rsplug.packages.${system}.default;
         };
-        pkgs = ctx.pkgs;
+      darwinCtx = mkCtx darwinSystem;
 
-        mkHomeConfiguration =
-          { target }:
-          ctx.home-manager.lib.homeManagerConfiguration {
-            pkgs = ctx.pkgs;
-            modules = [
-              ({ config, ... }: import ./home.nix { inherit config ctx target; })
-            ];
-          };
-
-        # target を受け取って dockerImage を生成する共関数。
-        # dockerImage (linux-container) と dockerImageDebug (linux-container-debug) で共有。
-        mkDockerImage =
-          target:
-          let
-            pkgs = ctx.pkgs;
-            dockerHomeConfiguration = mkHomeConfiguration {
-              inherit target;
-            };
-            nixConfig = pkgs.writeTextDir "etc/nix/nix.conf" ''
-              substituters = https://cache.nixos.org/
-              trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
-              experimental-features = nix-command flakes
-              build-users-group = nixbld
-              allowed-users = *
-              sandbox = false
-            '';
-            writeScriptDir =
-              destination: text:
-              pkgs.writeTextFile {
-                inherit text destination;
-                executable = true;
-                name = "write-${builtins.baseNameOf destination}";
-              };
-            fishProfileLoader = writeScriptDir "/etc/fish/conf.d/profile.fish" ''
-              if status --is-login
-                source /etc/profile.d/*.fish
-              end
-            '';
-          in
-          pkgs.dockerTools.buildImage {
-            name = "ama-home-manager-pure";
-            tag = "latest";
-            includeNixDB = true;
-            buildVMMemorySize = 2048;
-
-            # Requires: `system-features = kvm`
-            runAsRoot = ''
-              #!${pkgs.runtimeShell}
-              ${pkgs.dockerTools.shadowSetup}
-
-              chmod 1777 /tmp
-
-              export USER=root LOGNAME=root HOME=/root
-              mkdir -p /nix/var/nix/profiles/per-user/$USER $HOME/.config
-              cp -r ${./.} $HOME/.config/home-manager
-              chmod 644 -R $HOME/.config/home-manager
-
-              # busybox によるもの
-              addgroup -S nixbld
-              adduser -G nixbld -D -H nixbld
-            '';
-
-            copyToRoot = pkgs.buildEnv {
-              name = "base-before-activation";
-              paths = with pkgs; [
-                dockerHomeConfiguration.activationPackage
-
-                busybox # Scratch ならこれは必要っぽい
-                less
-
-                nix
-                nixConfig
-
-                # 必要っぽいライブラリ
-                dockerTools.caCertificates
-                dockerTools.usrBinEnv
-
-                fishProfileLoader
-                glibc
-                stdenv.cc
-                pkg-config
-                curl
+    in
+    inputs.flake-utils.lib.eachSystem
+      [
+        "aarch64-darwin"
+        "aarch64-linux"
+        "x86_64-linux"
+      ]
+      (
+        system:
+        let
+          ctx = mkCtx system;
+        in
+        {
+          packages = {
+            default = ctx.dot;
+            homeConfigurations.${env.username} = ctx.home-manager.lib.homeManagerConfiguration {
+              pkgs = ctx.pkgs;
+              modules = [
+                ({ config, ... }: import ./nix/home.nix { inherit config ctx; })
               ];
             };
-            config = {
-              User = "root";
-              Env = [
-                "USER=root"
-                "LOGNAME=root"
-                "HOME=/root"
+          };
+
+          apps.default = inputs.flake-utils.lib.mkApp {
+            drv = self.packages.${system}.default;
+          };
+        }
+      )
+    // {
+
+      # Compatibility output for tools that still do `nix run .#nix-darwin`.
+      nix-darwin = inputs.nix-darwin.packages.${darwinSystem}.default;
+
+      darwinConfigurations.${env.hostname} = darwinCtx.nix-darwin.lib.darwinSystem {
+        modules = [
+          ({ pkgs, ... }: import ./nix/darwin.nix { ctx = darwinCtx; })
+          darwinCtx.nix-homebrew.darwinModules.nix-homebrew
+          {
+            nix-homebrew = {
+              enable = true;
+              # Rosetta(Intel)プレフィックスは使用していないため無効化
+              # /usr/local/bin/brew がPATH優先度で /opt/homebrew/bin/brew より先に
+              # 解決され、brew bundle がIntel prefixで実行されて失敗する問題を回避
+              enableRosetta = false;
+              user = env.username;
+              autoMigrate = true;
+              # Homebrew 6.0 Tap-Trust: 非公式tapをactivation時に自動trust
+              trust.taps = [
+                "jorgelbg/tap"
+                "arto-app/tap"
+                "anomalyco/tap"
+                "macos-fuse-t/cask"
+                "vorssaint/tap"
+                "steipete/tap"
               ];
-              WorkingDir = "/root";
             };
-          };
-
-        dockerImage = mkDockerImage "linux-container";
-        dockerImageDebug = mkDockerImage "linux-container-debug";
-      in
-      {
-
-        packages = {
-          default = ctx.dot;
-          homeConfigurations.${env.username} = mkHomeConfiguration {
-            target = if pkgs.stdenv.isDarwin then "darwin" else "linux-container";
-            # TODO: linux-desktop の自動分岐をどうするか
-          };
-        }
-        // pkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
-          # Compatibility output for tools that still do `nix run .#nix-darwin`.
-          nix-darwin = inputs.nix-darwin.packages.${system}.default;
-          darwinConfigurations.${env.hostname} = ctx.nix-darwin.lib.darwinSystem {
-            modules = [
-              ({ pkgs, ... }: import ./darwin.nix { inherit ctx; })
-              ctx.nix-homebrew.darwinModules.nix-homebrew
-              {
-                nix-homebrew = {
-                  enable = true;
-                  # Rosetta(Intel)プレフィックスは使用していないため無効化
-                  # /usr/local/bin/brew がPATH優先度で /opt/homebrew/bin/brew より先に
-                  # 解決され、brew bundle がIntel prefixで実行されて失敗する問題を回避
-                  enableRosetta = false;
-                  user = env.username;
-                  autoMigrate = true;
-                  # Homebrew 6.0 Tap-Trust: 非公式tapをactivation時に自動trust
-                  trust.taps = [
-                    "jorgelbg/tap"
-                    "arto-app/tap"
-                    "anomalyco/tap"
-                    "macos-fuse-t/cask"
-                    "vorssaint/tap"
-                    "steipete/tap"
-                  ];
-                };
-              }
-            ];
-          };
-        }
-        // pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
-          inherit dockerImage dockerImageDebug;
-        };
-
-        apps.default = ctx.flake-utils.lib.mkApp {
-          drv = self.packages.${system}.default;
-        };
-      }
-    );
+          }
+        ];
+      };
+    };
 }

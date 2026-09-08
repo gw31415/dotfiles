@@ -1,13 +1,12 @@
 {
   config,
   ctx,
-  target,
   ...
 }:
 let
   pkgs = ctx.pkgs;
-  env = import ../../env.nix;
-  packageGroups = import ./packages.nix { inherit ctx; };
+  env = import ./env.nix;
+  packageGroups = import ./pkgs.nix { inherit ctx; };
   configHome = "${config.xdg.configHome}";
   homeManagerDirectory = "${configHome}/home-manager";
   managedSource =
@@ -22,32 +21,33 @@ in
 {
   home = {
     username = env.username;
-    homeDirectory = env.homeDirectory;
+    # Linux では nix-darwin が無い素の home-manager のため /home 配下に落ち着ける。
+    homeDirectory = if pkgs.stdenv.isDarwin then env.homeDirectory else "/home/${env.username}";
     stateVersion = "25.11";
     sessionPath = [
       "$HOME/.local/bin"
       "$HOME/.cargo/bin"
     ];
-    packages = packageGroups.forTarget target;
+    packages = if pkgs.stdenv.isDarwin then packageGroups.darwin else packageGroups.linux;
   };
 
   home.file = {
     ".skk/SKK-JISYO.L".source = "${pkgs.skkDictionaries.l}/share/skk/SKK-JISYO.L";
-    ".latexmkrc".source = ./../../statics/latexmkrc;
+    ".latexmkrc".source = ../files/latexmkrc;
 
-    "${configHome}/wezterm".source = managedSource "syms/wezterm";
-    "${configHome}/tunnel-client".source = managedSource "syms/tunnel-client";
-    "${configHome}/direnv".source = managedSource "syms/direnv";
-    "${configHome}/ghostty".source = managedSource "syms/ghostty";
-    "${configHome}/lazygit".source = managedSource "syms/lazygit";
-    "${configHome}/commitgen".source = managedSource "syms/commitgen";
-    "${configHome}/audiorouter".source = managedSource "syms/audiorouter";
-    "${configHome}/herdr".source = managedSource "syms/herdr";
-    "${configHome}/mise".source = managedSource "syms/mise";
+    "${configHome}/wezterm".source = managedSource "config/wezterm";
+    "${configHome}/tunnel-client".source = managedSource "config/tunnel-client";
+    "${configHome}/direnv".source = managedSource "config/direnv";
+    "${configHome}/ghostty".source = managedSource "config/ghostty";
+    "${configHome}/lazygit".source = managedSource "config/lazygit";
+    "${configHome}/commitgen".source = managedSource "config/commitgen";
+    "${configHome}/audiorouter".source = managedSource "config/audiorouter";
+    "${configHome}/herdr".source = managedSource "config/herdr";
+    "${configHome}/mise".source = managedSource "config/mise";
     "${configHome}/nvim/lua".source = managedSource "nvim/lua";
     "${configHome}/nvim/after".source = managedSource "nvim/after";
-    "${configHome}/fish/completions".source = managedSource "syms/fish_completions";
-    "${configHome}/fish/functions".source = managedSource "syms/fish_functions";
+    "${configHome}/fish/completions".source = managedSource "config/fish_completions";
+    "${configHome}/fish/functions".source = managedSource "config/fish_functions";
   };
 
   home.sessionVariables = {
@@ -63,7 +63,7 @@ in
 
   programs.neovim = {
     enable = true;
-    initLua = "require 'init'"; 
+    initLua = "require 'init'";
   };
 
   programs.git = {
@@ -88,7 +88,7 @@ in
       };
       core.pager = "hunk pager";
       init.defaultBranch = "main";
-      commit.gpgSign = target != "linux-container";
+      commit.gpgSign = true;
       tag.gpgSign = true;
       gpg.format = "openpgp";
       user = {
@@ -99,6 +99,9 @@ in
       diff.lockb.binary = true;
       diff.lockb.textconv = "${pkgs.bun}/bin/bun";
       diff.ipynb.binary = true;
+      # GCM は macOS 側で導入されるため Darwin のみ。
+    } // pkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
+      credential.helper = "/usr/local/share/gcm-core/git-credential-manager";
     };
   };
 
@@ -134,7 +137,26 @@ in
         src = packageGroups.sources.herdr_editor.src;
       }
     ];
-    shellInit = ''
+    # NOTE: brew shellenv が先 (mise 本体は brew 導入のため、その後の mise activate より前が必須)。
+    # Darwin のみ。Linux では空文字になる。
+    shellInit = pkgs.lib.optionalString pkgs.stdenv.isDarwin ''
+      if test -f /opt/homebrew/bin/brew
+        eval (/opt/homebrew/bin/brew shellenv)
+      end
+      if test -d "/opt/homebrew/share/fish/completions"
+        set -p fish_complete_path /opt/homebrew/share/fish/completions
+      end
+      if test -d "/opt/homebrew/share/fish/vendor_completions.d"
+        set -p fish_complete_path /opt/homebrew/share/fish/vendor_completions.d
+      end
+      if test -d /Applications/Android\ Studio.app/Contents/jbr/Contents/Home
+        export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jbr/Contents/Home
+      end
+      if test -d "$HOME/Library/Android/sdk/platform-tools/"
+        set -x PATH $HOME/Library/Android/sdk/platform-tools/ $PATH
+      end
+
+    '' + ''
       set fish_greeting
       if status is-interactive
         direnv hook fish | source

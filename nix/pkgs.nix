@@ -2,7 +2,8 @@
 let
   pkgs = ctx.pkgs;
   pkgs-stable = ctx.pkgs-stable;
-  sources = import ../../_sources/generated.nix {
+  # nvfetcher 管理 (fish プラグイン)。更新時は `cd vendor && nvfetcher`。
+  sources = import ../vendor/generated.nix {
     inherit (pkgs)
       dockerTools
       fetchFromGitHub
@@ -44,7 +45,6 @@ rec {
     litecli
     mergiraf
     mmv-go
-    nix-prefetch-docker
     nixfmt-rfc-style
     p7zip
     pandoc
@@ -80,56 +80,19 @@ rec {
     container
   ];
 
-  # TODO: 以下のパッケージを整理する
+  # 素の Linux (nix-darwin なし) 用。mise 本体と、brew で担う GPG/TLS 系の
+  # 代替 (gnupg)、素の Linux に無い shell 基盤 (fish/bash/binutils) を足す。
+  # rsplug は mise 側で導入 (FHS 問題は旧コンテナ特有で素の Linux では起きない)。
   linuxPkgs = with pkgs; [
-    # macOSでは darwin.nix で有効化する
     fish
-
-
-    # macOSでは brew でインストールする
     claude
     codex
     gnupg
     mise
-
-    # rsplug は nix ビルドで導入（mise の prebuild は nix コンテナで動的リンカが解決せず起動不可）
-    ctx.rsplug
-
-    # cargo ビルド（mise の cargo 系ツール・rsplug の Rust プラグイン）が amd64 で
-    # bash/ld を PATH から解決できるように（gc wrapper の ld 参照が amd64 で壊れる問題の対策）。
     bash
     binutils
   ];
 
-  linuxDesktopPkgs = with pkgs; [
-    brave
-    ghostty
-  ];
-
-  # デバッグ用最小セット: dockerImageDebug での検証に必要なものだけ
-  debugMinimal = with pkgs; [
-    fish
-    rustup
-    mise
-    codex
-    gnupg
-    ctx.dot
-    ctx.rsplug
-    sccache
-    bash
-    binutils
-  ];
-
-  forTarget =
-    target:
-    if target == "darwin" then
-      common ++ darwinPkgs
-    else if target == "linux-container-debug" then
-      debugMinimal
-    else if target == "linux-container" then
-      common ++ linuxPkgs
-    else if target == "linux-desktop" then
-      common ++ linuxPkgs ++ linuxDesktopPkgs
-    else
-      throw "unsupported package target: ${target}";
+  darwin = common ++ darwinPkgs;
+  linux = common ++ linuxPkgs;
 }

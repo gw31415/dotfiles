@@ -1,3 +1,2 @@
-/statics/Brewfile linguist-vendored
-/statics/kana-rule.conf linguist-vendored
-/syms/fish_*/** linguist-vendored
+/files/kana-rule.conf linguist-vendored
+/config/fish_*/** linguist-vendored
