@@ -45,7 +45,7 @@ rec {
     litecli
     mergiraf
     mmv-go
-    nixfmt-rfc-style
+    nixfmt
     p7zip
     pandoc
     poppler-utils
