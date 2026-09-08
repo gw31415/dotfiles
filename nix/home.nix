@@ -22,7 +22,8 @@ in
   home = {
     username = env.username;
     # Linux では nix-darwin が無い素の home-manager のため /home 配下に落ち着ける。
-    homeDirectory = if pkgs.stdenv.hostPlatform.isDarwin then env.homeDirectory else "/home/${env.username}";
+    homeDirectory =
+      if pkgs.stdenv.hostPlatform.isDarwin then env.homeDirectory else "/home/${env.username}";
     stateVersion = "26.05";
     sessionPath = [
       "$HOME/.local/bin"
@@ -101,7 +102,8 @@ in
       diff.lockb.textconv = "${pkgs.bun}/bin/bun";
       diff.ipynb.binary = true;
       # GCM は macOS 側で導入されるため Darwin のみ。
-    } // pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+    }
+    // pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
       credential.helper = "/usr/local/share/gcm-core/git-credential-manager";
     };
   };
@@ -140,37 +142,39 @@ in
     ];
     # NOTE: brew shellenv が先 (mise 本体は brew 導入のため、その後の mise activate より前が必須)。
     # Darwin のみ。Linux では空文字になる。
-    shellInit = pkgs.lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
-      if test -f /opt/homebrew/bin/brew
-        eval (/opt/homebrew/bin/brew shellenv)
-      end
-      if test -d "/opt/homebrew/share/fish/completions"
-        set -p fish_complete_path /opt/homebrew/share/fish/completions
-      end
-      if test -d "/opt/homebrew/share/fish/vendor_completions.d"
-        set -p fish_complete_path /opt/homebrew/share/fish/vendor_completions.d
-      end
-      if test -d /Applications/Android\ Studio.app/Contents/jbr/Contents/Home
-        export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jbr/Contents/Home
-      end
-      if test -d "$HOME/Library/Android/sdk/platform-tools/"
-        set -x PATH $HOME/Library/Android/sdk/platform-tools/ $PATH
-      end
+    shellInit =
+      pkgs.lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
+        if test -f /opt/homebrew/bin/brew
+          eval (/opt/homebrew/bin/brew shellenv)
+        end
+        if test -d "/opt/homebrew/share/fish/completions"
+          set -p fish_complete_path /opt/homebrew/share/fish/completions
+        end
+        if test -d "/opt/homebrew/share/fish/vendor_completions.d"
+          set -p fish_complete_path /opt/homebrew/share/fish/vendor_completions.d
+        end
+        if test -d /Applications/Android\ Studio.app/Contents/jbr/Contents/Home
+          export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jbr/Contents/Home
+        end
+        if test -d "$HOME/Library/Android/sdk/platform-tools/"
+          set -x PATH $HOME/Library/Android/sdk/platform-tools/ $PATH
+        end
 
-    '' + ''
-      set fish_greeting
-      if status is-interactive
-        direnv hook fish | source
-        mise activate fish | source
-      else
-        mise activate fish --shims | source
-      end
-      set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
-      set -x GITHUB_TOKEN (gh auth token)
-      abbr -a n -f _na
+      ''
+      + ''
+        set fish_greeting
+        if status is-interactive
+          direnv hook fish | source
+          mise activate fish | source
+        else
+          mise activate fish --shims | source
+        end
+        set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
+        set -x GITHUB_TOKEN (gh auth token)
+        abbr -a n -f _na
 
-      bind \ea __fishify_replace_buffer
-    '';
+        bind \ea __fishify_replace_buffer
+      '';
   };
 
   programs.fzf = {
