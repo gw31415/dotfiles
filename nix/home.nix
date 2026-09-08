@@ -165,6 +165,7 @@ in
         mise activate fish --shims | source
       end
       set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
+      set -x GITHUB_TOKEN (gh auth token)
       abbr -a n -f _na
 
       bind \ea __fishify_replace_buffer
