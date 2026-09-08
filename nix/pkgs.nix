@@ -14,15 +14,7 @@ in
 rec {
   inherit sources;
 
-  # 開発 CLI・日常 CLI は mise が正。ここに残すのは mise に backend が無いものだけ。
-  # mise 移管済み (config/mise/config.toml):
-  #   言語: node/go/python/ruby/deno/uv/pnpm
-  #   LSP/Fmt: basedpyright/gopls/tree-sitter/stylua/mergiraf/fish-lsp
-  #   CLI: gh/lazygit/jq/jnv/yt-dlp/pandoc/silicon/vhs/litecli/ollama/claude/codex/
-  #     bat/eza/tmux/ffmpeg/imagemagick/7zip/asciinema/
-  #     tdf(cargo)/mmv-go(go)/vim-startuptime(go)/poppler(conda)/librsvg(conda)
-  # 削除 (参照なし・代替あり): wget・aria2 /
-  #   p7zip (7zip の 7zz に交代)
+  # NOTE: 開発 CLI・日常 CLI は基本的に mise をつかうこと
   common = with pkgs; [
     # Nix 固有
     ctx.dot
@@ -44,7 +36,7 @@ rec {
     bindfs
     direnv
     envchain
-    gocryptfs # Linux はあるが macOS のビルドが不在
+    gocryptfs # Linux はあるが macOS が不在
     openssh
   ];
 
@@ -52,26 +44,18 @@ rec {
     # macOS 固有のパッケージ (Nix 管理)。
   ];
 
-  # 素の Linux (nix-darwin なし) 用。方針: mise/gnupg は macOS=brew・Linux=Nix。
-  # brew にあって Linux に無いものはここで Nix 補完する (mac の Nix には混入させない)。
-  # 対応表 (brew → Nix):
-  #   mise → mise / gnupg → gnupg / openssl@3 → openssl /
-  #   gettext → gettext / libgpg-error → libgpg-error / pkgconf → pkgconf /
-  #   pinentry-mac → pinentry-curses (Linux に Touch ID は無いため curses 版)
-  # 対象外 (macOS 専用): mas, pinentry-touchid, xcode-build-server, codexbar,
-  #   cocoapods, casks GUI 全般
-  # 開発 CLI は mise 側。
+  # Linux 固有のパッケージ (Nix 管理)。
   linuxPkgs = with pkgs; [
-    fish
-    gnupg
-    mise
-    bash
     binutils
-    openssl
+    fish
     gettext
+    gnupg
     libgpg-error
+    mise
+    openssl
     pinentry-curses
     pkgconf
+    zsh
   ];
 
   darwin = common ++ darwinPkgs;
