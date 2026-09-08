@@ -46,8 +46,8 @@ in
     "${configHome}/herdr".source = managedSource "config/herdr";
     "${configHome}/mise".source = managedSource "config/mise";
     "${configHome}/nvim/init.lua".text = "require 'init'";
-    "${configHome}/nvim/lua".source = managedSource "nvim/lua";
-    "${configHome}/nvim/after".source = managedSource "nvim/after";
+    "${configHome}/nvim/lua".source = managedSource "config/nvim_lua";
+    "${configHome}/nvim/after".source = managedSource "config/nvim_after";
     "${configHome}/fish/completions".source = managedSource "config/fish_completions";
     "${configHome}/fish/functions".source = managedSource "config/fish_functions";
   };
@@ -59,7 +59,7 @@ in
 
     DIRENV_LOG_FORMAT = "";
     GOPATH = "${config.home.homeDirectory}/.go";
-    RSPLUG_CONFIG_FILES = "${homeManagerDirectory}/nvim/rsplug/*.toml";
+    RSPLUG_CONFIG_FILES = "${homeManagerDirectory}/config/nvim_rsplug/*.toml";
     RUSTC_WRAPPER = "${pkgs.sccache}/bin/sccache";
   };
 
