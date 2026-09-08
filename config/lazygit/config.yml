@@ -2,6 +2,6 @@ gui:
   nerdFontsVersion: "3"
 git:
   overrideGpg: true
-  pagers:
+  diffRenderers:
     - colorArg: always
-      pager: hunk pager
+      command: hunk pager
