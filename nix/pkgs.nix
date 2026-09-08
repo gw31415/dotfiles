@@ -1,10 +1,9 @@
 { ctx }:
 let
-  pkgs = ctx.pkgs;
-  pkgs-stable = ctx.pkgs-stable;
+  pkgs = ctx.pkgs-stable;
   # nvfetcher 管理 (fish プラグイン)。更新時は `cd vendor && nvfetcher`。
   sources = import ../vendor/generated.nix {
-    inherit (pkgs)
+    inherit (ctx.pkgs)
       dockerTools
       fetchFromGitHub
       fetchgit
@@ -15,75 +14,65 @@ in
 rec {
   inherit sources;
 
-  # ponytail: 開発 CLI は mise が正。ここは起動基盤 + Nix でしか安定しないもののみ。
-  # mise に移管済み: basedpyright/gopls/deno/ollama/gh/lazygit/jq/jnv/mergiraf/
-  #   tree-sitter/uv/ruby/pandoc/yt-dlp/vhs/litecli/claude/codex
-  # fonts は Linux のみ (macOS は brew font-* cask)。
-  # cocoapods は brew へ移動。
-  common = with pkgs-stable; [
-    # nixpkgs-stable の direnv 2.37.1 は Darwin で cgo 無効のまま
-    # external link を要求してビルドに失敗するため、unstable 側を使う。
-    pkgs.direnv
-    pkgs.nvfetcher
-
-    # B 案 shell 生存セット (非対話 shell の shim 遅延回避のため Nix 残留)。
-    bat
-    eza
-
-    comma
-    envchain
-    nixfmt
-    home-manager
-    tmux
-    openssh
-
-    # ダウンロード・メディア・暗号化基盤 (バージョン切替不要のため Nix 残留)。
-    aria2
-    wget
-    ffmpeg
-    imagemagick
-    librsvg
-    poppler-utils
-    p7zip
-    gocryptfs
-    bindfs
-
-    # 小物 (mise 化の利が薄いため Nix 残留)。
-    asciinema
-    mmv-go
-    tdf
-    vim-startuptime
-
-    # Development 基盤 (例外・Nix 固有)。
+  # 開発 CLI・日常 CLI は mise が正。ここに残すのは mise に backend が無いものだけ。
+  # mise 移管済み (config/mise/config.toml):
+  #   言語: node/go/python/ruby/deno/uv/pnpm
+  #   LSP/Fmt: basedpyright/gopls/tree-sitter/stylua/mergiraf/fish-lsp
+  #   CLI: gh/lazygit/jq/jnv/yt-dlp/pandoc/silicon/vhs/litecli/ollama/claude/codex/
+  #     bat/eza/tmux/ffmpeg/imagemagick/7zip/asciinema/
+  #     tdf(cargo)/mmv-go(go)/vim-startuptime(go)/poppler(conda)/librsvg(conda)
+  # 削除 (参照なし・代替あり): wget・aria2 /
+  #   p7zip (7zip の 7zz に交代)
+  common = with pkgs; [
+    # Nix 固有
     ctx.dot
-    sccache
-    rustup
+    comma
+    home-manager
+    nixfmt
+    nvfetcher
+
+    # Fonts (両 OS 共通で Nix 管理)。
+    hackgen-nf-font
+    ipaexfont
+    noto-fonts-cjk-sans
+    noto-fonts-cjk-serif
+    source-han-sans
+    source-han-serif
+    twemoji-color-font
+
+    # Linux & macOS 共通 かつ mise 不在
+    bindfs
+    direnv
+    envchain
+    gocryptfs # Linux はあるが macOS のビルドが不在
+    openssh
   ];
 
-  darwinPkgs = with pkgs-stable; [
-    container
+  darwinPkgs = [
+    # macOS 固有のパッケージ (Nix 管理)。
   ];
 
-  # 素の Linux (nix-darwin なし) 用。mise 本体と、brew で担う GPG/TLS 系の
-  # 代替 (gnupg)、素の Linux に無い shell 基盤 (fish/bash/binutils) を足す。
-  # fonts は Linux のみ Nix で持つ。開発 CLI は mise 側。
-  linuxPkgs =
-    (with pkgs; [
-      fish
-      gnupg
-      mise
-      bash
-      binutils
-    ])
-    ++ (with pkgs-stable; [
-      hackgen-nf-font
-      ipaexfont
-      noto-fonts-cjk-sans
-      noto-fonts-cjk-serif
-      source-han-sans
-      source-han-serif
-      twemoji-color-font
-    ]);
+  # 素の Linux (nix-darwin なし) 用。方針: mise/gnupg は macOS=brew・Linux=Nix。
+  # brew にあって Linux に無いものはここで Nix 補完する (mac の Nix には混入させない)。
+  # 対応表 (brew → Nix):
+  #   mise → mise / gnupg → gnupg / openssl@3 → openssl /
+  #   gettext → gettext / libgpg-error → libgpg-error / pkgconf → pkgconf /
+  #   pinentry-mac → pinentry-curses (Linux に Touch ID は無いため curses 版)
+  # 対象外 (macOS 専用): mas, pinentry-touchid, xcode-build-server, codexbar,
+  #   cocoapods, casks GUI 全般
+  # 開発 CLI は mise 側。
+  linuxPkgs = with pkgs; [
+    fish
+    gnupg
+    mise
+    bash
+    binutils
+    openssl
+    gettext
+    libgpg-error
+    pinentry-curses
+    pkgconf
+  ];
 
   darwin = common ++ darwinPkgs;
   linux = common ++ linuxPkgs;

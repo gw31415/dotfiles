@@ -11,6 +11,7 @@ ruby = "latest"
 deno = "2"
 uv = "latest"
 "aqua:pnpm" = "11"
+sccache = "latest"
 
 # LSP / Formatter (Nix から移管)。
 "npm:basedpyright" = "latest"
@@ -32,6 +33,21 @@ vhs = "latest"
 ollama = "latest"
 claude = "latest"
 codex = "latest"
+
+# 日常 CLI
+# aria2 = "latest" # バイナリインストールできる手段が存在しない
+bat = "latest"
+eza = "latest"
+tmux = "latest"
+ffmpeg = "latest"
+imagemagick = "latest"
+"7zip" = "latest"
+"pipx:asciinema" = "latest"
+"cargo:https://github.com/itsjunetime/tdf" = "latest"
+"go:github.com/itchyny/mmv/cmd/mmv" = "latest"
+"go:github.com/rhysd/vim-startuptime" = "latest"
+"conda:poppler" = "latest"
+"conda:librsvg" = "latest"
 
 # 既存維持。
 aube = "latest"
