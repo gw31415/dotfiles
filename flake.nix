@@ -2,23 +2,27 @@
   description = "dotfiles and configurations for ama";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-26.05";
+    # INFO: nix-darwin-26.05 のリリースチェックが nixpkgs-YY.MM-darwin を要求するためこちらを採用
+    #       (nixos-26.05 だと darwinSystem の eval が弾かれる)。
+    #       中身はフル nixpkgs のため Linux でも eval・導入可。
+    # WARN: Hydra は -darwin ブランチを Darwin 向けにビルド・テストするため、
+    #       Linux のバイナリキャッシュは nixos-26.05 より薄くソースビルドに落ちやすい。
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-26.05-darwin";
 
     flake-utils.url = "github:numtide/flake-utils";
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-darwin = {
-      url = "github:LnL7/nix-darwin";
+      url = "github:LnL7/nix-darwin/nix-darwin-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     dot = {
       url = "github:gw31415/dot-cli";
       inputs = {
-        nixpkgs.follows = "nixpkgs-stable";
+        nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";
       };
     };
@@ -40,10 +44,6 @@
         // {
           inherit system;
           pkgs = import inputs.nixpkgs {
-            inherit system;
-            config.allowUnfree = true;
-          };
-          pkgs-stable = import inputs.nixpkgs-stable {
             inherit system;
             config.allowUnfree = true;
           };

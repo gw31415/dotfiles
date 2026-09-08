@@ -1,6 +1,6 @@
 { ctx }:
 let
-  pkgs = ctx.pkgs-stable;
+  pkgs = ctx.pkgs;
   # nvfetcher 管理 (fish プラグイン)。更新時は `cd vendor && nvfetcher`。
   sources = import ../vendor/generated.nix {
     inherit (pkgs)
