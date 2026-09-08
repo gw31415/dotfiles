@@ -3,7 +3,7 @@ let
   pkgs = ctx.pkgs-stable;
   # nvfetcher 管理 (fish プラグイン)。更新時は `cd vendor && nvfetcher`。
   sources = import ../vendor/generated.nix {
-    inherit (ctx.pkgs)
+    inherit (pkgs)
       dockerTools
       fetchFromGitHub
       fetchgit
