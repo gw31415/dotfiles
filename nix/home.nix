@@ -93,8 +93,6 @@ in
         name = "gw31415";
         email = "24710985+gw31415@users.noreply.github.com";
       };
-      diff.lockb.binary = true;
-      diff.lockb.textconv = "${pkgs.bun}/bin/bun";
       diff.ipynb.binary = true;
       # GCM は macOS 側で導入されるため Darwin のみ。
     }
