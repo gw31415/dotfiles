@@ -196,4 +196,6 @@ in
   };
 
   manual.manpages.enable = pkgs.lib.mkDefault true;
+  # man package が null の構成ではキャッシュ生成は無意味なため明示的に切る (挙動不変)。
+  programs.man.generateCaches = false;
 }
