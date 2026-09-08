@@ -114,7 +114,7 @@ in
       rp = "rsplug";
       sqlite3 = "litecli";
       tree = "eza -T";
-      rg = "tgrep";
+      # rg = "tgrep"; # tgrep はインデックス更新がないと意図しない結果となる
     };
     plugins = [
       {
