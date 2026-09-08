@@ -34,8 +34,6 @@ rec {
 
     # Linux & macOS 共通 かつ mise 不在
     bindfs
-    direnv
-    envchain
     gocryptfs # Linux はあるが macOS が不在
     openssh
   ];

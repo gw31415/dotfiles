@@ -38,7 +38,6 @@ in
 
     "${configHome}/wezterm".source = managedSource "config/wezterm";
     "${configHome}/tunnel-client".source = managedSource "config/tunnel-client";
-    "${configHome}/direnv".source = managedSource "config/direnv";
     "${configHome}/freeze".source = managedSource "config/freeze";
     "${configHome}/ghostty".source = managedSource "config/ghostty";
     "${configHome}/lazygit".source = managedSource "config/lazygit";
@@ -160,7 +159,6 @@ in
       + ''
         set fish_greeting
         if status is-interactive
-          direnv hook fish | source
           mise activate fish | source
         else
           mise activate fish --shims | source
