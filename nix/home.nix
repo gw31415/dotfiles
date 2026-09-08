@@ -52,15 +52,13 @@ in
     "${configHome}/fish/functions".source = managedSource "config/fish_functions";
   };
 
+  # 開発環境由来の変数 (EDITOR / DIRENV_LOG_FORMAT / GOPATH / RUSTC_WRAPPER /
+  # RSPLUG_CONFIG_FILES) は mise の [env] (config/mise/config.toml) へ移行済み。
   home.sessionVariables = {
-    EDITOR = "nvim";
+    # ログインシェル用で Nix store パスが必須のため mise に移行しない。
     SHELL = "${pkgs.fish}/bin/fish";
+    # セッション基盤の変数のため home-manager 側で定義し続ける。
     XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
-
-    DIRENV_LOG_FORMAT = "";
-    GOPATH = "${config.home.homeDirectory}/.go";
-    RSPLUG_CONFIG_FILES = "${homeManagerDirectory}/config/nvim_rsplug/*.toml";
-    RUSTC_WRAPPER = "${pkgs.sccache}/bin/sccache";
   };
 
   programs.git = {

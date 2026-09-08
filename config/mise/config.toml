@@ -76,5 +76,13 @@ tssh = "latest"
 ] }
 "github:microsoft/tgrep" = "latest"
 
+# home.sessionVariables から移行した開発環境変数 (二重管理を避けるため home.nix 側には残さない)。
+[env]
+EDITOR = "nvim" # aqua:neovim の shim が提供
+DIRENV_LOG_FORMAT = ""
+GOPATH = "{{ env.HOME }}/.go" # go は mise 管理
+RUSTC_WRAPPER = "{{ env.HOME }}/.local/share/mise/shims/sccache" # Nix store から mise shim へ切替
+RSPLUG_CONFIG_FILES = "{{ env.HOME }}/.config/home-manager/config/nvim_rsplug/*.toml"
+
 [wrappers]
 ssh = "tssh"
