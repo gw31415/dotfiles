@@ -110,10 +110,12 @@ in
   # Vim/Neovim 起動毎に Deno プロセスを spawn するオーバーヘッドが消え、
   # skkeleton / vim-gin / fuzzy-motion 等の denops 系プラグインが即座に使える。
   # 詳細: https://github.com/vim-denops/denops.vim/wiki または :help denops-shared-server
+  # NOTE: deno 本体は mise 管理。shim はバージョン更新でもパス不変のため launchd に適する。
+  # activation で `mise i` が先に走り、KeepAlive で再試行されるため初回起動失敗は実害小。
   launchd.user.agents.denops-shared-server = {
     serviceConfig = {
       ProgramArguments = [
-        "${ctx.pkgs.deno}/bin/deno"
+        "${env.homeDirectory}/.local/share/mise/shims/deno"
         "run"
         "-A"
         "--no-lock"

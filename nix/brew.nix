@@ -15,6 +15,7 @@
     ];
     brews = [
       "mise"
+      "cocoapods"
       "openssl@3"
       "gettext"
       "gnupg"
@@ -70,6 +71,15 @@
       # "postman"
       # "secretive"
       "zoom"
+
+      # Fonts (Nix の fonts は macOS 統合が弱いため brew で持つ。Linux は Nix)。
+      "font-hackgen-nerd"
+      "font-ipaexfont"
+      "font-noto-sans-cjk-jp"
+      "font-noto-serif-cjk-jp"
+      "font-source-han-sans-vf"
+      "font-source-han-serif-vf"
+      "font-twitter-color-emoji"
 
       # Home Manager GUI apps
       # "microsoft-auto-update"

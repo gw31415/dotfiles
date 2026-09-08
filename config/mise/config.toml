@@ -1,21 +1,49 @@
 [settings]
 experimental = true
-idiomatic_version_file_enable_tools = ["python", "node"]
+idiomatic_version_file_enable_tools = ["python", "node", "go"]
 
 [tools]
+# 言語ランタイム (mise が正。rust は rustup 例外のため入れない)。
+node = "latest"
+go = "latest"
+python = "latest"
+ruby = "latest"
+deno = "2"
+uv = "latest"
+"aqua:pnpm" = "11"
+
+# LSP / Formatter (Nix から移管)。
+"npm:basedpyright" = "latest"
+"go:golang.org/x/tools/gopls" = "latest"
+tree-sitter = "latest"
+stylua = "latest"
+"cargo:mergiraf" = "latest"
+"npm:fish-lsp" = "latest"
+
+# 開発 CLI (Nix から移管)。
+gh = "latest"
+lazygit = "latest"
+jq = "latest"
+jnv = "latest"
+yt-dlp = "latest"
+pandoc = "latest"
+vhs = "latest"
+"pipx:litecli" = "latest"
+ollama = "latest"
+claude = "latest"
+codex = "latest"
+
+# 既存維持。
 aube = "latest"
 "gem:terminal-notifier" = { version = "latest", os = "macos" }
 "github:gw31415/commitgen" = { version = "latest", bin = "commitgen" }
 "github:gw31415/rsplug.nvim" = { version = "latest", bin = "rsplug" }
 "github:gw31415/audiorouter" = "latest"
-node = "latest"
-"npm:fish-lsp" = "latest"
 "npm:trash-cli" = "latest"
 usage = "latest"
 "github:isak102/neowright" = "latest"
 # "cargo:https://github.com/jkcoxson/idevice_pair" = "latest"
 "hunkdiff" = "latest"
-stylua = "latest"
 "mdbook" = "latest"
 oh-my-pi = "latest"
 "cargo:https://github.com/nakasyou/local-mcp" = "latest"
@@ -24,7 +52,6 @@ oh-my-pi = "latest"
 tssh = "latest"
 "npm:@opencode-ai/cli" = "beta"
 "github:microsoft/tgrep" = "latest"
-"aqua:pnpm" = "11"
 
 [wrappers]
 ssh = "tssh"

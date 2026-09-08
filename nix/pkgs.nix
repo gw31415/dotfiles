@@ -15,83 +15,75 @@ in
 rec {
   inherit sources;
 
+  # ponytail: 開発 CLI は mise が正。ここは起動基盤 + Nix でしか安定しないもののみ。
+  # mise に移管済み: basedpyright/gopls/deno/ollama/gh/lazygit/jq/jnv/mergiraf/
+  #   tree-sitter/uv/ruby/pandoc/yt-dlp/vhs/litecli/claude/codex
+  # fonts は Linux のみ (macOS は brew font-* cask)。
+  # cocoapods は brew へ移動。
   common = with pkgs-stable; [
-    # LSPs
-    pkgs.basedpyright
-    gopls
-
     # nixpkgs-stable の direnv 2.37.1 は Darwin で cgo 無効のまま
     # external link を要求してビルドに失敗するため、unstable 側を使う。
     pkgs.direnv
     pkgs.nvfetcher
-    pkgs.ollama
-    aria2
-    asciinema
+
+    # B 案 shell 生存セット (非対話 shell の shim 遅延回避のため Nix 残留)。
     bat
-    bindfs
-    comma
-    deno
-    envchain
     eza
-    ffmpeg
-    gh
-    gocryptfs
-    home-manager
-    imagemagick
-    jnv
-    jq
-    lazygit
-    librsvg
-    litecli
-    mergiraf
-    mmv-go
+
+    comma
+    envchain
     nixfmt
-    p7zip
-    pandoc
-    poppler-utils
-    ruby
-    silicon
-    tdf
+    home-manager
     tmux
-    uv
-    vhs
-    vim-startuptime
+    openssh
+
+    # ダウンロード・メディア・暗号化基盤 (バージョン切替不要のため Nix 残留)。
+    aria2
     wget
-    yt-dlp
+    ffmpeg
+    imagemagick
+    librsvg
+    poppler-utils
+    p7zip
+    gocryptfs
+    bindfs
 
-    # Fonts
-    hackgen-nf-font
-    ipaexfont
-    noto-fonts-cjk-sans
-    noto-fonts-cjk-serif
-    source-han-sans
-    source-han-serif
-    twemoji-color-font
+    # 小物 (mise 化の利が薄いため Nix 残留)。
+    asciinema
+    mmv-go
+    tdf
+    vim-startuptime
 
-    # Development tools
+    # Development 基盤 (例外・Nix 固有)。
     ctx.dot
     sccache
-    tree-sitter
     rustup
   ];
 
   darwinPkgs = with pkgs-stable; [
-    cocoapods
     container
   ];
 
   # 素の Linux (nix-darwin なし) 用。mise 本体と、brew で担う GPG/TLS 系の
   # 代替 (gnupg)、素の Linux に無い shell 基盤 (fish/bash/binutils) を足す。
-  # rsplug は mise 側で導入 (FHS 問題は旧コンテナ特有で素の Linux では起きない)。
-  linuxPkgs = with pkgs; [
-    fish
-    claude
-    codex
-    gnupg
-    mise
-    bash
-    binutils
-  ];
+  # fonts は Linux のみ Nix で持つ。開発 CLI は mise 側。
+  linuxPkgs =
+    (with pkgs; [
+      fish
+      gnupg
+      mise
+      bash
+      binutils
+    ])
+    ++ (with pkgs-stable; [
+      hackgen-nf-font
+      ipaexfont
+      noto-fonts-cjk-sans
+      noto-fonts-cjk-serif
+      source-han-sans
+      source-han-serif
+      twemoji-color-font
+    ]);
 
   darwin = common ++ darwinPkgs;
   linux = common ++ linuxPkgs;
