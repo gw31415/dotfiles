@@ -53,7 +53,7 @@ in
       magnification = true;
       largesize = 64;
       orientation = "bottom";
-      launchanim = false;
+      launchanim = true;
     };
   };
 
