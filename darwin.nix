@@ -122,6 +122,7 @@ in
       "google-chrome"
       "ghostty"
       "vorssaint"
+      "waku"
       # "android-studio"
       # "container"
       # "cursor"
