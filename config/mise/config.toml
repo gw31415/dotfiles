@@ -71,7 +71,9 @@ oh-my-pi = "latest"
 "github:openai/tunnel-client" = "latest"
 "pipx:serena-agent" = "latest"
 tssh = "latest"
-"npm:@opencode-ai/cli" = "beta"
+"npm:@opencode-ai/cli" = { version = "beta", allow_builds = [
+	"@opencode-ai/cli",
+] }
 "github:microsoft/tgrep" = "latest"
 
 [wrappers]
