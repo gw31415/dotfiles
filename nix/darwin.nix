@@ -1,12 +1,6 @@
 { ctx, ... }:
 let
   env = import ./env.nix;
-
-  # cli.ts は nixpkgs の vimPlugins.denops-vim に同梱されている
-  # (denops/@denops-private/cli.ts)。rsplug の worktree ハッシュはコミット毎に
-  # 変わるため、固定パスとして参照するには nixpkgs 由来のストアパスが最も安定。
-  denopsVim = ctx.pkgs.vimPlugins.denops-vim;
-  denopsCli = "${denopsVim}/denops/@denops-private/cli.ts";
 in
 {
   imports = [ ./brew.nix ];
@@ -120,7 +114,7 @@ in
         "-A"
         "--no-lock"
         "-q"
-        denopsCli
+        "${ctx.pkgs.vimPlugins.denops-vim}/denops/@denops-private/cli.ts"
         "--hostname"
         "127.0.0.1"
         "--port"
