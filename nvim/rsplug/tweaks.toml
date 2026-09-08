@@ -7,6 +7,15 @@ vim.cmd.colorscheme 'onedark'
 '''
 
 [[plugins]]
+repo = "charm-and-friends/freeze.nvim"
+on_cmd = 'Freeze'
+lua_after = '''
+require 'freeze'.setup {
+	config = "user"
+}
+'''
+
+[[plugins]]
 repo = "stevearc/conform.nvim"
 on_event = ["BufWritePre", "LspAttach"]
 on_cmd = "ConformInfo"

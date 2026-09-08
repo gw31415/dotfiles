@@ -1,0 +1,10 @@
+{
+  "font": {
+    "family": "HackGen Console NF",
+    "size": 14
+  },
+  "padding": [14, 7, 0, 7],
+  "line_height": 1.2,
+  "show_line_numbers": true,
+  "theme": "onedark"
+}
