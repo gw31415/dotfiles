@@ -22,13 +22,13 @@ in
   home = {
     username = env.username;
     # Linux では nix-darwin が無い素の home-manager のため /home 配下に落ち着ける。
-    homeDirectory = if pkgs.stdenv.isDarwin then env.homeDirectory else "/home/${env.username}";
-    stateVersion = "25.11";
+    homeDirectory = if pkgs.stdenv.hostPlatform.isDarwin then env.homeDirectory else "/home/${env.username}";
+    stateVersion = "26.05";
     sessionPath = [
       "$HOME/.local/bin"
       "$HOME/.cargo/bin"
     ];
-    packages = if pkgs.stdenv.isDarwin then packageGroups.darwin else packageGroups.linux;
+    packages = if pkgs.stdenv.hostPlatform.isDarwin then packageGroups.darwin else packageGroups.linux;
   };
 
   home.file = {
@@ -100,7 +100,7 @@ in
       diff.lockb.textconv = "${pkgs.bun}/bin/bun";
       diff.ipynb.binary = true;
       # GCM は macOS 側で導入されるため Darwin のみ。
-    } // pkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
+    } // pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
       credential.helper = "/usr/local/share/gcm-core/git-credential-manager";
     };
   };
@@ -139,7 +139,7 @@ in
     ];
     # NOTE: brew shellenv が先 (mise 本体は brew 導入のため、その後の mise activate より前が必須)。
     # Darwin のみ。Linux では空文字になる。
-    shellInit = pkgs.lib.optionalString pkgs.stdenv.isDarwin ''
+    shellInit = pkgs.lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
       if test -f /opt/homebrew/bin/brew
         eval (/opt/homebrew/bin/brew shellenv)
       end
