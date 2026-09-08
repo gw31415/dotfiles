@@ -25,3 +25,6 @@ oh-my-pi = "latest"
 tssh = "latest"
 "npm:@opencode-ai/cli" = "beta"
 "github:microsoft/tgrep" = "latest"
+
+[wrappers]
+ssh = "tssh"

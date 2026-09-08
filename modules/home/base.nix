@@ -108,7 +108,6 @@ in
       dcd = "cd ${homeManagerDirectory}";
       gll = "lazygit";
       rp = "rsplug";
-      ssh = "tssh";
       sqlite3 = "litecli";
       tree = "eza -T";
       rg = "tgrep";
