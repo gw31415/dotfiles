@@ -46,6 +46,7 @@ in
     "${configHome}/audiorouter".source = managedSource "config/audiorouter";
     "${configHome}/herdr".source = managedSource "config/herdr";
     "${configHome}/mise".source = managedSource "config/mise";
+    "${configHome}/nvim/init.lua".text = "require 'init'";
     "${configHome}/nvim/lua".source = managedSource "nvim/lua";
     "${configHome}/nvim/after".source = managedSource "nvim/after";
     "${configHome}/fish/completions".source = managedSource "config/fish_completions";
@@ -61,11 +62,6 @@ in
     GOPATH = "${config.home.homeDirectory}/.go";
     RSPLUG_CONFIG_FILES = "${homeManagerDirectory}/nvim/rsplug/*.toml";
     RUSTC_WRAPPER = "${pkgs.sccache}/bin/sccache";
-  };
-
-  programs.neovim = {
-    enable = true;
-    initLua = "require 'init'";
   };
 
   programs.git = {
