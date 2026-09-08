@@ -1,8 +1,10 @@
 [settings]
 experimental = true
+cargo.binstall_only = true
 idiomatic_version_file_enable_tools = ["python", "node", "go"]
 
 [tools]
+cargo-binstall = "latest"
 # 言語ランタイム (mise が正。rust は rustup 例外のため入れない)。
 node = "latest"
 go = "latest"
@@ -11,6 +13,7 @@ ruby = "latest"
 deno = "2"
 uv = "latest"
 "aqua:pnpm" = "11"
+rust = "latest"
 sccache = "latest"
 
 # LSP / Formatter (Nix から移管)。
