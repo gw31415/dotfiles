@@ -49,15 +49,33 @@ mise run bootstrap
 
 ### 旧 Home Manager 環境からの移行
 
-旧 Nix profile の `dot` は Home Manager を呼ぶため、この構成では実行しない。
-最初の一回だけ clone 済みリポジトリから直接
+旧 Nix profile の `dot` を、mise-first 実装へ差し替えるため、最初の一回だけ clone 済みリポジトリから直接
 `./config/mise/tasks/link.sh` を実行する。この処理は、現在このリポジトリが
 管理する destination の Nix store symlink だけを置き換え、通常ファイルや
 それ以外の symlink は停止して手動解決を求める。
 
-新しい fish を開いた後は移行用の `dot` 関数が利用できる。`dot` / `dot -h` は
-`mise run link`、`dot -d` は nix-darwin、`dot -a` は両方、`dot -u` は
-`nix flake update` に委譲する。新規の運用では `mise run` を直接使う。
+新しい fish を開いた後も、従来どおり `dot`、`dot -h`、`dot -d`、`dot -a`、
+`dot -u`、`dot sh`、`dot gc` を使える。内部では user-level apply と開発 shell を
+mise に、システム適用・flake 更新・GC を Nix に委譲する。
+
+## `dot` Usage
+
+`dot` のインターフェースは維持する。引数なしと `dot -h` は user-level 設定を
+適用し、`dot -d` は macOS の nix-darwin、`dot -a` は両方を適用する。
+`dot -u` は従来どおり `flake.lock` だけを更新・コミットし、`dot -ua` はその後に
+両方を適用する。mise / pez / Homebrew の更新は `mise run update` を使う。
+
+```bash
+dot                 # user-level apply
+dot --home          # 同上
+dot --darwin        # macOS system apply
+dot --all           # user-level + macOS system apply
+dot --update        # flake.lock のみ更新・コミット
+dot -ua             # lockfile 更新後に両方を apply
+dot sh <cmd>        # dotfiles ディレクトリで mise 管理環境を使い <cmd> を実行
+dot gc              # Nix garbage collection
+dot gc --aggressive # 全世代を削除してから Nix garbage collection
+```
 
 ### macOS (nix-darwin) の切替・更新
 
