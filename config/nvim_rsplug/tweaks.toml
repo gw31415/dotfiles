@@ -1,21 +1,24 @@
 [[plugins]]
 start = true
 repo = "navarasu/onedark.nvim"
-lua_after = '''require 'onedark'.setup { transparent = true, dark = true }
+lua_after = '''
+require 'onedark'.setup { transparent = true, dark = true }
 vim.cmd.colorscheme 'onedark'
 '''
 
 [[plugins]]
 repo = "charm-and-friends/freeze.nvim"
 on_cmd = 'Freeze'
-lua_after = '''require 'freeze'.setup { config = 'user' }
+lua_after = '''
+require 'freeze'.setup { config = 'user' }
 '''
 
 [[plugins]]
 repo = "stevearc/conform.nvim"
 on_event = ["BufWritePre", "LspAttach"]
 on_cmd = "ConformInfo"
-lua_after = '''require 'conform'.setup {}
+lua_after = '''
+require 'conform'.setup {}
 vim.api.nvim_create_autocmd('LspAttach', {
 	callback = function (args)
 		local bufopts = { silent = true, buffer = args.buf }
@@ -62,7 +65,8 @@ lua_after = "require 'overseer'.setup()"
 [[plugins]]
 repo = "HakonHarnes/img-clip.nvim"
 on_event = "VeryLazy"
-lua_after = '''require 'img-clip'.setup {
+lua_after = '''
+require 'img-clip'.setup {
 	-- recommended settings
 	default = {
 		embed_image_as_base64 = false,
@@ -84,7 +88,8 @@ on_event = "TermOpen"
 [[plugins]]
 repo = "lewis6991/gitsigns.nvim"
 on_event = "VeryLazy"
-lua_after = '''require 'gitsigns'.setup { numhl = true, signcolumn = false }
+lua_after = '''
+require 'gitsigns'.setup { numhl = true, signcolumn = false }
 
 local function create_opfunc(name, inner)
 	if type(inner) ~= 'table' then
@@ -175,7 +180,8 @@ on_ft = "gin-status"
 [[plugins]]
 repo = "onsails/diaglist.nvim"
 on_event = "LspAttach"
-lua_after = '''vim.api.nvim_create_user_command('Diaglist', function ()
+lua_after = '''
+vim.api.nvim_create_user_command('Diaglist', function ()
 	require 'diaglist.quickfix'.populate_qflist()
 end, { force = true }
 )
@@ -186,7 +192,8 @@ require 'diaglist.quickfix'.populate_qflist()
 [[plugins]]
 repo = "mfussenegger/nvim-dap"
 on_map = { n = ["<F5>", "<F10>", "<F11>", "<F12>", "bb"] }
-lua_after = '''vim.fn.sign_define('DapBreakpoint', { text = '', texthl = 'Macro', linehl = '', numhl = '' })
+lua_after = '''
+vim.fn.sign_define('DapBreakpoint', { text = '', texthl = 'Macro', linehl = '', numhl = '' })
 vim.fn.sign_define('DapBreakpointCondition', { text = '󰆗', texthl = 'Macro', linehl = '', numhl = '' })
 vim.fn.sign_define('DapLogPoint', { text = '󰵛', texthl = '', linehl = 'Macro', numhl = '' })
 vim.fn.sign_define('DapBreakpointRejected', { text = '', texthl = 'Macro', linehl = '', numhl = '' })
@@ -208,13 +215,15 @@ repo = "rcarriga/nvim-dap-ui"
 depends = ["nvim-nio", "nvim-dap-virtual-text"]
 [[plugins]]
 repo = "theHamsta/nvim-dap-virtual-text"
-lua_after = '''require 'nvim-dap-virtual-text'.setup { enabled_commands = false }
+lua_after = '''
+require 'nvim-dap-virtual-text'.setup { enabled_commands = false }
 '''
 
 [[plugins]]
 repo = "rachartier/tiny-inline-diagnostic.nvim"
 on_event = "LspAttach"
-lua_after = '''require 'tiny-inline-diagnostic'.setup {
+lua_after = '''
+require 'tiny-inline-diagnostic'.setup {
 	options = {
 		multiple_diag_under_cursor = true,
 		show_all_diags_on_cursorline = true,
@@ -233,7 +242,8 @@ lua_after = "require 'colorful-menu'.setup {}"
 [[plugins]]
 repo = "aznhe21/actions-preview.nvim"
 depends = "nui.nvim"
-lua_after = '''local hl = require 'actions-preview.highlight'
+lua_after = '''
+local hl = require 'actions-preview.highlight'
 require 'actions-preview'.setup {
 	backend = { 'snacks' },
 	highlight_command = {
@@ -250,7 +260,8 @@ depends = "nui.nvim"
 repo = "gw31415/fzyselect-lines.nvim"
 on_map = { n = ["g/", "<c-p>"] }
 depends = "fzyselect.vim"
-lua_after = '''vim.keymap.set('n', 'g/', function () require 'fzyselect-lines'.open() end, { desc = 'Fuzzy-Find the line and jump' })
+lua_after = '''
+vim.keymap.set('n', 'g/', function () require 'fzyselect-lines'.open() end, { desc = 'Fuzzy-Find the line and jump' })
 
 -- git ls-files
 vim.keymap.set('n', '<c-p>', function ()
@@ -267,11 +278,13 @@ vim.keymap.set('n', '<c-p>', function ()
 	if res.code ~= 0 then
 		vim.notify(vim.fn.trim(res.stderr), vim.log.levels.ERROR, { title = 'fzyselect: git ls-files' })
 	else
-		require 'fzyselect'.start(vim.fn.split(res.stdout, '\n'), { prompt = 'git ls-files: <Enter> to edit' }, function (
-			path
+		require 'fzyselect'.start(
+			vim.fn.split(res.stdout, '\n'),
+			{ prompt = 'git ls-files: <Enter> to edit' },
+			function (path)
+				if path then vim.cmd.edit(path) end
+			end
 		)
-			if path then vim.cmd.edit(path) end
-		end)
 	end
 end)
 '''
@@ -279,7 +292,8 @@ end)
 [[plugins]]
 repo = "gw31415/fzyselect.vim"
 depends = "fzyselect-nui-opener.nvim"
-lua_after = '''vim.g.fzyselect_opener = require 'fzyselect-nui-opener'
+lua_after = '''
+vim.g.fzyselect_opener = require 'fzyselect-nui-opener'
 
 vim.api.nvim_create_autocmd('FileType', {
 	pattern = 'fzyselect',
@@ -316,7 +330,8 @@ vim.api.nvim_create_autocmd('FileType', {
 repo = "gw31415/bufmanager.nvim"
 depends = "fzyselect.vim"
 on_event = "BufAdd"
-lua_after = '''vim.keymap.set('n', 'gb', function ()
+lua_after = '''
+vim.keymap.set('n', 'gb', function ()
 	vim.api.nvim_create_autocmd('FileType', {
 		once = true,
 		pattern = 'fzyselect',
@@ -340,7 +355,8 @@ on_event = "CmdlineEnter"
 on_map = { n = "c<c-l>" }
 depends = "fzyselect.vim"
 lua_before = "vim.api.nvim_set_var('deepl_target_lang', 'EN')"
-lua_after = '''require 'deepl-commands'.setup { selector_func = function (...) require 'fzyselect'.start(...) end }
+lua_after = '''
+require 'deepl-commands'.setup { selector_func = function (...) require 'fzyselect'.start(...) end }
 vim.keymap.set('n', 'c<c-l>', '<cmd>DeepLTarget<cr>', { desc = 'Select the DeepL translation target lang' })
 '''
 
@@ -348,7 +364,8 @@ vim.keymap.set('n', 'c<c-l>', '<cmd>DeepLTarget<cr>', { desc = 'Select the DeepL
 repo = "gw31415/deepl-operator.vim"
 depends = "deepl-commands.nvim" # Management of g:deepl_target_lang
 on_map = { nx = ["cl", "cL"] }
-lua_after = '''vim.keymap.set({ 'n', 'x' }, 'cl', '<Plug>(deepl-replace)', { desc = 'Replace with DeepL translation' })
+lua_after = '''
+vim.keymap.set({ 'n', 'x' }, 'cl', '<Plug>(deepl-replace)', { desc = 'Replace with DeepL translation' })
 vim.keymap.set('n', 'cll', '<Plug>(deepl-replace)_', { desc = 'Replace with DeepL translation and keep cursor' })
 vim.keymap.set('n', 'cL', '<Plug>(deepl-replace)$', { desc = 'Replace with DeepL translation at end of line' })
 '''
@@ -356,7 +373,8 @@ vim.keymap.set('n', 'cL', '<Plug>(deepl-replace)$', { desc = 'Replace with DeepL
 [[plugins]]
 repo = "CRAG666/code_runner.nvim"
 on_event = "CmdlineEnter"
-lua_after = '''require 'code_runner'.setup {
+lua_after = '''
+require 'code_runner'.setup {
 	mode = 'term',
 	focus = true,
 	startinsert = false,
@@ -380,14 +398,16 @@ lua_after = '''require 'code_runner'.setup {
 [[plugins]]
 repo = "folke/snacks.nvim"
 on_cmd = "Snacks"
-lua_after = '''require 'snacks'.setup { picker = { enabled = true, ui_select = false } }
+lua_after = '''
+require 'snacks'.setup { picker = { enabled = true, ui_select = false } }
 vim.api.nvim_create_user_command('Snacks', 'lua require "snacks".picker()', {})
 '''
 
 [[plugins]]
 repo = "gw31415/root.nvim"
 on_cmd = "Root"
-lua_after = '''local quiet = true
+lua_after = '''
+local quiet = true
 -- Timer for startup 20ms to avoid noisy-messages on startup
 vim.defer_fn(function ()
 	quiet = false
@@ -407,7 +427,8 @@ vim.api.nvim_create_user_command(
 [[plugins]]
 repo = "j-hui/fidget.nvim@v*"
 on_event = "VeryLazy"
-lua_after = '''require 'fidget'.setup {
+lua_after = '''
+require 'fidget'.setup {
 	notification = {
 		override_vim_notify = true
 	}
@@ -421,7 +442,8 @@ lua_after = "vim.api.nvim_set_hl(0, 'SkkeletonHenkan', { reverse = true })"
 [[plugins]]
 repo = "delphinus/skkeleton_indicator.nvim"
 on_event = "InsertEnter"
-lua_after = '''vim.api.nvim_set_hl(0, 'SkkeletonIndicatorEiji', { fg = '#88c0d0', bg = '#2e3440', bold = true })
+lua_after = '''
+vim.api.nvim_set_hl(0, 'SkkeletonIndicatorEiji', { fg = '#88c0d0', bg = '#2e3440', bold = true })
 vim.api.nvim_set_hl(0, 'SkkeletonIndicatorHira', { fg = '#2e3440', bg = '#a3be8c', bold = true })
 vim.api.nvim_set_hl(0, 'SkkeletonIndicatorKata', { fg = '#2e3440', bg = '#ebcb8b', bold = true })
 vim.api.nvim_set_hl(0, 'SkkeletonIndicatorHankata', { fg = '#2e3440', bg = '#b48ead', bold = true })
@@ -439,7 +461,8 @@ require 'skkeleton_indicator'.setup {
 
 [[plugins]]
 repo = "stevearc/dressing.nvim"
-lua_after = '''require 'dressing'.setup { input = { enabled = false }, select = { enabled = false } }
+lua_after = '''
+require 'dressing'.setup { input = { enabled = false }, select = { enabled = false } }
 '''
 
 [[plugins]]
@@ -461,7 +484,8 @@ lua_after = "require 'octo'.setup {}"
 [[plugins]]
 repo = "stevearc/aerial.nvim"
 on_map = { n = ["<leader>A", "{", "}"] }
-lua_after = '''require 'aerial'.setup {
+lua_after = '''
+require 'aerial'.setup {
 	on_attach = function (bufnr)
 		vim.keymap.set('n', '{', '<cmd>AerialPrev<CR>', { buffer = bufnr, desc = 'Jump to the aerial-prev' })
 		vim.keymap.set('n', '}', '<cmd>AerialNext<CR>', { buffer = bufnr, desc = 'Jump to the aerial-next' })
@@ -473,7 +497,8 @@ vim.keymap.set('n', '<leader>A', function () require 'aerial'.toggle() end, { de
 [[plugins]]
 repo = "lukas-reineke/indent-blankline.nvim"
 on_event = "VeryLazy"
-lua_after = '''local highlight = {
+lua_after = '''
+local highlight = {
 	'RainbowRed', 'RainbowYellow', 'RainbowBlue', 'RainbowOrange', 'RainbowGreen', 'RainbowViolet', 'RainbowCyan'
 }
 local hooks = require 'ibl.hooks'
@@ -515,7 +540,8 @@ on_cmd = ["TSPlaygroundToggle", "TSHighlightCapturesUnderCursor"]
 [[plugins]]
 repo = "b0o/incline.nvim"
 on_event = "VeryLazy"
-lua_after = '''local helpers = require 'incline.helpers'
+lua_after = '''
+local helpers = require 'incline.helpers'
 local navic = require 'nvim-navic'
 local devicons = require 'nvim-web-devicons'
 
@@ -576,7 +602,8 @@ require 'incline'.setup {
 [[plugins]]
 repo = "gregorias/coerce.nvim"
 on_event = "VeryLazy"
-lua_after = '''require 'coerce'.setup {
+lua_after = '''
+require 'coerce'.setup {
 	default_mode_keymap_prefixes = {
 		normal_mode = 'cr',
 		motion_mode = 'cr',
@@ -595,7 +622,8 @@ lua_after = "vim.lsp.enable 'kakehashi'"
 repo = "FabijanZulj/blame.nvim"
 on_cmd = "BlameToggle"
 on_map = { n = "<leader>b" }
-lua_after = '''require 'blame'.setup()
+lua_after = '''
+require 'blame'.setup()
 vim.keymap.set('n', '<leader>b', '<cmd>BlameToggle<cr>', { noremap = true, silent = true })
 '''
 
@@ -614,7 +642,8 @@ on_cmd = [
     "LazyGitFilterCurrentFile",
 ]
 on_map = { n = "gll" }
-lua_after = '''vim.cmd [[
+lua_after = '''
+vim.cmd [[
 let $VISUAL = $EDITOR
 let $GIT_EDITOR = $EDITOR
 ]]

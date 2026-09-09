@@ -1,7 +1,8 @@
 [[plugins]]
 repo = "nvim-lualine/lualine.nvim"
 on_event = "UIEnter"
-lua_after = '''--------------------------------------------------------------------------------
+lua_after = '''
+--------------------------------------------------------------------------------
 -- Global Functions used in Statusline
 --------------------------------------------------------------------------------
 
@@ -65,11 +66,13 @@ require 'lualine'.setup {
 [[plugins]]
 repo = "nvim-treesitter/nvim-treesitter@main"
 on_event = "VimEnter"
-lua_post_update = '''local ts_installed_list = require 'nvim-treesitter'.get_installed()
+lua_post_update = '''
+local ts_installed_list = require 'nvim-treesitter'.get_installed()
 require 'nvim-treesitter'.uninstall(ts_installed_list):wait(180000)
 require 'nvim-treesitter'.install(ts_installed_list, { summary = true }):wait(180000)
 '''
-lua_after = '''local install_dir = vim.fn.stdpath 'data' .. '/treesitter'
+lua_after = '''
+local install_dir = vim.fn.stdpath 'data' .. '/treesitter'
 vim.opt.runtimepath:append(install_dir)
 require 'nvim-treesitter'.setup { install_dir = install_dir }
 
@@ -87,7 +90,8 @@ on_event = "VimEnter"
 repo = "kevinhwang91/nvim-ufo"
 on_event = ["BufAdd", "VimEnter", "UIEnter"]
 depends = ["nvim-treesitter", "promise-async"]
-lua_after = '''vim.o.foldcolumn = '2'
+lua_after = '''
+vim.o.foldcolumn = '2'
 vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
 vim.o.foldenable = true
