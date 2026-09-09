@@ -1,0 +1,5 @@
+complete -c dot -s h -l home -d 'Relink dotfiles with mise'
+complete -c dot -s d -l darwin -d 'Apply nix-darwin on macOS'
+complete -c dot -s a -l all -d 'Relink dotfiles and apply nix-darwin on macOS'
+complete -c dot -s u -l update -d 'Update flake.lock only'
+complete -c dot -l help -d 'Show compatibility-wrapper help'

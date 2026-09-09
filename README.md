@@ -47,6 +47,18 @@ mise run bootstrap
 初回 `mise install` は言語ランタイム (node / go / python / rust / dotnet 等) を
 取得するため時間がかかる。
 
+### 旧 Home Manager 環境からの移行
+
+旧 Nix profile の `dot` は Home Manager を呼ぶため、この構成では実行しない。
+最初の一回だけ clone 済みリポジトリから直接
+`./config/mise/tasks/link.sh` を実行する。この処理は、現在このリポジトリが
+管理する destination の Nix store symlink だけを置き換え、通常ファイルや
+それ以外の symlink は停止して手動解決を求める。
+
+新しい fish を開いた後は移行用の `dot` 関数が利用できる。`dot` / `dot -h` は
+`mise run link`、`dot -d` は nix-darwin、`dot -a` は両方、`dot -u` は
+`nix flake update` に委譲する。新規の運用では `mise run` を直接使う。
+
 ### macOS (nix-darwin) の切替・更新
 
 ```bash
