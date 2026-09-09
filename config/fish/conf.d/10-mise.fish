@@ -15,5 +15,9 @@ if not set -q DOTFILES
 end
 
 # GPG エージェントの SSH ソケット・GitHub トークン (mise 管理の gpg/gh 前提)。
-set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
-set -x GITHUB_TOKEN (gh auth token)
+if command -q gpgconf
+    set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
+end
+if command -q gh
+    set -x GITHUB_TOKEN (gh auth token)
+end

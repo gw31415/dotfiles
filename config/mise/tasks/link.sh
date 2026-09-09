@@ -47,7 +47,8 @@ link() {
 }
 
 # ディレクトリ配置
-for d in wezterm tunnel-client freeze ghostty lazygit commitgen git audiorouter herdr mise; do
+# wezterm は廃止済み。kakehashi は Neovim の LSP bridge のユーザ設定。
+for d in tunnel-client freeze ghostty lazygit commitgen git audiorouter herdr kakehashi mise; do
   link "config/$d" ".config/$d"
 done
 link "config/nvim_lua" ".config/nvim/lua"

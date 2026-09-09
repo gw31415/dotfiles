@@ -42,6 +42,8 @@ in
   ########################################
   environment.systemPackages = with pkgs; [
     comma
+    # kakehashi/nil が Nix ファイルの整形に呼び出す Nix 専用 formatter。
+    nixfmt
   ];
 
   ########################################
@@ -83,7 +85,7 @@ in
 
     # activation スクリプトはクリーン環境で実行され PATH に
     # /opt/homebrew/bin が含まれないため、明示的に先頭に追加する。
-    # これにより mise や pinentry-mac（pinentry-touchid -fix が内部で参照）が解決される。
+    # これにより pinentry-mac（pinentry-touchid -fix が内部で参照）が解決される。
     export PATH=/opt/homebrew/bin:$PATH
 
     # pinentry-touchid falls back to the Homebrew `pinentry` formula's
@@ -110,8 +112,6 @@ in
         sleep 1
       done
     fi
-
-    mise i && mise up --bump
   '';
 
   ########################################
@@ -122,7 +122,7 @@ in
   # skkeleton / vim-gin / fuzzy-motion 等の denops 系プラグインが即座に使える。
   # 詳細: https://github.com/vim-denops/denops.vim/wiki または :help denops-shared-server
   # NOTE: deno 本体は mise 管理。shim はバージョン更新でもパス不変のため launchd に適する。
-  # activation で `mise i` が先に走り、KeepAlive で再試行されるため初回起動失敗は実害小。
+  # `mise run bootstrap` が shim を導入する。初回起動に間に合わなくても KeepAlive が再試行する。
   launchd.user.agents.denops-shared-server = {
     serviceConfig = {
       ProgramArguments = [
@@ -164,7 +164,7 @@ in
             set +a
           fi
           export PATH="$HOME/.local/share/mise/shims:$PATH"
-          exec "${env.homeDirectory}/.local/share/mise/installs/github-openai-tunnel-client/latest/tunnel-client" \
+          exec "${env.homeDirectory}/.local/share/mise/shims/tunnel-client" \
             run --profile local-mcp-stdio
         ''}"
       ];

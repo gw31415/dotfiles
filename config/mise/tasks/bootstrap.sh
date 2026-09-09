@@ -31,13 +31,14 @@ if [ "$OS" = "Darwin" ]; then
     echo "  sudo darwin-rebuild switch --flake \"$REPO\""
   fi
 elif [ "$OS" = "Linux" ]; then
-  if ! command -v nix >/dev/null 2>&1; then
-    echo "Nix が未導入 (共有ツール層用): https://nixos.org/download から導入後、再実行" >&2
-    exit 1
+  if command -v nix >/dev/null 2>&1; then
+    echo "== optional nix profile (shared) =="
+    nix profile remove dotfiles-shared 2>/dev/null || true
+    nix profile install "$REPO#shared"
+  else
+    echo "Nix is not installed; skipping the optional shared native-tool layer." >&2
+    echo "Install Nix later, then run: nix profile install \"$REPO#shared\"" >&2
   fi
-  echo "== nix profile (shared) =="
-  nix profile remove dotfiles-shared 2>/dev/null || true
-  nix profile install "$REPO#shared"
 else
   echo "unsupported OS: $OS" >&2
   exit 1

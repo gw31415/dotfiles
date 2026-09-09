@@ -8,7 +8,7 @@ Nix は「はみ出る部分」の薄い wrapper のみに縮小している。
 | ツール/言語     | mise (`config/mise/config.toml`)   | 同左                               |
 | dotfiles 配置   | `mise run link`                    | 同左                               |
 | fish plugin     | pez (`config/fish/pez.toml` + lock) | 同左                              |
-| 共有ツール層    | Nix `.#shared` (`nix/shared.nix`)  | — (brew が担当)                    |
+| 共有ツール層    | 任意: Nix `.#shared` (`nix/shared.nix`) | — (brew が担当)                |
 | GUI / brew 基盤 | —                                  | `Brewfile` (`mise run bootstrap`)  |
 | Nix             | 共有ツール層のみ                   | システム設定・フォント・常駐のみ   |
 
@@ -36,8 +36,9 @@ mise run bootstrap
 
 `mise run bootstrap` は OS 別に以下を行う:
 
-- Linux: Nix 導入確認 → `nix profile install .#shared` → `mise install` →
-  `pez install` + `pez doctor` → fish をログインシェルに (`chsh`)
+- Linux: `mise install` → `pez install` + `pez doctor` → fish をログインシェルに
+  (`chsh`)。Nix が導入済みなら、Nix 専用 formatter・ネイティブ依存の任意層も
+  `nix profile install .#shared` で導入する
 - macOS: Homebrew 導入 (未導入時) → `brew bundle --file Brewfile` →
   同上 (`mise install`, `pez`, `chsh`)
   - Nix が未導入なら https://nixos.org/download から導入後、
@@ -52,8 +53,7 @@ mise run bootstrap
 sudo darwin-rebuild switch --flake ~/dotfiles
 ```
 
-`flake.lock` 更新後は Mac 側で `nix flake update` すること
-(Linux 側に Nix が無くても `darwin-rebuild` が評価する)。
+`flake.lock` 更新後は Mac 側で `nix flake update` すること。
 
 tap trust (Homebrew 6.0) で `brew bundle` が失敗したら、
 `brew tap <tap>` を手動実行して再試行すること。
