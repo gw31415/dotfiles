@@ -36,7 +36,6 @@ in
     ".skk/SKK-JISYO.L".source = "${pkgs.skkDictionaries.l}/share/skk/SKK-JISYO.L";
     ".latexmkrc".source = ../files/latexmkrc;
 
-    "${configHome}/wezterm".source = managedSource "config/wezterm";
     "${configHome}/tunnel-client".source = managedSource "config/tunnel-client";
     "${configHome}/freeze".source = managedSource "config/freeze";
     "${configHome}/ghostty".source = managedSource "config/ghostty";
@@ -45,6 +44,7 @@ in
     "${configHome}/audiorouter".source = managedSource "config/audiorouter";
     "${configHome}/herdr".source = managedSource "config/herdr";
     "${configHome}/mise".source = managedSource "config/mise";
+    "${configHome}/kakehashi".source = managedSource "config/kakehashi";
     "${configHome}/nvim/init.lua".text = "require 'init'";
     "${configHome}/nvim/lua".source = managedSource "config/nvim_lua";
     "${configHome}/nvim/after".source = managedSource "config/nvim_after";

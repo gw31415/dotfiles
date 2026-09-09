@@ -16,13 +16,28 @@ uv = "latest"
 rust = "latest"
 sccache = "latest"
 
-# LSP / Formatter (Nix から移管)。
+# LSP / Formatter (Nix・mason から移管)。
+"github:atusy/kakehashi" = "latest"
+"aqua:astral-sh/ty" = "latest"
 "npm:basedpyright" = "latest"
 "go:golang.org/x/tools/gopls" = "latest"
 tree-sitter = "latest"
-stylua = "latest"
 "cargo:mergiraf" = "latest"
 "npm:fish-lsp" = "latest"
+# mason から移管 (clangd / nil / vim-language-server は mise に無いため mason 維持)。
+"aqua:astral-sh/ruff" = "latest"
+"aqua:biomejs/biome" = "latest"
+"aqua:tamasfe/taplo" = "latest"
+"aqua:Myriad-Dreamin/tinymist" = "latest"
+"aqua:rhysd/actionlint" = "latest"
+"npm:@vtsls/language-server" = "latest"
+"npm:vscode-langservers-extracted" = "latest"
+"npm:yaml-language-server" = "latest"
+"npm:dockerfile-language-server-nodejs" = "latest"
+"npm:@typespec/compiler" = "latest"
+"npm:oxlint" = "latest"
+# NOTE: latest は beta を拾うため stable 系列にピン留め
+"gem:ruby-lsp" = "0.26"
 
 # 開発 CLI (Nix から移管)。
 gh = "latest"
@@ -75,6 +90,25 @@ tssh = "latest"
 	"@opencode-ai/cli",
 ] }
 "github:microsoft/tgrep" = "latest"
+
+# NOTE: aquaレジストリなし・npmなし・cargoはbinstall提供なし・ubiは非推奨のためgithubバックエンド。
+# 同一リリースに複数バイナリ同梱のためtool_alias+matchingで分割する。
+[tool_alias]
+emmylua_ls = "github:EmmyLuaLs/emmylua-analyzer-rust"
+emmylua_check = "github:EmmyLuaLs/emmylua-analyzer-rust"
+luafmt = "github:EmmyLuaLs/emmylua-analyzer-rust"
+
+[tools.emmylua_ls]
+version = "latest"
+matching = "emmylua_ls"
+
+[tools.emmylua_check]
+version = "latest"
+matching = "emmylua_check"
+
+[tools.luafmt]
+version = "latest"
+matching = "luafmt"
 
 # home.sessionVariables から移行した開発環境変数 (二重管理を避けるため home.nix 側には残さない)。
 [env]

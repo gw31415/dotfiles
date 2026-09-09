@@ -600,6 +600,18 @@ repo = "nvimtools/none-ls.nvim"
 lua_after = "require 'null-ls'.setup()"
 [[plugins]]
 repo = "williamboman/mason-lspconfig.nvim"
+lua_after = '''
+-- サーバの起動は kakehashi が行い、バイナリ導入は基本 mise が担う。
+-- mason は mise に無いもの (clangd / nil / vim-language-server) のみ自動DLする。
+require 'mason-lspconfig'.setup {
+	automatic_enable = false,
+	ensure_installed = {
+		'clangd',
+		'nil',
+		'vimls',
+	},
+}
+'''
 [[plugins]]
 repo = "jay-babu/mason-null-ls.nvim"
 depends = ["mason.nvim", "none-ls.nvim"]
@@ -625,106 +637,58 @@ require 'mason-null-ls'.setup {
 repo = "neovim/nvim-lspconfig"
 on_event = ["LspAttach", "VeryLazy"]
 lua_after = '''
-local lsp_list = vim.list_extend({
-	'gopls',
-	'fish_lsp',
-	'sourcekit',
-	'ty',
-	'basedpyright',
-	'ruff'
-}, require 'mason-lspconfig'.get_installed_servers())
+-- kakehashi が下流サーバをブリッジするため、Neovim 側で vim.lsp から
+-- 直接起動するのは kakehashi のみ (rust-analyzer 等はプラグイン側で起動)。
+-- プロジェクトごとの JS/TS 切替 (deno / biome 等) は各リポジトリの
+-- kakehashi.toml で行う (設定は ~/.config/kakehashi/kakehashi.toml)。
+vim.lsp.enable { 'kakehashi' }
 
-local lsp_unloads = { 'biome', 'denols', 'vtsls', 'tsgo' }
-
-vim.lsp.enable(vim.tbl_filter(function(name) return not vim.list_contains(lsp_unloads, name) end, lsp_list))
-
-vim.api.nvim_create_autocmd('FileType', {
-	pattern = { 'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx' },
-	callback = function(args)
-		---@param files string[]
-		local function has_root(files)
-			local found_dirs = vim.fs.find(files, {
-				upward = true,
-				path = vim.fs.dirname(vim.fs.normalize(vim.api.nvim_buf_get_name(args.buf))),
-			})
-			return #found_dirs > 0
-		end
-
-		-- TODO: ワークスペース毎に適切なLSPを選択する
-		---@param name string
-		local function enable_or_attach(name)
-			local client = vim.lsp.get_clients { name = name }[1]
-			if client then
-				vim.lsp.buf_attach_client(args.buf, client.id)
-			else
-				-- TODO: enableの場合、denolsとその他のJS/TS系LSを両方起動すると(恐らく)競合する
-				-- INFO: vim.lsp.start(vim.lsp.config(name)) だと :LspInfo でエラーになる。
-				vim.lsp.enable(name)
+-- kakehashi は文書を開いた際に直接の言語のパーサを自動導入するが、
+-- kakehashi.toml の base (jsonc → json 等) では導入されず、base が無いまま
+-- 起動するとロード失敗がセッション中キャッシュされてしまう。
+-- そのため派生言語の基底を事前にシードしてから kakehashi を有効化する。
+do
+	local exe = vim.fn.exepath 'kakehashi'
+	if exe == '' then
+		vim.notify('kakehashi: binary not found (mise)', vim.log.levels.WARN)
+	else
+		-- kakehashi.toml の [languages.*].base に対応する基底言語
+		local seed_langs = { 'tsx', 'javascript', 'json', 'markdown' }
+		vim.system({ exe, 'language', 'status' }, { text = true }, function(res)
+			local installed = {}
+			for line in (res.stdout or ''):gmatch '[^\r\n]+' do
+				local lang = line:match '^%s*(%S+)%s+✓ parser%s+✓ queries'
+				if lang then installed[lang] = true end
 			end
-		end
-		if has_root { 'deno.json', 'deno.jsonc', 'deno.lock', 'deps.ts', 'denops' } then
-			enable_or_attach 'denols'
-		else
-			if vim.fn.executable 'tsgo' ~= 0 then
-				enable_or_attach 'tsgo'
-			else
-				enable_or_attach 'vtsls'
-			end
-		end
 
-		if has_root { 'biome.json' } then
-			enable_or_attach 'biome'
-			for _, name in ipairs { 'denols', 'vtsls', 'tsgo' } do
-				vim.lsp.config(name, {
-					capabilities = {
-						documentFormattingProvider = false,
-						documentRangeFormattingProvider = false,
-					},
-				})
-			end
-		end
-	end,
-})
-vim.api.nvim_create_autocmd('FileType', {
-	pattern = { 'css' },
-	callback = function(args)
-		---@param files string[]
-		local function has_root(files)
-			local found_dirs = vim.fs.find(files, {
-				upward = true,
-				path = vim.fs.dirname(vim.fs.normalize(vim.api.nvim_buf_get_name(args.buf))),
-			})
-			return #found_dirs > 0
-		end
+			local missing = vim.tbl_filter(function(lang)
+				return not installed[lang]
+			end, seed_langs)
 
-		if has_root { 'biome.json' } then
-			vim.lsp.enable('biome')
-		end
-	end,
-})
-vim.api.nvim_create_autocmd('FileType', {
-	pattern = 'json',
-	callback = function(args)
-		---@param files string[]
-		local function has_root(files)
-			local found_dirs = vim.fs.find(files, {
-				upward = true,
-				path = vim.fs.dirname(vim.fs.normalize(vim.api.nvim_buf_get_name(args.buf))),
-			})
-			return #found_dirs > 0
-		end
-
-		if has_root { 'biome.json' } then
-			vim.lsp.config('jsonls', {
-				capabilities = {
-					documentFormattingProvider = false,
-					documentRangeFormattingProvider = false,
-				},
-			})
-		end
-	end,
-})
-vim.api.nvim_exec_autocmds('FileType', { pattern = vim.api.nvim_get_option_value('filetype', {}) })
+			vim.schedule(function()
+				local index = 0
+				local function install_next()
+					index = index + 1
+					if index > #missing then
+						vim.lsp.enable 'kakehashi'
+						return
+					end
+					local lang = missing[index]
+					vim.system({ exe, 'language', 'install', lang }, { text = true }, function(r)
+						if r.code ~= 0 then
+							vim.notify(
+								('kakehashi: failed to install %s parser: %s'):format(lang, vim.trim(r.stderr or r.stdout or '')),
+								vim.log.levels.WARN
+							)
+						end
+						vim.schedule(install_next)
+					end)
+				end
+				install_next()
+			end)
+		end)
+	end
+end
 '''
 
 [[plugins]]

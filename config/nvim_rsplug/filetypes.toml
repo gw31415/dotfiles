@@ -120,22 +120,6 @@ on_ft = "markdown"
 lua_before = "vim.g.vim_markdown_no_default_key_mappings = 1"
 
 [[plugins]]
-repo = "DrKJeff16/wezterm-types"
-start = true
-
-[[plugins]]
-repo = "folke/lazydev.nvim"
-on_ft = "lua"
-lua_after = '''
-require 'lazydev'.setup {
-	library = {
-		{ path = '${3rd}/luv/library',                words = { 'vim%.uv' } },
-		{ path = 'wezterm-types', mods = { 'wezterm' } },
-	},
-}
-'''
-
-[[plugins]]
 repo = "saecki/crates.nvim@stable"
 on_ft = "toml"
 lua_after = "require 'crates'.setup()"
@@ -143,6 +127,19 @@ lua_after = "require 'crates'.setup()"
 [[plugins]]
 repo = "mrcjkb/rustaceanvim"
 on_ft = "rust"
+lua_after = '''
+-- rust-analyzer は rustaceanvim が Neovim 側で直接起動する (kakehashi はブリッジしない)
+vim.g.rustaceanvim = {
+	server = {
+		default_settings = {
+			['rust-analyzer'] = {
+				checkOnSave = true,
+				check = { command = 'clippy' },
+			},
+		},
+	},
+}
+'''
 
 [[plugins]]
 repo = "akinsho/flutter-tools.nvim"

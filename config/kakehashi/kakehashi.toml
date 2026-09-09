@@ -1,0 +1,169 @@
+# kakehashi (https://github.com/atusy/kakehashi) のユーザ設定。
+# Neovim 側は `kakehashi` コマンドの起動のみを行い、設定はすべてこのファイルから渡る。
+# プロジェクト固有の上書きは各リポジトリの ./kakehashi.toml で行う
+# (ユーザ設定 → プロジェクト設定 → initializationOptions の順でマージされる)。
+# ドキュメント: https://github.com/atusy/kakehashi/blob/main/docs/README.md
+
+# --- host bridge ------------------------------------------------------------
+# kakehashi はデフォルトでは埋め込み領域 (Markdown のコードブロック等) しか
+# ブリッジしないため、ホスト文書自体を下流サーバに中継するよう明示的に有効化する。
+# (Phase 2: Neovim は下流サーバを一切起動せず、kakehashi 経由で全サーバを利用する)
+[languages._.bridge._self]
+enabled = true
+
+# --- language servers -------------------------------------------------------
+
+[languageServers.basedpyright]
+cmd = ["basedpyright-langserver", "--stdio"]
+languages = ["python"]
+
+# 型チェックは ty (mise) が担当するため basedpyright 側は無効化
+[languageServers.basedpyright.settings.basedpyright.analysis]
+autoSearchPaths = true
+useLibraryCodeForTypes = true
+diagnosticMode = "workspace"
+typeCheckingMode = "off"
+
+[languageServers.ty]
+cmd = ["ty", "server"]
+languages = ["python"]
+
+[languageServers.ruff]
+cmd = ["ruff", "server"]
+languages = ["python"]
+
+[languageServers.vtsls]
+cmd = ["vtsls", "--stdio"]
+languages = ["typescript", "typescriptreact", "javascript", "javascriptreact", "vue"]
+
+[languageServers.tailwindcss]
+cmd = ["tailwindcss-language-server", "--stdio"]
+languages = ["html", "css", "javascript", "javascriptreact", "typescript", "typescriptreact", "markdown"]
+
+[languageServers.taplo]
+cmd = ["taplo", "lsp", "stdio"]
+languages = ["toml"]
+
+[languageServers.nil]
+cmd = ["nil"]
+languages = ["nix"]
+
+[languageServers.nil.settings.nil.formatting]
+command = ["nixfmt"]
+
+[languageServers.nil.settings.nil.flake]
+autoArchive = true
+
+[languageServers.tinymist]
+cmd = ["tinymist"]
+languages = ["typst"]
+
+[languageServers.clangd]
+cmd = ["clangd"]
+languages = ["c", "cpp"]
+
+[languageServers.gopls]
+cmd = ["gopls"]
+languages = ["go", "gomod", "gowork", "gotmpl"]
+
+[languageServers.fish-lsp]
+cmd = ["fish-lsp", "start"]
+languages = ["fish"]
+
+[languageServers.sourcekit]
+cmd = ["sourcekit-lsp"]
+languages = ["swift", "objc"]
+
+[languageServers.ruby-lsp]
+cmd = ["ruby-lsp"]
+languages = ["ruby", "eruby"]
+
+[languageServers.yamlls]
+cmd = ["yaml-language-server", "--stdio"]
+languages = ["yaml"]
+
+[languageServers.html]
+cmd = ["vscode-html-language-server", "--stdio"]
+languages = ["html"]
+
+[languageServers.cssls]
+cmd = ["vscode-css-language-server", "--stdio"]
+languages = ["css"]
+
+[languageServers.jsonls]
+cmd = ["vscode-json-language-server", "--stdio"]
+languages = ["json", "jsonc"]
+
+[languageServers.dockerls]
+cmd = ["docker-langserver", "--stdio"]
+languages = ["dockerfile"]
+
+[languageServers.vimls]
+cmd = ["vim-language-server", "--stdio"]
+languages = ["vim"]
+
+# Lua は emmylua_ls に一本化 (設定・フォーマットは各リポジトリ直下の .emmyrc.lua / .luafmt.toml)。
+# workspaceMarkers は既定 (".git") 維持: 設定ファイルはリポジトリ直下に置く運用のため
+# root が .git と一致し、他サーバと設定を揃えられる。
+[languageServers.emmylua_ls]
+cmd = ["emmylua_ls"]
+languages = ["lua"]
+
+[languageServers.tsp-server]
+cmd = ["tsp-server", "--stdio"]
+languages = ["typespec"]
+
+[languageServers.oxlint]
+cmd = ["oxlint", "--lsp"]
+languages = ["javascript", "javascriptreact", "typescript", "typescriptreact", "vue", "svelte", "astro"]
+
+# --- Neovim の languageId (filetype) → Tree-sitter 文法名の対応付け ---------
+# kakehashi の内蔵言語名に無い languageId は base で文法を借りる。
+# NOTE: base の言語は nvim 起動時にシードされる (tweaks.toml の nvim-lspconfig 節)。
+# latex は upstream の文法アーカイブ不備で導入できないため tex 系は対象外。
+
+[languages.jsonc]
+base = "json"
+
+[languages.typescriptreact]
+base = "tsx"
+
+[languages.javascriptreact]
+base = "javascript"
+
+[languages.mdx]
+base = "markdown"
+
+[languages.mstdn]
+base = "markdown"
+
+# --- プロジェクト別上書きの例 (各リポジトリの ./kakehashi.toml へ) -----------
+#
+# deno プロジェクト (denols に切り替え、vtsls を host bridge から外す):
+#   [languageServers.deno]
+#   cmd = ["deno", "lsp"]
+#   languages = ["typescript", "typescriptreact", "javascript", "javascriptreact"]
+#
+#   [languageServers.deno.init_options]
+#   lint = true
+#   unstable = true
+#
+#   [languageServers.deno.init_options.suggest.imports.hosts]
+#   "https://deno.land" = true
+#   "https://cdn.nest.land" = true
+#   "https://crux.land" = true
+#
+#   [languages.typescript.bridge._self.aggregation._]
+#   priorities = ["deno"]
+#
+#   [languages.javascript.bridge._self.aggregation._]
+#   priorities = ["deno"]
+#
+# biome.json を置くプロジェクト (biome は mise で導入):
+#   [languageServers.biome]
+#   cmd = ["biome", "lsp-proxy"]
+#   languages = ["typescript", "typescriptreact", "javascript", "javascriptreact", "vue", "svelte", "astro", "html", "css", "json", "jsonc", "graphql"]
+#
+#   # フォーマットは biome を優先
+#   [languages._.bridge._self.aggregation."textDocument/formatting"]
+#   priorities = ["biome", "vtsls"]

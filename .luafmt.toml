@@ -1,0 +1,12 @@
+# emmylua_ls / luafmt (emmylua_formatter) 用フォーマット設定。
+# 旧 Lua 開発環境から好みの設定のみ移植 (未掲載はデフォルト維持)。
+[output]
+quote_style = "Single"
+single_arg_call_parens = "Omit"
+
+[indent]
+kind = "Tab"
+width = 4
+
+[layout]
+max_line_width = 120

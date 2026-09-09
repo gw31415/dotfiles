@@ -54,6 +54,11 @@ rec {
     pinentry-curses
     pkgconf
     zsh
+    # kakehashi が tree-sitter パーサを自動ビルドするための C コンパイラ (build-essential 相当)。
+    # mason の自動DLにも unzip / wget が要る。
+    gcc
+    unzip
+    wget
   ];
 
   darwin = common ++ darwinPkgs;
