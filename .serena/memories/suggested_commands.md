@@ -1,5 +1,6 @@
-- `home-manager switch --flake .#ama` to apply Home Manager changes on this machine.
-- `home-manager switch --flake .#ama --show-trace` for failing evaluations.
-- `nix build .#linux-x86_64-musl-static` or other flake targets when validating package outputs.
+- `./config/mise/tasks/link.sh` then `mise trust <repo>` then `mise run bootstrap` to provision a machine.
+- `mise run link` / `mise run update` for dotfiles sync and updates.
+- `sudo darwin-rebuild switch --flake .` to apply nix-darwin changes on macOS.
+- `nix flake update` on macOS to refresh `flake.lock` (no Nix on Linux side by default).
 - `rg PATTERN config/nvim` to search Neovim config quickly.
 - `nvim --clean --headless '+lua dofile("/absolute/path/to/file.lua")' +q` for syntax/loading checks on Lua snippets when sandbox-safe.

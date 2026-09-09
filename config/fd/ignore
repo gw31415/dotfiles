@@ -1,0 +1,6 @@
+.local
+.cache
+.cargo
+node_modules
+Library
+OrbStack
