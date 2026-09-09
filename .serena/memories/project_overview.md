@@ -1,4 +1,4 @@
-- Purpose: personal dotfiles and machine configuration for ama, centered on Nix flakes, Home Manager, nix-darwin, and a custom Neovim setup.
-- Stack: Nix, Home Manager, nix-darwin, Lua for Neovim config, assorted shell/tooling on Darwin.
-- Structure: `flake.nix`, `nix/` (env/darwin/brew/home/pkgs), `config/` for ~/.config symlinks (including `config/nvim/`), `files/` for loose home files, `vendor/` for nvfetcher sources.
-- Platform: Darwin/macOS only. No Linux/container targets.
+- Purpose: personal dotfiles and machine configuration for ama, mise-first, with Nix kept only as a thin wrapper for system-level overflow, and a custom Neovim setup.
+- Stack: mise (tools + tasks), pez (fish plugins), Nix (shared profile on Linux, nix-darwin on macOS), Brewfile on macOS, Lua for Neovim config.
+- Structure: `flake.nix`, `nix/` (env/darwin/shared), `config/` for ~/.config symlinks (including `config/nvim/`), `config/mise/tasks/` for link/bootstrap/update scripts, `config/fish/` for fish conf + pez.toml/lock, `files/` for loose home files, `Brewfile` for macOS.
+- Platform: Linux (mise + Nix shared profile) and Darwin/macOS (mise + Brewfile + nix-darwin).

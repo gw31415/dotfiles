@@ -1,69 +1,74 @@
 # dotfiles and configurations for ama
 
+mise-first な dotfiles。開発ツール・ランタイム・シェル設定は mise が正で、
+Nix は「はみ出る部分」の薄い wrapper のみに縮小している。
+
+| 層              | Linux                              | macOS                              |
+| --------------- | ---------------------------------- | ---------------------------------- |
+| ツール/言語     | mise (`config/mise/config.toml`)   | 同左                               |
+| dotfiles 配置   | `mise run link`                    | 同左                               |
+| fish plugin     | pez (`config/fish/pez.toml` + lock) | 同左                              |
+| 共有ツール層    | Nix `.#shared` (`nix/shared.nix`)  | — (brew が担当)                    |
+| GUI / brew 基盤 | —                                  | `Brewfile` (`mise run bootstrap`)  |
+| Nix             | 共有ツール層のみ                   | システム設定・フォント・常駐のみ   |
+
+conda backend の使用は `conda:poppler` / `conda:librsvg` の2点のみ
+(prebuilt 配布が conda-forge にしか無いため)。
+
 ## Installation
 
 ```bash
-nix run github:gw31415/dot-cli#install
+# 1. mise (公式インストーラ)
+curl https://mise.run | sh
+
+# 2. clone
+git clone <this-repo> ~/dotfiles && cd ~/dotfiles
+
+# 3. symlink 配置 (mise 不要で直接実行できる)
+./config/mise/tasks/link.sh
+
+# 4. このリポジトリを信頼 (初回のみ)
+mise trust ~/dotfiles
+
+# 5. bootstrap
+mise run bootstrap
 ```
 
-### macFUSE
+`mise run bootstrap` は OS 別に以下を行う:
 
-[macFUSE](https://macfuse.github.io) needs to change the [`Security Policy`](https://github.com/macfuse/macfuse/wiki/Getting-Started).
+- Linux: Nix 導入確認 → `nix profile install .#shared` → `mise install` →
+  `pez install` + `pez doctor` → fish をログインシェルに (`chsh`)
+- macOS: Homebrew 導入 (未導入時) → `brew bundle --file Brewfile` →
+  同上 (`mise install`, `pez`, `chsh`)
+  - Nix が未導入なら https://nixos.org/download から導入後、
+    `sudo darwin-rebuild switch --flake ~/dotfiles`
 
-## `dot` Usage
+初回 `mise install` は言語ランタイム (node / go / python / rust / dotnet 等) を
+取得するため時間がかかる。
 
-### Switching (update/upgrade) Environments
+### macOS (nix-darwin) の切替・更新
 
-- Shortcut for `dot --home`, or install `github:gw31415/dotfiles`.
-	```bash
-	dot
-	```
+```bash
+sudo darwin-rebuild switch --flake ~/dotfiles
+```
 
-- Switch env of home-manager
-	```bash
-	dot --home # or `dot -h`
-	```
+`flake.lock` 更新後は Mac 側で `nix flake update` すること
+(Linux 側に Nix が無くても `darwin-rebuild` が評価する)。
 
-- Switch env of nix-darwin
-	```bash
-	dot --darwin # or `dot -d`
-	```
+tap trust (Homebrew 6.0) で `brew bundle` が失敗したら、
+`brew tap <tap>` を手動実行して再試行すること。
 
-- Switch all envs
-	```bash
-	dot --all # or `dot -a`
-	```
+## `mise run` Usage
 
-- Fetch & update the `flake.lock`
-	```bash
-	dot --update # or `dot -u`
-	```
+```bash
+mise run link      # config/*, files/* を $HOME へ symlink (冪等)
+mise run bootstrap # 初期構築 (link 含む)
+mise run update    # mise / pez / brew・Nix 層の更新
+```
 
-### Utilities
+## fish plugins (pez)
 
-- Open the dir-changed devShell of the dotfiles and run `<cmd>`. Without `<cmd>`, it will open `$SHELL`.
-	```bash
-	dot sh <cmd>
-	```
-
-- Nix garbage-collection
-	```bash
-	dot gc
-	```
-
-- Nix garbage-collection (aggressive)
-	```bash
-	dot gc --aggressive
-	```
-
-## Examples
-
-- Update all environments after updating the `flake.lock`
-	```bash
-	dot -ua
-	```
-
-- Show `git status` of the current `dotfiles`
-	```bash
-	dot sh git status
-	```
+`config/fish/pez.toml` が一覧、`config/fish/pez-lock.toml` が固定版。
+追加・更新は `pez` コマンドで行い、lock をコミットすること。
+- `~/.config/fish/{functions,completions,conf.d}` は実ディレクトリのまま、
+  repo ファイルを1件ずつ symlink する (pez が plugin をコピーする先のため)。

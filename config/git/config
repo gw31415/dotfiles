@@ -1,0 +1,26 @@
+[user]
+	name = gw31415
+	email = 24710985+gw31415@users.noreply.github.com
+	signingKey = CF3AE17DB7E2A136
+[commit]
+	gpgSign = true
+[tag]
+	gpgSign = true
+[gpg]
+	format = openpgp
+[core]
+	pager = hunk pager
+[init]
+	defaultBranch = main
+[merge]
+	conflictStyle = diff3
+[merge "mergiraf"]
+	name = mergiraf
+	driver = mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L
+[diff "ipynb"]
+	binary = true
+[credential]
+	# GCM は mise の dotnet: backend 管理 (`dotnet:git-credential-manager`)。
+	# `git-credential-manager configure` が書く設定と同値のため初回 configure は不要。
+	# manager -> `git-credential-manager` (mise shim) を PATH 解決する。
+	helper = manager

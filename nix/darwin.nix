@@ -1,16 +1,16 @@
-{ ctx, ... }:
+# nix-darwin: macOS システム設定など「はみ出る部分」のみの薄い wrapper。
+# user-level (symlink / shell / 開発ツール / brew) は mise + Brewfile が正。
+{ pkgs, ... }:
 let
   env = import ./env.nix;
 in
 {
-  imports = [ ./brew.nix ];
-
   ########################################
   # Requires for nix-darwin to work
   ########################################
   system.stateVersion = 4;
   system.primaryUser = env.username;
-  nixpkgs.hostPlatform = ctx.system;
+  nixpkgs.hostPlatform = "aarch64-darwin";
 
   # REQUIRED: To keep-enabled experimental features after installation, since nix is managed by nix-darwin.
   nix.settings = {
@@ -22,10 +22,27 @@ in
   };
 
   # REQUIRED: Because this dotfiles is intended for a nix-darwin multi-user environment.
-  nix.package = ctx.pkgs.nix;
+  nix.package = pkgs.nix;
 
-  # REQUIRED: Create /etc/fish that loads the nix-darwin environment.
-  programs.fish.enable = true;
+  ########################################
+  # Fonts (Nix 管理に残す)
+  ########################################
+  fonts.packages = with pkgs; [
+    hackgen-nf-font
+    ipaexfont
+    noto-fonts-cjk-sans
+    noto-fonts-cjk-serif
+    source-han-sans
+    source-han-serif
+    twemoji-color-font
+  ];
+
+  ########################################
+  # Nix 専用ツール
+  ########################################
+  environment.systemPackages = with pkgs; [
+    comma
+  ];
 
   ########################################
   # Configuration for macOS system
@@ -114,7 +131,7 @@ in
         "-A"
         "--no-lock"
         "-q"
-        "${ctx.pkgs.vimPlugins.denops-vim}/denops/@denops-private/cli.ts"
+        "${pkgs.vimPlugins.denops-vim}/denops/@denops-private/cli.ts"
         "--hostname"
         "127.0.0.1"
         "--port"
@@ -137,7 +154,7 @@ in
   launchd.user.agents.tunnel-client = {
     serviceConfig = {
       ProgramArguments = [
-        "${ctx.pkgs.writeShellScript "tunnel-client-run" ''
+        "${pkgs.writeShellScript "tunnel-client-run" ''
           set -eo pipefail
           if [[ -f "$HOME/.env" ]]; then
             set -a

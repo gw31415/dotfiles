@@ -1,0 +1,5 @@
+.DS_Store
+kls_database.db
+.aider*
+.cocoindex_code
+.tgrep
