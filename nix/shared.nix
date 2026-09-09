@@ -1,5 +1,5 @@
 # mise で実現できないライブラリ性の高い共有ツール (Linux 用 buildEnv)。
-# 開発 CLI・日常 CLI は mise (config/mise/config.toml) が正。
+# 開発 CLI・日常 CLI は mise (repository root の config.toml) が正。
 # Nix が無い Linux では任意レイヤーとして省略できる。
 # 導入: `nix profile install .#shared`
 { pkgs }:

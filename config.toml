@@ -1,0 +1,241 @@
+min_version = "2026.9.3"
+
+[settings]
+experimental = true
+cargo.binstall_only = true
+idiomatic_version_file_enable_tools = ["python", "node", "go"]
+# `mise bootstrap` が tools phase で導入する。日常の task 実行では自動導入しない。
+task.run_auto_install = false
+
+[tools]
+cargo-binstall = "latest"
+# 言語ランタイム (mise が正。rust は rustup 例外のため入れない)。
+node = "latest"
+go = "latest"
+python = "latest"
+ruby = "latest"
+deno = "2"
+uv = "latest"
+"aqua:pnpm" = "11"
+rust = "latest"
+sccache = "latest"
+# .NET SDK (GCM の dotnet: backend に必要。現行 GCM は .NET SDK 10 必須)。
+dotnet = "10"
+# Git Credential Manager (.NET tool として mise 管理。git 側の helper=manager が shim を解決)。
+# NOTE: `mise install` は `git-credential-manager configure` 相当を行わないが、
+# config/git/config で helper を宣言済みのため初回の configure 手順は不要。
+"dotnet:git-credential-manager" = "latest"
+
+# シェル・シェル統合 (旧 home-manager programs.* 相当)。
+"aqua:fish-shell/fish-shell" = "latest"
+fzf = "latest"
+fd = "latest"
+"github:iffse/pay-respects" = "latest"
+"github:tetzng/pez" = "latest"
+
+# LSP / Formatter (Nix・mason から移管)。
+"github:atusy/kakehashi" = "latest"
+"aqua:astral-sh/ty" = "latest"
+"npm:basedpyright" = "latest"
+"go:golang.org/x/tools/gopls" = "latest"
+tree-sitter = "latest"
+"cargo:mergiraf" = "latest"
+"npm:fish-lsp" = "latest"
+# mason から移管 (clangd / nil / vim-language-server は mise に無いため mason 維持)。
+"aqua:astral-sh/ruff" = "latest"
+"aqua:biomejs/biome" = "latest"
+"aqua:tamasfe/taplo" = "latest"
+"aqua:Myriad-Dreamin/tinymist" = "latest"
+"aqua:rhysd/actionlint" = "latest"
+"npm:@vtsls/language-server" = "latest"
+"npm:vscode-langservers-extracted" = "latest"
+"npm:yaml-language-server" = "latest"
+"npm:dockerfile-language-server-nodejs" = "latest"
+"npm:@typespec/compiler" = "latest"
+"npm:oxlint" = "latest"
+# NOTE: latest は beta を拾うため stable 系列にピン留め
+"gem:ruby-lsp" = "0.26"
+
+# 開発 CLI (Nix から移管)。
+gh = "latest"
+lazygit = "latest"
+jq = "latest"
+jnv = "latest"
+yt-dlp = "latest"
+pandoc = "latest"
+vhs = "latest"
+"pipx:litecli" = "latest"
+ollama = "latest"
+claude = "latest"
+codex = "latest"
+
+# 日常 CLI
+# aria2 = "latest" # バイナリインストールできる手段が存在しない
+bat = "latest"
+eza = "latest"
+tmux = "latest"
+ffmpeg = "latest"
+imagemagick = "latest"
+"7zip" = "latest"
+"aqua:charmbracelet/freeze" = "latest"
+"aqua:neovim" = "latest"
+"pipx:asciinema" = "latest"
+"cargo:https://github.com/itsjunetime/tdf" = "latest"
+"go:github.com/itchyny/mmv/cmd/mmv" = "latest"
+"go:github.com/rhysd/vim-startuptime" = "latest"
+"conda:poppler" = "latest"
+"conda:librsvg" = "latest"
+
+# 既存維持。
+aube = "latest"
+"gem:terminal-notifier" = { version = "latest", os = "macos" }
+"github:gw31415/commitgen" = { version = "latest", bin = "commitgen" }
+"github:gw31415/rsplug.nvim" = { version = "latest", bin = "rsplug" }
+"github:gw31415/audiorouter" = "latest"
+"npm:trash-cli" = "latest"
+usage = "latest"
+"github:isak102/neowright" = "latest"
+# "cargo:https://github.com/jkcoxson/idevice_pair" = "latest"
+"hunkdiff" = "latest"
+"mdbook" = "latest"
+oh-my-pi = "latest"
+"cargo:https://github.com/nakasyou/local-mcp" = "latest"
+"github:openai/tunnel-client" = "latest"
+"pipx:serena-agent" = "latest"
+tssh = "latest"
+"npm:@opencode-ai/cli" = { version = "beta", allow_builds = [
+	"@opencode-ai/cli",
+] }
+"github:microsoft/tgrep" = "latest"
+
+# NOTE: aquaレジストリなし・npmなし・cargoはbinstall提供なし・ubiは非推奨のためgithubバックエンド。
+# 同一リリースに複数バイナリ同梱のためtool_alias+matchingで分割する。
+[tool_alias]
+emmylua_ls = "github:EmmyLuaLs/emmylua-analyzer-rust"
+emmylua_check = "github:EmmyLuaLs/emmylua-analyzer-rust"
+luafmt = "github:EmmyLuaLs/emmylua-analyzer-rust"
+
+[tools.emmylua_ls]
+version = "latest"
+matching = "emmylua_ls"
+
+[tools.emmylua_check]
+version = "latest"
+matching = "emmylua_check"
+
+[tools.luafmt]
+version = "latest"
+matching = "luafmt"
+
+# home.sessionVariables から移行した開発環境変数。
+# NOTE: RSPLUG_CONFIG_FILES は config/fish/conf.d/15-rsplug.fish で定義
+#       (mise の {{ config_root }} は user-global では $HOME を指すため fish 側で解決)。
+[env]
+# Host packages do not create mise shims.  The ARM Homebrew prefix keeps the
+# `mas` command available to bootstrap's Mac App Store package manager.
+_.path = ["/opt/homebrew/bin"]
+EDITOR = "nvim" # aqua:neovim の shim が提供
+DIRENV_LOG_FORMAT = ""
+GOPATH = "{{ env.HOME }}/.go" # go は mise 管理
+RUSTC_WRAPPER = "{{ env.HOME }}/.local/share/mise/shims/sccache" # Nix store から mise shim へ切替
+
+[wrappers]
+ssh = "tssh"
+
+# mise の宣言的 dotfile 管理。`mise bootstrap --adopt` はこの repository を
+# ~/.config/mise に clone するため、source は repository root からの相対パス。
+# fish の3ディレクトリは pez が管理外の plugin ファイルを配置するため
+# symlink-each にし、mise が所有する leaf だけを更新する。
+[dotfiles]
+"~/.config/audiorouter" = { source = "config/audiorouter", mode = "symlink" }
+"~/.config/commitgen" = { source = "config/commitgen", mode = "symlink" }
+"~/.config/freeze" = { source = "config/freeze", mode = "symlink" }
+"~/.config/ghostty" = { source = "config/ghostty", mode = "symlink" }
+"~/.config/herdr" = { source = "config/herdr", mode = "symlink" }
+"~/.config/kakehashi" = { source = "config/kakehashi", mode = "symlink" }
+"~/.config/lazygit" = { source = "config/lazygit", mode = "symlink" }
+"~/.config/nvim/after" = { source = "config/nvim_after", mode = "symlink" }
+"~/.config/nvim/init.lua" = { source = "config/nvim/init.lua", mode = "symlink" }
+"~/.config/nvim/lua" = { source = "config/nvim_lua", mode = "symlink" }
+"~/.config/tunnel-client" = { source = "config/tunnel-client", mode = "symlink" }
+"~/.config/fd/ignore" = { source = "config/fd/ignore", mode = "symlink" }
+"~/.config/fish/completions" = { source = "config/fish_completions", mode = "symlink-each" }
+"~/.config/fish/conf.d" = { source = "config/fish/conf.d", mode = "symlink-each" }
+"~/.config/fish/functions" = { source = "config/fish_functions", mode = "symlink-each" }
+"~/.config/fish/pez-lock.toml" = { source = "config/fish/pez-lock.toml", mode = "symlink" }
+"~/.config/fish/pez.toml" = { source = "config/fish/pez.toml", mode = "symlink" }
+"~/.config/git/attributes" = { source = "config/git/attributes", mode = "symlink" }
+"~/.config/git/config" = { source = "config/git/config", mode = "symlink" }
+"~/.config/git/ignore" = { source = "config/git/ignore", mode = "symlink" }
+"~/.latexmkrc" = { source = "files/latexmkrc", mode = "symlink" }
+"~/.skk/SKK-JISYO.L" = { source = "files/SKK-JISYO.L", mode = "symlink" }
+
+# Brewfile を mise の package manager に移行する。Homebrew 本体を shell task から
+# 呼び出さず、mise が宣言状態を検査して必要な package だけを導入する。
+[bootstrap.packages]
+"brew:cocoapods" = { version = "latest", os = "macos" }
+"brew:openssl@3" = { version = "latest", os = "macos" }
+"brew:gettext" = { version = "latest", os = "macos" }
+"brew:gnupg" = { version = "latest", os = "macos" }
+"brew:libgpg-error" = { version = "latest", os = "macos" }
+"brew:mas" = { version = "latest", os = "macos" }
+"brew:pinentry-mac" = { version = "latest", os = "macos" }
+"brew:pkgconf" = { version = "latest", os = "macos" }
+"brew:xcode-build-server" = { version = "latest", os = "macos" }
+"brew:jorgelbg/tap/pinentry-touchid" = { version = "latest", os = "macos" }
+"brew:steipete/tap/codexbar" = { version = "latest", os = "macos" }
+"brew-cask:anki" = { version = "latest", os = "macos" }
+"brew-cask:blackhole-2ch" = { version = "latest", os = "macos" }
+"brew-cask:claude-code" = { version = "latest", os = "macos" }
+"brew-cask:codex" = { version = "latest", os = "macos" }
+"brew-cask:codex-app" = { version = "latest", os = "macos" }
+"brew-cask:discord" = { version = "latest", os = "macos" }
+"brew-cask:gnucash" = { version = "latest", os = "macos" }
+"brew-cask:iloader" = { version = "latest", os = "macos" }
+"brew-cask:keybase" = { version = "latest", os = "macos" }
+"brew-cask:macfuse" = { version = "latest", os = "macos" }
+"brew-cask:macskk" = { version = "latest", os = "macos" }
+"brew-cask:musicbrainz-picard" = { version = "latest", os = "macos" }
+"brew-cask:open-design" = { version = "latest", os = "macos" }
+"brew-cask:puremac" = { version = "latest", os = "macos" }
+"brew-cask:slack" = { version = "latest", os = "macos" }
+"brew-cask:smoothcsv" = { version = "latest", os = "macos" }
+"brew-cask:thaw" = { version = "latest", os = "macos" }
+"brew-cask:google-chrome" = { version = "latest", os = "macos" }
+"brew-cask:ghostty" = { version = "latest", os = "macos" }
+"brew-cask:vorssaint" = { version = "latest", os = "macos" }
+"brew-cask:waku" = { version = "latest", os = "macos" }
+"brew-cask:obsidian" = { version = "latest", os = "macos" }
+"brew-cask:zoom" = { version = "latest", os = "macos" }
+"mas:1365531024" = { version = "latest", os = "macos" } # 1Blocker
+"mas:937984704" = { version = "latest", os = "macos" } # Amphetamine
+"mas:409183694" = { version = "latest", os = "macos" } # Keynote
+"mas:539883307" = { version = "latest", os = "macos" } # LINE
+"mas:634148309" = { version = "latest", os = "macos" } # Logic Pro
+"mas:6444915884" = { version = "latest", os = "macos" } # Ice Cubes for Mastodon
+"mas:409203825" = { version = "latest", os = "macos" } # Numbers
+"mas:409201541" = { version = "latest", os = "macos" } # Pages
+"mas:497799835" = { version = "latest", os = "macos" } # Xcode
+"mas:415166115" = { version = "latest", os = "macos" } # タイピスト
+"mas:1598123076" = { version = "latest", os = "macos" } # 宛名印刷
+
+# [tools] を導入した後だけ必要な pez 操作は native bootstrap hook に置く。
+[bootstrap.hooks.post-tools]
+run = [
+  "mise exec -- pez install",
+  "mise exec -- pez doctor",
+]
+
+# built-in package phase では PATH にない mas を skip することがあるため、
+# Homebrew の bin を追加した mise env で Mac App Store entries だけを収束する。
+[bootstrap.hooks.post-packages]
+run = 'test "$(uname)" != Darwin || mise exec -- mise bootstrap packages apply --manager mas'
+
+[tasks.update]
+description = "Update declarative system packages, mise tools, and fish plugins"
+run = [
+  "mise bootstrap packages upgrade",
+  "mise upgrade --bump",
+  "mise exec -- pez upgrade",
+  "mise exec -- pez doctor",
+]

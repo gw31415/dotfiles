@@ -1,5 +1,5 @@
 # nix-darwin: macOS システム設定など「はみ出る部分」のみの薄い wrapper。
-# user-level (symlink / shell / 開発ツール / brew) は mise + Brewfile が正。
+# user-level (symlink / shell / 開発ツール / host package) は mise bootstrap が正。
 { pkgs, ... }:
 let
   env = import ./env.nix;
@@ -122,7 +122,7 @@ in
   # skkeleton / vim-gin / fuzzy-motion 等の denops 系プラグインが即座に使える。
   # 詳細: https://github.com/vim-denops/denops.vim/wiki または :help denops-shared-server
   # NOTE: deno 本体は mise 管理。shim はバージョン更新でもパス不変のため launchd に適する。
-  # `mise run bootstrap` が shim を導入する。初回起動に間に合わなくても KeepAlive が再試行する。
+  # `mise bootstrap` が shim を導入する。初回起動に間に合わなくても KeepAlive が再試行する。
   launchd.user.agents.denops-shared-server = {
     serviceConfig = {
       ProgramArguments = [

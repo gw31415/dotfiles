@@ -38,13 +38,13 @@ function dot --description 'Apply dotfiles and system configuration'
     end
     set -l mise_dir (realpath "$config_home/mise" 2>/dev/null)
     set -l repo
-    if set -q DOTFILES; and test -f "$DOTFILES/flake.nix"
+    if set -q DOTFILES; and test -f "$DOTFILES/config.toml"; and test -f "$DOTFILES/flake.nix"
         set repo "$DOTFILES"
-    else if test -n "$mise_dir"; and test -f "$mise_dir/config.toml"
-        set repo (path dirname (path dirname "$mise_dir"))
+    else if test -n "$mise_dir"; and test -f "$mise_dir/config.toml"; and test -f "$mise_dir/flake.nix"
+        set repo "$mise_dir"
     end
     if test -z "$repo"; or not test -f "$repo/flake.nix"
-        echo '[ERROR] Not installed. To install, run the bootstrap task from the cloned repository first.' >&2
+        echo '[ERROR] Not installed. Install mise, then run `mise bootstrap --adopt <repo>`.' >&2
         return 1
     end
 
@@ -68,17 +68,13 @@ function dot --description 'Apply dotfiles and system configuration'
     # 引数なし、-h、-a は旧 Home Manager switch と同じ user-level apply。
     if set -q _flag_home; or set -q _flag_all; or test $original_argc -eq 0
         if not command -q mise
-            echo '[INFO] mise is not installed; bootstrapping the mise-first user configuration...'
-            "$repo/config/mise/tasks/bootstrap.sh"
-            or begin
-                echo '[ERROR] Failed to bootstrap the mise-first user configuration.' >&2
-                return 1
-            end
+            echo '[ERROR] mise is not installed. Install mise, then run `mise bootstrap --adopt <repo>`.' >&2
+            return 1
         else
             echo '[INFO] Switching user configuration...'
-            command mise run link
+            command mise bootstrap
             or begin
-                echo '[ERROR] Failed to link dotfiles.' >&2
+                echo '[ERROR] Failed to bootstrap user configuration.' >&2
                 return 1
             end
         end

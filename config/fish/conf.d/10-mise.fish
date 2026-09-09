@@ -5,12 +5,11 @@ else
     mise activate fish --shims | source
 end
 
-# リポジトリ配置 (mise の {{ config_root }} は user-global では $HOME を指すため
-# symlink 解決で求める。~/.config/mise -> <repo>/config/mise を想定)。
+# `mise bootstrap --adopt` はこのリポジトリを ~/.config/mise に置く。
 if not set -q DOTFILES
     set -l mise_dir (realpath ~/.config/mise 2>/dev/null)
-    if test -n "$mise_dir"
-        set -gx DOTFILES (path dirname (path dirname $mise_dir))
+    if test -n "$mise_dir"; and test -f "$mise_dir/config.toml"
+        set -gx DOTFILES "$mise_dir"
     end
 end
 

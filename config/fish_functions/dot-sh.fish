@@ -7,13 +7,13 @@ function dot-sh --description 'Open the dotfiles managed development shell'
     end
     set -l mise_dir (realpath "$config_home/mise" 2>/dev/null)
     set -l repo
-    if set -q DOTFILES; and test -f "$DOTFILES/flake.nix"
+    if set -q DOTFILES; and test -f "$DOTFILES/config.toml"; and test -f "$DOTFILES/flake.nix"
         set repo "$DOTFILES"
-    else if test -n "$mise_dir"; and test -f "$mise_dir/config.toml"
-        set repo (path dirname (path dirname "$mise_dir"))
+    else if test -n "$mise_dir"; and test -f "$mise_dir/config.toml"; and test -f "$mise_dir/flake.nix"
+        set repo "$mise_dir"
     end
     if test -z "$repo"; or not test -f "$repo/flake.nix"
-        echo '[ERROR] Not installed. To install, run the bootstrap task from the cloned repository first.' >&2
+        echo '[ERROR] Not installed. Install mise, then run `mise bootstrap --adopt <repo>`.' >&2
         return 1
     end
     if test -n "$DOT_DEVSHELL"
@@ -21,7 +21,7 @@ function dot-sh --description 'Open the dotfiles managed development shell'
         return 1
     end
     if not command -q mise
-        echo '[ERROR] mise is not installed. Run the bootstrap task first.' >&2
+        echo '[ERROR] mise is not installed. Install mise, then run `mise bootstrap --adopt <repo>`.' >&2
         return 1
     end
 

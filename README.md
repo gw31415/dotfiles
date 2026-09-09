@@ -5,11 +5,11 @@ Nix は「はみ出る部分」の薄い wrapper のみに縮小している。
 
 | 層              | Linux                              | macOS                              |
 | --------------- | ---------------------------------- | ---------------------------------- |
-| ツール/言語     | mise (`config/mise/config.toml`)   | 同左                               |
-| dotfiles 配置   | `mise run link`                    | 同左                               |
+| ツール/言語     | mise (`config.toml`)               | 同左                               |
+| dotfiles 配置   | `mise bootstrap dotfiles`           | 同左                               |
 | fish plugin     | pez (`config/fish/pez.toml` + lock) | 同左                              |
 | 共有ツール層    | 任意: Nix `.#shared` (`nix/shared.nix`) | — (brew が担当)                |
-| GUI / brew 基盤 | —                                  | `Brewfile` (`mise run bootstrap`)  |
+| GUI / host package | —                               | `[bootstrap.packages]`             |
 | Nix             | 共有ツール層のみ                   | システム設定・フォント・常駐のみ   |
 
 conda backend の使用は `conda:poppler` / `conda:librsvg` の2点のみ
@@ -21,38 +21,40 @@ conda backend の使用は `conda:poppler` / `conda:librsvg` の2点のみ
 # 1. mise (公式インストーラ)
 curl https://mise.run | sh
 
-# 2. clone
-git clone <this-repo> ~/dotfiles && cd ~/dotfiles
-
-# 3. symlink 配置 (mise 不要で直接実行できる)
-./config/mise/tasks/link.sh
-
-# 4. このリポジトリを信頼 (初回のみ)
-mise trust ~/dotfiles
-
-# 5. bootstrap
-mise run bootstrap
+# 2. この repository を mise のグローバル構成として採用して bootstrap
+#    (mise が ~/.config/mise へ clone・trust してから宣言状態を適用する)
+mise bootstrap --adopt <this-repo-url>
 ```
 
-`mise run bootstrap` は OS 別に以下を行う:
+`mise bootstrap` は以下を宣言的に適用する:
 
-- Linux: `mise install` → `pez install` + `pez doctor` → fish をログインシェルに
-  (`chsh`)。Nix が導入済みなら、Nix 専用 formatter・ネイティブ依存の任意層も
-  `nix profile install .#shared` で導入する
-- macOS: Homebrew 導入 (未導入時) → `brew bundle --file Brewfile` →
-  同上 (`mise install`, `pez`, `chsh`)
-  - Nix が未導入なら https://nixos.org/download から導入後、
-    `sudo darwin-rebuild switch --flake ~/dotfiles`
+- `config.toml` の `[dotfiles]` に定義した symlink と fish の leaf symlink
+- macOS の Homebrew formula / cask と Mac App Store application
+  (`[bootstrap.packages]`)
+- `[tools]` の mise-managed toolchain
+- tools 導入後の `pez install` と `pez doctor`
 
 初回 `mise install` は言語ランタイム (node / go / python / rust / dotnet 等) を
 取得するため時間がかかる。
 
+Nix の `.#shared` は任意の互換層であり、bootstrap では導入しない。必要な Linux
+環境だけで `nix profile install ~/.config/mise#shared` を明示的に実行する。
+
+Arto は third-party tap の cask で、現在の mise package backend が安全に評価できない。
+これは bootstrap の外で、必要な Mac だけに `brew install --cask arto-app/tap/arto` を
+明示的に実行する。
+
 ### 旧 Home Manager 環境からの移行
 
-旧 Nix profile の `dot` を、mise-first 実装へ差し替えるため、最初の一回だけ clone 済みリポジトリから直接
-`./config/mise/tasks/link.sh` を実行する。この処理は、現在このリポジトリが
-管理する destination の Nix store symlink だけを置き換え、通常ファイルや
-それ以外の symlink は停止して手動解決を求める。
+mise は既存ファイルを上書きしない。まず `mise bootstrap --dry-run` で対象を
+確認し、競合した destination が旧 `/nix/store` symlink であることを確認してから、
+その symlink だけを手動で外して再実行する。通常ファイルや出所不明の symlink に
+`--force-dotfiles` を使わないこと。
+
+旧構成の `~/.config/mise -> <repo>/config/mise` は互換 symlink により、そのまま
+リポジトリ root を指す。既存 checkout を使い続ける場合は adopt し直さず、
+`mise trust ~/.config/mise/config.toml` の後に `mise bootstrap` を実行する。
+新しいマシンだけ `mise bootstrap --adopt` を使う。
 
 新しい fish を開いた後も、従来どおり `dot`、`dot -h`、`dot -d`、`dot -a`、
 `dot -u`、`dot sh`、`dot gc` を使える。内部では user-level apply と開発 shell を
@@ -85,15 +87,14 @@ sudo darwin-rebuild switch --flake ~/dotfiles
 
 `flake.lock` 更新後は Mac 側で `nix flake update` すること。
 
-tap trust (Homebrew 6.0) で `brew bundle` が失敗したら、
-`brew tap <tap>` を手動実行して再試行すること。
-
-## `mise run` Usage
+## mise Usage
 
 ```bash
-mise run link      # config/*, files/* を $HOME へ symlink (冪等)
-mise run bootstrap # 初期構築 (link 含む)
-mise run update    # mise / pez / brew・Nix 層の更新
+mise bootstrap --dry-run          # 変更予定を確認
+mise bootstrap                    # dotfiles・host package・tools を収束
+mise bootstrap dotfiles apply     # dotfiles だけを収束
+mise bootstrap packages status    # host package の状態確認
+mise run update                   # package / mise tool / pez の更新
 ```
 
 ## fish plugins (pez)
