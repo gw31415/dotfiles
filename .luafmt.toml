@@ -2,7 +2,9 @@
 # 旧 Lua 開発環境から好みの設定のみ移植 (未掲載はデフォルト維持)。
 [output]
 quote_style = "Single"
-single_arg_call_parens = "Omit"
+# NOTE: "Omit" は luafmt 0.25.1 で複数引数の2つ目以降を欠落させる不具合あり
+# (例: print('a','b') → print 'a')。上流修正まで Preserve。
+single_arg_call_parens = "Preserve"
 
 [indent]
 kind = "Tab"

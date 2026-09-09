@@ -36,19 +36,19 @@ vim.keymap.set('n', '<Leader>u', function() require 'undotree'.toggle() end, { d
 [[plugins]]
 repo = "kylechui/nvim-surround"
 on_map = { n = [
-	"ys",
-	"yss",
-	"yS",
-	"ySS",
-	"ds",
-	"cs",
-	"cS",
+    "ys",
+    "yss",
+    "yS",
+    "ySS",
+    "ds",
+    "cs",
+    "cS",
 ], i = [
-	"<C-g>s",
-	"<C-g>S",
+    "<C-g>s",
+    "<C-g>S",
 ], x = [
-	"S",
-	"gS",
+    "S",
+    "gS",
 ] }
 lua_after = """
 require 'nvim-surround'.setup {
@@ -63,9 +63,9 @@ require 'nvim-surround'.setup {
 [[plugins]]
 repo = "simeji/winresizer"
 on_cmd = [
-	"WinResizerStartResize",
-	"WinResizerStartFocus",
-	"WinResizerStartMove",
+    "WinResizerStartResize",
+    "WinResizerStartFocus",
+    "WinResizerStartMove",
 ]
 on_map = { n = "<c-w>e" }
 lua_before = "vim.api.nvim_set_var('winresizer_start_key', '<c-w>e')"

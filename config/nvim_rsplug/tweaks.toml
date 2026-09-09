@@ -1,38 +1,43 @@
 [[plugins]]
 start = true
 repo = "navarasu/onedark.nvim"
-lua_after = '''
-require 'onedark'.setup { transparent = true, dark = true }
+lua_after = '''require 'onedark'.setup { transparent = true, dark = true }
 vim.cmd.colorscheme 'onedark'
 '''
 
 [[plugins]]
 repo = "charm-and-friends/freeze.nvim"
 on_cmd = 'Freeze'
-lua_after = '''
-require 'freeze'.setup {
-	config = "user"
-}
+lua_after = '''require 'freeze'.setup { config = 'user' }
 '''
 
 [[plugins]]
 repo = "stevearc/conform.nvim"
 on_event = ["BufWritePre", "LspAttach"]
 on_cmd = "ConformInfo"
-lua_after = '''
--- local js_formatters = { 'biome', 'prettierd', 'prettier', stop_after_first = true }
-require 'conform'.setup {
-	toml = { 'taplo', },
-	python = { 'ruff', 'isort', 'black' },
-	-- formatters_by_ft = {
-	-- 	json = js_formatters,
-	-- 	javascript = js_formatters,
-	-- 	javascriptreact = js_formatters,
-	-- 	typescript = js_formatters,
-	-- 	typescriptreact = js_formatters,
-	-- 	astro = js_formatters,
-	-- },
-}
+lua_after = '''require 'conform'.setup {}
+vim.api.nvim_create_autocmd('LspAttach', {
+	callback = function (args)
+		local bufopts = { silent = true, buffer = args.buf }
+		vim.opt_local.formatexpr = 'v:lua.require"conform".formatexpr()'
+
+		vim.keymap.set('n', 'K', function ()
+			local winid = require 'ufo'.peekFoldedLinesUnderCursor()
+			if not winid then vim.lsp.buf.hover() end
+		end, bufopts
+		)
+		vim.keymap.set('n', 'gra', function ()
+			require
+				 'actions-preview'
+				.code_actions()
+		end, bufopts
+		)
+		vim.keymap.set('n', 'gqal', function ()
+			require 'conform'.format { async = true, lsp_format = 'fallback' }
+		end, bufopts
+		)
+	end
+})
 '''
 
 [[plugins]]
@@ -57,18 +62,17 @@ lua_after = "require 'overseer'.setup()"
 [[plugins]]
 repo = "HakonHarnes/img-clip.nvim"
 on_event = "VeryLazy"
-lua_after = '''
-require 'img-clip'.setup {
+lua_after = '''require 'img-clip'.setup {
 	-- recommended settings
 	default = {
 		embed_image_as_base64 = false,
 		prompt_for_file_name = false,
 		drag_and_drop = {
-			insert_mode = true,
+			insert_mode = true
 		},
 		-- required for Windows users
-		use_absolute_path = true,
-	},
+		use_absolute_path = true
+	}
 }
 '''
 
@@ -80,18 +84,14 @@ on_event = "TermOpen"
 [[plugins]]
 repo = "lewis6991/gitsigns.nvim"
 on_event = "VeryLazy"
-lua_after = '''
-require 'gitsigns'.setup {
-	numhl = true,
-	signcolumn = false,
-}
+lua_after = '''require 'gitsigns'.setup { numhl = true, signcolumn = false }
 
 local function create_opfunc(name, inner)
 	if type(inner) ~= 'table' then
 		inner = {}
 	end
 
-	local opfunc = function(typ)
+	local opfunc = function (typ)
 		if not typ or typ == '' then
 			vim.api.nvim_set_option_value('operatorfunc', 'v:lua.' .. name, {})
 			return 'g@'
@@ -136,26 +136,36 @@ local function create_opfunc(name, inner)
 	return _G[name]
 end
 
-vim.keymap.set({ 'n', 'x' }, '<C-g>a', create_opfunc('_gitsigns_stage_hunk', {
-	on_select = function(_)
-		local startline = vim.fn.line "'["
-		local endline = vim.fn.line "']"
-		require 'gitsigns'.stage_hunk { startline, endline }
-	end
-}), { expr = true, desc = 'Stage the hunk' })
-vim.keymap.set('n', '<C-g>aal', function() require 'gitsigns'.stage_buffer() end, { desc = 'Stage the whole file' })
+vim.keymap.set(
+	{ 'n', 'x' }, '<C-g>a',
+	create_opfunc('_gitsigns_stage_hunk', {
+		on_select = function (_)
+			local startline = vim.fn.line "'["
+			local endline = vim.fn.line "']"
+			require 'gitsigns'.stage_hunk { startline, endline }
+		end
+	}),
+	{ expr = true, desc = 'Stage the hunk' }
+)
+vim.keymap.set('n', '<C-g>aal', function () require 'gitsigns'.stage_buffer() end, { desc = 'Stage the whole file' })
 
-vim.keymap.set({ 'n', 'x' }, '<C-g>r', create_opfunc('_gitsigns_reset_hunk', {
-	on_select = function(_)
-		local startline = vim.fn.line "'["
-		local endline = vim.fn.line "']"
-		require 'gitsigns'.reset_hunk { startline, endline }
-	end
-}), { expr = true, desc = 'Restore the hunk' }) 
+vim.keymap.set(
+	{ 'n', 'x' }, '<C-g>r',
+	create_opfunc('_gitsigns_reset_hunk', {
+		on_select = function (_)
+			local startline = vim.fn.line "'["
+			local endline = vim.fn.line "']"
+			require 'gitsigns'.reset_hunk { startline, endline }
+		end
+	}),
+	{ expr = true, desc = 'Restore the hunk' }
+)
 
-vim.keymap.set('n', '<C-g>k', function() require 'gitsigns'.preview_hunk_inline() end, { desc = 'View the diff of the Hunk' })
-vim.keymap.set('n', ']<C-g>', function() require 'gitsigns'.nav_hunk 'next' end, { desc = 'Go to the next Hunk' })
-vim.keymap.set('n', '[<C-g>', function() require 'gitsigns'.nav_hunk 'prev' end, { desc = 'Go to the previous Hunk' })
+vim.keymap.set('n', '<C-g>k', function () require 'gitsigns'.preview_hunk_inline() end, {
+	desc = 'View the diff of the Hunk'
+})
+vim.keymap.set('n', ']<C-g>', function () require 'gitsigns'.nav_hunk 'next' end, { desc = 'Go to the next Hunk' })
+vim.keymap.set('n', '[<C-g>', function () require 'gitsigns'.nav_hunk 'prev' end, { desc = 'Go to the previous Hunk' })
 '''
 
 [[plugins]]
@@ -165,10 +175,10 @@ on_ft = "gin-status"
 [[plugins]]
 repo = "onsails/diaglist.nvim"
 on_event = "LspAttach"
-lua_after = '''
-vim.api.nvim_create_user_command('Diaglist', function()
+lua_after = '''vim.api.nvim_create_user_command('Diaglist', function ()
 	require 'diaglist.quickfix'.populate_qflist()
-end, { force = true })
+end, { force = true }
+)
 require 'diaglist'.init()
 require 'diaglist.quickfix'.populate_qflist()
 '''
@@ -176,20 +186,19 @@ require 'diaglist.quickfix'.populate_qflist()
 [[plugins]]
 repo = "mfussenegger/nvim-dap"
 on_map = { n = ["<F5>", "<F10>", "<F11>", "<F12>", "bb"] }
-lua_after = '''
-vim.fn.sign_define('DapBreakpoint', { text = '', texthl = 'Macro', linehl = '', numhl = '' })
+lua_after = '''vim.fn.sign_define('DapBreakpoint', { text = '', texthl = 'Macro', linehl = '', numhl = '' })
 vim.fn.sign_define('DapBreakpointCondition', { text = '󰆗', texthl = 'Macro', linehl = '', numhl = '' })
 vim.fn.sign_define('DapLogPoint', { text = '󰵛', texthl = '', linehl = 'Macro', numhl = '' })
 vim.fn.sign_define('DapBreakpointRejected', { text = '', texthl = 'Macro', linehl = '', numhl = '' })
 require 'dapui'.setup()
-require 'dap'.listeners.before['event_initialized']['custom'] = function() require 'dapui'.open {} end
-require 'dap'.listeners.before['event_terminated']['custom'] = function() require 'dapui'.close {} end
+require 'dap'.listeners.before['event_initialized']['custom'] = function () require 'dapui'.open {} end
+require 'dap'.listeners.before['event_terminated']['custom'] = function () require 'dapui'.close {} end
 
-vim.keymap.set('n', '<F5>', function() require 'dap'.continue() end, { desc = 'DAP: continue' })
-vim.keymap.set('n', '<F10>', function() require 'dap'.step_over() end, { desc = 'DAP: step over' })
-vim.keymap.set('n', '<F11>', function() require 'dap'.step_into() end, { desc = 'DAP: step into' })
-vim.keymap.set('n', '<F12>', function() require 'dap'.step_out() end, { desc = 'DAP: step out' })
-vim.keymap.set('n', 'bb', function() require 'dap'.toggle_breakpoint() end, { desc = 'DAP: toggle breakpoint' })
+vim.keymap.set('n', '<F5>', function () require 'dap'.continue() end, { desc = 'DAP: continue' })
+vim.keymap.set('n', '<F10>', function () require 'dap'.step_over() end, { desc = 'DAP: step over' })
+vim.keymap.set('n', '<F11>', function () require 'dap'.step_into() end, { desc = 'DAP: step into' })
+vim.keymap.set('n', '<F12>', function () require 'dap'.step_out() end, { desc = 'DAP: step out' })
+vim.keymap.set('n', 'bb', function () require 'dap'.toggle_breakpoint() end, { desc = 'DAP: toggle breakpoint' })
 '''
 
 [[plugins]]
@@ -199,23 +208,21 @@ repo = "rcarriga/nvim-dap-ui"
 depends = ["nvim-nio", "nvim-dap-virtual-text"]
 [[plugins]]
 repo = "theHamsta/nvim-dap-virtual-text"
-lua_after = '''
-require 'nvim-dap-virtual-text'.setup { enabled_commands = false }
+lua_after = '''require 'nvim-dap-virtual-text'.setup { enabled_commands = false }
 '''
 
 [[plugins]]
 repo = "rachartier/tiny-inline-diagnostic.nvim"
 on_event = "LspAttach"
-lua_after = '''
-require 'tiny-inline-diagnostic'.setup {
+lua_after = '''require 'tiny-inline-diagnostic'.setup {
 	options = {
 		multiple_diag_under_cursor = true,
 		show_all_diags_on_cursorline = true,
 		multilines = {
 			enabled = true,
-			always_show = true,
-		},
-	},
+			always_show = true
+		}
+	}
 }
 '''
 
@@ -226,13 +233,12 @@ lua_after = "require 'colorful-menu'.setup {}"
 [[plugins]]
 repo = "aznhe21/actions-preview.nvim"
 depends = "nui.nvim"
-lua_after = '''
-local hl = require 'actions-preview.highlight'
+lua_after = '''local hl = require 'actions-preview.highlight'
 require 'actions-preview'.setup {
 	backend = { 'snacks' },
 	highlight_command = {
-		hl.delta 'delta --no-gitconfig --side-by-side',
-	},
+		hl.delta 'delta --no-gitconfig --side-by-side'
+	}
 }
 '''
 
@@ -244,25 +250,28 @@ depends = "nui.nvim"
 repo = "gw31415/fzyselect-lines.nvim"
 on_map = { n = ["g/", "<c-p>"] }
 depends = "fzyselect.vim"
-lua_after = '''
-vim.keymap.set('n', 'g/', function() require 'fzyselect-lines'.open() end, { desc = 'Fuzzy-Find the line and jump' })
+lua_after = '''vim.keymap.set('n', 'g/', function () require 'fzyselect-lines'.open() end, { desc = 'Fuzzy-Find the line and jump' })
 
 -- git ls-files
-vim.keymap.set('n', '<c-p>', function()
-	local res = vim.system({ 'sh', '-c', [[
+vim.keymap.set('n', '<c-p>', function ()
+	local res = vim.system({
+		'sh',
+		'-c',
+		[[
 		(
 			git ls-files
 			git ls-files --others --exclude-standard
 		) | sort -u
-	]] }, { text = true }):wait()
+	]]
+	}, { text = true }):wait()
 	if res.code ~= 0 then
 		vim.notify(vim.fn.trim(res.stderr), vim.log.levels.ERROR, { title = 'fzyselect: git ls-files' })
 	else
-		require 'fzyselect'.start(vim.fn.split(res.stdout, '\n'),
-			{ prompt = 'git ls-files: <Enter> to edit' },
-			function(path)
-				if path then vim.cmd.edit(path) end
-			end)
+		require 'fzyselect'.start(vim.fn.split(res.stdout, '\n'), { prompt = 'git ls-files: <Enter> to edit' }, function (
+			path
+		)
+			if path then vim.cmd.edit(path) end
+		end)
 	end
 end)
 '''
@@ -270,17 +279,16 @@ end)
 [[plugins]]
 repo = "gw31415/fzyselect.vim"
 depends = "fzyselect-nui-opener.nvim"
-lua_after = '''
-vim.g.fzyselect_opener = require 'fzyselect-nui-opener'
+lua_after = '''vim.g.fzyselect_opener = require 'fzyselect-nui-opener'
 
 vim.api.nvim_create_autocmd('FileType', {
 	pattern = 'fzyselect',
-	callback = function()
+	callback = function ()
 		vim.wo.winblend = 0
 		vim.api.nvim_create_autocmd('TextChanged', {
 			buffer = 0,
 			once = true,
-			callback = function()
+			callback = function ()
 				local lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
 				local width = 0
 				for _, line in ipairs(lines) do
@@ -290,15 +298,16 @@ vim.api.nvim_create_autocmd('FileType', {
 				local row = math.max(math.floor(vim.api.nvim_get_option_value('lines', {}) / 2), 1)
 				local col = math.max(math.floor((vim.api.nvim_get_option_value('columns', {}) - width) / 2), 1)
 				vim.api.nvim_win_set_config(0, { width = width + 2, row = row, col = col, relative = 'editor' })
-			end,
+			end
 		})
 		vim.wo.wrap = false
 		vim.keymap.set('n', 'i', require 'fzyselect'.input, { buffer = true, desc = 'Input for fuzzy query' })
-		vim.keymap.set('n', '<cr>', "<cmd>cal fzyselect#cr(v:count??'.')<cr>",
-			{ buffer = true, desc = 'Confirm selection' })
+		vim.keymap.set(
+			'n', '<cr>', "<cmd>cal fzyselect#cr(v:count??'.')<cr>", { buffer = true, desc = 'Confirm selection' }
+		)
 		vim.keymap.set('n', '<esc>', '<cmd>clo<cr>', { buffer = true, desc = 'Close fuzzy selection' })
 		vim.opt_local.number = true
-	end,
+	end
 })
 '''
 
@@ -307,15 +316,19 @@ vim.api.nvim_create_autocmd('FileType', {
 repo = "gw31415/bufmanager.nvim"
 depends = "fzyselect.vim"
 on_event = "BufAdd"
-lua_after = '''
-vim.keymap.set('n', 'gb', function()
+lua_after = '''vim.keymap.set('n', 'gb', function ()
 	vim.api.nvim_create_autocmd('FileType', {
 		once = true,
 		pattern = 'fzyselect',
-		callback = function()
-			vim.keymap.set({ 'n', 'x' }, 'd', '<Plug>(bufmanager-bdelete)', { buffer = true, desc = 'Delete the buffer' })
-			vim.keymap.set('n', 'dd', '<Plug>(bufmanager-bdelete)_', { buffer = true, desc = 'Delete the buffer in current-line' })
-		end,
+		callback = function ()
+			vim.keymap.set(
+				{ 'n', 'x' }, 'd', '<Plug>(bufmanager-bdelete)', { buffer = true, desc = 'Delete the buffer' }
+			)
+			vim.keymap.set('n', 'dd', '<Plug>(bufmanager-bdelete)_', {
+				buffer = true,
+				desc = 'Delete the buffer in current-line'
+			})
+		end
 	})
 	vim.fn['bufmanager#open']()
 end)
@@ -327,10 +340,7 @@ on_event = "CmdlineEnter"
 on_map = { n = "c<c-l>" }
 depends = "fzyselect.vim"
 lua_before = "vim.api.nvim_set_var('deepl_target_lang', 'EN')"
-lua_after = '''
-require 'deepl-commands'.setup {
-	selector_func = function(...) require 'fzyselect'.start(...) end,
-}
+lua_after = '''require 'deepl-commands'.setup { selector_func = function (...) require 'fzyselect'.start(...) end }
 vim.keymap.set('n', 'c<c-l>', '<cmd>DeepLTarget<cr>', { desc = 'Select the DeepL translation target lang' })
 '''
 
@@ -338,8 +348,7 @@ vim.keymap.set('n', 'c<c-l>', '<cmd>DeepLTarget<cr>', { desc = 'Select the DeepL
 repo = "gw31415/deepl-operator.vim"
 depends = "deepl-commands.nvim" # Management of g:deepl_target_lang
 on_map = { nx = ["cl", "cL"] }
-lua_after = '''
-vim.keymap.set({ 'n', 'x' }, 'cl', '<Plug>(deepl-replace)', { desc = 'Replace with DeepL translation' })
+lua_after = '''vim.keymap.set({ 'n', 'x' }, 'cl', '<Plug>(deepl-replace)', { desc = 'Replace with DeepL translation' })
 vim.keymap.set('n', 'cll', '<Plug>(deepl-replace)_', { desc = 'Replace with DeepL translation and keep cursor' })
 vim.keymap.set('n', 'cL', '<Plug>(deepl-replace)$', { desc = 'Replace with DeepL translation at end of line' })
 '''
@@ -347,8 +356,7 @@ vim.keymap.set('n', 'cL', '<Plug>(deepl-replace)$', { desc = 'Replace with DeepL
 [[plugins]]
 repo = "CRAG666/code_runner.nvim"
 on_event = "CmdlineEnter"
-lua_after = '''
-require 'code_runner'.setup {
+lua_after = '''require 'code_runner'.setup {
 	mode = 'term',
 	focus = true,
 	startinsert = false,
@@ -357,12 +365,12 @@ require 'code_runner'.setup {
 		python = 'python3 -u',
 		typescript = 'deno run -A',
 		rust = 'cd $dir && rustc $fileName && $dir/$fileNameWithoutExt',
-		go = 'go run',
+		go = 'go run'
 	},
 	term = {
 		position = 'rightb vert',
-		size = 70,
-	},
+		size = 70
+	}
 	-- filetype_path = vim.fn.expand('~/.config/nvim/code_runner.json'),
 	-- project_path = vim.fn.expand('~/.config/nvim/project_manager.json')
 }
@@ -372,35 +380,36 @@ require 'code_runner'.setup {
 [[plugins]]
 repo = "folke/snacks.nvim"
 on_cmd = "Snacks"
-lua_after = '''
-require 'snacks'.setup { picker = { enabled = true, ui_select = false } }
+lua_after = '''require 'snacks'.setup { picker = { enabled = true, ui_select = false } }
 vim.api.nvim_create_user_command('Snacks', 'lua require "snacks".picker()', {})
 '''
 
 [[plugins]]
 repo = "gw31415/root.nvim"
 on_cmd = "Root"
-lua_after = '''
-local quiet = true
+lua_after = '''local quiet = true
 -- Timer for startup 20ms to avoid noisy-messages on startup
-vim.defer_fn(function()
+vim.defer_fn(function ()
 	quiet = false
 end, 20)
-vim.api.nvim_create_user_command('Root', function(opts)
-	require 'root'.cd(opts.args, quiet)
-end, {
-	nargs = '?',
-	complete = 'file',
-})
+vim.api.nvim_create_user_command(
+	'Root',
+	function (opts)
+		require 'root'.cd(opts.args, quiet)
+	end,
+	{
+		nargs = '?',
+		complete = 'file'
+	}
+)
 '''
 
 [[plugins]]
 repo = "j-hui/fidget.nvim@v*"
 on_event = "VeryLazy"
-lua_after = '''
-require 'fidget'.setup {
+lua_after = '''require 'fidget'.setup {
 	notification = {
-		override_vim_notify = true,
+		override_vim_notify = true
 	}
 }
 '''
@@ -412,8 +421,7 @@ lua_after = "vim.api.nvim_set_hl(0, 'SkkeletonHenkan', { reverse = true })"
 [[plugins]]
 repo = "delphinus/skkeleton_indicator.nvim"
 on_event = "InsertEnter"
-lua_after = '''
-vim.api.nvim_set_hl(0, 'SkkeletonIndicatorEiji', { fg = '#88c0d0', bg = '#2e3440', bold = true })
+lua_after = '''vim.api.nvim_set_hl(0, 'SkkeletonIndicatorEiji', { fg = '#88c0d0', bg = '#2e3440', bold = true })
 vim.api.nvim_set_hl(0, 'SkkeletonIndicatorHira', { fg = '#2e3440', bg = '#a3be8c', bold = true })
 vim.api.nvim_set_hl(0, 'SkkeletonIndicatorKata', { fg = '#2e3440', bg = '#ebcb8b', bold = true })
 vim.api.nvim_set_hl(0, 'SkkeletonIndicatorHankata', { fg = '#2e3440', bg = '#b48ead', bold = true })
@@ -431,11 +439,7 @@ require 'skkeleton_indicator'.setup {
 
 [[plugins]]
 repo = "stevearc/dressing.nvim"
-lua_after = '''
-require 'dressing'.setup {
-	input = { enabled = false },
-	select = { enabled = false },
-}
+lua_after = '''require 'dressing'.setup { input = { enabled = false }, select = { enabled = false } }
 '''
 
 [[plugins]]
@@ -457,32 +461,24 @@ lua_after = "require 'octo'.setup {}"
 [[plugins]]
 repo = "stevearc/aerial.nvim"
 on_map = { n = ["<leader>A", "{", "}"] }
-lua_after = '''
-require 'aerial'.setup {
-	on_attach = function(bufnr)
+lua_after = '''require 'aerial'.setup {
+	on_attach = function (bufnr)
 		vim.keymap.set('n', '{', '<cmd>AerialPrev<CR>', { buffer = bufnr, desc = 'Jump to the aerial-prev' })
 		vim.keymap.set('n', '}', '<cmd>AerialNext<CR>', { buffer = bufnr, desc = 'Jump to the aerial-next' })
-	end,
+	end
 }
-vim.keymap.set('n', '<leader>A', function() require 'aerial'.toggle() end, { desc = 'Toggle the aerial' })
+vim.keymap.set('n', '<leader>A', function () require 'aerial'.toggle() end, { desc = 'Toggle the aerial' })
 '''
 
 [[plugins]]
 repo = "lukas-reineke/indent-blankline.nvim"
 on_event = "VeryLazy"
-lua_after = '''
-local highlight = {
-	'RainbowRed',
-	'RainbowYellow',
-	'RainbowBlue',
-	'RainbowOrange',
-	'RainbowGreen',
-	'RainbowViolet',
-	'RainbowCyan',
+lua_after = '''local highlight = {
+	'RainbowRed', 'RainbowYellow', 'RainbowBlue', 'RainbowOrange', 'RainbowGreen', 'RainbowViolet', 'RainbowCyan'
 }
 local hooks = require 'ibl.hooks'
 
-hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+hooks.register(hooks.type.HIGHLIGHT_SETUP, function ()
 	vim.api.nvim_set_hl(0, 'RainbowRed', { fg = '#E06C75' })
 	vim.api.nvim_set_hl(0, 'RainbowYellow', { fg = '#E5C07B' })
 	vim.api.nvim_set_hl(0, 'RainbowBlue', { fg = '#61AFEF' })
@@ -519,8 +515,7 @@ on_cmd = ["TSPlaygroundToggle", "TSHighlightCapturesUnderCursor"]
 [[plugins]]
 repo = "b0o/incline.nvim"
 on_event = "VeryLazy"
-lua_after = '''
-local helpers = require 'incline.helpers'
+lua_after = '''local helpers = require 'incline.helpers'
 local navic = require 'nvim-navic'
 local devicons = require 'nvim-web-devicons'
 
@@ -543,20 +538,19 @@ local function smart_path(bufnr)
 end
 require 'incline'.setup {
 	hide = {
-		cursorline = true,
+		cursorline = true
 	},
 	window = {
 		padding = 0,
-		margin = { horizontal = 0, vertical = 0 },
+		margin = { horizontal = 0, vertical = 0 }
 	},
-	render = function(props)
+	render = function (props)
 		local filename = smart_path(props.buf)
 		local ft_icon, ft_color = devicons.get_icon_color(filename)
 		local modified = vim.bo[props.buf].modified
 		local res = {
-			ft_icon and { ' ', ft_icon, ' ', guibg = ft_color, guifg = helpers.contrast_color(ft_color) } or '',
-			' ',
-			{ filename, gui = modified and 'bold,italic' or 'bold' },
+			ft_icon and { ' ', ft_icon, ' ', guibg = ft_color, guifg = helpers.contrast_color(ft_color) } or '', ' ',
+			{ filename, gui = modified and 'bold,italic' or 'bold' }
 		}
 		if props.focused then
 			res.guibg = '#54507e'
@@ -566,15 +560,15 @@ require 'incline'.setup {
 		if props.focused then
 			for _, item in ipairs(navic.get_data(props.buf) or {}) do
 				table.insert(res, {
-					{ ' > ',     group = 'NavicSeparator' },
+					{ ' > ', group = 'NavicSeparator' },
 					{ item.icon, group = 'NavicIcons' .. item.type },
-					{ item.name, group = 'NavicText' },
+					{ item.name, group = 'NavicText' }
 				})
 			end
 		end
 		table.insert(res, ' ')
 		return res
-	end,
+	end
 }
 '''
 
@@ -582,122 +576,27 @@ require 'incline'.setup {
 [[plugins]]
 repo = "gregorias/coerce.nvim"
 on_event = "VeryLazy"
-lua_after = '''
-require 'coerce'.setup {
+lua_after = '''require 'coerce'.setup {
 	default_mode_keymap_prefixes = {
 		normal_mode = 'cr',
-		motion_mode = "cr",
-		visual_mode = "cr",
+		motion_mode = 'cr',
+		visual_mode = 'cr'
 	}
 }
 '''
 
+# install yourself copilot-language-server, nil, vim-language-server
+
 [[plugins]]
-repo = "williamboman/mason.nvim"
-lua_after = "require 'mason'.setup()"
-[[plugins]]
-repo = "nvimtools/none-ls.nvim"
-lua_after = "require 'null-ls'.setup()"
-[[plugins]]
-repo = "williamboman/mason-lspconfig.nvim"
-lua_after = '''
--- サーバの起動は kakehashi が行い、バイナリ導入は基本 mise が担う。
--- mason は mise に無いもの (clangd / nil / vim-language-server) のみ自動DLする。
-require 'mason-lspconfig'.setup {
-	automatic_enable = false,
-	ensure_installed = {
-		'clangd',
-		'nil',
-		'vimls',
-	},
-}
-'''
-[[plugins]]
-repo = "jay-babu/mason-null-ls.nvim"
-depends = ["mason.nvim", "none-ls.nvim"]
 on_event = "VeryLazy"
-lua_after = '''
-require 'mason-null-ls'.setup {
-	automatic_setup = true,
-	automatic_installation = true,
-	ensure_installed = {},
-	handlers = {
-		function(sourcename, methods)
-			-- Disable biome in null-ls because it works as a standalone LSP
-			if sourcename == 'biome' then
-				return
-			else
-				require 'mason-null-ls'.default_setup(sourcename, methods)
-			end
-		end,
-	},
-}
-'''
-[[plugins]]
-repo = "neovim/nvim-lspconfig"
-on_event = ["LspAttach", "VeryLazy"]
-lua_after = '''
--- kakehashi が下流サーバをブリッジするため、Neovim 側で vim.lsp から
--- 直接起動するのは kakehashi のみ (rust-analyzer 等はプラグイン側で起動)。
--- プロジェクトごとの JS/TS 切替 (deno / biome 等) は各リポジトリの
--- kakehashi.toml で行う (設定は ~/.config/kakehashi/kakehashi.toml)。
-vim.lsp.enable { 'kakehashi' }
-
--- kakehashi は文書を開いた際に直接の言語のパーサを自動導入するが、
--- kakehashi.toml の base (jsonc → json 等) では導入されず、base が無いまま
--- 起動するとロード失敗がセッション中キャッシュされてしまう。
--- そのため派生言語の基底を事前にシードしてから kakehashi を有効化する。
-do
-	local exe = vim.fn.exepath 'kakehashi'
-	if exe == '' then
-		vim.notify('kakehashi: binary not found (mise)', vim.log.levels.WARN)
-	else
-		-- kakehashi.toml の [languages.*].base に対応する基底言語
-		local seed_langs = { 'tsx', 'javascript', 'json', 'markdown' }
-		vim.system({ exe, 'language', 'status' }, { text = true }, function(res)
-			local installed = {}
-			for line in (res.stdout or ''):gmatch '[^\r\n]+' do
-				local lang = line:match '^%s*(%S+)%s+✓ parser%s+✓ queries'
-				if lang then installed[lang] = true end
-			end
-
-			local missing = vim.tbl_filter(function(lang)
-				return not installed[lang]
-			end, seed_langs)
-
-			vim.schedule(function()
-				local index = 0
-				local function install_next()
-					index = index + 1
-					if index > #missing then
-						vim.lsp.enable 'kakehashi'
-						return
-					end
-					local lang = missing[index]
-					vim.system({ exe, 'language', 'install', lang }, { text = true }, function(r)
-						if r.code ~= 0 then
-							vim.notify(
-								('kakehashi: failed to install %s parser: %s'):format(lang, vim.trim(r.stderr or r.stdout or '')),
-								vim.log.levels.WARN
-							)
-						end
-						vim.schedule(install_next)
-					end)
-				end
-				install_next()
-			end)
-		end)
-	end
-end
-'''
+lua_after = "vim.lsp.enable 'kakehashi'"
 
 [[plugins]]
 repo = "FabijanZulj/blame.nvim"
 on_cmd = "BlameToggle"
 on_map = { n = "<leader>b" }
-lua_after = '''
-require 'blame'.setup()
-vim.keymap.set("n", "<leader>b", "<cmd>BlameToggle<cr>", { noremap = true, silent = true })
+lua_after = '''require 'blame'.setup()
+vim.keymap.set('n', '<leader>b', '<cmd>BlameToggle<cr>', { noremap = true, silent = true })
 '''
 
 [[plugins]]
@@ -708,15 +607,14 @@ lua_after = "vim.api.nvim_create_user_command('Emoji', 'call emjpick#insert()', 
 [[plugins]]
 repo = "kdheepak/lazygit.nvim"
 on_cmd = [
-	"LazyGit",
-	"LazyGitConfig",
-	"LazyGitCurrentFile",
-	"LazyGitFilter",
-	"LazyGitFilterCurrentFile",
+    "LazyGit",
+    "LazyGitConfig",
+    "LazyGitCurrentFile",
+    "LazyGitFilter",
+    "LazyGitFilterCurrentFile",
 ]
 on_map = { n = "gll" }
-lua_after = '''
-vim.cmd [[
+lua_after = '''vim.cmd [[
 let $VISUAL = $EDITOR
 let $GIT_EDITOR = $EDITOR
 ]]

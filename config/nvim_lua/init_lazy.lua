@@ -38,7 +38,7 @@ vim.cmd [[
 local path_sep = package.config:sub(1, 1) == '\\' and ';' or ':'
 
 -- Use mise cmds
-vim.env.PATH = vim.env.HOME .. "/.local/share/mise/shims" .. path_sep .. vim.env.PATH
+vim.env.PATH = vim.env.HOME .. '/.local/share/mise/shims' .. path_sep .. vim.env.PATH
 
 local function prepend_node_modules_bin(path)
 	if not path or path == '' then return end
@@ -46,7 +46,7 @@ local function prepend_node_modules_bin(path)
 	local node_modules_dir = vim.fs.find('node_modules', {
 		path = path,
 		upward = true,
-		type = 'directory',
+		type = 'directory'
 	})[1]
 	if not node_modules_dir then return end
 
@@ -61,40 +61,43 @@ end
 
 prepend_node_modules_bin(vim.fn.getcwd())
 vim.api.nvim_create_autocmd({ 'VimEnter', 'DirChanged', 'BufEnter' }, {
-	callback = function(args)
+	callback = function (args)
 		prepend_node_modules_bin(vim.fn.getcwd())
 
 		local bufname = args.buf and vim.api.nvim_buf_get_name(args.buf) or ''
 		if bufname ~= '' then
 			prepend_node_modules_bin(vim.fs.dirname(bufname))
 		end
-	end,
+	end
 })
 
-vim.api.nvim_create_user_command('Restart', function()
+vim.api.nvim_create_user_command('Restart', function ()
 	local cache = vim.fn.stdpath 'cache' .. '/nvim-restart-session.vim'
 	vim.cmd('mksession! ' .. vim.fn.fnameescape(cache))
 	vim.cmd('restart source ' .. vim.fn.fnameescape(cache))
-end, {})
+end, {}
+)
 vim.keymap.set('n', 'zr', '<cmd>Restart<cr>')
 
-vim.api.nvim_create_user_command('TSReinstall', function()
+vim.api.nvim_create_user_command('TSReinstall', function ()
 	local ts_installed_list = require 'nvim-treesitter'.get_installed()
 	require 'nvim-treesitter'.uninstall(ts_installed_list):wait(180000)
 	require 'nvim-treesitter'.install(ts_installed_list, { summary = true })
-end, {})
+end, {}
+)
 
 -- 空行での編集開始時に自動でインデント
 for _, key in ipairs { 'a', 'A', 'i', 'I' } do
-	vim.keymap.set('n', key, function()
+	vim.keymap.set('n', key, function ()
 		return vim.fn.empty(vim.fn.getline('.')) == 1 and '"_cc' or key
-	end, { expr = true })
+	end, { expr = true }
+	)
 end
 
 -- 残りのウィンドウが特殊ウィンドウのみである場合、終了する
 -- https://zenn.dev/vim_jp/articles/ff6cd224fab0c7
 vim.api.nvim_create_autocmd('QuitPre', {
-	callback = function()
+	callback = function ()
 		-- 現在のウィンドウ番号を取得
 		local current_win = vim.api.nvim_get_current_win()
 		-- すべてのウィンドウをループして調べる
@@ -113,7 +116,7 @@ vim.api.nvim_create_autocmd('QuitPre', {
 		vim.cmd.only({ bang = true })
 		-- この後、ウィンドウ1つの状態でquitが実行されるので、Vimが終了する
 	end,
-	desc = 'Close all special buffers and quit Neovim',
+	desc = 'Close all special buffers and quit Neovim'
 })
 
 --------------------------------------------------------------------------------
@@ -124,41 +127,31 @@ vim.lsp.config('*', {
 	capabilities = {
 		workspace = {
 			didChangeWatchedFiles = {
-				dynamicRegistration = true,
-			},
-		},
-	},
+				dynamicRegistration = true
+			}
+		}
+	}
 })
 
 vim.api.nvim_create_autocmd('LspAttach', {
-	callback = function(args)
-		vim.lsp.document_color.enable(true, { bufnr = args.buf }, { style = "virtual" })
-
-		vim.opt_local.formatexpr = 'v:lua.require"conform".formatexpr()'
+	callback = function (args)
+		vim.lsp.document_color.enable(true, { bufnr = args.buf }, { style = 'virtual' })
 
 		vim.diagnostic.config { signs = false, virtual_text = false }
 		local bufopts = { silent = true, buffer = true }
 		vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
 		vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-		vim.keymap.set('n', 'K', function()
-			local winid = require 'ufo'.peekFoldedLinesUnderCursor()
-			if not winid then vim.lsp.buf.hover() end
-		end, bufopts)
-		vim.keymap.set('n', 'gra', function()
+		vim.keymap.set('n', 'gra', function ()
 			require 'actions-preview'.code_actions()
-		end, bufopts)
-		vim.keymap.set('n', 'gqal', function()
-				require 'conform'.format { async = true, lsp_format = 'fallback' }
-			end,
-			{ buffer = true }
+		end, bufopts
 		)
-	end,
+	end
 })
 
 --------------------------------------------------------------------------------
 -- fzyselect.vim - Custom tweaks
 --------------------------------------------------------------------------------
 
-vim.defer_fn(function()
-	vim.ui.select = function(...) return require 'fzyselect'.start(...) end
+vim.defer_fn(function ()
+	vim.ui.select = function (...) return require 'fzyselect'.start(...) end
 end, 1000)

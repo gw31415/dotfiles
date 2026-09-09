@@ -1,9 +1,9 @@
 [[plugins]]
 lua_start = '''
-vim.g.loaded_node_provider=0
-vim.g.loaded_perl_provider=0
-vim.g.loaded_ruby_provider=0
-vim.g.loaded_python3_provider=0
+vim.g.loaded_node_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_python3_provider = 0
 
 ----------------------------
 -- Disable built-in plugins
@@ -19,9 +19,9 @@ vim.g.loaded_2html_plugin = true
 -- Lazy loading
 ----------------------------
 
-vim.schedule(function()
-	require 'init_lazy'
-	vim.api.nvim_exec_autocmds('User', { pattern = 'VeryLazy', modeline = false })
+vim.schedule(function ()
+    require 'init_lazy'
+    vim.api.nvim_exec_autocmds('User', { pattern = 'VeryLazy', modeline = false })
 end)
 
 ----------------------------
@@ -37,29 +37,23 @@ vim.go.guifont = 'HackGen_Console_NF:h14'
 vim.opt.shiftwidth = 4
 vim.opt.tabstop = 4
 vim.go.cmdheight = 0
-vim.opt.fillchars = {
-	eob = ' ',
-	foldopen = '󱨉',
-	foldclose = '',
-	foldsep = ' ',
-	foldinner = ''
-}
+vim.opt.fillchars = { eob = ' ', foldopen = '󱨉', foldclose = '', foldsep = ' ', foldinner = '' }
 
 vim.cmd 'filetype plugin indent on'
 
 vim.filetype.add {
-	filename = {
-		Appfile = 'ruby',
-		config = 'config',
-	}
+    filename = {
+        Appfile = 'ruby',
+        config = 'config'
+    }
 }
 '''
 
 [[plugins]]
 repo = "vim-denops/denops.vim"
-sym = true                     # NOTE: denops.vim は要所コピーではなくシンボリックリンクで参照させないと動かない
+sym = true # NOTE: denops.vim は要所コピーではなくシンボリックリンクで参照させないと動かない
 start = true
-merge = false                  # denops の autoload は他プラグインと merge してはならない
+merge = false # denops の autoload は他プラグインと merge してはならない
 lua_before = '''
 if vim.loop.os_uname().sysname == 'Darwin' then
 	vim.g.denops_server_addr = '127.0.0.1:32123'

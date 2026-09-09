@@ -1,84 +1,81 @@
 [[plugins]]
 repo = "nvim-lualine/lualine.nvim"
 on_event = "UIEnter"
-lua_after = '''
---------------------------------------------------------------------------------
+lua_after = '''--------------------------------------------------------------------------------
 -- Global Functions used in Statusline
 --------------------------------------------------------------------------------
 
 local macro_state = {
-	---@return string
-	function()
-		local key = vim.fn.reg_recording()
-		return key ~= '' and ('MACRO:' .. key) or ''
-	end,
-	color = { bg = 'red', fg = 'black', gui = 'bold' }
+    ---@return string
+    function ()
+        local key = vim.fn.reg_recording()
+        return key ~= '' and ('MACRO:' .. key) or ''
+    end,
+    color = { bg = 'red', fg = 'black', gui = 'bold' }
 }
 
 local search_count = {
-	---@return string
-	function()
-		if vim.v.hlsearch == 0 then
-			return ''
-		end
-		local count = vim.fn.searchcount { recompute = 1, maxcount = 999 }
-		local current = count.current
-		local total = count.total
-		return current ~= 0 and string.format('%d/%d', current, total) or ''
-	end,
-	color = { fg = 'orange' },
+    ---@return string
+    function ()
+        if vim.v.hlsearch == 0 then
+            return ''
+        end
+        local count = vim.fn.searchcount { recompute = 1, maxcount = 999 }
+        local current = count.current
+        local total = count.total
+        return current ~= 0 and string.format('%d/%d', current, total) or ''
+    end,
+    color = { fg = 'orange' }
 }
 
 ---@return string
 local function indent()
-	return '' .. (vim.bo.expandtab and vim.bo.shiftwidth .. ' 󱁐' or vim.bo.tabstop .. ' ')
+    return '' .. (vim.bo.expandtab and vim.bo.shiftwidth .. ' 󱁐' or vim.bo.tabstop .. ' ')
 end
 
 require 'lualine'.setup {
-	options = {
-		globalstatus = true,
-	},
-	sections = {
-		lualine_b = { macro_state, 'branch', 'diff', 'diagnostics' },
-		lualine_c = { 'filename' },
-		lualine_x = { 'encoding', 'fileformat', indent, 'filetype' },
-		lualine_y = { 'progress', search_count },
-	},
-	refresh = {
-		events = {
-			'WinEnter',
-			'BufEnter',
-			'BufWritePost',
-			'SessionLoadPost',
-			'FileChangedShellPost',
-			'VimResized',
-			'Filetype',
-			'CursorMoved',
-			'CursorMovedI',
-			'ModeChanged',
-			'RecordingEnter',
-			'RecordingLeave',
-		},
-	}
+    options = {
+        globalstatus = true
+    },
+    sections = {
+        lualine_b = { macro_state, 'branch', 'diff', 'diagnostics' },
+        lualine_c = { 'filename' },
+        lualine_x = { 'encoding', 'fileformat', indent, 'filetype' },
+        lualine_y = { 'progress', search_count }
+    },
+    refresh = {
+        events = {
+            'WinEnter',
+            'BufEnter',
+            'BufWritePost',
+            'SessionLoadPost',
+            'FileChangedShellPost',
+            'VimResized',
+            'Filetype',
+            'CursorMoved',
+            'CursorMovedI',
+            'ModeChanged',
+            'RecordingEnter',
+            'RecordingLeave'
+        }
+    }
 }
 '''
 
 [[plugins]]
 repo = "nvim-treesitter/nvim-treesitter@main"
 on_event = "VimEnter"
-lua_post_update = '''
-local ts_installed_list = require 'nvim-treesitter'.get_installed()
+lua_post_update = '''local ts_installed_list = require 'nvim-treesitter'.get_installed()
 require 'nvim-treesitter'.uninstall(ts_installed_list):wait(180000)
 require 'nvim-treesitter'.install(ts_installed_list, { summary = true }):wait(180000)
 '''
-lua_after = '''
-local install_dir = vim.fn.stdpath 'data' .. '/treesitter'
+lua_after = '''local install_dir = vim.fn.stdpath 'data' .. '/treesitter'
 vim.opt.runtimepath:append(install_dir)
 require 'nvim-treesitter'.setup { install_dir = install_dir }
 
-vim.api.nvim_create_autocmd("FileType", {
-	group = vim.api.nvim_create_augroup("vim-treesitter-start", {}),
-	callback = function() pcall(vim.treesitter.start) end,
+vim.api.nvim_create_autocmd('FileType', {
+    group = vim.api.nvim_create_augroup('vim-treesitter-start', {}),
+    callback = function () pcall(vim.treesitter.start) end
 })
 '''
 
@@ -90,8 +87,7 @@ on_event = "VimEnter"
 repo = "kevinhwang91/nvim-ufo"
 on_event = ["BufAdd", "VimEnter", "UIEnter"]
 depends = ["nvim-treesitter", "promise-async"]
-lua_after = '''
-vim.o.foldcolumn = '2'
+lua_after = '''vim.o.foldcolumn = '2'
 vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
 vim.o.foldenable = true
@@ -100,44 +96,60 @@ vim.keymap.set('n', 'zR', require 'ufo'.openAllFolds)
 vim.keymap.set('n', 'zM', require 'ufo'.closeAllFolds)
 
 require 'ufo'.setup {
-	provider_selector = function()
-		return { 'treesitter', 'indent' }
-	end,
-	fold_virt_text_handler = function(virtText, lnum, endLnum, width, truncate)
-		local newVirtText = {}
-		local suffix = ('   %d '):format(endLnum - lnum)
-		local sufWidth = vim.fn.strdisplaywidth(suffix)
-		local targetWidth = width - sufWidth
-		local curWidth = 0
-		for _, chunk in ipairs(virtText) do
-			local chunkText = chunk[1]
-			local chunkWidth = vim.fn.strdisplaywidth(chunkText)
-			if targetWidth > curWidth + chunkWidth then
-				table.insert(newVirtText, chunk)
-			else
-				chunkText = truncate(chunkText, targetWidth - curWidth)
-				local hlGroup = chunk[2]
-				table.insert(newVirtText, { chunkText, hlGroup })
-				chunkWidth = vim.fn.strdisplaywidth(chunkText)
-				-- str width returned from truncate() may less than 2nd argument, need padding
-				if curWidth + chunkWidth < targetWidth then
-					suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
-				end
-				break
-			end
-			curWidth = curWidth + chunkWidth
-		end
-		table.insert(newVirtText, { suffix, 'MoreMsg' })
-		return newVirtText
-	end
+    provider_selector = function ()
+        return { 'treesitter', 'indent' }
+    end,
+    fold_virt_text_handler = function (virtText, lnum, endLnum, width, truncate)
+        local newVirtText = {}
+        local suffix = ('   %d '):format(endLnum - lnum)
+        local sufWidth = vim.fn.strdisplaywidth(suffix)
+        local targetWidth = width - sufWidth
+        local curWidth = 0
+        for _, chunk in ipairs(virtText) do
+            local chunkText = chunk[1]
+            local chunkWidth = vim.fn.strdisplaywidth(chunkText)
+            if targetWidth > curWidth + chunkWidth then
+                table.insert(newVirtText, chunk)
+            else
+                chunkText = truncate(chunkText, targetWidth - curWidth)
+                local hlGroup = chunk[2]
+                table.insert(newVirtText, { chunkText, hlGroup })
+                chunkWidth = vim.fn.strdisplaywidth(chunkText)
+                -- str width returned from truncate() may less than 2nd argument, need padding
+                if curWidth + chunkWidth < targetWidth then
+                    suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
+                end
+                break
+            end
+            curWidth = curWidth + chunkWidth
+        end
+        table.insert(newVirtText, { suffix, 'MoreMsg' })
+        return newVirtText
+    end
 }
 
 vim.lsp.config('*', {
-	textDocument = {
-		foldingRange = {
-			dynamicRegistration = false,
-			lineFoldingOnly = true,
-		},
-	}
+    textDocument = {
+        foldingRange = {
+            dynamicRegistration = false,
+            lineFoldingOnly = true
+        }
+    }
+})
+
+vim.api.nvim_create_autocmd('LspAttach', {
+    callback = function ()
+        vim.keymap.set(
+            'n', 'K',
+            function ()
+                local winid = require 'ufo'.peekFoldedLinesUnderCursor()
+                if not winid then vim.lsp.buf.hover() end
+            end,
+            {
+                silent = true,
+                buffer = true
+            }
+        )
+    end
 })
 '''

@@ -4,6 +4,13 @@
 # (ユーザ設定 → プロジェクト設定 → initializationOptions の順でマージされる)。
 # ドキュメント: https://github.com/atusy/kakehashi/blob/main/docs/README.md
 
+# --- Tree-sitter 検索パス -----------------------------------------------------
+# rsplug の TOML 内 lua_* 文字列を Lua として抜き出す自作 injections.scm
+# (queries/toml/injections.scm。;; extends で既定クエリに追記) を読ませる。
+# searchPaths 指定時は既定の一覧を置換するため、実データディレクトリも併記する。
+# NOTE: 未定義変数があると設定全体が破棄されるため ${KAKEHASHI_DATA_DIR} は使わず実パスを書く。
+searchPaths = [".", "~/Library/Application Support/kakehashi", "~/.local/share/kakehashi"]
+
 # --- host bridge ------------------------------------------------------------
 # kakehashi はデフォルトでは埋め込み領域 (Markdown のコードブロック等) しか
 # ブリッジしないため、ホスト文書自体を下流サーバに中継するよう明示的に有効化する。

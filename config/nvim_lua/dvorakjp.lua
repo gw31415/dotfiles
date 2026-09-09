@@ -41,7 +41,7 @@ local skkeleton = {
 }
 
 return setmetatable(skkeleton, {
-	__index = function(_, key)
+	__index = function (_, key)
 		if key == 'skkeleton' then
 			return skkeleton
 		elseif key == 'kensaku' then
