@@ -6,6 +6,11 @@ cargo.binstall_only = true
 idiomatic_version_file_enable_tools = ["python", "node", "go"]
 # `mise bootstrap` が tools phase で導入する。日常の task 実行では自動導入しない。
 task.run_auto_install = false
+# lockfile で解決済みバージョン/URL を固定し、初回 provisioning の latest 解決と
+# GitHub/aqua への API 呼び出しを削減する。更新は `mise lock --global --bump`。
+lockfile = true
+# 実際に使うマシンのプラットフォームだけを lock 対象にする (既定は7種)。
+lockfile_platforms = ["linux-arm64", "macos-arm64"]
 
 [tools]
 cargo-binstall = "latest"
