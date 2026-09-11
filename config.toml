@@ -113,7 +113,7 @@ tssh = "latest"
 ] }
 "github:microsoft/tgrep" = "latest"
 ripgrep = "latest"
-"github:gw31415/dopa" = "v0.1.0"
+"github:gw31415/dopa" = { version = "v0.1.0", os = "macos/arm64" }
 
 # NOTE: aquaレジストリなし・npmなし・cargoはbinstall提供なし・ubiは非推奨のためgithubバックエンド。
 # 同一リリースに複数バイナリ同梱のためtool_alias+matchingで分割する。

@@ -2196,6 +2196,16 @@ checksum = "sha256:9f823511ec22ea3409bec12417b698bf7d4e4b525e3f082c14f6fb91a001b
 url = "https://github.com/gw31415/commitgen/releases/download/v0.3.2/commitgen-aarch64-apple-darwin"
 url_api = "https://api.github.com/repos/gw31415/commitgen/releases/assets/451164853"
 
+[[tools."github:gw31415/dopa"]]
+version = "0.1.0"
+backend = "github:gw31415/dopa"
+specifiers = ["v0.1.0"]
+
+[tools."github:gw31415/dopa"."platforms.macos-arm64"]
+checksum = "sha256:fa8a553dba704a52b4fa068cbc5b1839ddde58624a457dafaafd126a827d54d7"
+url = "https://github.com/gw31415/dopa/releases/download/v0.1.0/dopa-macos-arm64.tar.gz"
+url_api = "https://api.github.com/repos/gw31415/dopa/releases/assets/557739202"
+
 [[tools."github:gw31415/rsplug.nvim"]]
 version = "0.4.0"
 backend = "github:gw31415/rsplug.nvim"
