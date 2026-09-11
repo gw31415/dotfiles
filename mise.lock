@@ -2287,14 +2287,6 @@ version = "1.27.1"
 backend = "core:go"
 specifiers = ["latest"]
 
-[tools.go."platforms.linux-arm64"]
-checksum = "sha256:3450b45a3f9ee8568792736a5c5e70a1f2e9b36c35a8f74958c03e51d7d92bec"
-url = "https://dl.google.com/go/go1.27.1.linux-arm64.tar.gz"
-
-[tools.go."platforms.macos-arm64"]
-checksum = "sha256:ee215d57e0ec269c60cc9ceca68e6bda321ba9ee5afe24f4b0988703c2d87d12"
-url = "https://dl.google.com/go/go1.27.1.darwin-arm64.tar.gz"
-
 [[tools."go:github.com/itchyny/mmv/cmd/mmv"]]
 version = "0.1.6"
 backend = "go:github.com/itchyny/mmv/cmd/mmv"
