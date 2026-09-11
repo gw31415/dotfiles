@@ -47,6 +47,12 @@ in
   ];
 
   ########################################
+  # Tailscale (system daemon + CLI + MagicDNS resolver)
+  ########################################
+  # 初回のみ `sudo tailscale up` で認証が必要。
+  services.tailscale.enable = true;
+
+  ########################################
   # Configuration for macOS system
   ########################################
   system.defaults = {
