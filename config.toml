@@ -112,6 +112,7 @@ tssh = "latest"
 	"@opencode-ai/cli",
 ] }
 "github:microsoft/tgrep" = "latest"
+ripgrep = "latest"
 
 # NOTE: aquaレジストリなし・npmなし・cargoはbinstall提供なし・ubiは非推奨のためgithubバックエンド。
 # 同一リリースに複数バイナリ同梱のためtool_alias+matchingで分割する。
