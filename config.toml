@@ -215,7 +215,7 @@ ssh = "tssh"
 "brew-cask:obsidian" = { version = "latest", os = "macos" }
 "brew-cask:zoom" = { version = "latest", os = "macos" }
 "mas:1365531024" = { version = "latest", os = "macos" } # 1Blocker
-"mas:937984704" = { version = "latest", os = "macos" } # Amphetamine
+# "mas:937984704" = { version = "latest", os = "macos" } # Amphetamine → Vorssaint or dopa で代用できる
 "mas:409183694" = { version = "latest", os = "macos" } # Keynote
 "mas:539883307" = { version = "latest", os = "macos" } # LINE
 "mas:634148309" = { version = "latest", os = "macos" } # Logic Pro
