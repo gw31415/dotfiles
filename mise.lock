@@ -1460,9 +1460,14 @@ url = "https://github.com/tamasfe/taplo/releases/download/0.10.0/taplo-darwin-aa
 url_api = "https://api.github.com/repos/tamasfe/taplo/releases/assets/257323110"
 
 [[tools.aube]]
-version = "2.2.4"
+version = "2.2.13"
 backend = "packslip:github.com/aubepkg/aube"
 specifiers = ["latest"]
+
+[tools.aube."platforms.macos-arm64"]
+checksum = "sha256:f999226cddee14afc8d0d2d461191888b65064262e66e83ce1fc8e9069792c1e"
+url = "https://github.com/aubepkg/aube/releases/download/v2.2.13/aube-v2.2.13-aarch64-apple-darwin.tar.gz"
+signer = "sigstore-oidc:https://github.com/aubepkg/aube/.github/workflows/release-plz.yml"
 
 [[tools.bat]]
 version = "0.26.1"
