@@ -1397,6 +1397,21 @@ checksum = "sha256:93491525e4e338f7a6b164334b33eee261fb70f71576539c8a08130f84dc3
 url = "https://github.com/fish-shell/fish-shell/releases/download/4.9.2/fish-4.9.2.pkg"
 url_api = "https://api.github.com/repos/fish-shell/fish-shell/releases/assets/545717347"
 
+[[tools."aqua:github/copilot-language-server-release"]]
+version = "1.545.0"
+backend = "aqua:github/copilot-language-server-release"
+specifiers = ["latest"]
+
+[tools."aqua:github/copilot-language-server-release"."platforms.linux-arm64"]
+checksum = "sha256:fffe8186b26b661d03f12fd909d2e19f53feea8a6c6160ae3968b9d6fc70246b"
+url = "https://github.com/github/copilot-language-server-release/releases/download/1.545.0/copilot-language-server-linux-arm64-1.545.0.zip"
+url_api = "https://api.github.com/repos/github/copilot-language-server-release/releases/assets/556129698"
+
+[tools."aqua:github/copilot-language-server-release"."platforms.macos-arm64"]
+checksum = "sha256:781198251e940eb0cacaac8af1a45a5725e09bc50b080bee8ab32a8e810c9b20"
+url = "https://github.com/github/copilot-language-server-release/releases/download/1.545.0/copilot-language-server-darwin-arm64-1.545.0.zip"
+url_api = "https://api.github.com/repos/github/copilot-language-server-release/releases/assets/556129701"
+
 [[tools."aqua:neovim"]]
 version = "0.12.5"
 backend = "aqua:neovim"

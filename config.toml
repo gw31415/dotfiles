@@ -113,6 +113,7 @@ ripgrep = "latest"
 "github:gw31415/rusk" = "latest"
 "github:Ameyanagi/yuru" = "latest"
 "npm:@wonderwhy-er/desktop-commander" = "latest"
+"aqua:github/copilot-language-server-release" = "latest"
 
 # NOTE: aquaレジストリなし・npmなし・cargoはbinstall提供なし・ubiは非推奨のためgithubバックエンド。
 # 同一リリースに複数バイナリ同梱のためtool_alias+matchingで分割する。
