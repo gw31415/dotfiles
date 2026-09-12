@@ -3,9 +3,9 @@
 	email = 24710985+gw31415@users.noreply.github.com
 	# signingKey = CF3AE17DB7E2A136
 [commit]
-	gpgSign = true
+	gpgSign = false
 [tag]
-	gpgSign = true
+	gpgSign = false
 [gpg]
 	format = openpgp
 [core]
