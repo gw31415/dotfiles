@@ -1464,6 +1464,11 @@ version = "2.2.13"
 backend = "packslip:github.com/aubepkg/aube"
 specifiers = ["latest"]
 
+[tools.aube."platforms.linux-arm64"]
+checksum = "sha256:561a16c933188ef14955989cf99bb368748df5a3903c4cf12d2b05c31d8f4ec8"
+url = "https://github.com/aubepkg/aube/releases/download/v2.2.13/aube-v2.2.13-aarch64-unknown-linux-gnu.tar.gz"
+signer = "sigstore-oidc:https://github.com/aubepkg/aube/.github/workflows/release-plz.yml"
+
 [tools.aube."platforms.macos-arm64"]
 checksum = "sha256:f999226cddee14afc8d0d2d461191888b65064262e66e83ce1fc8e9069792c1e"
 url = "https://github.com/aubepkg/aube/releases/download/v2.2.13/aube-v2.2.13-aarch64-apple-darwin.tar.gz"
@@ -2301,6 +2306,14 @@ url_api = "https://api.github.com/repos/tetzng/pez/releases/assets/438236843"
 version = "1.27.1"
 backend = "core:go"
 specifiers = ["latest"]
+
+[tools.go."platforms.linux-arm64"]
+checksum = "sha256:3450b45a3f9ee8568792736a5c5e70a1f2e9b36c35a8f74958c03e51d7d92bec"
+url = "https://dl.google.com/go/go1.27.1.linux-arm64.tar.gz"
+
+[tools.go."platforms.macos-arm64"]
+checksum = "sha256:ee215d57e0ec269c60cc9ceca68e6bda321ba9ee5afe24f4b0988703c2d87d12"
+url = "https://dl.google.com/go/go1.27.1.darwin-arm64.tar.gz"
 
 [[tools."go:github.com/itchyny/mmv/cmd/mmv"]]
 version = "0.1.6"
