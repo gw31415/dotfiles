@@ -1,0 +1,16 @@
+# Keep zsh's command search path aligned with the paths configured for fish.
+# `path` is zsh's array form of PATH; `typeset -U` removes duplicates while
+# preserving the first occurrence and therefore the priority below.
+path=(
+  "$HOME/.local/bin"
+  "$HOME/.cargo/bin"
+  "$HOME/.go/bin"
+  "$HOME/.local/share/mise/command-wrappers/bin"
+  "$HOME/.local/share/mise/shims"
+  "$HOME/Library/Android/sdk/platform-tools"
+  /opt/homebrew/bin
+  /opt/homebrew/sbin
+  $path
+)
+typeset -U path
+export PATH

@@ -1,0 +1,22 @@
+# Use fish shell if available and not already running in fish
+# if [[ -o interactive ]] && [[ -z ${ZSH_STARTED_FISH:-} ]] && command -v fish >/dev/null 2>&1; then
+if  [[ -z ${ZSH_STARTED_FISH:-} ]]; then
+  export ZSH_STARTED_FISH=1
+  exec fish -l
+fi
+
+# Full mise integration when zsh is used interactively instead of handing off
+# to fish. Non-interactive zsh gets mise shims from ~/.zshenv.
+if [[ -o interactive ]] && command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate zsh)"
+fi
+
+# pnpm
+export PNPM_HOME="/Users/ama/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+# pnpm end
+
+export PATH="$HOME/.local/bin:$PATH"

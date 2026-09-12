@@ -176,6 +176,9 @@ ssh = "tssh"
 "~/.config/git/ignore" = { source = "config/git/ignore", mode = "symlink" }
 "~/.latexmkrc" = { source = "files/latexmkrc", mode = "symlink" }
 "~/.skk/SKK-JISYO.L" = { source = "files/SKK-JISYO.L", mode = "symlink" }
+"~/.zprofile" = { source = "files/zprofile", mode = "symlink" }
+"~/.zshenv" = { source = "files/zshenv", mode = "symlink" }
+"~/.zshrc" = { source = "files/zshrc", mode = "symlink" }
 
 # Brewfile を mise の package manager に移行する。Homebrew 本体を shell task から
 # 呼び出さず、mise が宣言状態を検査して必要な package だけを導入する。
