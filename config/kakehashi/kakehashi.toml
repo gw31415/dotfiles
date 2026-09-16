@@ -69,6 +69,16 @@ languages = ["typst"]
 cmd = ["clangd"]
 languages = ["c", "cpp"]
 
+[languageServers.rust-analyzer]
+cmd = ["rust-analyzer"]
+languages = ["rust"]
+
+[languageServers.rust-analyzer.settings.rust-analyzer]
+checkOnSave = true
+
+[languageServers.rust-analyzer.settings.rust-analyzer.check]
+command = "clippy"
+
 [languageServers.gopls]
 cmd = ["gopls"]
 languages = ["go", "gomod", "gowork", "gotmpl"]
