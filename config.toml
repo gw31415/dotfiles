@@ -113,7 +113,8 @@ tssh = "latest"
 ] }
 "github:microsoft/tgrep" = "latest"
 ripgrep = "latest"
-"github:gw31415/dopa" = { version = "v0.1.0", os = "macos/arm64" }
+"github:gw31415/rusk" = "latest"
+"github:Ameyanagi/yuru" = "latest"
 
 # NOTE: aquaレジストリなし・npmなし・cargoはbinstall提供なし・ubiは非推奨のためgithubバックエンド。
 # 同一リリースに複数バイナリ同梱のためtool_alias+matchingで分割する。
@@ -194,6 +195,7 @@ ssh = "tssh"
 "brew:xcode-build-server" = { version = "latest", os = "macos" }
 "brew:jorgelbg/tap/pinentry-touchid" = { version = "latest", os = "macos" }
 "brew:steipete/tap/codexbar" = { version = "latest", os = "macos" }
+"brew:fif7y/tap/pelmet" = { version = "latest", os = "macos" }
 "brew-cask:anki" = { version = "latest", os = "macos" }
 "brew-cask:blackhole-2ch" = { version = "latest", os = "macos" }
 "brew-cask:claude-code" = { version = "latest", os = "macos" }
@@ -206,11 +208,9 @@ ssh = "tssh"
 "brew-cask:macfuse" = { version = "latest", os = "macos" }
 "brew-cask:macskk" = { version = "latest", os = "macos" }
 "brew-cask:musicbrainz-picard" = { version = "latest", os = "macos" }
-"brew-cask:open-design" = { version = "latest", os = "macos" }
 "brew-cask:puremac" = { version = "latest", os = "macos" }
 "brew-cask:slack" = { version = "latest", os = "macos" }
 "brew-cask:smoothcsv" = { version = "latest", os = "macos" }
-"brew-cask:thaw" = { version = "latest", os = "macos" }
 "brew-cask:google-chrome" = { version = "latest", os = "macos" }
 "brew-cask:ghostty" = { version = "latest", os = "macos" }
 "brew-cask:vorssaint" = { version = "latest", os = "macos" }

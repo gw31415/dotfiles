@@ -2156,6 +2156,16 @@ url = "https://github.com/cli/cli/releases/download/v2.100.0/gh_2.100.0_macOS_ar
 url_api = "https://api.github.com/repos/cli/cli/releases/assets/542974295"
 provenance = "github-attestations"
 
+[[tools."github:Ameyanagi/yuru"]]
+version = "0.2.3"
+backend = "github:Ameyanagi/yuru"
+specifiers = ["latest"]
+
+[tools."github:Ameyanagi/yuru"."platforms.macos-arm64"]
+checksum = "sha256:42a126d1bae225801960cfad59b27186312cc5602dbeeacd3fdb5b054f01ff8c"
+url = "https://github.com/Ameyanagi/yuru/releases/download/v0.2.3/yuru-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/Ameyanagi/yuru/releases/assets/516640344"
+
 [[tools."github:atusy/kakehashi"]]
 version = "1.0.0"
 backend = "github:atusy/kakehashi"
@@ -2202,14 +2212,14 @@ url = "https://github.com/gw31415/commitgen/releases/download/v0.3.2/commitgen-a
 url_api = "https://api.github.com/repos/gw31415/commitgen/releases/assets/451164853"
 
 [[tools."github:gw31415/dopa"]]
-version = "0.1.0"
+version = "0.2.1"
 backend = "github:gw31415/dopa"
-specifiers = ["v0.1.0"]
+specifiers = ["v0.2.1"]
 
 [tools."github:gw31415/dopa"."platforms.macos-arm64"]
-checksum = "sha256:fa8a553dba704a52b4fa068cbc5b1839ddde58624a457dafaafd126a827d54d7"
-url = "https://github.com/gw31415/dopa/releases/download/v0.1.0/dopa-macos-arm64.tar.gz"
-url_api = "https://api.github.com/repos/gw31415/dopa/releases/assets/557739202"
+checksum = "sha256:ae74048eeb1c9b4099081b377bc4041a56857cc697e8d726e85d06be49416126"
+url = "https://github.com/gw31415/dopa/releases/download/v0.2.1/dopa-macos-arm64.tar.gz"
+url_api = "https://api.github.com/repos/gw31415/dopa/releases/assets/558596579"
 
 [[tools."github:gw31415/rsplug.nvim"]]
 version = "0.4.0"
@@ -2228,6 +2238,21 @@ checksum = "sha256:e8f76d9866087986c18b4fa1661e4cd9f0d2d98cb5fc8c130f74d5e37ee05
 url = "https://github.com/gw31415/rsplug.nvim/releases/download/v0.4.0/rsplug-aarch64-apple-darwin-0.4.0.tar.gz"
 url_api = "https://api.github.com/repos/gw31415/rsplug.nvim/releases/assets/488337101"
 provenance = "github-attestations"
+
+[[tools."github:gw31415/rusk"]]
+version = "0.1.2"
+backend = "github:gw31415/rusk"
+specifiers = ["latest"]
+
+[tools."github:gw31415/rusk"."platforms.linux-arm64"]
+checksum = "sha256:fb9fb72a670fd1e62bb6ae32bc9f3e0ebd8681dfb12dcdf90f6b752beacf0150"
+url = "https://github.com/gw31415/rusk-task/releases/download/v0.1.2/rusk-v0.1.2-aarch64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/gw31415/rusk-task/releases/assets/335498875"
+
+[tools."github:gw31415/rusk"."platforms.macos-arm64"]
+checksum = "sha256:0e14f8bcaf9c1301d1b0c169bcaee75040337aa6adea0abc50adbe402d887a7d"
+url = "https://github.com/gw31415/rusk-task/releases/download/v0.1.2/rusk-v0.1.2-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/gw31415/rusk-task/releases/assets/335498457"
 
 [[tools."github:iffse/pay-respects"]]
 version = "0.8.8"
@@ -2656,17 +2681,17 @@ url = "https://github.com/rust-lang/mdBook/releases/download/v0.5.4/mdbook-v0.5.
 url_api = "https://api.github.com/repos/rust-lang/mdBook/releases/assets/468210169"
 
 [[tools.node]]
-version = "26.8.1"
+version = "26.8.2"
 backend = "core:node"
 specifiers = ["latest"]
 
 [tools.node."platforms.linux-arm64"]
-checksum = "sha256:d5f973ce975e4bd03e6c2038260f7e9201615aa8e1ee293c72f8dcc2a6d9fddb"
-url = "https://nodejs.org/dist/v26.8.1/node-v26.8.1-linux-arm64.tar.gz"
+checksum = "sha256:746cdbf21565b4ea06f77642bb0e85466de8bb722242be2c5e006f272c361c63"
+url = "https://nodejs.org/dist/v26.8.2/node-v26.8.2-linux-arm64.tar.gz"
 
 [tools.node."platforms.macos-arm64"]
-checksum = "sha256:6e577fd0d9db776db82306629e441a9dace416702622aebdd171c9dfaa41f4d2"
-url = "https://nodejs.org/dist/v26.8.1/node-v26.8.1-darwin-arm64.tar.gz"
+checksum = "sha256:974b6d5fb2fc7c33ff2354db0902b4e91c2de01ec8acc6de48e543c97e18c9e1"
+url = "https://nodejs.org/dist/v26.8.2/node-v26.8.2-darwin-arm64.tar.gz"
 
 [[tools."npm:@opencode-ai/cli"]]
 version = "beta"
@@ -2836,7 +2861,7 @@ url = "https://github.com/jdx/ruby/releases/download/4.0.6-1/ruby-4.0.6.macos.ta
 provenance = "github-attestations"
 
 [[tools.rust]]
-version = "1.98.1"
+version = "1.88.0"
 backend = "core:rust"
 specifiers = ["latest"]
 
