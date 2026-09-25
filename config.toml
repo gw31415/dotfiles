@@ -14,7 +14,7 @@ lockfile_platforms = ["linux-arm64", "macos-arm64"]
 
 [tools]
 cargo-binstall = "latest"
-# 言語ランタイム (mise が正。rust は rustup 例外のため入れない)。
+# 言語ランタイム (mise が正。Rust は core:rust が rustup 経由で管理)。
 node = "latest"
 go = "latest"
 python = "latest"
@@ -22,7 +22,7 @@ ruby = "latest"
 deno = "2"
 uv = "latest"
 "aqua:pnpm" = "11"
-rust = "latest"
+rust = "stable"
 sccache = "latest"
 # .NET SDK (GCM の dotnet: backend に必要。現行 GCM は .NET SDK 10 必須)。
 dotnet = "10"
