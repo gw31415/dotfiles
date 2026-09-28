@@ -56,6 +56,8 @@ in
   # Configuration for macOS system
   ########################################
   system.defaults = {
+    # Spotlight の呼び出しを無効化。
+    CustomUserPreferences."com.apple.Spotlight".MenuItemHidden = true;
     finder = {
       AppleShowAllExtensions = true;
       CreateDesktop = true;
@@ -84,9 +86,21 @@ in
   };
 
   ########################################
-  # Auto install software updates
+  # System activation
   ########################################
   system.activationScripts.extraActivation.text = ''
+    # activation は root で動くため、設定対象ユーザーのコンテキストで実行する。
+    # AppleSymbolicHotKeys 全体を置換せず、Spotlight のキーだけをマージする。
+    /bin/launchctl asuser "$(/usr/bin/id -u ${env.username})" \
+      /usr/bin/sudo -H -u ${env.username} -- \
+      /usr/bin/defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add \
+        64 '<dict><key>enabled</key><false/></dict>' \
+        65 '<dict><key>enabled</key><false/></dict>'
+
+    # マウント済みの全ボリュームで Spotlight のインデックス作成を停止する。
+    # Finder 等のインデックスを利用する検索にも適用される。
+    /usr/bin/mdutil -a -i off
+
     softwareupdate --all --download --background
 
     # activation スクリプトはクリーン環境で実行され PATH に
