@@ -56,8 +56,15 @@ in
   # Configuration for macOS system
   ########################################
   system.defaults = {
-    # Spotlight の呼び出しを無効化。
-    CustomUserPreferences."com.apple.Spotlight".MenuItemHidden = true;
+    CustomUserPreferences = {
+      # Spotlight の呼び出しを無効化。
+      "com.apple.Spotlight".MenuItemHidden = true;
+      # 「アプリ」「デスクトップを表示」を両方オフにしたときの5本指設定。
+      # 4本指設定は下の trackpad で内蔵・Bluetooth 両方に適用する。
+      "com.apple.AppleMultitouchTrackpad".TrackpadFiveFingerPinchGesture = 0;
+      "com.apple.driver.AppleBluetoothMultitouch.trackpad".TrackpadFiveFingerPinchGesture = 0;
+    };
+    trackpad.TrackpadFourFingerPinchGesture = 0;
     finder = {
       AppleShowAllExtensions = true;
       CreateDesktop = true;
@@ -75,6 +82,8 @@ in
       largesize = 64;
       orientation = "bottom";
       launchanim = true;
+      # 親指と3本指を広げてデスクトップを表示するジェスチャーを無効化。
+      showDesktopGestureEnabled = false;
     };
   };
 
