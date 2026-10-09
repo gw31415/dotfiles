@@ -14,3 +14,6 @@ path=(
 )
 typeset -U path
 export PATH
+
+# Added by Unsloth installer
+export PATH="/Users/ama/.local/bin:$PATH"
