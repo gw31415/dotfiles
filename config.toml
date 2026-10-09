@@ -108,13 +108,11 @@ oh-my-pi = "latest"
 "github:openai/tunnel-client" = "latest"
 "pipx:serena-agent" = "latest"
 tssh = "latest"
-"npm:@opencode-ai/cli" = { version = "beta", allow_builds = [
-	"@opencode-ai/cli",
-] }
 "github:microsoft/tgrep" = "latest"
 ripgrep = "latest"
 "github:gw31415/rusk" = "latest"
 "github:Ameyanagi/yuru" = "latest"
+"npm:@wonderwhy-er/desktop-commander" = "latest"
 
 # NOTE: aquaレジストリなし・npmなし・cargoはbinstall提供なし・ubiは非推奨のためgithubバックエンド。
 # 同一リリースに複数バイナリ同梱のためtool_alias+matchingで分割する。
@@ -214,7 +212,7 @@ ssh = "tssh"
 "brew-cask:google-chrome" = { version = "latest", os = "macos" }
 "brew-cask:ghostty" = { version = "latest", os = "macos" }
 "brew-cask:vorssaint" = { version = "latest", os = "macos" }
-"brew-cask:waku" = { version = "latest", os = "macos" }
+# "brew-cask:waku" = { version = "latest", os = "macos" }
 "brew-cask:obsidian" = { version = "latest", os = "macos" }
 "brew-cask:zoom" = { version = "latest", os = "macos" }
 "mas:1365531024" = { version = "latest", os = "macos" } # 1Blocker
