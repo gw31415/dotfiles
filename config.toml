@@ -199,6 +199,7 @@ ssh = "tssh"
 "brew-cask:claude-code" = { version = "latest", os = "macos" }
 "brew-cask:codex" = { version = "latest", os = "macos" }
 "brew-cask:codex-app" = { version = "latest", os = "macos" }
+"brew-cask:claude" = { version = "latest", os = "macos" }
 "brew-cask:discord" = { version = "latest", os = "macos" }
 "brew-cask:gnucash" = { version = "latest", os = "macos" }
 "brew-cask:iloader" = { version = "latest", os = "macos" }
