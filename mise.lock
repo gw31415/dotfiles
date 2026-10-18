@@ -1526,11 +1526,6 @@ version = "HEAD"
 backend = "cargo:https://github.com/itsjunetime/tdf"
 specifiers = ["latest"]
 
-[[tools."cargo:https://github.com/nakasyou/local-mcp"]]
-version = "HEAD"
-backend = "cargo:https://github.com/nakasyou/local-mcp"
-specifiers = ["latest"]
-
 [[tools."cargo:mergiraf"]]
 version = "0.19.1"
 backend = "cargo:mergiraf"
@@ -2149,11 +2144,6 @@ version = "0.26.11"
 backend = "gem:ruby-lsp"
 specifiers = ["0.26"]
 
-[[tools."gem:terminal-notifier"]]
-version = "3.1.0"
-backend = "gem:terminal-notifier"
-specifiers = ["latest"]
-
 [[tools.gh]]
 version = "2.100.0"
 backend = "aqua:cli/cli"
@@ -2196,21 +2186,6 @@ checksum = "sha256:4421ee3eab5a22b3b67ffe9b42a303e53359b9951fdf319f8c9587c36baf4
 url = "https://github.com/atusy/kakehashi/releases/download/v1.0.0/kakehashi-v1.0.0-aarch64-apple-darwin.tar.gz"
 url_api = "https://api.github.com/repos/atusy/kakehashi/releases/assets/522202631"
 
-[[tools."github:gw31415/audiorouter"]]
-version = "0.2.0"
-backend = "github:gw31415/audiorouter"
-specifiers = ["latest"]
-
-[tools."github:gw31415/audiorouter"."platforms.linux-arm64"]
-checksum = "sha256:9608a538351a88cb3eb4a9404202b6a1c8c88686a926f5b2b690834aeb88437b"
-url = "https://github.com/gw31415/audiorouter/releases/download/v0.2.0/audiorouter-aarch64-unknown-linux-gnu.tar.gz"
-url_api = "https://api.github.com/repos/gw31415/audiorouter/releases/assets/463497451"
-
-[tools."github:gw31415/audiorouter"."platforms.macos-arm64"]
-checksum = "sha256:6b65d48111ad49cde6e36168abca4fcf1d4ed69ecfd27068af36e4a88541f9d8"
-url = "https://github.com/gw31415/audiorouter/releases/download/v0.2.0/audiorouter-aarch64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/gw31415/audiorouter/releases/assets/463497449"
-
 [[tools."github:gw31415/commitgen"]]
 version = "0.3.2"
 backend = "github:gw31415/commitgen"
@@ -2225,16 +2200,6 @@ url_api = "https://api.github.com/repos/gw31415/commitgen/releases/assets/451164
 checksum = "sha256:9f823511ec22ea3409bec12417b698bf7d4e4b525e3f082c14f6fb91a001b75f"
 url = "https://github.com/gw31415/commitgen/releases/download/v0.3.2/commitgen-aarch64-apple-darwin"
 url_api = "https://api.github.com/repos/gw31415/commitgen/releases/assets/451164853"
-
-[[tools."github:gw31415/dopa"]]
-version = "0.2.1"
-backend = "github:gw31415/dopa"
-specifiers = ["v0.2.1"]
-
-[tools."github:gw31415/dopa"."platforms.macos-arm64"]
-checksum = "sha256:ae74048eeb1c9b4099081b377bc4041a56857cc697e8d726e85d06be49416126"
-url = "https://github.com/gw31415/dopa/releases/download/v0.2.1/dopa-macos-arm64.tar.gz"
-url_api = "https://api.github.com/repos/gw31415/dopa/releases/assets/558596579"
 
 [[tools."github:gw31415/rsplug.nvim"]]
 version = "0.4.0"
@@ -2308,24 +2273,6 @@ url_api = "https://api.github.com/repos/microsoft/tgrep/releases/assets/54829287
 checksum = "sha256:9ef13569d6725bb50497671506c914aaf6602fb0631810c8d100214498497ec8"
 url = "https://github.com/microsoft/tgrep/releases/download/v1.0.4/tgrep-v1.0.4-aarch64-apple-darwin.tar.gz"
 url_api = "https://api.github.com/repos/microsoft/tgrep/releases/assets/548292881"
-
-[[tools."github:openai/tunnel-client"]]
-version = "0.0.14"
-backend = "github:openai/tunnel-client"
-specifiers = ["latest"]
-
-[tools."github:openai/tunnel-client"."platforms.linux-arm64"]
-checksum = "sha256:2de3fb879a18edb847e0313592c912f1983685488290a7fdba7ac403e6a4fb0a"
-url = "https://github.com/openai/tunnel-client/releases/download/v0.0.14/tunnel-client-v0.0.14-linux-arm64.zip"
-url_api = "https://api.github.com/repos/openai/tunnel-client/releases/assets/540136652"
-provenance = "github-attestations"
-provenance_verified = true
-
-[tools."github:openai/tunnel-client"."platforms.macos-arm64"]
-checksum = "sha256:b540493c5bdbcdbb755700c8e2e16597e28b1569e425007e0f73111047bd6a64"
-url = "https://github.com/openai/tunnel-client/releases/download/v0.0.14/tunnel-client-v0.0.14-darwin-arm64.zip"
-url_api = "https://api.github.com/repos/openai/tunnel-client/releases/assets/540136657"
-provenance = "github-attestations"
 
 [[tools."github:tetzng/pez"]]
 version = "0.5.1"
@@ -2708,14 +2655,6 @@ url = "https://nodejs.org/dist/v26.8.2/node-v26.8.2-linux-arm64.tar.gz"
 checksum = "sha256:974b6d5fb2fc7c33ff2354db0902b4e91c2de01ec8acc6de48e543c97e18c9e1"
 url = "https://nodejs.org/dist/v26.8.2/node-v26.8.2-darwin-arm64.tar.gz"
 
-[[tools."npm:@opencode-ai/cli"]]
-version = "beta"
-backend = "npm:@opencode-ai/cli"
-specifiers = ["beta"]
-
-[tools."npm:@opencode-ai/cli".options]
-allow_builds = '["@opencode-ai/cli"]'
-
 [[tools."npm:@typespec/compiler"]]
 version = "1.15.0"
 backend = "npm:@typespec/compiler"
@@ -2780,21 +2719,6 @@ url_api = "https://api.github.com/repos/can1357/oh-my-pi/releases/assets/5895077
 checksum = "sha256:9fccf2cdd7a472c93cb54d99d95d914c86b5f41652054e3cdd0b17c5d28393a6"
 url = "https://github.com/can1357/oh-my-pi/releases/download/v18.3.2/omp-darwin-arm64"
 url_api = "https://api.github.com/repos/can1357/oh-my-pi/releases/assets/589507782"
-
-[[tools.ollama]]
-version = "0.33.3"
-backend = "aqua:ollama/ollama"
-specifiers = ["latest"]
-
-[tools.ollama."platforms.linux-arm64"]
-checksum = "sha256:4425a112af999ae6572c1ce211fbabeaca7bab23ed5860972acdfc0cc2358420"
-url = "https://github.com/ollama/ollama/releases/download/v0.33.3/ollama-linux-arm64.tar.zst"
-url_api = "https://api.github.com/repos/ollama/ollama/releases/assets/543087936"
-
-[tools.ollama."platforms.macos-arm64"]
-checksum = "sha256:342db03df80bb9db84ff64246031bd5f70c09b59ff52fa5cc9aaae3476cc4a9d"
-url = "https://github.com/ollama/ollama/releases/download/v0.33.3/ollama-darwin.tgz"
-url_api = "https://api.github.com/repos/ollama/ollama/releases/assets/543087823"
 
 [[tools.pandoc]]
 version = "3.11"
