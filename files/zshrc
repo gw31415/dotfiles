@@ -12,7 +12,7 @@ if [[ -o interactive ]] && command -v mise >/dev/null 2>&1; then
 fi
 
 # pnpm
-export PNPM_HOME="/Users/ama/Library/pnpm"
+export PNPM_HOME="$HOME/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME/bin:"*) ;;
   *) export PATH="$PNPM_HOME/bin:$PATH" ;;

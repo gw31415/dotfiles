@@ -1,0 +1,13 @@
+# OCI module。miserc.local.toml に `env = ["oci"]` を置いた OCI の Linux サーバーでだけ読み込む。
+#
+# 現時点で OCI 専用に足すツール・dotfile は無く、共通設定 (config.toml) だけで足りる。
+# この module は「OCI では何を入れないか」を明示する置き場でもある:
+#   - macOS module のもの (GUI アプリ・zsh・TeX・CoreAudio・tunnel-client 等) は読み込まない。
+#   - ログインシェルは bash のまま。fish は herdr / 対話で使う。
+#   - 次のサーバー常駐はこの dotfiles の管理外 (root 権限の system service):
+#       dev-session-mcp (/opt/dev-session-mcp, dev-session-mcp-*.service)
+#       cloudflared-dev-session-mcp.service (apt の cloudflared)
+#       dev-session-mcp-tunnel.service (/usr/local/bin/tunnel-client)
+#
+# OCI だけで必要なものが出てきたら、ここに [tools] / [dotfiles] /
+# [bootstrap.linux.systemd.units] などを追加する。

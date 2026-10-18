@@ -1,1 +1,3 @@
 /result
+# マシンごとの module 選択 (env = ["macos"] / ["oci"])。共有しない。
+/miserc.local.toml
