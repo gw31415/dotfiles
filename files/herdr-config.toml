@@ -1,7 +1,15 @@
+{#- herdr の config.toml。mise が [dotfiles] の template として ~/.config/herdr/config.toml に描画する。
+    herdr の default_shell は ~ や環境変数を展開せず、herdr サーバーの PATH には mise の shim が
+    入らないことがあるため、fish は OS ごとの絶対パスで指定する。 -#}
+{%- if os() == "macos" -%}
+{%- set fish = "/opt/homebrew/bin/fish" -%}
+{%- else -%}
+{%- set fish = env.HOME ~ "/.local/share/mise/installs/aqua-fish-shell-fish-shell/latest/fish" -%}
+{%- endif -%}
 onboarding = false
 
 [terminal]
-default_shell = "/opt/homebrew/bin/fish"
+default_shell = "{{ fish }}"
 
 [ui]
 show_agent_labels_on_pane_borders = true
@@ -24,7 +32,7 @@ detach = ["prefix+q", "super+w"]
 [[keys.command]]
 key = "prefix+i"
 type = "shell"
-command = "fish -c herdr_editor"
+command = "{{ fish }} -c herdr_editor"
 description = "compose text to input"
 
 [experimental]

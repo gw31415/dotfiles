@@ -178,7 +178,9 @@ ssh = "tssh"
 # その他 CLI
 "~/.config/fd/ignore" = { source = "config/fd/ignore", mode = "symlink" }
 "~/.config/freeze" = { source = "config/freeze", mode = "symlink" }
-"~/.config/herdr" = { source = "config/herdr", mode = "symlink" }
+# herdr は実行時ファイル (socket・log) を同じディレクトリに置くため、config.toml だけを
+# OS ごとの fish パスを埋め込んだ template として描画する。
+"~/.config/herdr/config.toml" = { source = "files/herdr-config.toml", mode = "template" }
 
 # [tools] を導入した後だけ必要な pez 操作は native bootstrap hook に置く。
 [bootstrap.hooks.post-tools]

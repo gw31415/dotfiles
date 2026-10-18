@@ -1,3 +1,5 @@
 /result
 # マシンごとの module 選択 (env = ["macos"] / ["oci"])。共有しない。
 /miserc.local.toml
+# 旧構成で ~/.config/herdr が指していた場所。herdr の実行時ファイルが残ることがある。
+/config/herdr/

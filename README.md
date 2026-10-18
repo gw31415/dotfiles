@@ -74,6 +74,23 @@ Nix の `.#shared` は任意の互換層であり、bootstrap では導入しな
 外す前に `mise bootstrap unapply <module> --dry-run` で確認してから削除する。
 module 由来の mise ツールは `mise prune` で消えるので、残したいものがあれば先に確認する。
 
+### herdr
+
+herdr は実行時ファイル (socket・log・session) を `~/.config/herdr` に置くため、ディレクトリごとの
+symlink をやめ、`config.toml` だけを `files/herdr-config.toml` から template として描画する。
+`default_shell` は `~` や環境変数を展開せず、herdr サーバーの PATH に mise の shim が
+入らないことがあるため、fish は OS ごとの絶対パスを埋め込む。設定の変更は template を編集して
+`mise bootstrap dotfiles apply` と `herdr server reload-config` を実行する。
+
+旧構成 (`~/.config/herdr -> ~/.config/mise/config/herdr`) から移行するマシンでは、一度だけ次を実行する
+(同じファイルシステム内の移動なので、起動中の herdr の socket はそのまま使える):
+
+```bash
+rm ~/.config/herdr && mv ~/.config/mise/config/herdr ~/.config/herdr
+rm ~/.config/herdr/config.toml ~/.config/herdr/.gitignore
+mise bootstrap dotfiles apply && herdr server reload-config
+```
+
 ### 旧 Home Manager 環境からの移行
 
 mise は既存ファイルを上書きしない。まず `mise bootstrap --dry-run` で対象を
