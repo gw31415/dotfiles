@@ -1,8 +1,18 @@
 # AGENTS.md
 
+## 設定ファイルの置き場所
+
+- `config.toml`: macOS と OCI の両方で使うもの。
+- `config.macos.toml`: Mac でしか動かない・使わないもの (GUI、Homebrew/cask/mas、CoreAudio、zsh、TeX、tunnel-client 等)。
+- `config.oci.toml`: OCI サーバーでだけ必要なもの。サーバーの system service (dev-session-mcp、cloudflared、/usr/local/bin/tunnel-client) はこの repo の管理外。
+- arm64 Linux 向けの配布が無いだけのツールは `config.toml` に置き、`os = ["macos", "linux/x64"]` で絞る。
+- module 内の項目には `os = "macos"` を付けない (module の選択で既に絞られている)。
+- マシンごとの選択は git 管理外の `miserc.local.toml` (`env = ["macos"]` / `env = ["oci"]`)。コミットしない。
+- lockfile は config ファイルごと: `config.toml` → `mise.lock`、`config.<env>.toml` → `mise.<env>.lock`。ツールを module 間で移したら lock の entry も移す。
+
 ## mise ツール追加時のバックエンド選定
 
-対象: repository root の `config.toml` にある `[tools]`。
+対象: 上記いずれかの config ファイルにある `[tools]`。
 
 優先順位:
 
@@ -25,4 +35,5 @@ matching = "emmylua_ls"
 ## mise config 編集時の注意
 
 - `[tools.<name>]` 形式のテーブルは `[tools]` 内のフラットなエントリより後(`[env]` の直前等)に置く。途中挿入すると後続のフラットエントリがそのサブテーブルに吸収される
-- 検証: `python3 -c "import tomllib; tomllib.load(open('config.toml','rb'))"` と `mise install` + `mise which <tool>`
+- 検証: `python3 -c "import tomllib; [tomllib.load(open(f,'rb')) for f in ('config.toml','config.macos.toml','config.oci.toml')]"`、`mise config ls` (読み込まれた module の確認)、`mise install` + `mise which <tool>`
+- module ごとの差分確認: `mise -E macos bootstrap --dry-run` / `mise -E oci bootstrap --dry-run`

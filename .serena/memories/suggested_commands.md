@@ -1,6 +1,7 @@
-- `./config/mise/tasks/link.sh` then `mise trust <repo>` then `mise run bootstrap` to provision a machine.
-- `mise run link` / `mise run update` for dotfiles sync and updates.
-- `sudo darwin-rebuild switch --flake .` to apply nix-darwin changes on macOS.
-- `nix flake update` on macOS to refresh `flake.lock` (no Nix on Linux side by default).
+- New machine: `mise bootstrap --adopt <repo>`, then `echo 'env = ["macos"]' > ~/.config/mise/miserc.local.toml` (or `["oci"]`), then `mise bootstrap`.
+- `mise bootstrap --dry-run` / `mise bootstrap` to apply dotfiles, host packages and tools; `mise run update` for updates; `mise config ls` shows which modules loaded.
+- `mise -E macos bootstrap --dry-run` / `mise -E oci bootstrap --dry-run` to preview a module.
+- `dot -d` (or `sudo darwin-rebuild switch --flake ~/.config/mise`) to apply nix-darwin changes on macOS.
+- `nix flake update` on macOS to refresh `flake.lock` (no Nix on the OCI server).
 - `rg PATTERN config/nvim` to search Neovim config quickly.
 - `nvim --clean --headless '+lua dofile("/absolute/path/to/file.lua")' +q` for syntax/loading checks on Lua snippets when sandbox-safe.

@@ -3,34 +3,62 @@
 mise-first な dotfiles。開発ツール・ランタイム・シェル設定は mise が正で、
 Nix は「はみ出る部分」の薄い wrapper のみに縮小している。
 
-| 層              | Linux                              | macOS                              |
-| --------------- | ---------------------------------- | ---------------------------------- |
-| ツール/言語     | mise (`config.toml`)               | 同左                               |
-| dotfiles 配置   | `mise bootstrap dotfiles`           | 同左                               |
-| fish plugin     | pez (`config/fish/pez.toml` + lock) | 同左                              |
-| 共有ツール層    | 任意: Nix `.#shared` (`nix/shared.nix`) | — (brew が担当)                |
-| GUI / host package | —                               | `[bootstrap.packages]`             |
-| Nix             | 共有ツール層のみ                   | システム設定・フォント・常駐のみ   |
+## 構成
+
+共通設定と、マシンごとに選ぶ module (mise の config environment) に分けている。
+
+| ファイル            | 読み込むマシン | 中身                                                                 |
+| ------------------- | -------------- | -------------------------------------------------------------------- |
+| `config.toml`       | 全マシン       | ランタイム・シェル・LSP・開発/日常 CLI、nvim/fish/git などの dotfiles |
+| `config.macos.toml` | Mac            | brew / cask / mas、zsh・TeX・ghostty・audiorouter、tunnel-client 等   |
+| `config.oci.toml`   | OCI サーバー   | OCI 専用の追加分 (現状なし)。サーバー常駐はこの repo の管理外と明記   |
+| `miserc.local.toml` | (git 管理外)   | そのマシンで読む module の選択                                        |
+| `mise.lock` / `mise.<env>.lock` | —  | 各 config ファイルに対応する lockfile                                 |
+| `flake.nix`, `nix/` | Mac (+任意で Linux) | nix-darwin のシステム設定・フォント・LaunchAgent、Linux の任意共有層 |
+
+| 層                 | OCI (Linux)                          | macOS                                  |
+| ------------------ | ------------------------------------ | -------------------------------------- |
+| ツール/言語        | mise (`config.toml`)                 | mise (`config.toml` + `config.macos.toml`) |
+| dotfiles 配置      | `mise bootstrap` (`[dotfiles]`)      | 同左                                   |
+| fish plugin        | pez (`config/fish/pez.toml` + lock)  | 同左                                   |
+| ログインシェル     | bash (fish は対話・herdr で使う)     | zsh → fish に exec                      |
+| GUI / host package | —                                    | `[bootstrap.packages]` (macOS module)   |
+| 常駐サービス       | system service (repo 管理外)         | nix-darwin の LaunchAgent              |
+| Nix                | 未使用 (任意: `.#shared`)            | システム設定・フォント・常駐のみ       |
 
 conda backend の使用は `conda:poppler` / `conda:librsvg` の2点のみ
 (prebuilt 配布が conda-forge にしか無いため)。
 
+### どこに書くか
+
+- 両方のマシンで使うもの → `config.toml`
+- Mac でしか動かない・使わないもの (GUI、CoreAudio、Homebrew、zsh、TeX) → `config.macos.toml`
+- OCI サーバーでだけ必要なもの → `config.oci.toml`
+- arm64 Linux 向けの配布が無いだけのツールは `config.toml` に置き、
+  `os = ["macos", "linux/x64"]` で絞る。
+
 ## Installation
 
 ```bash
-# 1. mise (公式インストーラ)
+# 1. mise (公式インストーラ)。module の選択に 2026.10.13 以降が必要。
 curl https://mise.run | sh
 
-# 2. この repository を mise のグローバル構成として採用して bootstrap
-#    (mise が ~/.config/mise へ clone・trust してから宣言状態を適用する)
+# 2. この repository を mise のグローバル構成として採用する
+#    (mise が ~/.config/mise へ clone・trust し、共通設定だけで一度収束させる)
 mise bootstrap --adopt <this-repo-url>
+
+# 3. このマシンの module を選んで、もう一度 bootstrap する
+echo 'env = ["macos"]' > ~/.config/mise/miserc.local.toml   # Mac
+echo 'env = ["oci"]'   > ~/.config/mise/miserc.local.toml   # OCI サーバー
+mise bootstrap --dry-run
+mise bootstrap
 ```
 
 `mise bootstrap` は以下を宣言的に適用する:
 
-- `config.toml` の `[dotfiles]` に定義した symlink と fish の leaf symlink
+- 選択した module を含む `[dotfiles]` の symlink と fish の leaf symlink
 - macOS の Homebrew formula / cask と Mac App Store application
-  (`[bootstrap.packages]`)
+  (`[bootstrap.packages]`、macOS module のみ)
 - `[tools]` の mise-managed toolchain
 - tools 導入後の `pez install` と `pez doctor`
 
@@ -40,9 +68,11 @@ mise bootstrap --adopt <this-repo-url>
 Nix の `.#shared` は任意の互換層であり、bootstrap では導入しない。必要な Linux
 環境だけで `nix profile install ~/.config/mise#shared` を明示的に実行する。
 
-Arto は third-party tap の cask で、現在の mise package backend が安全に評価できない。
-これは bootstrap の外で、必要な Mac だけに `brew install --cask arto-app/tap/arto` を
-明示的に実行する。
+### module を外す・切り替える
+
+`miserc.local.toml` から外しただけでは、その module が置いた symlink は残る。
+外す前に `mise bootstrap unapply <module> --dry-run` で確認してから削除する。
+module 由来の mise ツールは `mise prune` で消えるので、残したいものがあれば先に確認する。
 
 ### 旧 Home Manager 環境からの移行
 
@@ -51,24 +81,20 @@ mise は既存ファイルを上書きしない。まず `mise bootstrap --dry-r
 その symlink だけを手動で外して再実行する。通常ファイルや出所不明の symlink に
 `--force-dotfiles` を使わないこと。
 
-旧構成の `~/.config/mise -> <repo>/config/mise` は互換 symlink により、そのまま
-リポジトリ root を指す。既存 checkout を使い続ける場合は adopt し直さず、
+旧構成の `~/.config/mise -> <repo>/config/mise` は互換 symlink (`config/mise -> ..`)
+により、そのままリポジトリ root を指す。既存 checkout を使い続ける場合は adopt し直さず、
 `mise trust ~/.config/mise/config.toml` の後に `mise bootstrap` を実行する。
 新しいマシンだけ `mise bootstrap --adopt` を使う。
-
-新しい fish を開いた後も、従来どおり `dot`、`dot -h`、`dot -d`、`dot -a`、
-`dot -u`、`dot sh`、`dot gc` を使える。内部では user-level apply と開発 shell を
-mise に、システム適用・flake 更新・GC を Nix に委譲する。
 
 ## `dot` Usage
 
 `dot` のインターフェースは維持する。引数なしと `dot -h` は user-level 設定を
 適用し、`dot -d` は macOS の nix-darwin、`dot -a` は両方を適用する。
-`dot -u` は従来どおり `flake.lock` だけを更新・コミットし、`dot -ua` はその後に
+`dot -u` は `flake.lock` だけを更新・コミットし、`dot -ua` はその後に
 両方を適用する。mise / pez / Homebrew の更新は `mise run update` を使う。
 
 ```bash
-dot                 # user-level apply
+dot                 # user-level apply (mise bootstrap)
 dot --home          # 同上
 dot --darwin        # macOS system apply
 dot --all           # user-level + macOS system apply
@@ -82,10 +108,10 @@ dot gc --aggressive # 全世代を削除してから Nix garbage collection
 ### macOS (nix-darwin) の切替・更新
 
 ```bash
-sudo darwin-rebuild switch --flake ~/dotfiles
+dot -d
+# 直接実行する場合
+sudo darwin-rebuild switch --flake ~/.config/mise
 ```
-
-`flake.lock` 更新後は Mac 側で `nix flake update` すること。
 
 ## mise Usage
 
@@ -93,7 +119,8 @@ sudo darwin-rebuild switch --flake ~/dotfiles
 mise bootstrap --dry-run          # 変更予定を確認
 mise bootstrap                    # dotfiles・host package・tools を収束
 mise bootstrap dotfiles apply     # dotfiles だけを収束
-mise bootstrap packages status    # host package の状態確認
+mise bootstrap packages status    # host package の状態確認 (Mac)
+mise config ls                    # 読み込まれている config (module) を確認
 mise run update                   # package / mise tool / pez の更新
 ```
 

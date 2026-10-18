@@ -1,4 +1,4 @@
 - Purpose: personal dotfiles and machine configuration for ama, mise-first, with Nix kept only as a thin wrapper for system-level overflow, and a custom Neovim setup.
-- Stack: mise (tools + tasks), pez (fish plugins), Nix (shared profile on Linux, nix-darwin on macOS), Brewfile on macOS, Lua for Neovim config.
-- Structure: `flake.nix`, `nix/` (env/darwin/shared), `config/` for ~/.config symlinks (including `config/nvim/`), `config/mise/tasks/` for link/bootstrap/update scripts, `config/fish/` for fish conf + pez.toml/lock, `files/` for loose home files, `Brewfile` for macOS.
-- Platform: Linux (mise + Nix shared profile) and Darwin/macOS (mise + Brewfile + nix-darwin).
+- Stack: mise (tools, tasks, `mise bootstrap` for dotfiles and host packages), pez (fish plugins), nix-darwin on macOS (optional Nix shared profile on Linux), Lua for Neovim config.
+- Structure: `config.toml` (shared by every machine), `config.macos.toml` / `config.oci.toml` (machine modules, chosen per machine in the untracked `miserc.local.toml`), `mise.lock` / `mise.macos.lock`, `flake.nix` + `nix/` (env/darwin/shared), `config/` for ~/.config symlinks (incl. nvim, fish, git), `files/` for loose home files.
+- Platforms: macOS (AmacBook: base + macos module + nix-darwin) and an OCI Linux arm64 server (base + oci module; login shell bash, no Nix; its system services are managed outside this repo).
