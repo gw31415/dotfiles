@@ -25,7 +25,7 @@ _.path = ["/opt/homebrew/bin"]
 "~/.config/ghostty" = { source = "config/ghostty", mode = "symlink" }
 "~/.config/audiorouter" = { source = "config/audiorouter", mode = "symlink" }
 "~/.config/tunnel-client" = { source = "config/tunnel-client", mode = "symlink" }
-# zsh は macOS のログインシェル (fish に exec で引き継ぐ)。OCI には zsh が無い。
+# ログインシェルは Homebrew の fish。zsh は予備として設定だけ置く。OCI には zsh が無い。
 "~/.zprofile" = { source = "files/zprofile", mode = "symlink" }
 "~/.zshenv" = { source = "files/zshenv", mode = "symlink" }
 "~/.zshrc" = { source = "files/zshrc", mode = "symlink" }

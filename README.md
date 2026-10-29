@@ -21,7 +21,7 @@ Nix は「はみ出る部分」の薄い wrapper のみに縮小している。
 | ツール/言語        | mise (`config.toml`)                 | mise (`config.toml` + `config.macos.toml`) |
 | dotfiles 配置      | `mise bootstrap` (`[dotfiles]`)      | 同左                                   |
 | fish plugin        | pez (`config/fish/pez.toml` + lock)  | 同左                                   |
-| ログインシェル     | bash (fish は対話・herdr で使う)     | zsh → fish に exec                      |
+| ログインシェル     | bash (fish は対話・herdr で使う)     | fish (`/opt/homebrew/bin/fish`)          |
 | GUI / host package | —                                    | `[bootstrap.packages]` (macOS module)   |
 | 常駐サービス       | system service (repo 管理外)         | nix-darwin の LaunchAgent              |
 | Nix                | 未使用 (任意: `.#shared`)            | システム設定・フォント・常駐のみ       |
@@ -52,6 +52,13 @@ echo 'env = ["macos"]' > ~/.config/mise/miserc.local.toml   # Mac
 echo 'env = ["oci"]'   > ~/.config/mise/miserc.local.toml   # OCI サーバー
 mise bootstrap --dry-run
 mise bootstrap
+```
+
+Mac では bootstrap 後に Homebrew の fish をログインシェルにする (初回のみ):
+
+```bash
+echo /opt/homebrew/bin/fish | sudo tee -a /etc/shells
+chsh -s /opt/homebrew/bin/fish
 ```
 
 `mise bootstrap` は以下を宣言的に適用する:
