@@ -59,4 +59,3 @@ url_api = "https://api.github.com/repos/ollama/ollama/releases/assets/543087936"
 checksum = "sha256:342db03df80bb9db84ff64246031bd5f70c09b59ff52fa5cc9aaae3476cc4a9d"
 url = "https://github.com/ollama/ollama/releases/download/v0.33.3/ollama-darwin.tgz"
 url_api = "https://api.github.com/repos/ollama/ollama/releases/assets/543087823"
-

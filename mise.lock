@@ -1392,6 +1392,11 @@ checksum = "sha256:f6b99103964905f9ae9c0ab16ec96537010a8b7a031f1c3ec0c4be1892962
 url = "https://github.com/fish-shell/fish-shell/releases/download/4.9.2/fish-4.9.2-linux-aarch64.tar.xz"
 url_api = "https://api.github.com/repos/fish-shell/fish-shell/releases/assets/545702231"
 
+[tools."aqua:fish-shell/fish-shell"."platforms.macos-arm64"]
+checksum = "sha256:93491525e4e338f7a6b164334b33eee261fb70f71576539c8a08130f84dc3496"
+url = "https://github.com/fish-shell/fish-shell/releases/download/4.9.2/fish-4.9.2.pkg"
+url_api = "https://api.github.com/repos/fish-shell/fish-shell/releases/assets/545717347"
+
 [[tools."aqua:github/copilot-language-server-release"]]
 version = "1.545.0"
 backend = "aqua:github/copilot-language-server-release"
@@ -2285,17 +2290,17 @@ url = "https://github.com/tetzng/pez/releases/download/v0.5.1/pez-aarch64-apple-
 url_api = "https://api.github.com/repos/tetzng/pez/releases/assets/438236843"
 
 [[tools.go]]
-version = "1.24.13"
+version = "1.27.1"
 backend = "core:go"
-specifiers = ["1.24"]
+specifiers = ["latest"]
 
 [tools.go."platforms.linux-arm64"]
-checksum = "sha256:74d97be1cc3a474129590c67ebf748a96e72d9f3a2b6fef3ed3275de591d49b3"
-url = "https://dl.google.com/go/go1.24.13.linux-arm64.tar.gz"
+checksum = "sha256:3450b45a3f9ee8568792736a5c5e70a1f2e9b36c35a8f74958c03e51d7d92bec"
+url = "https://dl.google.com/go/go1.27.1.linux-arm64.tar.gz"
 
 [tools.go."platforms.macos-arm64"]
-checksum = "sha256:f282d882c3353485e2fc6c634606d85caf36e855167d59b996dbeae19fa7629a"
-url = "https://dl.google.com/go/go1.24.13.darwin-arm64.tar.gz"
+checksum = "sha256:ee215d57e0ec269c60cc9ceca68e6bda321ba9ee5afe24f4b0988703c2d87d12"
+url = "https://dl.google.com/go/go1.27.1.darwin-arm64.tar.gz"
 
 [[tools."go:github.com/itchyny/mmv/cmd/mmv"]]
 version = "0.1.6"
@@ -2865,6 +2870,16 @@ url_api = "https://api.github.com/repos/trzsz/trzsz-ssh/releases/assets/48989126
 version = "6.8.0"
 backend = "packslip:github.com/jdx/usage"
 specifiers = ["latest"]
+
+[tools.usage."platforms.linux-arm64"]
+checksum = "sha256:5ac012d6a7a1aaa5049e22afb77c3ec76768c2203d323d6d26a7b494ddccc780"
+url = "https://github.com/jdx/usage/releases/download/v6.8.0/usage-aarch64-unknown-linux-gnu.tar.gz"
+signer = "sigstore-oidc:https://github.com/jdx/usage/.github/workflows/publish-cli.yml"
+
+[tools.usage."platforms.macos-arm64"]
+checksum = "sha256:f6bfe2e5353e02769d3f6902d06db1cb201f84124df08465fd4826f9ce7ba632"
+url = "https://github.com/jdx/usage/releases/download/v6.8.0/usage-universal-apple-darwin.tar.gz"
+signer = "sigstore-oidc:https://github.com/jdx/usage/.github/workflows/publish-cli.yml"
 
 [[tools.uv]]
 version = "0.12.10"
