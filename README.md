@@ -10,7 +10,7 @@ Nix は「はみ出る部分」の薄い wrapper のみに縮小している。
 | ファイル            | 読み込むマシン | 中身                                                                 |
 | ------------------- | -------------- | -------------------------------------------------------------------- |
 | `config.toml`       | 全マシン       | ランタイム・シェル・LSP・開発/日常 CLI、nvim/fish/git などの dotfiles |
-| `config.macos.toml` | Mac            | brew / cask / mas、zsh・TeX・ghostty・audiorouter、tunnel-client 等   |
+| `config.macos.toml` | Mac            | brew / cask / mas、zsh・TeX・audiorouter、tunnel-client 等   |
 | `config.oci.toml`   | OCI サーバー   | OCI 専用の追加分 (現状なし)。サーバー常駐はこの repo の管理外と明記   |
 | `miserc.local.toml` | (git 管理外)   | そのマシンで読む module の選択                                        |
 | `mise.lock` / `mise.<env>.lock` | —  | 各 config ファイルに対応する lockfile                                 |

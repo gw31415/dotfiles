@@ -56,7 +56,8 @@ _.path = ["/opt/homebrew/bin"]
 "brew-cask:codex" = "latest"
 "brew-cask:codex-app" = "latest"
 "brew-cask:discord" = "latest"
-"brew-cask:ghostty" = "latest"
+# 端末は Rex Beta.app に移行中。Ghostty は既定では入れない (設定の symlink は残す)。
+# "brew-cask:ghostty" = "latest"
 "brew-cask:gnucash" = "latest"
 "brew-cask:google-chrome" = "latest"
 "brew-cask:iloader" = "latest"
