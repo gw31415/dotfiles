@@ -3,3 +3,9 @@
 /miserc.local.toml
 # 旧構成で ~/.config/herdr が指していた場所。herdr の実行時ファイルが残ることがある。
 /config/herdr/
+# Claude Code: settings.json・commands/・agents/・skills/ は共有するのでコミットし、
+# 個人設定・作業用 worktree・stop hook の目印ファイルだけを除く。
+/.claude/settings.local.json
+/.claude/worktrees/
+/.claude/DONE
+/.claude/WAITING
