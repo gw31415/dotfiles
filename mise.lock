@@ -2660,11 +2660,6 @@ version = "0.3.0"
 backend = "npm:@vtsls/language-server"
 specifiers = ["latest"]
 
-[[tools."npm:@wonderwhy-er/desktop-commander"]]
-version = "0.2.51"
-backend = "npm:@wonderwhy-er/desktop-commander"
-specifiers = ["latest"]
-
 [[tools."npm:basedpyright"]]
 version = "1.40.0"
 backend = "npm:basedpyright"

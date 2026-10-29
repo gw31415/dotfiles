@@ -89,7 +89,6 @@ claude = "latest"
 codex = "latest"
 oh-my-pi = "latest"
 "pipx:serena-agent" = "latest"
-"npm:@wonderwhy-er/desktop-commander" = "latest"
 
 # --- 日常 CLI ---
 # aria2 = "latest" # バイナリインストールできる手段が存在しない
