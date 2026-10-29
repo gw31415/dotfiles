@@ -35,6 +35,10 @@ vim.cmd [[
 	cno <c-e> <end>
 ]]
 
+-- lua_start で止めておいた matchit をここで読む
+vim.g.loaded_matchit = nil
+vim.cmd.packadd 'matchit'
+
 local path_sep = package.config:sub(1, 1) == '\\' and ';' or ':'
 
 -- Use mise cmds
