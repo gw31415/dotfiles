@@ -150,6 +150,33 @@ launchanim = true
 # 親指と3本指を広げてデスクトップを表示するジェスチャーを無効化。
 showDesktopGestureEnabled = false
 
+# Rex Beta.app (端末)。設定ファイルは無く、すべて UserDefaults に保存される。
+# Homebrew cask が無いのでアプリ本体は公式サイトから手動で入れる (~/Applications)。
+# ウィンドウ位置・Sparkle の更新状態・同期先サーバー・ソケットのキャッシュなど
+# マシン固有の値は宣言しない。反映には Rex の再起動が要る。
+[bootstrap.macos.defaults."com.superlogical.rex"]
+# 外観はシステムに従い、ライト/ダークで別テーマを使う。
+"Workspace.appearance" = "system"
+"Workspace.lightThemeID" = "merino-light"
+"Workspace.darkThemeID" = "merino-dark"
+"Workspace.interfaceStyle" = "blendTheme"
+"Workspace.inactivePaneFadeMode" = "both"
+"Workspace.usesStandardInactiveWindowPaneStyles" = true
+"Workspace.tabIconTintMode" = "off"
+"Workspace.terminalFontName" = "HackGen Console NF"
+"Workspace.terminalFontPointSize" = 13.0
+"Workspace.terminalAllowsLigatures" = false
+"Workspace.terminalFontSmoothing" = false
+"Workspace.terminalSmoothScrolling" = false
+"Workspace.terminalCursorBlinkUsesCustomInterval" = false
+"Workspace.terminalCursorBlinkIntervalMilliseconds" = 0
+"rex.agents.names-sessions" = true
+"rex.client.remoteControl" = true
+"rex.server.run-mode" = "bundled"
+"rex.server.automatic-restart-enabled" = true
+"rex.server.block-plugin-reload-enabled" = false
+"rex.server.tailnet-enabled" = true
+
 # Spotlight のショートカット (64, 65) だけを無効化し、他のホットキーは残す。
 [[bootstrap.macos.defaults_entries]]
 domain = "com.apple.symbolichotkeys"
