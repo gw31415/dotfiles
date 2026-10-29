@@ -1,13 +1,3 @@
-[[plugins]]
-repo = "gw31415/mstdn-editor.vim"
-start = true
-
-[[plugins]]
-repo = "m4xshen/hardtime.nvim"
-depends = "nui.nvim"
-on_cmd = "Hardtime"
-lua_after = "require 'hardtime'.setup()"
-
 # Discord Rich Presence
 [[plugins]]
 repo = "andweeb/presence.nvim"

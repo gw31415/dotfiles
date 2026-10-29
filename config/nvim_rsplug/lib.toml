@@ -8,9 +8,6 @@ repo = "MunifTanjim/nui.nvim"
 repo = "kevinhwang91/promise-async"
 
 [[plugins]]
-repo = "giusgad/hologram.nvim"
-
-[[plugins]]
 repo = "nvim-tree/nvim-web-devicons"
 
 [[plugins]]
