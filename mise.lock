@@ -2202,20 +2202,20 @@ url = "https://github.com/gw31415/commitgen/releases/download/v0.3.2/commitgen-a
 url_api = "https://api.github.com/repos/gw31415/commitgen/releases/assets/451164853"
 
 [[tools."github:gw31415/rsplug.nvim"]]
-version = "0.5.3"
+version = "0.5.5"
 backend = "github:gw31415/rsplug.nvim"
 specifiers = ["latest"]
 
 [tools."github:gw31415/rsplug.nvim"."platforms.linux-arm64"]
-checksum = "sha256:1362f960607f27ed47f951bed1170dad47a9a2eb7651bb2d93c564b2786eb61f"
-url = "https://github.com/gw31415/rsplug.nvim/releases/download/v0.5.3/rsplug-aarch64-unknown-linux-gnu-0.5.3.tar.gz"
-url_api = "https://api.github.com/repos/gw31415/rsplug.nvim/releases/assets/688453133"
+checksum = "sha256:55e03d0e11ae44cb281aaff6db6ac78a664431ee197bf82130d5a604646d2e88"
+url = "https://github.com/gw31415/rsplug.nvim/releases/download/v0.5.5/rsplug-aarch64-unknown-linux-gnu-0.5.5.tar.gz"
+url_api = "https://api.github.com/repos/gw31415/rsplug.nvim/releases/assets/688825623"
 provenance = "github-attestations"
 
 [tools."github:gw31415/rsplug.nvim"."platforms.macos-arm64"]
-checksum = "sha256:b453d524917411fdc8bc1e099d33e5add75c37487e6278a0b20fccf0fd353a30"
-url = "https://github.com/gw31415/rsplug.nvim/releases/download/v0.5.3/rsplug-aarch64-apple-darwin-0.5.3.tar.gz"
-url_api = "https://api.github.com/repos/gw31415/rsplug.nvim/releases/assets/688453124"
+checksum = "sha256:754ac065dcc75b0d69a4dd6a160adac8cfbb01915e7860efe024c5fea82e9ff3"
+url = "https://github.com/gw31415/rsplug.nvim/releases/download/v0.5.5/rsplug-aarch64-apple-darwin-0.5.5.tar.gz"
+url_api = "https://api.github.com/repos/gw31415/rsplug.nvim/releases/assets/688825619"
 provenance = "github-attestations"
 
 [[tools."github:gw31415/rusk"]]
