@@ -68,7 +68,9 @@ vim.api.nvim_create_autocmd({ 'VimEnter', 'DirChanged', 'BufEnter' }, {
 	callback = function (args)
 		prepend_node_modules_bin(vim.fn.getcwd())
 
-		local bufname = args.buf and vim.api.nvim_buf_get_name(args.buf) or ''
+		-- fyler はディレクトリバッファを BufEnter 中に消すので、後続の BufEnter では無効になっている
+		if not vim.api.nvim_buf_is_valid(args.buf) then return end
+		local bufname = vim.api.nvim_buf_get_name(args.buf)
 		if bufname ~= '' then
 			prepend_node_modules_bin(vim.fs.dirname(bufname))
 		end
