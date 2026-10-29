@@ -42,7 +42,7 @@ conda backend の使用は `conda:poppler` / `conda:librsvg` の2点のみ
 user-level のツール・dotfiles・シェルは mise と Homebrew に寄せ、Nix は
 「Nix でないと宣言的に揃えにくいもの」だけに使う。
 
-- macOS のシステム設定 (`system.defaults`、`/etc/shells`、sudo の Touch ID)・
+- macOS のシステム設定 (`system.defaults`、sudo の Touch ID)・
   フォント・LaunchAgent・Tailscale → nix-darwin
 - gocryptfs / bindfs など mise・Homebrew に配布が無く、Linux の `.#shared` と
   同じ nixpkgs で揃えたいもの → nix-darwin の `systemPackages` と `.#shared`
@@ -65,19 +65,15 @@ mise bootstrap --dry-run
 mise bootstrap
 ```
 
-Mac では nix-darwin を適用して Homebrew の fish を `/etc/shells` に登録し、
-ログインシェルにする (初回のみ):
-
-```bash
-sudo darwin-rebuild switch --flake ~/.config/mise
-chsh -s /opt/homebrew/bin/fish
-```
+Mac では `config.macos.toml` の `[bootstrap.user]` により、bootstrap が Homebrew の
+fish を `/etc/shells` に登録してログインシェルにする (sudo とパスワードを求められる)。
 
 `mise bootstrap` は以下を宣言的に適用する:
 
 - 選択した module を含む `[dotfiles]` の symlink と fish の leaf symlink
 - macOS の Homebrew formula / cask と Mac App Store application
   (`[bootstrap.packages]`、macOS module のみ)
+- macOS のログインシェル (`[bootstrap.user]`、macOS module のみ)
 - `[tools]` の mise-managed toolchain
 - tools 導入後の `pez install` と `pez doctor`
 

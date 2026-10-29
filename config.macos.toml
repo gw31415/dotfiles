@@ -83,6 +83,12 @@ _.path = ["/opt/homebrew/bin"]
 "mas:415166115" = "latest" # タイピスト
 "mas:1598123076" = "latest" # 宛名印刷
 
+# ログインシェル。`/etc/shells` への登録と chsh を mise bootstrap が行う。
+# nix-darwin の environment.shells は /etc/shells を丸ごと所有して手編集済みの
+# ファイルと衝突するため使わない。
+[bootstrap.user]
+login_shell = "/opt/homebrew/bin/fish"
+
 # built-in package phase では PATH にない mas を skip することがあるため、
 # Homebrew の bin を追加した mise env で Mac App Store entries だけを収束する。
 [bootstrap.hooks.post-packages]

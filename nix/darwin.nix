@@ -51,13 +51,6 @@ in
   ];
 
   ########################################
-  # Login shell
-  ########################################
-  # ログインシェルにする Homebrew の fish を /etc/shells に登録する。
-  # 切り替え自体は初回に `chsh -s /opt/homebrew/bin/fish` を手で実行する。
-  environment.shells = [ "/opt/homebrew/bin/fish" ];
-
-  ########################################
   # Tailscale (system daemon + CLI + MagicDNS resolver)
   ########################################
   # 初回のみ `sudo tailscale up` で認証が必要。
