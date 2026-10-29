@@ -42,7 +42,7 @@ conda backend の使用は `conda:poppler` / `conda:librsvg` の2点のみ
 user-level のツール・dotfiles・シェルは mise と Homebrew に寄せ、Nix は
 「Nix でないと宣言的に揃えにくいもの」だけに使う。
 
-- root 権限が要る macOS 設定 (sudo の Touch ID、Spotlight の index 停止)・
+- root 権限が要る macOS 設定 (sudo の Touch ID、Spotlight の index 有効化)・
   フォント・Tailscale → nix-darwin
 - user-level の macOS 設定 (defaults・LaunchAgent・ログインシェル) は Nix でなくても
   宣言的に書けるので mise (`config.macos.toml`) に置く

@@ -71,9 +71,9 @@ in
   # System activation
   ########################################
   system.activationScripts.extraActivation.text = ''
-    # マウント済みの全ボリュームで Spotlight のインデックス作成を停止する。
-    # Finder 等のインデックスを利用する検索にも適用される。
-    /usr/bin/mdutil -a -i off
+    # 以前は Spotlight の index を止めていたが、mas がインストール済みアプリの判別に
+    # index を使うため有効に戻す (止めたままだと bootstrap のたびに再導入を試みる)。
+    /usr/bin/mdutil -a -i on
 
     softwareupdate --all --download --background
   '';

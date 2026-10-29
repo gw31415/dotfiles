@@ -20,9 +20,6 @@ ollama = "latest"
 # `mas` command available to bootstrap's Mac App Store package manager.
 [env]
 _.path = ["/opt/homebrew/bin"]
-# nix-darwin が Spotlight の index を止めているため、mas が毎回 index を作り直そうとして
-# 警告を大量に出す。止めている前提なので mas の自動 index はしない。
-MAS_NO_AUTO_INDEX = "1"
 
 [dotfiles]
 "~/.config/ghostty" = { source = "config/ghostty", mode = "symlink" }
