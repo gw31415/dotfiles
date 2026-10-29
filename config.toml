@@ -172,6 +172,7 @@ ssh = "tssh"
 "~/.config/fish/functions" = { source = "config/fish_functions", mode = "symlink-each" }
 "~/.config/fish/pez-lock.toml" = { source = "config/fish/pez-lock.toml", mode = "symlink" }
 "~/.config/fish/pez.toml" = { source = "config/fish/pez.toml", mode = "symlink" }
+"~/.config/fish/themes" = { source = "config/fish/themes", mode = "symlink-each" }
 # git
 "~/.config/git/attributes" = { source = "config/git/attributes", mode = "symlink" }
 "~/.config/git/config" = { source = "config/git/config", mode = "symlink" }
