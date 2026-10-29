@@ -1,6 +1,6 @@
 # macOS module。miserc.local.toml に `env = ["macos"]` を置いた Mac でだけ読み込む。
-# システム設定・フォント・常駐 (denops / tunnel-client の LaunchAgent) は
-# nix-darwin (nix/darwin.nix) が担当する。
+# user-level の macOS 設定 (defaults・LaunchAgent・ログインシェル) もここで持つ。
+# root 権限の設定・フォント・Tailscale・Nix 由来のパッケージは nix-darwin (nix/darwin.nix)。
 
 [tools]
 "gem:terminal-notifier" = "latest"
@@ -8,7 +8,7 @@
 ollama = "latest"
 # CoreAudio のルーティング (BlackHole 2ch と組み合わせて使う)。
 "github:gw31415/audiorouter" = "latest"
-# OpenAI MCP control-plane へのトンネル。nix-darwin の launchd agent が
+# OpenAI MCP control-plane へのトンネル。下の [bootstrap.macos.launchd.agents] が
 # mise shim 経由で `tunnel-client run --profile local-mcp-stdio` を常駐させ、
 # トンネル先の local-mcp も PATH (mise shim) から起動する。
 # NOTE: OCI のトンネルは /etc/dev-session-mcp-tunnel の system service で、
@@ -91,5 +91,120 @@ login_shell = "/opt/homebrew/bin/fish"
 
 # built-in package phase では PATH にない mas を skip することがあるため、
 # Homebrew の bin を追加した mise env で Mac App Store entries だけを収束する。
+#
+# pinentry-touchid は Homebrew の `pinentry` の既定に戻ってしまうため、upgrade や
+# relink の後に pinentry-mac へ向け直す (GPG 署名で Touch ID を出すため)。
+# `-fix` が起動した pinentry-mac は Assuan の handshake を待ち続けて bootstrap を
+# 止めるので、stdin を閉じて EOF を渡し、10 秒で打ち切る。
 [bootstrap.hooks.post-packages]
-run = "mise exec -- mise bootstrap packages apply --manager mas"
+run = [
+  "mise exec -- mise bootstrap packages apply --manager mas",
+  """
+  if [ -x /opt/homebrew/bin/pinentry-touchid ]; then
+    PATH=/opt/homebrew/bin:$PATH /opt/homebrew/bin/pinentry-touchid -fix </dev/null >/dev/null 2>&1 &
+    pid=$!
+    i=0
+    while kill -0 "$pid" 2>/dev/null; do
+      i=$((i + 1))
+      if [ "$i" -ge 10 ]; then
+        kill "$pid" 2>/dev/null
+        wait "$pid" 2>/dev/null
+        break
+      fi
+      sleep 1
+    done
+  fi
+  """,
+]
+
+########################################
+# macOS defaults (旧 nix-darwin の system.defaults)
+########################################
+# mise は Dock・Finder を再起動しないため、反映には再ログインか `killall Dock Finder`。
+[bootstrap.macos.defaults]
+# Spotlight の呼び出しを無効化。
+"com.apple.Spotlight" = { MenuItemHidden = true }
+# 4本指・5本指のピンチを無効化 (内蔵と Bluetooth の両方)。
+"com.apple.AppleMultitouchTrackpad" = { TrackpadFourFingerPinchGesture = 0, TrackpadFiveFingerPinchGesture = 0 }
+"com.apple.driver.AppleBluetoothMultitouch.trackpad" = { TrackpadFourFingerPinchGesture = 0, TrackpadFiveFingerPinchGesture = 0 }
+
+[bootstrap.macos.defaults."com.apple.finder"]
+AppleShowAllExtensions = true
+CreateDesktop = true
+FXDefaultSearchScope = "SCcf"
+FXEnableExtensionChangeWarning = false
+FXPreferredViewStyle = "Nlsv"
+ShowPathbar = true
+ShowStatusBar = false
+
+[bootstrap.macos.defaults."com.apple.dock"]
+autohide = true
+show-recents = false
+tilesize = 50
+magnification = true
+largesize = 64
+orientation = "bottom"
+launchanim = true
+# 親指と3本指を広げてデスクトップを表示するジェスチャーを無効化。
+showDesktopGestureEnabled = false
+
+# Spotlight のショートカット (64, 65) だけを無効化し、他のホットキーは残す。
+[[bootstrap.macos.defaults_entries]]
+domain = "com.apple.symbolichotkeys"
+key = "AppleSymbolicHotKeys"
+path = ["64", "enabled"]
+value = false
+
+[[bootstrap.macos.defaults_entries]]
+domain = "com.apple.symbolichotkeys"
+key = "AppleSymbolicHotKeys"
+path = ["65", "enabled"]
+value = false
+
+########################################
+# LaunchAgents (旧 nix-darwin の launchd.user.agents)
+########################################
+# Neovim の denops プラグインが接続する共通 Deno サーバー。Vim/Neovim 起動ごとに
+# Deno を spawn しないので denops 系プラグインがすぐ使える。
+# サーバーは rsplug が入れた denops.vim と同じ版を使う (nvim 側と版がずれない)。
+# rsplug 導入前や deno の shim が無い間は落ちるが、keep_alive が再試行する。
+[bootstrap.macos.launchd.agents.denops-shared-server]
+program = "/bin/bash"
+args = [
+  "-c",
+  """
+  repo="$HOME/.cache/rsplug/repos/github.com/vim-denops/denops.vim"
+  exec "$HOME/.local/share/mise/shims/deno" run -A --no-lock -q \
+    "$repo/worktrees/$(cat "$repo/latest-snapshot")/denops/@denops-private/cli.ts" \
+    --hostname 127.0.0.1 --port 32123
+  """,
+]
+run_at_load = true
+keep_alive = true
+throttle_interval = 30
+stdout_path = "~/Library/Logs/denops-shared-server.log"
+stderr_path = "~/Library/Logs/denops-shared-server.log"
+
+# ローカル MCP サーバー (local-mcp) を OpenAI の制御プレーンへ常駐トンネルする。
+# プロファイル local-mcp-stdio は api_key を env:CONTROL_PLANE_API_KEY で参照するため、
+# 起動時に ~/.env を source する (シークレットを設定ファイルに書かない)。
+# local-mcp は tunnel-client から PATH 経由で起動されるため mise shims を通す。
+[bootstrap.macos.launchd.agents.tunnel-client]
+program = "/bin/bash"
+args = [
+  "-c",
+  """
+  set -eo pipefail
+  if [[ -f "$HOME/.env" ]]; then
+    set -a
+    source "$HOME/.env"
+    set +a
+  fi
+  export PATH="$HOME/.local/share/mise/shims:$PATH"
+  exec "$HOME/.local/share/mise/shims/tunnel-client" run --profile local-mcp-stdio
+  """,
+]
+run_at_load = true
+keep_alive = true
+stdout_path = "~/Library/Logs/tunnel-client/tunnel-client.log"
+stderr_path = "~/Library/Logs/tunnel-client/tunnel-client.error.log"

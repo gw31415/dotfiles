@@ -14,17 +14,17 @@ Nix は「はみ出る部分」の薄い wrapper のみに縮小している。
 | `config.oci.toml`   | OCI サーバー   | OCI 専用の追加分 (現状なし)。サーバー常駐はこの repo の管理外と明記   |
 | `miserc.local.toml` | (git 管理外)   | そのマシンで読む module の選択                                        |
 | `mise.lock` / `mise.<env>.lock` | —  | 各 config ファイルに対応する lockfile                                 |
-| `flake.nix`, `nix/` | Mac (+任意で Linux) | nix-darwin のシステム設定・フォント・LaunchAgent、Linux の任意共有層 |
+| `flake.nix`, `nix/` | Mac (+任意で Linux) | nix-darwin の root 権限設定・フォント・Tailscale、Linux の任意共有層 |
 
 | 層                 | OCI (Linux)                          | macOS                                  |
 | ------------------ | ------------------------------------ | -------------------------------------- |
 | ツール/言語        | mise (`config.toml`)                 | mise (`config.toml` + `config.macos.toml`) |
 | dotfiles 配置      | `mise bootstrap` (`[dotfiles]`)      | 同左                                   |
 | fish plugin        | pez (`config/fish/pez.toml` + lock)  | 同左                                   |
-| ログインシェル     | bash (fish は対話・herdr で使う)     | fish (`/opt/homebrew/bin/fish`)          |
+| ログインシェル     | fish (mise の aqua 版)               | fish (`/opt/homebrew/bin/fish`)          |
 | GUI / host package | —                                    | `[bootstrap.packages]` (macOS module)   |
-| 常駐サービス       | system service (repo 管理外)         | nix-darwin の LaunchAgent              |
-| Nix                | 未使用 (任意: `.#shared`)            | システム設定・フォント・常駐・FUSE 系  |
+| 常駐サービス       | system service (repo 管理外)         | `[bootstrap.macos.launchd.agents]`     |
+| Nix                | 未使用 (任意: `.#shared`)            | root 権限設定・フォント・FUSE 系       |
 
 conda backend の使用は `conda:poppler` / `conda:librsvg` の2点のみ
 (prebuilt 配布が conda-forge にしか無いため)。
@@ -42,8 +42,10 @@ conda backend の使用は `conda:poppler` / `conda:librsvg` の2点のみ
 user-level のツール・dotfiles・シェルは mise と Homebrew に寄せ、Nix は
 「Nix でないと宣言的に揃えにくいもの」だけに使う。
 
-- macOS のシステム設定 (`system.defaults`、sudo の Touch ID)・
-  フォント・LaunchAgent・Tailscale → nix-darwin
+- root 権限が要る macOS 設定 (sudo の Touch ID、Spotlight の index 停止)・
+  フォント・Tailscale → nix-darwin
+- user-level の macOS 設定 (defaults・LaunchAgent・ログインシェル) は Nix でなくても
+  宣言的に書けるので mise (`config.macos.toml`) に置く
 - gocryptfs / bindfs など mise・Homebrew に配布が無く、Linux の `.#shared` と
   同じ nixpkgs で揃えたいもの → nix-darwin の `systemPackages` と `.#shared`
 - Nix 専用ツール (comma、nixfmt)
@@ -65,15 +67,16 @@ mise bootstrap --dry-run
 mise bootstrap
 ```
 
-Mac では `config.macos.toml` の `[bootstrap.user]` により、bootstrap が Homebrew の
-fish を `/etc/shells` に登録してログインシェルにする (sudo とパスワードを求められる)。
+bootstrap は `[bootstrap.user]` により fish を `/etc/shells` に登録してログインシェルに
+する (sudo とパスワードを求められる)。Mac は Homebrew の fish、OCI は mise の fish を使う。
 
 `mise bootstrap` は以下を宣言的に適用する:
 
 - 選択した module を含む `[dotfiles]` の symlink と fish の leaf symlink
 - macOS の Homebrew formula / cask と Mac App Store application
   (`[bootstrap.packages]`、macOS module のみ)
-- macOS のログインシェル (`[bootstrap.user]`、macOS module のみ)
+- ログインシェル (`[bootstrap.user]`)、macOS の defaults と LaunchAgent
+  (`[bootstrap.macos.*]`、macOS module のみ)
 - `[tools]` の mise-managed toolchain
 - tools 導入後の `pez install` と `pez doctor`
 

@@ -1392,11 +1392,6 @@ checksum = "sha256:f6b99103964905f9ae9c0ab16ec96537010a8b7a031f1c3ec0c4be1892962
 url = "https://github.com/fish-shell/fish-shell/releases/download/4.9.2/fish-4.9.2-linux-aarch64.tar.xz"
 url_api = "https://api.github.com/repos/fish-shell/fish-shell/releases/assets/545702231"
 
-[tools."aqua:fish-shell/fish-shell"."platforms.macos-arm64"]
-checksum = "sha256:93491525e4e338f7a6b164334b33eee261fb70f71576539c8a08130f84dc3496"
-url = "https://github.com/fish-shell/fish-shell/releases/download/4.9.2/fish-4.9.2.pkg"
-url_api = "https://api.github.com/repos/fish-shell/fish-shell/releases/assets/545717347"
-
 [[tools."aqua:github/copilot-language-server-release"]]
 version = "1.545.0"
 backend = "aqua:github/copilot-language-server-release"

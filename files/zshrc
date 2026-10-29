@@ -1,16 +1,6 @@
 # The login shell is fish; zsh is kept as a fallback for explicit use.
-# Interactive zsh gets full mise integration, non-interactive zsh gets mise
-# shims from ~/.zshenv.
+# PATH comes from ~/.zshenv. Interactive zsh additionally gets full mise
+# integration.
 if [[ -o interactive ]] && command -v mise >/dev/null 2>&1; then
   eval "$(mise activate zsh)"
 fi
-
-# pnpm
-export PNPM_HOME="$HOME/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME/bin:"*) ;;
-  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
-esac
-# pnpm end
-
-export PATH="$HOME/.local/bin:$PATH"

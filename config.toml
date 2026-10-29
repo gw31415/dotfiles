@@ -17,6 +17,8 @@ task.run_auto_install = false
 lockfile = true
 # 実際に使うマシンのプラットフォームだけを lock 対象にする (既定は7種)。
 lockfile_platforms = ["linux-arm64", "macos-arm64"]
+# GitHub API のトークンは必要になったときだけ gh から取る (シェルで GITHUB_TOKEN を export しない)。
+github.credential_command = "gh auth token"
 
 [tools]
 cargo-binstall = "latest"
@@ -39,7 +41,8 @@ dotnet = "10"
 "dotnet:git-credential-manager" = "latest"
 
 # --- シェル・シェル統合 ---
-"aqua:fish-shell/fish-shell" = "latest"
+# Linux 用。Mac のログインシェル・herdr は Homebrew の fish (config.macos.toml) を使う。
+"aqua:fish-shell/fish-shell" = { version = "latest", os = ["linux"] }
 fzf = "latest"
 fd = "latest"
 "github:iffse/pay-respects" = "latest"

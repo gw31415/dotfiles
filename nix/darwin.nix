@@ -1,5 +1,6 @@
-# nix-darwin: macOS システム設定など「はみ出る部分」のみの薄い wrapper。
-# user-level (symlink / shell / 開発ツール / host package) は mise bootstrap が正。
+# nix-darwin: root 権限のシステム設定・フォント・Nix 由来のパッケージだけを持つ薄い wrapper。
+# user-level (symlink / shell / 開発ツール / host package / defaults / LaunchAgent) は
+# mise bootstrap (config.macos.toml) が正。
 { pkgs, ... }:
 let
   env = import ./env.nix;
@@ -57,40 +58,8 @@ in
   services.tailscale.enable = true;
 
   ########################################
-  # Configuration for macOS system
+  # sudo の Touch ID (root 権限の /etc/pam.d)
   ########################################
-  system.defaults = {
-    CustomUserPreferences = {
-      # Spotlight の呼び出しを無効化。
-      "com.apple.Spotlight".MenuItemHidden = true;
-      # 「アプリ」「デスクトップを表示」を両方オフにしたときの5本指設定。
-      # 4本指設定は下の trackpad で内蔵・Bluetooth 両方に適用する。
-      "com.apple.AppleMultitouchTrackpad".TrackpadFiveFingerPinchGesture = 0;
-      "com.apple.driver.AppleBluetoothMultitouch.trackpad".TrackpadFiveFingerPinchGesture = 0;
-    };
-    trackpad.TrackpadFourFingerPinchGesture = 0;
-    finder = {
-      AppleShowAllExtensions = true;
-      CreateDesktop = true;
-      FXDefaultSearchScope = "SCcf";
-      FXEnableExtensionChangeWarning = false;
-      FXPreferredViewStyle = "Nlsv";
-      ShowPathbar = true;
-      ShowStatusBar = false;
-    };
-    dock = {
-      autohide = true;
-      show-recents = false;
-      tilesize = 50;
-      magnification = true;
-      largesize = 64;
-      orientation = "bottom";
-      launchanim = true;
-      # 親指と3本指を広げてデスクトップを表示するジェスチャーを無効化。
-      showDesktopGestureEnabled = false;
-    };
-  };
-
   security.pam.services.sudo_local = {
     enable = true;
     reattach = true;
@@ -102,109 +71,10 @@ in
   # System activation
   ########################################
   system.activationScripts.extraActivation.text = ''
-    # activation は root で動くため、設定対象ユーザーのコンテキストで実行する。
-    # AppleSymbolicHotKeys 全体を置換せず、Spotlight のキーだけをマージする。
-    /bin/launchctl asuser "$(/usr/bin/id -u ${env.username})" \
-      /usr/bin/sudo -H -u ${env.username} -- \
-      /usr/bin/defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add \
-        64 '<dict><key>enabled</key><false/></dict>' \
-        65 '<dict><key>enabled</key><false/></dict>'
-
     # マウント済みの全ボリュームで Spotlight のインデックス作成を停止する。
     # Finder 等のインデックスを利用する検索にも適用される。
     /usr/bin/mdutil -a -i off
 
     softwareupdate --all --download --background
-
-    # activation スクリプトはクリーン環境で実行され PATH に
-    # /opt/homebrew/bin が含まれないため、明示的に先頭に追加する。
-    # これにより pinentry-mac（pinentry-touchid -fix が内部で参照）が解決される。
-    export PATH=/opt/homebrew/bin:$PATH
-
-    # pinentry-touchid falls back to the Homebrew `pinentry` formula's
-    # default pinentry. Keep it pointed at pinentry-mac so GPG commit signing
-    # can show the macOS/Touch ID prompt after Homebrew upgrades/relinks.
-    #
-    # `pinentry-touchid -fix` spawns pinentry-mac and bridges it over Assuan,
-    # printing "OK Hi from pinentry-mac!". In the non-interactive activation
-    # shell that spawned pinentry-mac then blocks forever waiting on the
-    # Assuan handshake -> `darwin-rebuild switch` hangs. So: close stdin so the
-    # spawned pinentry-mac sees EOF and exits, and bound the whole thing with a
-    # kill timer so a future relink still gets fixed without stalling the build.
-    if [ -x /opt/homebrew/bin/pinentry-touchid ]; then
-      /opt/homebrew/bin/pinentry-touchid -fix </dev/null >/dev/null 2>&1 &
-      _pe_pid=$!
-      _pe_wait=0
-      while kill -0 "$_pe_pid" 2>/dev/null; do
-        _pe_wait=$((_pe_wait + 1))
-        if [ "$_pe_wait" -ge 10 ]; then
-          kill "$_pe_pid" 2>/dev/null
-          wait "$_pe_pid" 2>/dev/null
-          break
-        fi
-        sleep 1
-      done
-    fi
   '';
-
-  ########################################
-  # denops Shared Server
-  ########################################
-  # Neovim の denops プラグインが接続する共通 Deno サーバーを常駐させる。
-  # Vim/Neovim 起動毎に Deno プロセスを spawn するオーバーヘッドが消え、
-  # skkeleton / vim-gin / fuzzy-motion 等の denops 系プラグインが即座に使える。
-  # 詳細: https://github.com/vim-denops/denops.vim/wiki または :help denops-shared-server
-  # NOTE: deno 本体は mise 管理。shim はバージョン更新でもパス不変のため launchd に適する。
-  # `mise bootstrap` が shim を導入する。初回起動に間に合わなくても KeepAlive が再試行する。
-  launchd.user.agents.denops-shared-server = {
-    serviceConfig = {
-      ProgramArguments = [
-        "${env.homeDirectory}/.local/share/mise/shims/deno"
-        "run"
-        "-A"
-        "--no-lock"
-        "-q"
-        "${pkgs.vimPlugins.denops-vim}/denops/@denops-private/cli.ts"
-        "--hostname"
-        "127.0.0.1"
-        "--port"
-        "32123"
-      ];
-      RunAtLoad = true;
-      KeepAlive = true;
-      StandardOutPath = "${env.homeDirectory}/Library/Logs/denops-shared-server.log";
-      StandardErrorPath = "${env.homeDirectory}/Library/Logs/denops-shared-server.log";
-    };
-  };
-
-  ########################################
-  # tunnel-client (OpenAI MCP control-plane tunnel)
-  ########################################
-  # ローカル MCP サーバー (local-mcp) を OpenAI の制御プレーンへ常駐トンネルする。
-  # プロファイル local-mcp-stdio は api_key を env:CONTROL_PLANE_API_KEY で参照するため、
-  # 起動時に ~/.env を source してランタイム解決する (シークレットを nix store に焼かない)。
-  # local-mcp は tunnel-client から PATH 経由で起動されるため mise shims を通す。
-  launchd.user.agents.tunnel-client = {
-    serviceConfig = {
-      ProgramArguments = [
-        "${pkgs.writeShellScript "tunnel-client-run" ''
-          set -eo pipefail
-          if [[ -f "$HOME/.env" ]]; then
-            set -a
-            set +u
-            source "$HOME/.env"
-            set -u
-            set +a
-          fi
-          export PATH="$HOME/.local/share/mise/shims:$PATH"
-          exec "${env.homeDirectory}/.local/share/mise/shims/tunnel-client" \
-            run --profile local-mcp-stdio
-        ''}"
-      ];
-      RunAtLoad = true;
-      KeepAlive = true;
-      StandardOutPath = "${env.homeDirectory}/Library/Logs/tunnel-client/tunnel-client.log";
-      StandardErrorPath = "${env.homeDirectory}/Library/Logs/tunnel-client/tunnel-client.error.log";
-    };
-  };
 }
