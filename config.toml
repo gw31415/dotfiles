@@ -104,7 +104,7 @@ aube = "latest"
 "go:github.com/itchyny/mmv/cmd/mmv" = "latest"
 "aqua:neovim" = "latest"
 "github:gw31415/rusk" = "latest"
-"github:Ameyanagi/yuru" = "latest"
+"github:Ameyanagi/yuru" = { version = "latest", os = ["macos", "linux/x64"] }
 "aqua:charmbracelet/freeze" = "latest"
 "pipx:asciinema" = "latest"
 vhs = "latest"
