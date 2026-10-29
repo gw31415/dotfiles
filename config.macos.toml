@@ -20,6 +20,9 @@ ollama = "latest"
 # `mas` command available to bootstrap's Mac App Store package manager.
 [env]
 _.path = ["/opt/homebrew/bin"]
+# nix-darwin が Spotlight の index を止めているため、mas が毎回 index を作り直そうとして
+# 警告を大量に出す。止めている前提なので mas の自動 index はしない。
+MAS_NO_AUTO_INDEX = "1"
 
 [dotfiles]
 "~/.config/ghostty" = { source = "config/ghostty", mode = "symlink" }
@@ -48,7 +51,6 @@ _.path = ["/opt/homebrew/bin"]
 "brew:xcode-build-server" = "latest"
 "brew:jorgelbg/tap/pinentry-touchid" = "latest"
 "brew:steipete/tap/codexbar" = "latest"
-"brew:fif7y/tap/pelmet" = "latest"
 "brew-cask:anki" = "latest"
 "brew-cask:blackhole-2ch" = "latest"
 "brew-cask:claude" = "latest"
@@ -56,6 +58,8 @@ _.path = ["/opt/homebrew/bin"]
 "brew-cask:codex" = "latest"
 "brew-cask:codex-app" = "latest"
 "brew-cask:discord" = "latest"
+# Pelmet は Dimble に改名された (tap の cask_renames.json)。
+"brew-cask:fif7y/tap/dimble" = "latest"
 # 端末は Rex Beta.app に移行中。Ghostty は既定では入れない (設定の symlink は残す)。
 # "brew-cask:ghostty" = "latest"
 "brew-cask:gnucash" = "latest"
@@ -74,12 +78,12 @@ _.path = ["/opt/homebrew/bin"]
 "brew-cask:zoom" = "latest"
 "mas:1365531024" = "latest" # 1Blocker
 # "mas:937984704" = "latest" # Amphetamine → Vorssaint or dopa で代用できる
-"mas:409183694" = "latest" # Keynote
+"mas:361285480" = "latest" # Keynote
 "mas:539883307" = "latest" # LINE
 "mas:634148309" = "latest" # Logic Pro
 "mas:6444915884" = "latest" # Ice Cubes for Mastodon
-"mas:409203825" = "latest" # Numbers
-"mas:409201541" = "latest" # Pages
+"mas:361304891" = "latest" # Numbers
+"mas:361309726" = "latest" # Pages
 "mas:497799835" = "latest" # Xcode
 "mas:415166115" = "latest" # タイピスト
 "mas:1598123076" = "latest" # 宛名印刷
