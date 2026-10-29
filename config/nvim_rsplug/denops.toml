@@ -14,6 +14,8 @@ vim.g.loaded_remote_plugins = true
 vim.g.skip_loading_mswin = true
 vim.g.loaded_tutor_mode_plugin = true
 vim.g.loaded_2html_plugin = true
+-- matchit は起動直後 (init_lazy) に読む
+vim.g.loaded_matchit = true
 
 ----------------------------
 -- Lazy loading
@@ -37,6 +39,8 @@ vim.go.guifont = 'HackGen_Console_NF:h14'
 vim.opt.shiftwidth = 4
 vim.opt.tabstop = 4
 vim.go.cmdheight = 0
+-- ShaDa の読み込み時間は履歴件数にほぼ比例する (既定 10000 件)
+vim.go.history = 1000
 vim.opt.fillchars = { eob = ' ', foldopen = '󱨉', foldclose = '', foldsep = ' ', foldinner = '' }
 
 vim.cmd 'filetype plugin indent on'
@@ -96,28 +100,34 @@ depends = "denops.vim"
 lua_after = '''
 vim.keymap.set({ 'i', 'c', 't' }, '<C-j>', '<Plug>(skkeleton-enable)')
 
-vim.fn['skkeleton#config'] {
-	markerHenkan = '▹',
-	eggLikeNewline = true,
-	markerHenkanSelect = '▸',
-	globalDictionaries = { '~/.skk/SKK-JISYO.L' },
-	selectCandidateKeys = 'aoeuhtn',
-}
+-- 設定は skkeleton の初期化時 (初回の有効化) に渡す。起動時に autoload を読まないため。
+vim.api.nvim_create_autocmd('User', {
+	pattern = 'skkeleton-initialize-pre',
+	callback = function ()
+		vim.fn['skkeleton#config'] {
+			markerHenkan = '▹',
+			eggLikeNewline = true,
+			markerHenkanSelect = '▸',
+			globalDictionaries = { '~/.skk/SKK-JISYO.L' },
+			selectCandidateKeys = 'aoeuhtn',
+		}
 
-for _, map in pairs {
-	{ 'input',  '<c-e>', '' },
-	{ 'henkan', '<c-e>', '' },
-	{ 'input',  '<c-n>', 'henkanFirst' },
-	{ 'henkan', '<c-n>', 'henkanForward' },
-	{ 'henkan', '<c-p>', 'henkanBackward' },
-	{ 'henkan', '<bs>',  'henkanBackward' },
-	{ 'henkan', '<c-h>', '' },
-	{ 'henkan', '<c-h>', 'henkanBackward' },
-} do
-	vim.fn['skkeleton#register_keymap'](unpack(map))
-end
+		for _, map in pairs {
+			{ 'input',  '<c-e>', '' },
+			{ 'henkan', '<c-e>', '' },
+			{ 'input',  '<c-n>', 'henkanFirst' },
+			{ 'henkan', '<c-n>', 'henkanForward' },
+			{ 'henkan', '<c-p>', 'henkanBackward' },
+			{ 'henkan', '<bs>',  'henkanBackward' },
+			{ 'henkan', '<c-h>', '' },
+			{ 'henkan', '<c-h>', 'henkanBackward' },
+		} do
+			vim.fn['skkeleton#register_keymap'](unpack(map))
+		end
 
-vim.call('skkeleton#register_kanatable', 'rom', require 'dvorakjp'.skkeleton)
+		vim.call('skkeleton#register_kanatable', 'rom', require 'dvorakjp'.skkeleton)
+	end,
+})
 '''
 
 [[plugins]]
