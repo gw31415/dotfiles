@@ -44,7 +44,18 @@ in
     comma
     # kakehashi/nil が Nix ファイルの整形に呼び出す Nix 専用 formatter。
     nixfmt
+    # Linux の `.#shared` と同じ nixpkgs から入れて、暗号化・bind mount を揃える。
+    # mise / Homebrew に macOS 向けの配布が無い。
+    bindfs
+    gocryptfs
   ];
+
+  ########################################
+  # Login shell
+  ########################################
+  # ログインシェルにする Homebrew の fish を /etc/shells に登録する。
+  # 切り替え自体は初回に `chsh -s /opt/homebrew/bin/fish` を手で実行する。
+  environment.shells = [ "/opt/homebrew/bin/fish" ];
 
   ########################################
   # Tailscale (system daemon + CLI + MagicDNS resolver)

@@ -24,7 +24,7 @@ Nix は「はみ出る部分」の薄い wrapper のみに縮小している。
 | ログインシェル     | bash (fish は対話・herdr で使う)     | fish (`/opt/homebrew/bin/fish`)          |
 | GUI / host package | —                                    | `[bootstrap.packages]` (macOS module)   |
 | 常駐サービス       | system service (repo 管理外)         | nix-darwin の LaunchAgent              |
-| Nix                | 未使用 (任意: `.#shared`)            | システム設定・フォント・常駐のみ       |
+| Nix                | 未使用 (任意: `.#shared`)            | システム設定・フォント・常駐・FUSE 系  |
 
 conda backend の使用は `conda:poppler` / `conda:librsvg` の2点のみ
 (prebuilt 配布が conda-forge にしか無いため)。
@@ -36,6 +36,17 @@ conda backend の使用は `conda:poppler` / `conda:librsvg` の2点のみ
 - OCI サーバーでだけ必要なもの → `config.oci.toml`
 - arm64 Linux 向けの配布が無いだけのツールは `config.toml` に置き、
   `os = ["macos", "linux/x64"]` で絞る。
+
+### Nix に残すもの
+
+user-level のツール・dotfiles・シェルは mise と Homebrew に寄せ、Nix は
+「Nix でないと宣言的に揃えにくいもの」だけに使う。
+
+- macOS のシステム設定 (`system.defaults`、`/etc/shells`、sudo の Touch ID)・
+  フォント・LaunchAgent・Tailscale → nix-darwin
+- gocryptfs / bindfs など mise・Homebrew に配布が無く、Linux の `.#shared` と
+  同じ nixpkgs で揃えたいもの → nix-darwin の `systemPackages` と `.#shared`
+- Nix 専用ツール (comma、nixfmt)
 
 ## Installation
 
@@ -54,10 +65,11 @@ mise bootstrap --dry-run
 mise bootstrap
 ```
 
-Mac では bootstrap 後に Homebrew の fish をログインシェルにする (初回のみ):
+Mac では nix-darwin を適用して Homebrew の fish を `/etc/shells` に登録し、
+ログインシェルにする (初回のみ):
 
 ```bash
-echo /opt/homebrew/bin/fish | sudo tee -a /etc/shells
+sudo darwin-rebuild switch --flake ~/.config/mise
 chsh -s /opt/homebrew/bin/fish
 ```
 
