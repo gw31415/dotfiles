@@ -202,36 +202,6 @@ require 'diaglist.quickfix'.populate_qflist()
 '''
 
 [[plugins]]
-repo = "mfussenegger/nvim-dap"
-on_map = { n = ["<F5>", "<F10>", "<F11>", "<F12>", "bb"] }
-lua_after = '''
-vim.fn.sign_define('DapBreakpoint', { text = '', texthl = 'Macro', linehl = '', numhl = '' })
-vim.fn.sign_define('DapBreakpointCondition', { text = '󰆗', texthl = 'Macro', linehl = '', numhl = '' })
-vim.fn.sign_define('DapLogPoint', { text = '󰵛', texthl = '', linehl = 'Macro', numhl = '' })
-vim.fn.sign_define('DapBreakpointRejected', { text = '', texthl = 'Macro', linehl = '', numhl = '' })
-require 'dapui'.setup()
-require 'dap'.listeners.before['event_initialized']['custom'] = function () require 'dapui'.open {} end
-require 'dap'.listeners.before['event_terminated']['custom'] = function () require 'dapui'.close {} end
-
-vim.keymap.set('n', '<F5>', function () require 'dap'.continue() end, { desc = 'DAP: continue' })
-vim.keymap.set('n', '<F10>', function () require 'dap'.step_over() end, { desc = 'DAP: step over' })
-vim.keymap.set('n', '<F11>', function () require 'dap'.step_into() end, { desc = 'DAP: step into' })
-vim.keymap.set('n', '<F12>', function () require 'dap'.step_out() end, { desc = 'DAP: step out' })
-vim.keymap.set('n', 'bb', function () require 'dap'.toggle_breakpoint() end, { desc = 'DAP: toggle breakpoint' })
-'''
-
-[[plugins]]
-repo = "nvim-neotest/nvim-nio"
-[[plugins]]
-repo = "rcarriga/nvim-dap-ui"
-depends = ["nvim-nio", "nvim-dap-virtual-text"]
-[[plugins]]
-repo = "theHamsta/nvim-dap-virtual-text"
-lua_after = '''
-require 'nvim-dap-virtual-text'.setup { enabled_commands = false }
-'''
-
-[[plugins]]
 repo = "rachartier/tiny-inline-diagnostic.nvim"
 on_event = "LspAttach"
 lua_after = '''
@@ -257,7 +227,7 @@ depends = "nui.nvim"
 lua_after = '''
 local hl = require 'actions-preview.highlight'
 require 'actions-preview'.setup {
-	backend = { 'snacks' },
+	backend = { 'nui' },
 	highlight_command = {
 		hl.delta 'delta --no-gitconfig --side-by-side'
 	}
@@ -406,14 +376,6 @@ require 'code_runner'.setup {
 }
 '''
 
-
-[[plugins]]
-repo = "folke/snacks.nvim"
-on_cmd = "Snacks"
-lua_after = '''
-require 'snacks'.setup { picker = { enabled = true, ui_select = false } }
-vim.api.nvim_create_user_command('Snacks', 'lua require "snacks".picker()', {})
-'''
 
 [[plugins]]
 repo = "gw31415/root.nvim"

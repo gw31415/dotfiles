@@ -1,24 +1,13 @@
-# fylerがマルチバッファに対応するまでこちらをデフォルトファイラにする
-[[plugins]]
-repo = "stevearc/oil.nvim"
-on_event = "VimEnter"
-lua_after = '''
-require 'oil'.setup {
-	default_file_explorer = true,
-	delete_to_trash = true,
-	extra_s3_args = { '--region', 'ap-northeast-1' },
-}
-'''
-
 [[plugins]]
 repo = "A7Lavinraj/fyler.nvim@stable"
 depends = "mini.icons"
+on_event = "VimEnter"
 on_cmd = "Fyler"
 on_map = { n = '<c-n>' }
 lua_after = '''
 require 'fyler'.setup {
 	extensions = { trash = { enabled = true }, git = { enabled = true } },
-	use_as_default_explorer = false,
+	use_as_default_explorer = true,
 	integrations = { icon = 'mini_icons' },
 	ui = { indent_guides = true },
 	mappings = {
@@ -114,6 +103,11 @@ require 'fyler'.setup {
 		},
 	},
 }
+
+-- 起動引数のディレクトリバッファは setup 前に開かれているので、ここで改めて開く
+if vim.fn.isdirectory(vim.api.nvim_buf_get_name(0)) == 1 then
+	vim.cmd 'doautocmd BufEnter'
+end
 
 vim.keymap.set('n', '<c-n>', function() require 'fyler'.toggle { kind = 'floating' } end, { desc = 'Toggle Fyler View' })
 '''
