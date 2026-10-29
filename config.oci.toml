@@ -3,7 +3,7 @@
 # 現時点で OCI 専用に足すツール・dotfile は無く、共通設定 (config.toml) だけで足りる。
 # この module は「OCI では何を入れないか」を明示する置き場でもある:
 #   - macOS module のもの (GUI アプリ・zsh・TeX・CoreAudio・tunnel-client 等) は読み込まない。
-#   - ログインシェルは bash のまま。fish は herdr / 対話で使う。
+#   - ログインシェルは fish (下の [bootstrap.user])。
 #   - 次のサーバー常駐はこの dotfiles の管理外 (root 権限の system service):
 #       dev-session-mcp (/opt/dev-session-mcp, dev-session-mcp-*.service)
 #       cloudflared-dev-session-mcp.service (apt の cloudflared)
@@ -11,3 +11,9 @@
 #
 # OCI だけで必要なものが出てきたら、ここに [tools] / [dotfiles] /
 # [bootstrap.linux.systemd.units] などを追加する。
+
+# ログインシェル。fish は mise (aqua) 管理のため、版に依存しない latest の symlink を指す。
+# mise は path の存在を確かめずに chsh するので、先に `mise bootstrap tools` を済ませ、
+# 別の SSH セッションを開いたまま `mise bootstrap user apply` する。
+[bootstrap.user]
+login_shell = "{{ env.HOME }}/.local/share/mise/installs/aqua-fish-shell-fish-shell/latest/fish"

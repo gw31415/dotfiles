@@ -1,0 +1,80 @@
+# name: dotfiles
+# Tomorrow / Tomorrow Night を基に、light は白背景で 4.3:1 以上の濃さへ寄せたもの。
+# fish が端末の背景色を問い合わせて [light] / [dark] を切り替える。
+# fish_color_prompt_* は fish_prompt.fish が使う独自の色。
+
+[light]
+# preferred_background: ffffff
+fish_color_normal --reset
+fish_color_autosuggestion 6d6f6b
+fish_color_cancel -r
+fish_color_command 8959a8
+fish_color_comment 9a7400
+fish_color_cwd 5b7000
+fish_color_cwd_root c82829
+fish_color_end 8959a8
+fish_color_error c82829
+fish_color_escape 207a80
+fish_color_history_current --bold
+fish_color_host --reset
+fish_color_host_remote 9a7400
+fish_color_operator 207a80
+fish_color_param 4271ae
+fish_color_quote 5b7000
+fish_color_redirection 207a80
+fish_color_search_match --bold --background=d6d6d6
+fish_color_selection --bold --background=d6d6d6
+fish_color_status c82829
+fish_color_user 5b7000
+fish_color_valid_path --underline
+fish_pager_color_completion --reset
+fish_pager_color_description 9a7400
+fish_pager_color_prefix --bold --underline
+fish_pager_color_progress ffffff --background=207a80 --bold
+fish_pager_color_selected_background --background=d6d6d6
+fish_color_prompt_red c82829
+fish_color_prompt_orange c24f00
+fish_color_prompt_yellow 9a7400
+fish_color_prompt_green 5b7000
+fish_color_prompt_aqua 207a80
+fish_color_prompt_blue 4271ae
+fish_color_prompt_purple 8959a8
+fish_color_prompt_muted 6d6f6b
+
+[dark]
+# preferred_background: 1d1f21
+fish_color_normal --reset
+fish_color_autosuggestion 969896
+fish_color_cancel -r
+fish_color_command b294bb
+fish_color_comment f0c674
+fish_color_cwd b5bd68
+fish_color_cwd_root cc6666
+fish_color_end b294bb
+fish_color_error cc6666
+fish_color_escape 8abeb7
+fish_color_history_current --bold
+fish_color_host --reset
+fish_color_host_remote f0c674
+fish_color_operator 8abeb7
+fish_color_param 81a2be
+fish_color_quote b5bd68
+fish_color_redirection 8abeb7
+fish_color_search_match --bold --background=373b41
+fish_color_selection --bold --background=373b41
+fish_color_status cc6666
+fish_color_user b5bd68
+fish_color_valid_path --underline
+fish_pager_color_completion --reset
+fish_pager_color_description f0c674
+fish_pager_color_prefix --bold --underline
+fish_pager_color_progress 1d1f21 --background=8abeb7 --bold
+fish_pager_color_selected_background --background=373b41
+fish_color_prompt_red cc6666
+fish_color_prompt_orange de935f
+fish_color_prompt_yellow f0c674
+fish_color_prompt_green b5bd68
+fish_color_prompt_aqua 8abeb7
+fish_color_prompt_blue 81a2be
+fish_color_prompt_purple b294bb
+fish_color_prompt_muted 969896

@@ -1,11 +1,12 @@
+# 色は config/fish/themes/dotfiles.theme の fish_color_prompt_* (light / dark で切り替わる)。
 function __fish_prompt_face
-    echo -ns (set_color normal yellow) "("
+    echo -ns (set_color normal) (set_color $fish_color_prompt_yellow) "("
     if test $argv[1] -eq 0
-        echo -ns (set_color --bold green) " 'u'"
+        echo -ns (set_color --bold $fish_color_prompt_green) " 'u'"
     else
-        echo -ns (set_color --bold red) "´-_-"
+        echo -ns (set_color --bold $fish_color_prompt_red) "´-_-"
     end
-    echo -ns (set_color normal yellow) ")" (set_color cyan) " =3"
+    echo -ns (set_color normal) (set_color $fish_color_prompt_yellow) ")" (set_color $fish_color_prompt_aqua) " =3"
     echo -ns (set_color normal)
 end
 
@@ -16,7 +17,7 @@ function __fish_prompt_simplegit
     set -l branch
     set -l head
     set -l icon
-    set -l color normal
+    set -l color $fish_color_normal
 
     #
     # branch / detached
@@ -24,11 +25,11 @@ function __fish_prompt_simplegit
     if set branch (command git symbolic-ref --quiet --short HEAD 2>/dev/null)
         set icon "✓"
         set head $branch
-        set color brgreen
+        set color $fish_color_prompt_green
     else
         set icon "@"
         set head (command git rev-parse --short HEAD 2>/dev/null)
-        set color brblack
+        set color $fish_color_prompt_muted
     end
 
     #
@@ -38,16 +39,16 @@ function __fish_prompt_simplegit
 
     if test -f "$gitdir/MERGE_HEAD"
         set icon "!"
-        set color brred
+        set color $fish_color_prompt_red
     else if test -d "$gitdir/rebase-merge" -o -d "$gitdir/rebase-apply"
         set icon "↻"
-        set color bryellow
+        set color $fish_color_prompt_orange
     else if test -f "$gitdir/CHERRY_PICK_HEAD"
         set icon ""
-        set color bryellow
+        set color $fish_color_prompt_orange
     else if test -f "$gitdir/BISECT_LOG"
         set icon "∵"
-        set color brmagenta
+        set color $fish_color_prompt_purple
     end
 
     #
@@ -60,17 +61,17 @@ function __fish_prompt_simplegit
 
         if test "$ahead" -gt 0 -a "$behind" -gt 0
             set upstream "⇅"
-            set color brmagenta
+            set color $fish_color_prompt_purple
         else if test "$ahead" -gt 0
             set upstream "↑$ahead"
-            set color bryellow
+            set color $fish_color_prompt_yellow
         else if test "$behind" -gt 0
             set upstream "↓$behind"
-            set color brblue
+            set color $fish_color_prompt_blue
         end
     else
         set upstream "!up"
-        set color red
+        set color $fish_color_prompt_red
     end
 
     #
@@ -198,7 +199,7 @@ function __fish_prompt_pwd
         set -l raw (__fish_unexpand_tilde $path)
 
         if test "$fish_prompt_pwd_dir_length" -eq 0
-            echo -s (set_color --bold cyan) $raw (set_color normal)
+            echo -s (set_color --bold $fish_color_prompt_aqua) $raw (set_color normal)
             continue
         end
 
@@ -224,11 +225,11 @@ function __fish_prompt_pwd
             end
         end
 
-        echo -n (set_color --bold cyan)
+        echo -n (set_color --bold $fish_color_prompt_aqua)
 
         for i in (seq 1 $parts_count)
             if test $i -eq $root_part_count
-                echo -n (set_color normal)(set_color --bold --reverse cyan)
+                echo -n (set_color normal)(set_color --bold --reverse $fish_color_prompt_aqua)
             end
 
             if test $i -ge $preserve_from
@@ -238,7 +239,7 @@ function __fish_prompt_pwd
             end
 
             if test $i -eq $root_part_count
-                echo -n (set_color normal)(set_color --bold cyan)
+                echo -n (set_color normal)(set_color --bold $fish_color_prompt_aqua)
             end
 
             if test $i -lt $parts_count

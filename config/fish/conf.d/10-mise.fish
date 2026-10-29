@@ -13,10 +13,9 @@ if not set -q DOTFILES
     end
 end
 
-# GPG エージェントの SSH ソケット・GitHub トークン (mise 管理の gpg/gh 前提)。
+# GPG エージェントの SSH ソケット (mise 管理の gpg 前提)。
+# GITHUB_TOKEN は起動のたびに gh を呼ぶうえ全プロセスへ渡るため export しない。
+# mise は settings の github.credential_command で必要なときだけ取得する。
 if command -q gpgconf
     set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
-end
-if command -q gh
-    set -x GITHUB_TOKEN (gh auth token)
 end
