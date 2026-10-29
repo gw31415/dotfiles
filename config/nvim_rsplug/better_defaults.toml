@@ -34,12 +34,17 @@ require 'dial.config'.augends:register_group {
 repo = "gukz/ftFT.nvim"
 on_map = { n = ["f", "t", "F", "T"] }
 lua_after = '''
-vim.api.nvim_set_hl(0, 'ftFT', {
-	ctermbg = 0,
-	ctermfg = 15,
-	bg = '#3b3f4c',
-	underline = true,
-})
+local function set_ftft_hl()
+	local light = vim.o.background == 'light'
+	vim.api.nvim_set_hl(0, 'ftFT', {
+		ctermbg = light and 15 or 0,
+		ctermfg = light and 0 or 15,
+		bg = light and '#dcdcdc' or '#3b3f4c',
+		underline = true,
+	})
+end
+set_ftft_hl()
+vim.api.nvim_create_autocmd('ColorScheme', { callback = set_ftft_hl })
 require 'ftFT'.setup {
 	hl_group = 'ftFT',
 }

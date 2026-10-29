@@ -2,8 +2,20 @@
 start = true
 repo = "navarasu/onedark.nvim"
 lua_after = '''
-require 'onedark'.setup { transparent = true, dark = true }
-vim.cmd.colorscheme 'onedark'
+-- 'background' (端末から自動検出) に合わせて dark / light を切り替える。背景は常に透過。
+local function apply_onedark()
+	require 'onedark'.setup {
+		transparent = true,
+		style = vim.o.background == 'light' and 'light' or 'dark',
+	}
+	vim.cmd.colorscheme 'onedark'
+end
+apply_onedark()
+vim.api.nvim_create_autocmd('OptionSet', {
+	pattern = 'background',
+	nested = true,
+	callback = apply_onedark,
+})
 '''
 
 [[plugins]]
@@ -438,17 +450,25 @@ require 'fidget'.setup {
 [[plugins]]
 repo = "NI57721/skkeleton-henkan-highlight"
 on_event = "InsertEnter"
-lua_after = "vim.api.nvim_set_hl(0, 'SkkeletonHenkan', { reverse = true })"
+lua_after = '''
+local function set_henkan_hl() vim.api.nvim_set_hl(0, 'SkkeletonHenkan', { reverse = true }) end
+set_henkan_hl()
+vim.api.nvim_create_autocmd('ColorScheme', { callback = set_henkan_hl })
+'''
 [[plugins]]
 repo = "delphinus/skkeleton_indicator.nvim"
 on_event = "InsertEnter"
 lua_after = '''
-vim.api.nvim_set_hl(0, 'SkkeletonIndicatorEiji', { fg = '#88c0d0', bg = '#2e3440', bold = true })
-vim.api.nvim_set_hl(0, 'SkkeletonIndicatorHira', { fg = '#2e3440', bg = '#a3be8c', bold = true })
-vim.api.nvim_set_hl(0, 'SkkeletonIndicatorKata', { fg = '#2e3440', bg = '#ebcb8b', bold = true })
-vim.api.nvim_set_hl(0, 'SkkeletonIndicatorHankata', { fg = '#2e3440', bg = '#b48ead', bold = true })
-vim.api.nvim_set_hl(0, 'SkkeletonIndicatorZenkaku', { fg = '#2e3440', bg = '#88c0d0', bold = true })
-vim.api.nvim_set_hl(0, 'SkkeletonIndicatorAbbrev', { fg = '#e5e9f0', bg = '#bf616a', bold = true })
+local function set_indicator_hl()
+	vim.api.nvim_set_hl(0, 'SkkeletonIndicatorEiji', { fg = '#88c0d0', bg = '#2e3440', bold = true })
+	vim.api.nvim_set_hl(0, 'SkkeletonIndicatorHira', { fg = '#2e3440', bg = '#a3be8c', bold = true })
+	vim.api.nvim_set_hl(0, 'SkkeletonIndicatorKata', { fg = '#2e3440', bg = '#ebcb8b', bold = true })
+	vim.api.nvim_set_hl(0, 'SkkeletonIndicatorHankata', { fg = '#2e3440', bg = '#b48ead', bold = true })
+	vim.api.nvim_set_hl(0, 'SkkeletonIndicatorZenkaku', { fg = '#2e3440', bg = '#88c0d0', bold = true })
+	vim.api.nvim_set_hl(0, 'SkkeletonIndicatorAbbrev', { fg = '#e5e9f0', bg = '#bf616a', bold = true })
+end
+set_indicator_hl()
+vim.api.nvim_create_autocmd('ColorScheme', { callback = set_indicator_hl })
 require 'skkeleton_indicator'.setup {
 	-- eijiText = "󱌯",
 	-- hiraText = "󱌴",
@@ -503,14 +523,20 @@ local highlight = {
 }
 local hooks = require 'ibl.hooks'
 
+local rainbow_colors = {
+	dark = {
+		RainbowRed = '#E06C75', RainbowYellow = '#E5C07B', RainbowBlue = '#61AFEF', RainbowOrange = '#D19A66',
+		RainbowGreen = '#98C379', RainbowViolet = '#C678DD', RainbowCyan = '#56B6C2',
+	},
+	light = {
+		RainbowRed = '#E45649', RainbowYellow = '#986801', RainbowBlue = '#4078F2', RainbowOrange = '#C18401',
+		RainbowGreen = '#50A14F', RainbowViolet = '#A626A4', RainbowCyan = '#0184BC',
+	},
+}
 hooks.register(hooks.type.HIGHLIGHT_SETUP, function ()
-	vim.api.nvim_set_hl(0, 'RainbowRed', { fg = '#E06C75' })
-	vim.api.nvim_set_hl(0, 'RainbowYellow', { fg = '#E5C07B' })
-	vim.api.nvim_set_hl(0, 'RainbowBlue', { fg = '#61AFEF' })
-	vim.api.nvim_set_hl(0, 'RainbowOrange', { fg = '#D19A66' })
-	vim.api.nvim_set_hl(0, 'RainbowGreen', { fg = '#98C379' })
-	vim.api.nvim_set_hl(0, 'RainbowViolet', { fg = '#C678DD' })
-	vim.api.nvim_set_hl(0, 'RainbowCyan', { fg = '#56B6C2' })
+	for name, fg in pairs(rainbow_colors[vim.o.background] or rainbow_colors.dark) do
+		vim.api.nvim_set_hl(0, name, { fg = fg })
+	end
 end)
 
 vim.g.rainbow_delimiters = { highlight = highlight }
@@ -578,10 +604,11 @@ require 'incline'.setup {
 			ft_icon and { ' ', ft_icon, ' ', guibg = ft_color, guifg = helpers.contrast_color(ft_color) } or '', ' ',
 			{ filename, gui = modified and 'bold,italic' or 'bold' }
 		}
+		local light = vim.o.background == 'light'
 		if props.focused then
-			res.guibg = '#54507e'
+			res.guibg = light and '#d4d0f5' or '#54507e'
 		else
-			res.guibg = '#000000'
+			res.guibg = light and '#dcdcdc' or '#000000'
 		end
 		if props.focused then
 			for _, item in ipairs(navic.get_data(props.buf) or {}) do
