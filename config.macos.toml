@@ -214,6 +214,20 @@ throttle_interval = 30
 stdout_path = "~/Library/Logs/denops-shared-server.log"
 stderr_path = "~/Library/Logs/denops-shared-server.log"
 
+# rsplug の設定 (config/nvim_rsplug/*.toml) を監視し、変わるたびに再ビルドする。
+# 新しい世代が公開されると、起動中の Neovim は require('rsplug').watch() で気づく。
+# launchd はシェルの環境を引き継がないので、ビルドで使う nvim・git を shims から渡す。
+[bootstrap.macos.launchd.agents.rsplug-watch]
+program = "{{ env.HOME }}/.local/share/mise/shims/rsplug"
+args = ["--watch", "-i", "{{ config_root }}/config/nvim_rsplug/*.toml"]
+environment = { PATH = "{{ env.HOME }}/.local/share/mise/shims:/opt/homebrew/bin:/usr/bin:/bin" }
+working_directory = "~"
+run_at_load = true
+keep_alive = true
+throttle_interval = 30
+stdout_path = "~/Library/Logs/rsplug-watch.log"
+stderr_path = "~/Library/Logs/rsplug-watch.log"
+
 # ローカル MCP サーバー (local-mcp) を OpenAI の制御プレーンへ常駐トンネルする。
 # プロファイル local-mcp-stdio は api_key を env:CONTROL_PLANE_API_KEY で参照するため、
 # 起動時に ~/.env を source する (シークレットを設定ファイルに書かない)。

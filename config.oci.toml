@@ -17,3 +17,14 @@
 # 別の SSH セッションを開いたまま `mise bootstrap user apply` する。
 [bootstrap.user]
 login_shell = "{{ env.HOME }}/.local/share/mise/installs/aqua-fish-shell-fish-shell/latest/fish"
+
+# rsplug の設定 (config/nvim_rsplug/*.toml) を監視し、変わるたびに再ビルドする。
+# 新しい世代が公開されると、起動中の Neovim は require('rsplug').watch() で気づく。
+# unit には mise の activate が効かないので、ビルドで使う nvim・git を shims から渡す。
+# ログアウト後も動かすには一度だけ `sudo loginctl enable-linger $USER` が要る。
+[bootstrap.linux.systemd.units.rsplug-watch]
+description = "rsplug config watcher"
+exec_start = "{{ env.HOME }}/.local/share/mise/shims/rsplug --watch -i {{ config_root }}/config/nvim_rsplug/*.toml"
+environment = { PATH = "{{ env.HOME }}/.local/share/mise/shims:/usr/local/bin:/usr/bin:/bin" }
+working_directory = "{{ env.HOME }}"
+restart = "on-failure"
