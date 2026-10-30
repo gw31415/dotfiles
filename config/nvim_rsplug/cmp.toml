@@ -73,7 +73,11 @@ vim.keymap.set('i', '<C-Space>', complete_insert, { desc = 'laser: complete' })
 
 -- `:` 補完用の scratch バッファを先に作り、kakehashi → vimls を起動しておく。
 -- 初回の CmdlineEnter で作るとサーバの起動待ちになり、入ってすぐは補完が出ない。
-require 'laser.cmdline'.ensure_buffer 'vim'
+-- 同じ VeryLazy で行う `vim.lsp.enable 'kakehashi'` (tweaks.toml) の後に FileType を
+-- 起こさないと kakehashi がアタッチしないため、schedule で後ろに回す。
+vim.schedule(function ()
+    require 'laser.cmdline'.ensure_buffer 'vim'
+end)
 
 -- VeryLazy より前に InsertEnter / CmdlineEnter で読まれた場合は、そのイベント分をここで補う
 if vim.fn.mode() == 'i' then
