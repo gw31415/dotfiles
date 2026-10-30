@@ -4,5 +4,3 @@ repo = "jorgebucaran/autopair.fish"
 repo = "ryoppippi/fish-na"
 [[plugins]]
 repo = "meaningful-ooo/sponge"
-[[plugins]]
-repo = "gw31415/herdr_editor.fish"

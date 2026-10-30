@@ -18,7 +18,6 @@ macos-window-buttons = hidden
 cursor-style-blink = false
 mouse-hide-while-typing = true
 quit-after-last-window-closed = true
-command = ~/.local/bin/herdr
 auto-update = check
 macos-dock-drop-behavior = new-window
 

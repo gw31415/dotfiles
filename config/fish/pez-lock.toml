@@ -82,21 +82,3 @@ name = "_sponge_on_exit.fish"
 [[plugins.files]]
 dir = "conf.d"
 name = "sponge.fish"
-
-[[plugins]]
-name = "herdr_editor.fish"
-repo = "gw31415/herdr_editor.fish"
-source = "https://github.com/gw31415/herdr_editor.fish"
-commit_sha = "6807eceebc95b4c568593b80bc934af7051b1ff9"
-
-[[plugins.files]]
-dir = "functions"
-name = "herdr_editor.fish"
-
-[[plugins.files]]
-dir = "functions"
-name = "__herdr_editor_edit.fish"
-
-[[plugins.files]]
-dir = "conf.d"
-name = "herdr_editor.fish"

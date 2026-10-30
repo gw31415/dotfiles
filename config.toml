@@ -43,7 +43,7 @@ dotnet = "10"
 "dotnet:git-credential-manager" = "latest"
 
 # --- シェル・シェル統合 ---
-# Linux 用。Mac のログインシェル・herdr は Homebrew の fish (config.macos.toml) を使う。
+# Linux 用。Mac のログインシェルは Homebrew の fish (config.macos.toml) を使う。
 "aqua:fish-shell/fish-shell" = { version = "latest", os = ["linux"] }
 fzf = "latest"
 fd = "latest"
@@ -185,9 +185,6 @@ ssh = "tssh"
 # その他 CLI
 "~/.config/fd/ignore" = { source = "config/fd/ignore", mode = "symlink" }
 "~/.config/freeze" = { source = "config/freeze", mode = "symlink" }
-# herdr は実行時ファイル (socket・log) を同じディレクトリに置くため、config.toml だけを
-# OS ごとの fish パスを埋め込んだ template として描画する。
-"~/.config/herdr/config.toml" = { source = "files/herdr-config.toml", mode = "template" }
 
 # [tools] を導入した後だけ必要な pez 操作は native bootstrap hook に置く。
 [bootstrap.hooks.post-tools]
