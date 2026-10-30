@@ -497,7 +497,7 @@ require 'coerce'.setup {
 }
 '''
 
-# install yourself copilot-language-server, nil, vim-language-server
+# install yourself nil
 
 [[plugins]]
 on_event = "VeryLazy"

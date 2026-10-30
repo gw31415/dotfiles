@@ -49,7 +49,7 @@ fd = "latest"
 "github:tetzng/pez" = "latest"
 
 # --- LSP / Formatter ---
-# (clangd / nil / vim-language-server は mise に無いため mason 維持)
+# (clangd / nil は mise に無いため別途導入)
 "github:atusy/kakehashi" = "latest"
 "aqua:astral-sh/ty" = "latest"
 "npm:basedpyright" = "latest"
@@ -57,6 +57,8 @@ fd = "latest"
 tree-sitter = "latest"
 "cargo:mergiraf" = "latest"
 "npm:fish-lsp" = "latest"
+# laser.nvim の `:` 補完 (kakehashi 経由の vimls) に使う
+"npm:vim-language-server" = "latest"
 "aqua:astral-sh/ruff" = "latest"
 "aqua:biomejs/biome" = "latest"
 "aqua:tamasfe/taplo" = "latest"

@@ -2689,6 +2689,11 @@ version = "7.2.0"
 backend = "npm:trash-cli"
 specifiers = ["latest"]
 
+[[tools."npm:vim-language-server"]]
+version = "2.3.1"
+backend = "npm:vim-language-server"
+specifiers = ["latest"]
+
 [[tools."npm:vscode-langservers-extracted"]]
 version = "4.10.0"
 backend = "npm:vscode-langservers-extracted"
