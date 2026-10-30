@@ -129,8 +129,14 @@ vim.api.nvim_create_autocmd('QuitPre', {
 -- Global Mappings/Configs used in LSP
 --------------------------------------------------------------------------------
 
+-- 静的な capabilities は Neovim の既定に任せ、サーバ側からの動的登録を受け付ける
 vim.lsp.config('*', {
 	capabilities = {
+		textDocument = {
+			foldingRange = {
+				dynamicRegistration = true
+			}
+		},
 		workspace = {
 			didChangeWatchedFiles = {
 				dynamicRegistration = true

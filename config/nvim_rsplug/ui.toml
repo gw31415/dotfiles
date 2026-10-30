@@ -132,15 +132,6 @@ require 'ufo'.setup {
     end
 }
 
-vim.lsp.config('*', {
-    textDocument = {
-        foldingRange = {
-            dynamicRegistration = false,
-            lineFoldingOnly = true
-        }
-    }
-})
-
 vim.api.nvim_create_autocmd('LspAttach', {
     callback = function ()
         vim.keymap.set(
