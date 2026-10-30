@@ -388,7 +388,13 @@ on_cmd = "Copilot"
 on_event = "VeryLazy"
 # 補完 (laser.nvim) は LSP の textDocument/completion のみを使い Copilot は出ないため、
 # Copilot はゴーストテキストで出す。<Tab> での受け入れは cmp.toml 側で割り当てている。
-lua_after = "require 'copilot'.setup { suggestion = { auto_trigger = true } }"
+# サーバは自前でダウンロードさせず、mise で入れた copilot-language-server を PATH から使う。
+lua_after = '''
+require 'copilot'.setup {
+	suggestion = { auto_trigger = true },
+	server = { type = 'binary', custom_server_filepath = 'copilot-language-server' }
+}
+'''
 
 [[plugins]]
 repo = "lukas-reineke/indent-blankline.nvim"
