@@ -1,6 +1,6 @@
 [[plugins]]
 repo = "atusy/laser.nvim"
-on_event = ["VeryLazy", "InsertEnter", "CmdlineEnter"]
+on_event = ["InsertEnter", "CmdlineEnter"]
 lua_after = '''
 local laser = require 'laser'
 
@@ -71,15 +71,19 @@ map('i', '<C-f>', when_visible(function () laser.scroll_preview(4) end))
 map('i', '<C-b>', when_visible(function () laser.scroll_preview(-4) end))
 vim.keymap.set('i', '<C-Space>', complete_insert, { desc = 'laser: complete' })
 
--- `:` 補完用の scratch バッファを先に作り、kakehashi → vimls を起動しておく。
--- 初回の CmdlineEnter で作るとサーバの起動待ちになり、入ってすぐは補完が出ない。
--- 同じ VeryLazy で行う `vim.lsp.enable 'kakehashi'` (tweaks.toml) の後に FileType を
--- 起こさないと kakehashi がアタッチしないため、schedule で後ろに回す。
-vim.schedule(function ()
-    require 'laser.cmdline'.ensure_buffer 'vim'
-end)
+-- WORKAROUND: laser は初回の `:` で初めて scratch バッファを作るため、kakehashi が
+-- まだアタッチしておらず、その `:` の間は補完が出ない (アタッチ後に再リクエストしない)。
+-- アタッチした時点でまだ `:` にいれば補完を出し直す。laser 側で対処されたら消す。
+vim.api.nvim_create_autocmd('LspAttach', {
+    group = group,
+    callback = function (args)
+        if vim.api.nvim_buf_get_name(args.buf):match '^untitled://laser%-cmdline/vim$' and vim.fn.getcmdtype() == ':' then
+            laser.complete { language_id = 'vim' }
+        end
+    end
+})
 
--- VeryLazy より前に InsertEnter / CmdlineEnter で読まれた場合は、そのイベント分をここで補う
+-- このプラグインは InsertEnter / CmdlineEnter で読まれるので、そのイベント分をここで補う
 if vim.fn.mode() == 'i' then
     complete_insert()
 elseif vim.fn.getcmdtype() == ':' then
