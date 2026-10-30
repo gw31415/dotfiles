@@ -1,6 +1,6 @@
 [[plugins]]
 repo = "atusy/laser.nvim"
-on_event = ["InsertEnter", "CmdlineEnter"]
+on_event = ["VeryLazy", "InsertEnter", "CmdlineEnter"]
 lua_after = '''
 local laser = require 'laser'
 
@@ -71,8 +71,14 @@ map('i', '<C-f>', when_visible(function () laser.scroll_preview(4) end))
 map('i', '<C-b>', when_visible(function () laser.scroll_preview(-4) end))
 vim.keymap.set('i', '<C-Space>', complete_insert, { desc = 'laser: complete' })
 
--- このプラグインは InsertEnter / CmdlineEnter で読まれるので、そのイベント分をここで補う
+-- `:` 補完用の scratch バッファを先に作り、kakehashi → vimls を起動しておく。
+-- 初回の CmdlineEnter で作るとサーバの起動待ちになり、入ってすぐは補完が出ない。
+require 'laser.cmdline'.ensure_buffer 'vim'
+
+-- VeryLazy より前に InsertEnter / CmdlineEnter で読まれた場合は、そのイベント分をここで補う
 if vim.fn.mode() == 'i' then
     complete_insert()
+elseif vim.fn.getcmdtype() == ':' then
+    laser.complete { language_id = 'vim' }
 end
 '''
