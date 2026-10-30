@@ -19,6 +19,8 @@ lockfile = true
 lockfile_platforms = ["linux-arm64", "macos-arm64"]
 # GitHub API のトークンは必要になったときだけ gh から取る (シェルで GITHUB_TOKEN を export しない)。
 github.credential_command = "gh auth token"
+# 自作ツールはリリース直後から使うので、公開待ち期間 (minimum_release_age) の対象外にする。
+minimum_release_age_excludes = ["github:gw31415/commitgen", "github:gw31415/rsplug.nvim", "github:gw31415/rusk"]
 
 [tools]
 cargo-binstall = "latest"
