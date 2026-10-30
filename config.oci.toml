@@ -24,7 +24,7 @@ login_shell = "{{ env.HOME }}/.local/share/mise/installs/aqua-fish-shell-fish-sh
 # ログアウト後も動かすには一度だけ `sudo loginctl enable-linger $USER` が要る。
 [bootstrap.linux.systemd.units.rsplug-watch]
 description = "rsplug config watcher"
-exec_start = "{{ env.HOME }}/.local/share/mise/shims/rsplug --watch -i {{ config_root }}/config/nvim_rsplug/*.toml"
+exec_start = "{{ env.HOME }}/.local/share/mise/shims/rsplug --watch -i {{ env.HOME }}/.config/mise/config/nvim_rsplug/*.toml"
 environment = { PATH = "{{ env.HOME }}/.local/share/mise/shims:/usr/local/bin:/usr/bin:/bin" }
 working_directory = "{{ env.HOME }}"
 restart = "on-failure"

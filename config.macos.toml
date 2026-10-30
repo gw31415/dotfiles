@@ -219,7 +219,7 @@ stderr_path = "~/Library/Logs/denops-shared-server.log"
 # launchd はシェルの環境を引き継がないので、ビルドで使う nvim・git を shims から渡す。
 [bootstrap.macos.launchd.agents.rsplug-watch]
 program = "{{ env.HOME }}/.local/share/mise/shims/rsplug"
-args = ["--watch", "-i", "{{ config_root }}/config/nvim_rsplug/*.toml"]
+args = ["--watch", "-i", "{{ env.HOME }}/.config/mise/config/nvim_rsplug/*.toml"]
 environment = { PATH = "{{ env.HOME }}/.local/share/mise/shims:/opt/homebrew/bin:/usr/bin:/bin" }
 working_directory = "~"
 run_at_load = true
