@@ -54,10 +54,6 @@ on_cmd = "ShowkeysToggle"
 lua_after = "require 'showkeys'.setup { maxkeys = 10 }"
 
 [[plugins]]
-repo = "gw31415/edisch.vim"
-start = true
-
-[[plugins]]
 repo = "chomosuke/term-edit.nvim"
 lua_after = "require 'term-edit'.setup { prompt_end = '%3 ' }"
 on_event = "TermOpen"
