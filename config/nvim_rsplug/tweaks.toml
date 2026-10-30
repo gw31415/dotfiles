@@ -183,10 +183,6 @@ require 'tiny-inline-diagnostic'.setup {
 '''
 
 [[plugins]]
-repo = "xzbdmw/colorful-menu.nvim"
-lua_after = "require 'colorful-menu'.setup {}"
-
-[[plugins]]
 repo = "aznhe21/actions-preview.nvim"
 depends = "nui.nvim"
 lua_after = '''
@@ -390,7 +386,9 @@ lua_after = "require 'nvim-navic'.setup { lsp = { auto_attach = true } }"
 repo = "zbirenbaum/copilot.lua"
 on_cmd = "Copilot"
 on_event = "VeryLazy"
-lua_after = "require 'copilot'.setup {}"
+# 補完 (laser.nvim) は LSP の textDocument/completion のみを使い Copilot は出ないため、
+# Copilot はゴーストテキストで出す。<Tab> での受け入れは cmp.toml 側で割り当てている。
+lua_after = "require 'copilot'.setup { suggestion = { auto_trigger = true } }"
 
 [[plugins]]
 repo = "lukas-reineke/indent-blankline.nvim"

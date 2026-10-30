@@ -1,99 +1,78 @@
 [[plugins]]
-repo = "Kaiser-Yang/blink-cmp-git"
-
-[[plugins]]
-repo = "fang2hou/blink-copilot"
+repo = "atusy/laser.nvim"
+on_event = ["InsertEnter", "CmdlineEnter"]
 lua_after = '''
-require 'blink-copilot'.setup { max_completions = 3, max_attempts = 7 }
-'''
+local laser = require 'laser'
 
-[[plugins]]
-repo = "disrupted/blink-cmp-conventional-commits"
+-- copilot-language-server は textDocument/completion を持たないため laser には出てこない。
+-- Copilot は copilot.lua の suggestion (ゴーストテキスト) で出し、<Tab> で受け入れる。
+local function copilot_visible()
+    return package.loaded['copilot.suggestion'] ~= nil and require 'copilot.suggestion'.is_visible()
+end
 
-[[plugins]]
-repo = "saghen/blink.cmp@v1.*"
-depends = ["blink-copilot", "blink-cmp-git", "blink-cmp-conventional-commits"]
-on_event = ["InsertEnter", "CmdlineEnter", "LspAttach"]
-build = ["cargo", "build", "--release"]
-dotgit = true
-lua_after = '''
-require 'blink.cmp'.setup {
-    sources = {
-        default = { 'snippets', 'lsp', 'copilot', 'path', 'buffer' },
-        per_filetype = {
-            markdown = { 'snippets', 'lsp', 'copilot', 'path' },
-            txt = { 'snippets', 'lsp', 'copilot', 'path' },
-            typst = { 'snippets', 'lsp', 'copilot', 'path' },
-            tex = { 'snippets', 'lsp', 'copilot', 'path' },
-            gitcommit = { inherit_defaults = true, 'git', 'conventional_commits' }
-        },
-        providers = {
-            copilot = {
-                name = 'copilot',
-                module = 'blink-copilot',
-                score_offset = -100,
-                async = true
-            },
-            git = {
-                module = 'blink-cmp-git',
-                name = 'Git'
-            },
-            conventional_commits = {
-                name = 'Conventional Commits',
-                module = 'blink-cmp-conventional-commits',
-                opts = {}
-            }
-        }
-    },
-    keymap = { preset = 'super-tab' },
-    completion = {
-        documentation = { auto_show = true, auto_show_delay_ms = 100 },
-        menu = {
-            draw = {
-                components = {
-                    label = {
-                        text = function (ctx)
-                            return require 'colorful-menu'.blink_components_text(ctx)
-                        end,
-                        highlight = function (ctx)
-                            return require 'colorful-menu'.blink_components_highlight(ctx)
-                        end
-                    }
-                }
-            }
-        }
-    },
-    cmdline = {
-        keymap = {
-            preset = 'inherit'
-            -- ['<space>'] = {
-			-- 	function(cmp)
-			-- 		local function fallback()
-			-- 			vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<space>', true, false, true), 'n', true)
-			-- 		end
-			--
-			-- 		if vim.tbl_contains({ ':', '@' }, vim.fn.getcmdtype()) and cmp.is_visible() then
-			-- 			return cmp.accept { callback = fallback }
-			-- 		end
-			-- 		return fallback()
-			-- 	end,
-			-- },
-        },
-        completion = {
-            menu = { auto_show = true },
-            list = {
-                selection = {
-                    preselect = false
-                }
-            }
-        }
-    },
-    signature = { enabled = true }
-}
+local group = vim.api.nvim_create_augroup('my-laser', { clear = true })
+local function complete_insert()
+    laser.complete {
+        menu = { auto_select = true, preview = true }
+    }
+end
+vim.api.nvim_create_autocmd({ 'InsertEnter', 'TextChangedI' }, {
+    group = group,
+    callback = complete_insert
+})
+-- `:` は kakehashi 経由の vimls で補完する
+vim.api.nvim_create_autocmd({ 'CmdlineEnter', 'CmdlineChanged' }, {
+    group = group,
+    pattern = ':',
+    callback = function ()
+        laser.complete { language_id = 'vim' }
+    end
+})
 
-if not vim.fn.has 'nvim-0.11' then
-    vim.lsp.config('*', {
-        capabilities = require 'blink.cmp'.get_lsp_capabilities()
-    })
+local function fallback(key)
+    -- t: 'wildchar' などをタイプしたキーとして扱わせる
+    vim.api.nvim_feedkeys(vim.keycode(key), 'int', false)
+end
+local function map(modes, key, action)
+    vim.keymap.set(modes, key, function ()
+        if action() == false then
+            fallback(key)
+        end
+    end, { desc = 'laser: ' .. key })
+end
+local function when_visible(f)
+    return function ()
+        if not laser.visible() then return false end
+        f()
+    end
+end
+
+-- super-tab 相当: 補完を確定 → Copilot を受け入れ → スニペットを進める → <Tab>
+map({ 'i', 'c' }, '<Tab>', function ()
+    if laser.visible() then
+        if laser.get_selected() == nil then
+            laser.select(1, { insert = false })
+        end
+        return laser.confirm()
+    elseif vim.fn.mode() == 'i' and copilot_visible() then
+        require 'copilot.suggestion'.accept()
+    elseif vim.fn.mode() == 'i' and vim.snippet.active { direction = 1 } then
+        vim.snippet.jump(1)
+    else
+        return false
+    end
+end)
+map({ 'i', 'c' }, '<C-n>', when_visible(function () laser.select(1) end))
+map({ 'i', 'c' }, '<C-p>', when_visible(function () laser.select(-1) end))
+map({ 'i', 'c' }, '<Down>', when_visible(function () laser.select(1) end))
+map({ 'i', 'c' }, '<Up>', when_visible(function () laser.select(-1) end))
+map({ 'i', 'c' }, '<C-e>', when_visible(laser.cancel))
+map('i', '<C-f>', when_visible(function () laser.scroll_preview(4) end))
+map('i', '<C-b>', when_visible(function () laser.scroll_preview(-4) end))
+vim.keymap.set('i', '<C-Space>', complete_insert, { desc = 'laser: complete' })
+
+-- このプラグインは InsertEnter / CmdlineEnter で読まれるので、そのイベント分をここで補う
+if vim.fn.mode() == 'i' then
+    complete_insert()
 end
 '''
