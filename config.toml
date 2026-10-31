@@ -87,6 +87,8 @@ hunkdiff = "latest"
 "github:gw31415/rsplug.nvim" = { version = "latest", bin = "rsplug" }
 usage = "latest"
 "go:github.com/rhysd/vim-startuptime" = "latest"
+# Cloudflare の CLI (DNS・D1・R2・KV・Workers)。`cf r2 objects put` が 1.0 系にしかないためベータに固定する。
+"npm:cf" = "1.0.0-beta.26"
 
 # --- AI エージェント ---
 claude = "latest"

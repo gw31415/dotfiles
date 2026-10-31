@@ -2669,6 +2669,11 @@ version = "1.40.0"
 backend = "npm:basedpyright"
 specifiers = ["latest"]
 
+[[tools."npm:cf"]]
+version = "1.0.0-beta.26"
+backend = "npm:cf"
+specifiers = ["1.0.0-beta.26"]
+
 [[tools."npm:dockerfile-language-server-nodejs"]]
 version = "0.15.0"
 backend = "npm:dockerfile-language-server-nodejs"
