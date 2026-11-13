@@ -219,6 +219,8 @@ fi
 curl -fL --retry 3 -o "$tmp" "$base/$name"
 [ "$(sum "$tmp")" = "$want" ] || { echo "$name の SHA-256 が一致しない (Release 更新中なら再実行)" >&2; exit 1; }
 mv "$tmp" "$dir/$name"
+# skkeleton の Deno KV は消えた見出しを残すので、DB ごと捨てて次の変換で作り直させる。
+rm -f "${XDG_CACHE_HOME:-$HOME/.cache}"/nvim/skkeleton/jisyo.db*
 echo "updated $dir/$name"
 '''
 

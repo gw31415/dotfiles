@@ -203,7 +203,7 @@ args = [
   "-c",
   """
   repo="$HOME/.cache/rsplug/repos/github.com/vim-denops/denops.vim"
-  exec "$HOME/.local/share/mise/shims/deno" run -A --no-lock -q \
+  exec "$HOME/.local/share/mise/shims/deno" run -A --no-lock -q --unstable-kv \
     "$repo/worktrees/$(cat "$repo/latest-snapshot")/denops/@denops-private/cli.ts" \
     --hostname 127.0.0.1 --port 32123
   """,

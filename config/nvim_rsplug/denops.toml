@@ -62,6 +62,8 @@ lua_before = '''
 if vim.loop.os_uname().sysname == 'Darwin' then
 	vim.g.denops_server_addr = '127.0.0.1:32123'
 end
+-- skkeleton の deno_kv ソースが Deno KV を使う。共通サーバー (macOS) 側は launchd の引数で同じ指定をしている。
+vim.g['denops#server#deno_args'] = { '-q', '--no-lock', '-A', '--unstable-kv' }
 '''
 
 [[plugins]]
@@ -105,18 +107,24 @@ vim.api.nvim_create_autocmd('User', {
 	pattern = 'skkeleton-initialize-pre',
 	callback = function ()
 		-- myhugejisyo (`mise run jisyo` で取得) は公式 L の後ろに足す。無ければ L だけで動く。
-		local dictionaries = { '~/.skk/SKK-JISYO.L' }
-		local huge = vim.fn.expand '~/.skk/SKK-JISYO.myhugejisyo.utf8'
-		if vim.fn.filereadable(huge) == 1 then
-			table.insert(dictionaries, { huge, 'utf-8' })
-		end
-		vim.fn['skkeleton#config'] {
+		local config = {
 			markerHenkan = '▹',
 			eggLikeNewline = true,
 			markerHenkanSelect = '▸',
-			globalDictionaries = dictionaries,
+			globalDictionaries = { '~/.skk/SKK-JISYO.L' },
 			selectCandidateKeys = 'aoeuhtn',
 		}
+		local huge = vim.fn.expand '~/.skk/SKK-JISYO.myhugejisyo.utf8'
+		if vim.fn.filereadable(huge) == 1 then
+			table.insert(config.globalDictionaries, { huge, 'utf-8' })
+			-- 140 MB をメモリに読むと起動ごとに約 6 秒 denops 全体が止まり 1 GB 強を使うので、Deno KV に載せる。
+			-- 辞書の更新後、最初の変換だけ DB の作り直しで 2〜3 分待つ。`mise run jisyo` が古い DB を消す。
+			local dir = vim.fn.stdpath 'cache' .. '/skkeleton'
+			vim.fn.mkdir(dir, 'p')
+			config.sources = { 'deno_kv' }
+			config.databasePath = dir .. '/jisyo.db'
+		end
+		vim.fn['skkeleton#config'](config)
 
 		for _, map in pairs {
 			{ 'input',  '<c-e>', '' },
