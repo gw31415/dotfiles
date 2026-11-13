@@ -197,6 +197,7 @@ value = false
 # Deno を spawn しないので denops 系プラグインがすぐ使える。
 # サーバーは rsplug が入れた denops.vim と同じ版を使う (nvim 側と版がずれない)。
 # rsplug 導入前や deno の shim が無い間は落ちるが、keep_alive が再試行する。
+# Deno の引数を変えるときはポートも変え、config/nvim_rsplug/denops.toml の denops_server_addr と揃える。
 [bootstrap.macos.launchd.agents.denops-shared-server]
 program = "/bin/bash"
 args = [
@@ -205,7 +206,7 @@ args = [
   repo="$HOME/.cache/rsplug/repos/github.com/vim-denops/denops.vim"
   exec "$HOME/.local/share/mise/shims/deno" run -A --no-lock -q --unstable-kv \
     "$repo/worktrees/$(cat "$repo/latest-snapshot")/denops/@denops-private/cli.ts" \
-    --hostname 127.0.0.1 --port 32123
+    --hostname 127.0.0.1 --port 32124
   """,
 ]
 run_at_load = true
