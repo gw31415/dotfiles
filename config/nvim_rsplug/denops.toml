@@ -60,7 +60,9 @@ start = true
 merge = false # denops の autoload は他プラグインと merge してはならない
 lua_before = '''
 if vim.loop.os_uname().sysname == 'Darwin' then
-	vim.g.denops_server_addr = '127.0.0.1:32123'
+	-- 共通サーバーの Deno 引数を変えたらポートも変える。古い引数のまま動き続けているサーバーには
+	-- つながらず、denops が自前のサーバー (下の deno_args) を起動するので、引数が食い違わない。
+	vim.g.denops_server_addr = '127.0.0.1:32124'
 end
 -- skkeleton の deno_kv ソースが Deno KV を使う。共通サーバー (macOS) 側は launchd の引数で同じ指定をしている。
 vim.g['denops#server#deno_args'] = { '-q', '--no-lock', '-A', '--unstable-kv' }
@@ -115,13 +117,7 @@ vim.api.nvim_create_autocmd('User', {
 			selectCandidateKeys = 'aoeuhtn',
 		}
 		local huge = vim.fn.expand '~/.skk/SKK-JISYO.myhugejisyo.utf8'
-		-- deno_kv は --unstable-kv の無い Deno では辞書を 1 つも返さない。共通サーバーが古い引数のまま
-		-- (launchd の設定を `mise bootstrap` で入れ直す前) なら L だけで動かす。
-		local kv = vim.g.denops_server_addr == nil
-			or (vim.fn.system { 'pgrep', '-f', 'unstable-kv.*@denops-private/cli.ts' } and vim.v.shell_error == 0)
-		if vim.fn.filereadable(huge) == 1 and not kv then
-			vim.notify('skkeleton: myhugejisyo を使うには mise bootstrap で denops 共通サーバーを更新する', vim.log.levels.WARN)
-		elseif vim.fn.filereadable(huge) == 1 then
+		if vim.fn.filereadable(huge) == 1 then
 			table.insert(config.globalDictionaries, { huge, 'utf-8' })
 			-- 140 MB をメモリに読むと起動ごとに約 6 秒 denops 全体が止まり 1 GB 強を使うので、Deno KV に載せる。
 			-- 辞書の更新後、最初の変換だけ DB の作り直しで 2〜3 分待つ。`mise run jisyo` が古い DB を消す。
