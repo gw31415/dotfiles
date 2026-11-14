@@ -38,6 +38,8 @@ _.path = ["/opt/homebrew/bin"]
 # 必要な Mac で `brew install --cask arto-app/tap/arto` を手動実行する。
 [bootstrap.packages]
 "brew:cocoapods" = "latest"
+# 既定アプリの割り当て (下の com.scriptingosx.utiluti.type を post-defaults hook で適用)。
+"brew:utiluti" = "latest"
 "brew:openssl@3" = "latest"
 "brew:gettext" = "latest"
 "brew:gnupg" = "latest"
@@ -189,6 +191,98 @@ domain = "com.apple.symbolichotkeys"
 key = "AppleSymbolicHotKeys"
 path = ["65", "enabled"]
 value = false
+
+########################################
+# 既定アプリ (utiluti)
+########################################
+# テキスト系のファイルを ng.app (Shougo/ng の macOS 対応フォーク) で開く。
+# キーは UTI か `extension:<拡張子>`、値は bundle id。utiluti は UTI の無い拡張子
+# (.lua など) も Finder と同じ dyn.* の型にして割り当てる。
+# post-defaults hook の `utiluti manage --include-unmanaged` がこの domain を読んで適用する。
+# .md (Arto)、.csv/.tsv (SmoothCSV)、.html/.svg (Safari) は他のアプリのまま。
+# .gitignore などのドットファイルは拡張子として扱われないので指定できない。
+[bootstrap.macos.defaults."com.scriptingosx.utiluti.type"]
+# 汎用のテキスト型 (拡張子の無いテキストや、下に無い宣言済みの型の受け皿)。
+# シェルスクリプトもダブルクリックで実行せず ng で開く。
+"public.plain-text" = "io.github.gw31415.ng"
+"public.utf8-plain-text" = "io.github.gw31415.ng"
+"public.utf16-plain-text" = "io.github.gw31415.ng"
+"public.utf16-external-plain-text" = "io.github.gw31415.ng"
+"public.source-code" = "io.github.gw31415.ng"
+"public.script" = "io.github.gw31415.ng"
+"public.shell-script" = "io.github.gw31415.ng"
+"public.bash-script" = "io.github.gw31415.ng"
+"public.zsh-script" = "io.github.gw31415.ng"
+# プレーンテキスト・ドキュメント
+"extension:txt" = "io.github.gw31415.ng"
+"extension:text" = "io.github.gw31415.ng"
+"extension:log" = "io.github.gw31415.ng"
+"extension:rst" = "io.github.gw31415.ng"
+"extension:org" = "io.github.gw31415.ng"
+"extension:tex" = "io.github.gw31415.ng"
+# 設定ファイル (.plist はバイナリ形式も含む)
+"extension:toml" = "io.github.gw31415.ng"
+"extension:yaml" = "io.github.gw31415.ng"
+"extension:yml" = "io.github.gw31415.ng"
+"extension:ini" = "io.github.gw31415.ng"
+"extension:conf" = "io.github.gw31415.ng"
+"extension:cfg" = "io.github.gw31415.ng"
+"extension:env" = "io.github.gw31415.ng"
+"extension:plist" = "io.github.gw31415.ng"
+"extension:entitlements" = "io.github.gw31415.ng"
+"extension:xctestplan" = "io.github.gw31415.ng"
+# データ
+"extension:json" = "io.github.gw31415.ng"
+"extension:jsonc" = "io.github.gw31415.ng"
+"extension:json5" = "io.github.gw31415.ng"
+"extension:xml" = "io.github.gw31415.ng"
+"extension:sql" = "io.github.gw31415.ng"
+"extension:lock" = "io.github.gw31415.ng"
+# ソースコード (.ts は macOS では動画の型だが TypeScript を優先する)
+"extension:py" = "io.github.gw31415.ng"
+"extension:swift" = "io.github.gw31415.ng"
+"extension:go" = "io.github.gw31415.ng"
+"extension:mod" = "io.github.gw31415.ng"
+"extension:lua" = "io.github.gw31415.ng"
+"extension:vim" = "io.github.gw31415.ng"
+"extension:fish" = "io.github.gw31415.ng"
+"extension:nix" = "io.github.gw31415.ng"
+"extension:js" = "io.github.gw31415.ng"
+"extension:mjs" = "io.github.gw31415.ng"
+"extension:cjs" = "io.github.gw31415.ng"
+"extension:ts" = "io.github.gw31415.ng"
+"extension:tsx" = "io.github.gw31415.ng"
+"extension:jsx" = "io.github.gw31415.ng"
+"extension:css" = "io.github.gw31415.ng"
+"extension:scss" = "io.github.gw31415.ng"
+"extension:c" = "io.github.gw31415.ng"
+"extension:h" = "io.github.gw31415.ng"
+"extension:m" = "io.github.gw31415.ng"
+"extension:sh" = "io.github.gw31415.ng"
+"extension:bash" = "io.github.gw31415.ng"
+"extension:zsh" = "io.github.gw31415.ng"
+"extension:rs" = "io.github.gw31415.ng"
+"extension:cpp" = "io.github.gw31415.ng"
+"extension:hpp" = "io.github.gw31415.ng"
+"extension:java" = "io.github.gw31415.ng"
+"extension:kt" = "io.github.gw31415.ng"
+"extension:rb" = "io.github.gw31415.ng"
+"extension:php" = "io.github.gw31415.ng"
+"extension:svelte" = "io.github.gw31415.ng"
+"extension:vue" = "io.github.gw31415.ng"
+"extension:diff" = "io.github.gw31415.ng"
+"extension:patch" = "io.github.gw31415.ng"
+
+# macOS 26.4 以降は既定アプリを変えるたびに確認ダイアログが出る (同じ値の再設定では出ない)。
+# ng.app は手動でビルドして入れるので、無い Mac では何もしない。
+[bootstrap.hooks.post-defaults]
+run = [
+  """
+  if [ -d "$HOME/Applications/ng.app" ]; then
+    /opt/homebrew/bin/utiluti manage --include-unmanaged
+  fi
+  """,
+]
 
 ########################################
 # LaunchAgents (旧 nix-darwin の launchd.user.agents)
