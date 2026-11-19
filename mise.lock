@@ -1715,14 +1715,15 @@ url = "https://github.com/charmbracelet/freeze/releases/download/v0.2.2/freeze_0
 url_api = "https://api.github.com/repos/charmbracelet/freeze/releases/assets/242747208"
 
 [[tools."aqua:fish-shell/fish-shell"]]
-version = "4.9.2"
+version = "4.9.3"
 backend = "aqua:fish-shell/fish-shell"
 specifiers = ["latest"]
 
 [tools."aqua:fish-shell/fish-shell"."platforms.linux-arm64"]
-checksum = "sha256:f6b99103964905f9ae9c0ab16ec96537010a8b7a031f1c3ec0c4be1892962353"
-url = "https://github.com/fish-shell/fish-shell/releases/download/4.9.2/fish-4.9.2-linux-aarch64.tar.xz"
-url_api = "https://api.github.com/repos/fish-shell/fish-shell/releases/assets/545702231"
+checksum = "sha256:57349f0111728c64b703a84e611aa97ff4d1fa8466385d64e67bd5bc3ffa49fc"
+checksum_source = "mise-versions"
+url = "https://github.com/fish-shell/fish-shell/releases/download/4.9.3/fish-4.9.3-linux-aarch64.tar.xz"
+url_api = "https://api.github.com/repos/fish-shell/fish-shell/releases/assets/551107872"
 
 [[tools."aqua:github/copilot-language-server-release"]]
 version = "1.573.0"
