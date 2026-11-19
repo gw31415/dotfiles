@@ -1,5 +1,6 @@
 # セッション PATH (旧 home-manager sessionPath 相当)。
 # fish をログインシェルにすると zsh の PATH を継承しないため、files/zshenv と揃える。
+# 10-mise.fish より先に読み込み、mise の activate が tool の path をこれらより前に置けるようにする。
 fish_add_path -g "$HOME/.local/bin" "$HOME/.cargo/bin" "$HOME/.go/bin"
 
 # pnpm のグローバル bin (pnpm 本体は mise 管理)。
