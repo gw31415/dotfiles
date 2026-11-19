@@ -38,6 +38,13 @@ _.path = ["/opt/homebrew/bin"]
 # 必要な Mac で `brew install --cask arto-app/tap/arto` を手動実行する。
 [bootstrap.packages]
 "brew:cocoapods" = "latest"
+# ログインシェル (下の [bootstrap.user])。
+"brew:fish" = "latest"
+"brew:git" = "latest"
+# mise 本体。
+"brew:mise" = "latest"
+"brew:typst" = "latest"
+"brew:xcodegen" = "latest"
 # 既定アプリの割り当て (下の com.scriptingosx.utiluti.type を post-defaults hook で適用)。
 "brew:utiluti" = "latest"
 "brew:openssl@3" = "latest"
@@ -50,14 +57,12 @@ _.path = ["/opt/homebrew/bin"]
 "brew:xcode-build-server" = "latest"
 "brew:jorgelbg/tap/pinentry-touchid" = "latest"
 "brew:steipete/tap/codexbar" = "latest"
+"brew-cask:affinity" = "latest"
 "brew-cask:anki" = "latest"
 "brew-cask:blackhole-2ch" = "latest"
 "brew-cask:claude" = "latest"
 "brew-cask:claude-code" = "latest"
-"brew-cask:codex" = "latest"
-"brew-cask:codex-app" = "latest"
 "brew-cask:discord" = "latest"
-# Pelmet は Dimble に改名された (tap の cask_renames.json)。
 "brew-cask:fif7y/tap/dimble" = "latest"
 # 端末は Rex Beta.app に移行中。Ghostty は既定では入れない (設定の symlink は残す)。
 # "brew-cask:ghostty" = "latest"
@@ -70,21 +75,26 @@ _.path = ["/opt/homebrew/bin"]
 "brew-cask:macfuse" = "latest"
 "brew-cask:macskk" = "latest"
 "brew-cask:musicbrainz-picard" = "latest"
-"brew-cask:obsidian" = "latest"
+"brew-cask:musescore" = "latest"
 "brew-cask:puremac" = "latest"
 "brew-cask:slack" = "latest"
 "brew-cask:smoothcsv" = "latest"
 "brew-cask:vorssaint" = "latest"
-# "brew-cask:waku" = "latest"
+"brew-cask:zed" = "latest"
 "brew-cask:zoom" = "latest"
 "mas:1365531024" = "latest" # 1Blocker
+"mas:640199958" = "latest" # Developer
 # "mas:937984704" = "latest" # Amphetamine → Vorssaint or dopa で代用できる
 "mas:361285480" = "latest" # Keynote
 "mas:539883307" = "latest" # LINE
 "mas:634148309" = "latest" # Logic Pro
 "mas:6444915884" = "latest" # Ice Cubes for Mastodon
+"mas:462058435" = "latest" # Microsoft Excel
+"mas:462062816" = "latest" # Microsoft PowerPoint
+"mas:462054704" = "latest" # Microsoft Word
 "mas:361304891" = "latest" # Numbers
 "mas:361309726" = "latest" # Pages
+"mas:1519867270" = "latest" # Refined GitHub
 "mas:497799835" = "latest" # Xcode
 "mas:415166115" = "latest" # タイピスト
 "mas:1598123076" = "latest" # 宛名印刷
