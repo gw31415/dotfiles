@@ -76,6 +76,8 @@ _.path = ["/opt/homebrew/bin"]
 "brew-cask:macskk" = "latest"
 "brew-cask:musescore" = "latest"
 "brew-cask:musicbrainz-picard" = "latest"
+# ad-hoc 署名のため、初回は `xattr -dr com.apple.quarantine /Applications/Sonora.app` が必要。
+"brew-cask:nolight132/tap/sonora" = "latest"
 "brew-cask:orbstack" = "latest"
 "brew-cask:puremac" = "latest"
 "brew-cask:slack" = "latest"

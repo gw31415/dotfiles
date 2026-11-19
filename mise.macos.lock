@@ -28,34 +28,33 @@ url = "https://github.com/gw31415/audiorouter/releases/download/v0.2.0/audiorout
 url_api = "https://api.github.com/repos/gw31415/audiorouter/releases/assets/463497449"
 
 [[tools."github:openai/tunnel-client"]]
-version = "0.0.14"
+version = "0.0.21"
 backend = "github:openai/tunnel-client"
 specifiers = ["latest"]
 
 [tools."github:openai/tunnel-client"."platforms.linux-arm64"]
-checksum = "sha256:2de3fb879a18edb847e0313592c912f1983685488290a7fdba7ac403e6a4fb0a"
-url = "https://github.com/openai/tunnel-client/releases/download/v0.0.14/tunnel-client-v0.0.14-linux-arm64.zip"
-url_api = "https://api.github.com/repos/openai/tunnel-client/releases/assets/540136652"
+checksum = "sha256:78a5202e0737199208a0c3e8f7c123805634546b0a587b83303b973b7f56aca6"
+url = "https://github.com/openai/tunnel-client/releases/download/v0.0.21/tunnel-client-v0.0.21-linux-arm64.zip"
+url_api = "https://api.github.com/repos/openai/tunnel-client/releases/assets/748378032"
 provenance = "github-attestations"
-provenance_verified = true
 
 [tools."github:openai/tunnel-client"."platforms.macos-arm64"]
-checksum = "sha256:b540493c5bdbcdbb755700c8e2e16597e28b1569e425007e0f73111047bd6a64"
-url = "https://github.com/openai/tunnel-client/releases/download/v0.0.14/tunnel-client-v0.0.14-darwin-arm64.zip"
-url_api = "https://api.github.com/repos/openai/tunnel-client/releases/assets/540136657"
+checksum = "sha256:353a535d2513f599f9fe7897606e89b3248611453b30203ebddfb6e62fd4f58b"
+url = "https://github.com/openai/tunnel-client/releases/download/v0.0.21/tunnel-client-v0.0.21-darwin-arm64.zip"
+url_api = "https://api.github.com/repos/openai/tunnel-client/releases/assets/748378033"
 provenance = "github-attestations"
 
 [[tools.ollama]]
-version = "0.33.3"
+version = "0.40.16"
 backend = "aqua:ollama/ollama"
 specifiers = ["latest"]
 
 [tools.ollama."platforms.linux-arm64"]
-checksum = "sha256:4425a112af999ae6572c1ce211fbabeaca7bab23ed5860972acdfc0cc2358420"
-url = "https://github.com/ollama/ollama/releases/download/v0.33.3/ollama-linux-arm64.tar.zst"
-url_api = "https://api.github.com/repos/ollama/ollama/releases/assets/543087936"
+checksum = "sha256:e45b8e6dcb86cb9f3057396351655079c9a4879b4ced2678c9350d375dcbc224"
+url = "https://github.com/ollama/ollama/releases/download/v0.40.16/ollama-linux-arm64.tar.zst"
+url_api = "https://api.github.com/repos/ollama/ollama/releases/assets/729375654"
 
 [tools.ollama."platforms.macos-arm64"]
-checksum = "sha256:342db03df80bb9db84ff64246031bd5f70c09b59ff52fa5cc9aaae3476cc4a9d"
-url = "https://github.com/ollama/ollama/releases/download/v0.33.3/ollama-darwin.tgz"
-url_api = "https://api.github.com/repos/ollama/ollama/releases/assets/543087823"
+checksum = "sha256:a743717494315da7cd352982b805f6b992d4b4452ca117fd5fbf86c4ee46fca0"
+url = "https://github.com/ollama/ollama/releases/download/v0.40.16/ollama-darwin.tgz"
+url_api = "https://api.github.com/repos/ollama/ollama/releases/assets/729375443"

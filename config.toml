@@ -32,7 +32,7 @@ python = "latest"
 ruby = "latest"
 deno = "2"
 uv = "latest"
-"aqua:pnpm" = "11"
+"aqua:pnpm" = "12"
 rust = "stable" # core:rust が rustup 経由で管理
 sccache = "latest"
 # .NET SDK (GCM の dotnet: backend に必要。現行 GCM は .NET SDK 10 必須)。
@@ -228,7 +228,8 @@ echo "updated $dir/$name"
 description = "Update declarative system packages, mise tools, and fish plugins"
 run = [
   "mise bootstrap packages upgrade",
-  "mise upgrade --bump",
+  # dotnet は GCM の対応する major に、ruby-lsp は stable 系列に留める (--bump は major を上げる)。
+  "mise upgrade --bump --exclude dotnet --exclude gem:ruby-lsp",
   "mise exec -- pez upgrade",
   "mise exec -- pez doctor",
   "mise run jisyo",
