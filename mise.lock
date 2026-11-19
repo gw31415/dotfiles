@@ -2929,7 +2929,7 @@ url_api = "https://api.github.com/repos/ynqa/jnv/releases/assets/386275031"
 
 [[tools.jq]]
 version = "1.8.2"
-backend = "asdf:jq"
+backend = "aqua:jqlang/jq"
 specifiers = ["latest"]
 
 [tools.jq."platforms.linux-arm64"]
