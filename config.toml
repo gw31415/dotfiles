@@ -94,7 +94,8 @@ usage = "latest"
 claude = "latest"
 codex = "latest"
 oh-my-pi = "latest"
-"pipx:serena-agent" = "latest"
+# 依存の tiktoken (PyO3) が Python 3.15 未対応で、wheel の無い linux-arm64 ではビルドに失敗する。
+"pipx:serena-agent" = { version = "latest", uvx_args = "--python 3.14" }
 
 # --- 日常 CLI ---
 # aria2 = "latest" # バイナリインストールできる手段が存在しない

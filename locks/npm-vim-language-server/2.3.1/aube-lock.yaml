@@ -1,0 +1,23 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      vim-language-server:
+        specifier: 2.3.1
+        version: 2.3.1
+
+packages:
+
+  vim-language-server@2.3.1:
+    resolution: {integrity: sha512-Y9Zy3NKzfndLUfuZRrITkpfGvpL2K7hNPV8sJ1iB6mf1YRxIX3Hs6lwZimoD5pmvamUaOQhNGYMS/Ox9itzA4Q==}
+    hasBin: true
+
+snapshots:
+
+  vim-language-server@2.3.1: {}
